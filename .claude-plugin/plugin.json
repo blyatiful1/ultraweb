@@ -1,0 +1,13 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "ultraweb",
+  "version": "0.1.0",
+  "description": "Ultimate one-prompt webdesign harness for Next.js: 55+ interlocking skills covering design taste, design systems, components, motion, Next.js engineering, backend, and quality gates",
+  "author": {
+    "name": "Iwan Braun",
+    "email": "iwan.braun@gkd-el.de"
+  },
+  "skills": [
+    "./"
+  ]
+}
