@@ -100,7 +100,7 @@ const [optimisticItems, addOptimistic] = useOptimistic(items, (state, next: Item
 
 design/BRIEF.md: "Reservation form → server action → Resend confirmation; states pending, confirmed, fully-booked (waitlist offer)."
 
-One `reserve` action, zod v4 at the boundary, availability decided server-side and returned as a UI *state* — never thrown:
+One `reserve` action, zod v4 at the boundary, availability settled by an atomic seat claim server-side and returned as a UI *state* — never thrown:
 
 ```ts
 // app/actions/reserve.ts
@@ -112,8 +112,11 @@ export type ReserveState = {
   values?: Record<string, string>   // echo the submission back so a failed parse or a full house never blanks the form
 }
 // reservationSchema.safeParse → invalid? { status: 'idle', errors, values } — fields stay filled
-//   → seats left? deliverConfirmation() (check Resend { data, error }) + revalidateTag('covers', 'minutes') → { status: 'confirmed' }
-//   → no seats? return { status: 'fully-booked', values }  ← form swaps its submit for the waitlist CTA, no throw
+//   → claim the seats atomically — one conditional write is the availability check:
+//       UPDATE covers SET booked = booked + $party WHERE booked + $party <= capacity  (returns rows affected)
+//     idempotent on the submission's request key, so a retried submit re-reads its own claim instead of double-booking
+//   → claim took (1 row)? only now deliverConfirmation() (check Resend { data, error }) + revalidateTag('covers', 'minutes') → { status: 'confirmed' }
+//   → claim rejected (0 rows)? return { status: 'fully-booked', values }  ← form swaps its submit for the waitlist CTA, no throw
 ```
 
 The three brief states map cleanly: the in-flight submit is `pending` from `useActionState`; the resolved outcomes are `confirmed` (email fires) and `fully-booked` (the waitlist offer renders in place). Copy is Portuguese under `/pt/*`, mirrored under `/en/*`.
