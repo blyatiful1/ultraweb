@@ -21,7 +21,7 @@ NextAuth v5 beta remains acceptable in exactly two cases: the project already ru
 
 1. Read BRIEF.md: which pages are protected, which sign-in methods (email+password? Google? magic link → `ultraweb:email`), whether roles exist. No auth requirement → stop. Never bolt accounts onto a brochure site.
 2. `npm i better-auth`. `BETTER_AUTH_SECRET` + `BETTER_AUTH_URL` into `.env`. Server config in `lib/auth.ts` (below).
-3. `npx @better-auth/cli generate` — emits the Drizzle auth tables (user, session, account, verification). Merge into `db/schema.ts` and migrate through `ultraweb:database`: one schema, one migration history.
+3. `npx auth@latest generate` — emits the Drizzle auth tables (user, session, account, verification). Merge into `db/schema.ts` and migrate through `ultraweb:database`: one schema, one migration history.
 4. Mount the handler and create the client (below).
 5. Protect in layers: proxy.ts cookie check for redirect UX, server-side session check where protected data renders, and a session re-check inside every mutating server action and route handler. All three, always.
 6. Build sign-in/sign-up as designed pages (rule below). Then verify the loop empirically: sign up → sign out → hit a protected page (must redirect) → sign in (must land back).
@@ -129,6 +129,8 @@ export const auth = betterAuth({
   plugins: [sso(), nextCookies()], // sso() → OIDC for Fleet; nextCookies stays last
 });
 ```
+
+`sso()` comes from `@better-auth/sso`, a separate install alongside `better-auth`; the Fleet OIDC provider is registered through that plugin — `sso()` in the config above plus its provider registration — and `npx auth@latest generate` regenerates the schema with the SSO tables beside the core four.
 
 proxy.ts matches `["/dashboard/:path*"]` on cookie presence only, redirecting to `/login`; the authoritative `auth.api.getSession` re-runs inside every `/api/v1/*` handler that returns berth data. The `/login` page is split-screen: the left panel runs the static berth-timeline SVG (the signature move) on dark surface `oklch(0.18 0.015 250)`, the right is a General Sans form with teal `oklch(0.68 0.12 200)` focus rings and JetBrains Mono on the account-ID field; error copy reads "That email and password don't match." — never "Invalid credentials".
 

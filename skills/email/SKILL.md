@@ -138,4 +138,4 @@ Handoff: the `getResend().emails.send({ react: OrderConfirmation(order) })` call
 - **ultraweb:tokens** — theme.ts is a hand-maintained mirror of the `@theme` tokens; when tokens change, re-translate.
 - **ultraweb:ship** — env audit covers RESEND_API_KEY and the verified production sender domain.
 - **ultraweb:brief** — reading design/BRIEF.md is process step 1; it decides which flows (contact, auth, receipt) send mail at all, or whether this skill is skipped.
-- **ultraweb:payments** — the raw-body Stripe webhook it owns is where the receipt/order-confirmation send fires; the template and Resend call live here, the payment event stays there.
+- **ultraweb:payments** — its raw-body Stripe webhook writes the order-keyed outbox row this skill drains to send the receipt/order-confirmation (idempotent per event/order ID, never inline in the handler); the template and Resend call live here, the payment event stays there.
