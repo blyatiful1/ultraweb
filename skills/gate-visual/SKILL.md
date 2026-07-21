@@ -74,6 +74,22 @@ Banned-list violations: 0 in final sweep. Issues fixed: 2. Residual defects: non
 - Shotgunning ten fixes in one round — untraceable; one root cause per round keeps cause and effect visible
 - Cropping or cherry-picking captures to flatter a fix — the judge sees full pages at full attention or the round is void
 
+## Worked example — Studio Norra, Editorial Brutalist agency portfolio
+
+DIRECTION.md contract the judge scored against each round: hero display in Archivo Expanded — "oversized, uppercase, tight tracking" — and signal red `oklch(0.6 0.21 25)` used ONLY for interaction states. Round 1 shot all five routes (`/`, `/work`, `/work/[slug]`, `/studio`, `/contact`) at 1440×900, light + dark, into `qa/visual/round-1/`.
+
+```markdown
+## gate-visual — 2026-05-14 — PASS (SHIP, round 3)
+| Round | Verdict | Lowest axis (page) | Worst defect → fix | Evidence |
+|-------|---------|--------------------|--------------------|----------|
+| 1 | NOT-CLOSE | distinctiveness 4 (/studio) | signal red painted as a static fill behind the team grid — DIRECTION.md reserves red for interaction states → fill reverted to ink `oklch(0.2 0.01 270)`, red restored to focus-visible + hover only (ultraweb:color owns) | qa/visual/round-1/ |
+| 2 | FIX-THEN-SHIP | typography 6 (/work) | Archivo Expanded index headings capped at 3rem, no scale contrast vs Inter body → ceiling raised to `clamp(2.5rem, 8vw, 7rem)`, tracking tightened to `-0.03em` (ultraweb:typography owns) | qa/visual/round-2/ |
+| 3 | SHIP | all ≥7 | — | qa/visual/round-3/ |
+Banned-list violations: 0 in final sweep. Issues fixed: 2. Residual defects: none.
+```
+
+Rejected: bundling the /work type-scale fix into round 1 alongside the red-leak fix — two root causes in one diff hides which change moved distinctiveness vs typography; one defect per round kept both fixes independently verifiable against their round-N+1 capture. Handoff: the round history in design/QA.md is read by ultraweb:ship, which blocks the release while any gate row reads below SHIP.
+
 ## Composes with
 
 - design-judge (subagent) — the scorer; this gate is its delivery mechanism
@@ -82,3 +98,4 @@ Banned-list violations: 0 in final sweep. Issues fixed: 2. Residual defects: non
 - ultraweb:gate-antislop — run it before this gate so judge rounds spend on real design defects, not greppable clichés
 - ultraweb:typography — owns the most common round-1 defect: undersized display type and weak scale contrast
 - ultraweb:layout-grid — owns the second most common: wallpaper rhythm and missing asymmetry
+- ultraweb:gate-responsive — precondition: its PASS must be recorded in design/QA.md before round 1, so the judge scores settled layouts instead of the overflow and orphan defects the responsive gate already owns
