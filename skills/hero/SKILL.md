@@ -75,6 +75,24 @@ The hero gets the largest share of craft budget — every visitor sees it, most 
 - Carousel or slider heroes — nobody sees slide 2; commit to one message.
 - Two filled CTAs; a badge-pill above the headline ("✨ New: …") as a reflex — emoji banned, pill only if DIRECTION.md justifies it.
 
+## Worked example — Framewalk, "Hollow Cartographer" Steam launch home
+
+design/DIRECTION.md: "Atmospheric Dark, earned by the fog-and-lantern art — not a template. Signature move: three-layer parallax fog in the hero that answers the cursor; static composite under prefers-reduced-motion."
+
+Variant: **full-bleed media** for `/` — the game's atmosphere IS the promise, so the art carries the emotion and chrome recedes. Headline "You are the last one still mapping the dark" in Space Grotesk at `--text-display: clamp(2.75rem, 1.5rem + 5.5vw, 7rem)`, tracking -0.03em, line-height 1.0, over a computed-AA scrim sized to the text zone (base surface `oklch(0.16 0.02 200)`). The LCP element is the far fog layer — a static import, never lazy:
+
+```tsx
+// LCP: far fog layer (statically imported); parallax lives in a client island below
+<Image src={fogFar} alt="" fill preload sizes="100vw"
+  placeholder="blur" className="object-cover" />
+```
+
+Primary CTA: **"Wishlist on Steam"** (filled, phosphor accent `oklch(0.78 0.15 160)`, AA-verified on the dark base); the launch-news email field sits after it as a ghost-submit inline form so nothing competes with the wishlist.
+
+Rejected: a second filled "Watch the trailer" button — the direction forbids a second filled CTA, so the trailer drops to a ghost arrow-link and Wishlist stands alone. Also rejected: a boxed gameplay screenshot (split variant) — it would sell fog-and-lantern like generic SaaS.
+
+Handoff: `components/sections/hero.tsx` stays a server component; the three-layer parallax is a lone `"use client"` island (LazyMotion + `m.` from `motion/react`) handed to ultraweb:scroll-motion for the cursor-answer and reduced-motion path, and ultraweb:gate-performance then confirms the far fog layer is the sole LCP with zero CLS.
+
 ## Composes with
 
 - ultraweb:copywriting — the headline is written before it is typeset; hero copy rules live there.
@@ -83,3 +101,7 @@ The hero gets the largest share of craft budget — every visitor sees it, most 
 - ultraweb:showpiece — when DIRECTION.md demands a canvas/3D hero; this skill owns the static fallback.
 - ultraweb:scroll-motion — hero exit choreography and scroll cues are its jurisdiction, not the hero's.
 - ultraweb:gate-performance — independently verifies the LCP/CLS claims made here; never self-certify.
+- ultraweb:typography — the hero pulls the `--text-display` clamp() scale and the display tracking/leading tokens from here; the headline uses that scale rather than hand-tuned sizes.
+- ultraweb:layout-grid — the split and editorial-offset variants sit on the grid this skill defines; column ratios (55/45, 60/40) come from there, not ad-hoc widths.
+- ultraweb:imagery — full-bleed and product-shot heroes request their hero art and treatment (overlay scrim, grain) from here before media-optimization sizes the file.
+- ultraweb:wireframe — the hero's block skeleton — headline zone, CTA slot, media placement — is planned upstream in the wireframe; this skill builds that block to grade.
