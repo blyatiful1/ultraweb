@@ -109,6 +109,26 @@ Rules:
 - `from: 'onboarding@resend.dev'` reaching production — dev-only sender; swap to the verified domain before ship.
 - ✨/🚀 in subject lines — taste bans emoji in production copy, and subject lines are production copy.
 
+## Worked example — Kaffeewerk Ost, order confirmation after Stripe checkout
+
+design/BRIEF.md: "Resend order confirmations after every purchase — sensory and direct, no marketing fluff." One transactional flow; the send drains the order-keyed outbox row the Stripe webhook writes per ultraweb:payments — never inline in the handler, so a webhook retry can't resend.
+
+`emails/theme.ts` translates SYSTEM.md's warm-neutral tokens to hex by hand — oklch never reaches an inbox:
+
+```ts
+export const t = {
+  bg: '#f7f3ec', fg: '#2b241f', muted: '#7a6f64', border: '#e6ded2',
+  accent: '#b3572f',                                   // rust, oklch(0.62 0.16 45) → hex
+  font: "'Fraunces', Georgia, 'Times New Roman', serif",  // display face + system serif fallback
+}
+```
+
+`emails/order-confirmation.tsx` leads with one Fraunces heading — "Deine Röstung ist unterwegs" — then a line-item block naming the roast in the brief's voice ("Röstung No. 14 · Washed Yirgacheffe — Apricot, black tea, honey"), one rust `<Button>` to an absolute `${process.env.NEXT_PUBLIC_SITE_URL}/shop/${order.productSlug}` — an email has no origin to resolve a relative path — for a reorder, and a hairline `<Hr>`. Subject: `Röstung No. 14 — bestätigt`.
+
+Rejected: rendering the site's signature roast-profile temperature-curve SVG inline in the email — Gmail strips inline SVG to a broken-image box, so the motif stays on the web and the email keeps the `<Hr>` divider instead.
+
+Handoff: the `getResend().emails.send({ react: OrderConfirmation(order) })` call drains the order-keyed outbox row the raw-body Stripe webhook writes per ultraweb:payments — not inline in the handler. The drain is idempotent end to end: claim the row atomically by its Stripe event/order ID and pass that same ID to Resend as the send's idempotency key (covered on `POST /emails` for 24h — so even a crash between an accepted send and the sent-flag write can't duplicate), give claims an expiring lease so a crashed drainer's rows get reclaimed, skip any row already marked sent, and mark it sent only after Resend returns no `error` (it's `{ data, error }`, never a throw) — a failed send releases the claim so the next drain retries, and a redelivered webhook can't resend a confirmation already recorded. ultraweb:copywriting supplied the subject and the tasting-note line.
+
 ## Composes with
 
 - **ultraweb:server-actions** — the contact action owns validation and error-as-state; this skill owns the send inside it.
@@ -117,3 +137,5 @@ Rules:
 - **ultraweb:copywriting** — subject lines, preview text, and body copy are site voice, not boilerplate.
 - **ultraweb:tokens** — theme.ts is a hand-maintained mirror of the `@theme` tokens; when tokens change, re-translate.
 - **ultraweb:ship** — env audit covers RESEND_API_KEY and the verified production sender domain.
+- **ultraweb:brief** — reading design/BRIEF.md is process step 1; it decides which flows (contact, auth, receipt) send mail at all, or whether this skill is skipped.
+- **ultraweb:payments** — its raw-body Stripe webhook writes the order-keyed outbox row this skill drains to send the receipt/order-confirmation (idempotent per event/order ID, never inline in the handler); the template and Resend call live here, the payment event stays there.

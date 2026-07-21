@@ -112,6 +112,20 @@ Sections take data as props — pages fetch, sections render. Secrets (`process.
 - Functions or event handlers passed across the server→client boundary
 - `npm i zustand` / `npm i redux` on a marketing site
 
+## Worked example — Tidepool, port-logistics SaaS boundary plan
+
+design/SITEMAP.md part 2 lists six routes (`/`, `/product`, `/pricing`, `/docs`, `/changelog`, `/login`) and the hero's signature: a live berth timeline that streams updates.
+
+The boundary plan (SITEMAP.md part 3) keeps every layout and page server; client leaves stay in the low teens:
+- `components/hero/berth-timeline.tsx` (`"use client"`) — polls `/api/v1/berths` and animates the timeline; the RSC renders the static SVG fallback and passes the seed as a serializable prop, so first paint needs no JS.
+- `components/pricing/billing-toggle.tsx` — monthly/annual lives in the URL (`?billing=annual`, awaited from `searchParams`), not `useState`, so a shared link lands on the annual view with Growth ($490/mo) still featured.
+- `app/login/_components/login-form.tsx` (`"use client"`) — `useActionState` over a `'use server'` Better Auth sign-in action; no handler crosses the boundary.
+- Theme: next-themes `defaultTheme="dark"` — the only context in the root layout (Precision Instrument is dark-first).
+
+Rejected: making `app/pricing/page.tsx` a client component to own the toggle — it would drag the whole tier table into the bundle for one query param. The URL carries the state instead.
+
+Handoff: SITEMAP.md part 3 is the contract ultraweb:navigation (header client leaf) and ultraweb:server-actions (the login action) build against; ultraweb:gate-performance later greps the tree against the low-teens count.
+
 ## Composes with
 
 - ultraweb:scaffold — creates the tree this contract governs; run app-structure immediately after it
@@ -120,3 +134,6 @@ Sections take data as props — pages fetch, sections render. Secrets (`process.
 - ultraweb:server-actions — the mutation row of the state table
 - ultraweb:micro-interactions — produces the components/motion leaves that sections compose
 - ultraweb:gate-performance — audits `"use client"` creep against the low-teens target at Phase 11
+- ultraweb:navigation — builds components/layout/header.tsx against this plan; its mobile-menu toggle is the canonical nav client leaf this skill assigns
+- ultraweb:page-transitions — owns the app/template.tsx re-mount case this skill's layout-vs-template rule defers to
+- ultraweb:gate-code — greps every layout.tsx for `"use client"` and counts occurrences, empirically enforcing this skill's leaf-placement rule

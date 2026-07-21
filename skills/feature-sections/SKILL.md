@@ -58,18 +58,6 @@ Tabs switch one large shared visual/demo surface. `npx shadcn@latest add tabs`, 
 
 No two adjacent sections on a page share a layout pattern — counting ALL neighbors: hero, social-proof, pricing, FAQ, not just feature sections. Additionally, adjacent sections alternate at least one of: background (band vs page), width (full-bleed vs contained), density (compressed vs airy). A page that goes split → split, or centered-stack → centered-stack, has wallpaper rhythm — fix the ORDER in SITEMAP.md; never decorate the twin to disguise it.
 
-## Worked example — SaaS landing feature stack
-
-SITEMAP.md lists: hero, logo wall, 3 core capabilities (each with product screenshot), a 4-step onboarding story, 6 secondary features, pricing. A passing order:
-
-1. Hero (typographic, from `ultraweb:hero`) → 2. logo wall (compressed band, `ultraweb:social-proof`)
-3. Alternating split ×3 for the core capabilities — paragraphs + screenshots fit the shape
-4. Sticky-scroll showcase for onboarding — sequential story, one evolving visual, contrast against the splits above
-5. Bento grid for the 6 secondary features — one spans 2 cols (the strongest), dark band background for release after the sticky section
-6. Pricing (contained, light) → FAQ (accordion list — differs from the contained pricing table in pattern and density)
-
-Every neighbor pair differs in pattern AND in at least one of background/width/density. That is the bar.
-
 ## A11y
 
 - One `h2` per section, features as `h3` — the heading outline must read as a story alone (gate-content checks this).
@@ -86,6 +74,18 @@ Every neighbor pair differs in pattern AND in at least one of background/width/d
 - Two bento grids on one page.
 - Staggered fade-up on every element in every section — motion becomes meaningless (banned list).
 
+## Worked example — SaaS landing feature stack
+
+SITEMAP.md lists: hero, logo wall, 3 core capabilities (each with product screenshot), a 4-step onboarding story, 6 secondary features, pricing. A passing order:
+
+1. Hero (typographic, from `ultraweb:hero`) → 2. logo wall (compressed band, `ultraweb:social-proof`)
+3. Alternating split ×3 for the core capabilities — paragraphs + screenshots fit the shape
+4. Sticky-scroll showcase for onboarding — sequential story, one evolving visual, contrast against the splits above
+5. Bento grid for the 6 secondary features — one spans 2 cols (the strongest), dark band background for release after the sticky section
+6. Pricing (contained, light) → FAQ (accordion list — differs from the contained pricing table in pattern and density)
+
+Every neighbor pair differs in pattern AND in at least one of background/width/density. That is the bar.
+
 ## Composes with
 
 - ultraweb:wireframe — upstream owner of section order; adjacency conflicts get fixed there first.
@@ -94,3 +94,5 @@ Every neighbor pair differs in pattern AND in at least one of background/width/d
 - ultraweb:scroll-motion — entrance reveals and useScroll wiring for the sticky showcase.
 - ultraweb:copywriting — feature headlines and body; a weak-looking pattern is often weak copy.
 - ultraweb:imagery — the visuals in splits and bento hero cells; never gray boxes.
+- ultraweb:gate-antislop — greps the built sections for the three-identical-cards pattern and adjacency twins this skill guards against; a slip fails there, not here.
+- ultraweb:icons — supplies the icon set and stroke-width discipline for any single icon placed in a bento cell or list entry — never three identical icon-cards.

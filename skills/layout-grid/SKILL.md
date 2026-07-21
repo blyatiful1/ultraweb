@@ -94,6 +94,22 @@ Rules:
 - Bento with all-equal cells, or a filler cell padding out the grid.
 - Ad-hoc widths — grep `max-w-[`; arbitrary container values mean the tier system is being bypassed.
 
+## Worked example — Studio Norra, Oslo agency portfolio layout
+
+design/DIRECTION.md: "Editorial Brutalist — exposed 12-col grid, oversized uppercase Archivo Expanded, deliberate rawness with high craft. Signature: cursor-proximity image reveals on the /work index."
+
+Exposed grid means the columns must stay legible, so the site commits to two recurring asymmetries: **Margin Note 3/9** (a sticky rail carrying the case number + eyebrow beside the wide case body on /work/[slug] and /studio) and **Staggered Rail** for the /work index, where column two drops `mt-24` so the cursor-reveal thumbnails never resolve into a tidy card grid — the boldest split hosts the signature move. Container tiers handed to tokens:
+
+```css
+@theme {
+  --container-prose: 65ch;    /* case-study running text */
+  --container-content: 72rem; /* /studio, /contact */
+  --container-wide: 88rem;    /* /work index + full-bleed case imagery */
+}
+```
+
+Rhythm on /work/[slug]: `release` hero exit (`py-28 md:py-40`), then a `compressed` credits/role strip (`py-12 md:py-16`), then `standard` narrative sections — never three py-24s in a row. Rejected a centered 6/6 gallery for the index: equal halves flatten the exposed-grid tension the direction is built on, and 6/6 is reserved for true comparisons. Output lands in design/SYSTEM.md §layout (tiers + split names + rhythm map); ultraweb:tokens mints the `--container-*` tokens and ultraweb:wireframe blueprints each /work section against the split names.
+
 ## Composes with
 
 - ultraweb:tokens — container tiers land as `--container-*` tokens in app/globals.css `@theme`.
@@ -102,3 +118,5 @@ Rules:
 - ultraweb:feature-sections — governed by the bento and split rules here.
 - ultraweb:gate-responsive — verifies rhythm and asymmetry survive 375/768/1440 screenshots.
 - ultraweb:taste — supplies the asymmetry mandate and anti-wallpaper rule this skill operationalizes.
+- ultraweb:gate-antislop — greps the anti-patterns defined here (`py-24` wallpaper, `max-w-[` arbitrary widths, repeated centered columns) and fails the build when the rhythm or tier system leaks.
+- ultraweb:gate-visual — its design-judge scores this skill's compression-and-release rhythm and recurring asymmetry against taste's required list; flat spacing or a missing asymmetry reads as a required-list miss.

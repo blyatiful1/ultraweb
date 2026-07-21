@@ -125,11 +125,34 @@ export async function POST(req: Request) {
 - A success page rendering "Payment successful" without retrieving and checking the session — celebrates unpaid and forged visits.
 - Bare unstyled success/cancel surfaces — designed pages, per Standard.
 
+## Worked example — Loop & Thread, one-time checkout for handmade goods
+
+design/BRIEF.md: "Small-batch woven goods — every piece is one-off; when it sells, it's gone." Physical purchases, charged once, no recurring plan.
+
+The buy button lives on `/shop/[slug]`; each throw and runner is one Product + Price in the Dashboard (test mode), IDs allowlisted in `lib/prices.ts` as an as-const tuple the shop tiles and the checkout action both read. The action validates `formData.get('priceId')` through `z.enum(PRICE_IDS)` — never an amount — and creates a one-time session:
+
+```ts
+const session = await getStripe().checkout.sessions.create({
+  mode: 'payment',                          // finished goods, charged once — not a plan
+  line_items: [{ price: parsed.data, quantity: 1 }],
+  success_url: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+  cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/shop?canceled=1`,   // no /pricing route — back to the grid
+})
+```
+
+Env stays `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET`, no `NEXT_PUBLIC_` prefix; the raw-body webhook fulfills on `checkout.session.completed`. Session-id idempotency is not enough for one-off stock — two different sessions can race for the same piece — so the write is one transaction that marks it sold behind a unique constraint keyed on the inventory item, refunding the session on conflict (already gone). That transaction records an order-keyed outbox row rather than calling Resend inline, then acks Stripe promptly; ultraweb:email drains the outbox. Success page is designed to SYSTEM.md — Fraunces heading on undyed linen `oklch(0.94 0.012 80)`, walnut `oklch(0.35 0.04 60)` body, copy "Woven to order — your piece ships within five days," one CTA back to `/journal`.
+
+Rejected: a "monthly textile club" subscription — the brief sells finished one-off pieces, not a recurring box, and recurring billing on single inventory would keep charging for goods already gone.
+
+Handoff: `lib/prices.ts` is the single source ultraweb:pricing renders the shop buy tiles from; the webhook's fulfillment write records the order-keyed outbox row ultraweb:email drains for the confirmation.
+
 ## Composes with
 
 - **ultraweb:pricing** — the tiers it renders and the checkout allowlist share `lib/prices.ts`; one source, zero drift.
 - **ultraweb:server-actions** — checkout follows its rules: zod at the boundary, `redirect()` outside try/catch.
 - **ultraweb:database** — fulfillment writes orders/subscriptions plus the processed-event ledger that makes the webhook idempotent.
 - **ultraweb:ui-states** — pending state on the buy button, the success confirmation, the canceled reassurance line.
-- **ultraweb:email** — receipt/confirmation mail sent from the webhook after the fulfillment write.
+- **ultraweb:email** — receipt/confirmation mail sent by draining the order outbox the webhook writes, not inline in the handler.
 - **ultraweb:ship** — env audit swaps to live keys, the production webhook endpoint secret, and `NEXT_PUBLIC_APP_URL` to the production origin at deploy, nowhere earlier.
+- **ultraweb:brief** — reads its design/BRIEF.md to decide one-time (`mode: 'payment'`) vs recurring (`mode: 'subscription'`) and how many Products/Prices to model in the Dashboard.
+- **ultraweb:api-design** — the Stripe webhook is a route handler built to its conventions: raw-body reading, explicit status-code contract (400 on bad signature, 200 on ack), no caching on the endpoint.

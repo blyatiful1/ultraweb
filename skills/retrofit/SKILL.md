@@ -91,6 +91,16 @@ Execute each phase via ultraweb:iterate, pointing it at this file and the phase 
 - Treating `tailwind.config.js` as cosmetic — it blocks the entire token strategy; migration is B-0
 - Skipping the artifact bootstrap — iterate refuses sites without design/BRIEF.md and DIRECTION.md
 
+## Worked example — Ledger & Lane, auditing the firm's inherited site
+
+**Patient (what retrofit reads):** a two-partner law firm's existing Next.js site from a prior vendor. Inventory finds Next 14, `tailwind.config.js` (the Tailwind v3 marker), `framer-motion`, `middleware.ts`, and default Inter at 16/32px with slate body text on white.
+
+**Diagnosis.** The static sweep flags "Welcome to Ledger & Lane" hero copy, three identical practice-area icon-cards, and uniform `rounded-xl`+`shadow-lg`. design-judge scores the 375/768/1440 screenshots: mean 4.1/10, worst axis Distinctiveness 2/10. The target isn't a rebuild but the existing bones sharpened toward "Quiet Authority" — Newsreader + Public Sans, ink-navy `oklch(0.25 0.02 260)` on warm paper `oklch(0.975 0.005 80)`, muted gold `oklch(0.72 0.09 85)` reserved for one CTA per page, ruled hairlines as the signature move. Gaps map one-to-one: dead copy → copywriting (A); icon-cards → feature-sections (B); Inter/slate → tokens+color+typography (B); the v3-config / framer-motion / `middleware.ts` triad → stack migration as **B-0**, prerequisite to all Phase B token work.
+
+**Phase C candidate — pending user confirmation:** distinctiveness at 2/10 records a full direction change (ultraweb:direction) as a Phase C candidate, not a verdict — it stays open until the user confirms scope; retrofit can't close it unilaterally. The recommended default meanwhile is Phase B: the routes (`/practice/[area]`, `/attorneys`, `/insights/[slug]`) and the MDX content model are sound, so burning it down would re-solve problems the site doesn't have. Phase B proceeds; Phase C waits on the recorded confirmation.
+
+**Handoff:** written to design/RETROFIT.md alongside a reconstructed design/BRIEF.md + DIRECTION.md; each approved phase hands to ultraweb:iterate, which executes it against this file one phase at a time.
+
 ## Composes with
 
 - ultraweb:taste — the rubric IS the constitution; every score traces to its lists

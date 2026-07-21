@@ -138,6 +138,28 @@ Type per page: `Organization`/`LocalBusiness` on home · `Article`/`BlogPosting`
 - JSON-LD stringified without the `<` escape
 - titles stuffed with `| Home | Welcome` — the template owns the suffix, the page owns one clean name
 
+## Worked example — Ledger & Lane, boutique law-firm findability
+
+design/SYSTEM.md fixes the OG palette — ink navy `oklch(0.25 0.02 260)`, warm paper `oklch(0.975 0.005 80)`, muted gold `oklch(0.72 0.09 85)`. ImageResponse can't read `globals.css`, so I resolve them to `#23252e`, `#f7f5ef`, `#c2a15e` and set ink type on paper with gold only on the divider rule — the palette reserves gold for a single accent per page.
+
+Root layout: `metadataBase: new URL("https://ledgerandlane.com")`, `title: { default: "Ledger & Lane — Considered Counsel", template: "%s — Ledger & Lane" }`. The home page carries one `LegalService` node; `/attorneys` profiles each get their own `Attorney` node (name, jobTitle, worksFor):
+
+```ts
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LegalService",
+  name: "Ledger & Lane",
+  url: "https://ledgerandlane.com",
+  makesOffer: practiceAreas.map((a) => ({ "@type": "Offer", name: a.title })),
+};
+```
+
+Insights are MDX, so `/insights/[slug]` runs `generateMetadata` with `await params`, and its `BlogPosting` reads `headline`, `datePublished`, and `author` from the article frontmatter.
+
+Rejected: aggregate `Review`/`AggregateRating` markup on the practice-area pages — nothing visible there shows a rating, and invisible structured data invites a manual penalty, so `LegalService` + `Attorney` stay the only entities marked up.
+
+Handoff: exports land as per-route `metadata`, `app/opengraph-image.tsx`, and an `app/sitemap.ts` mirroring the six routes from design/SITEMAP.md; `ultraweb:gate-content` then greps for duplicate titles and missing canonicals before Phase 10 closes.
+
 ## Composes with
 
 - **ultraweb:copywriting** — writes every title and description in voice; this skill only wires them.
@@ -146,3 +168,6 @@ Type per page: `Organization`/`LocalBusiness` on home · `Article`/`BlogPosting`
 - **ultraweb:faq** — owns FAQPage schema inside its section markup.
 - **ultraweb:color** — the OG image uses its palette, resolved to literals.
 - **ultraweb:gate-content** — verifies uniqueness and completeness of everything above.
+- **ultraweb:content-cms** — defines the MDX frontmatter (title, summary, publishedAt, author) that `/insights` generateMetadata and the BlogPosting JSON-LD read.
+- **ultraweb:routing** — owns the dynamic segments (`/practice/[area]`, `/insights/[slug]`) whose awaited `params` shape generateMetadata mirrors.
+- **ultraweb:ship** — sets the production origin that `metadataBase` hard-codes; the absolute OG and sitemap URLs break if the deploy domain drifts from it.

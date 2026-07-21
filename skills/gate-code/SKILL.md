@@ -80,6 +80,19 @@ Issues fixed: removed unused `date-fns`; moved "use client" from app/page.tsx to
 - Downgrading next/tailwindcss/motion to dodge an error — hand it to stack-doctor instead
 - Skipping the route sweep because "/" worked — dev compiles per route; unrequested routes are unverified routes
 
+## Worked example — Tidepool, first cold pass of the code gate
+
+design/SITEMAP.md lists six routes for the "Precision Instrument" build — `/`, `/product`, `/pricing`, `/docs`, `/changelog`, `/login`. The cold pass caught two defects worth recording:
+
+| # | Check | Result | Evidence |
+|---|-------|--------|----------|
+| 2 | npx tsc --noEmit | FAIL → PASS | `app/(marketing)/changelog/page.tsx` read `searchParams.tag` without `await` — a Promise in Next 16 |
+| 5 | RSC boundary audit | FAIL → PASS | `components/hero/berth-timeline.tsx` imports `motion/react`, no `"use client"` |
+
+The signature-move defect (check 5): the live-updating berth timeline animates its JetBrains Mono numerals with `useSpring` from `motion/react` but shipped as a server component, so `grep -rl "motion/react" app components | xargs -r grep -L "use client"` returned it. Fix: `"use client"` added at that one leaf — `app/(marketing)/page.tsx` stayed a server component composing it. Re-check returned empty; the census held at 11 client files, 0 in layouts.
+
+Rejected the lazy fix of hoisting `"use client"` onto `app/(marketing)/layout.tsx` to make the hook error vanish — that turns the whole marketing tree client and defeats the boundary plan; the directive belongs at the leaf. Check 2's fix — `await`-ing `searchParams` before reading `.tag` in `app/(marketing)/changelog/page.tsx` — re-ran `npx tsc --noEmit` to exit 0, silent, and is owned by ultraweb:routing, which takes back every unawaited `params`/`searchParams`; the check 5 boundary fix stays with ultraweb:app-structure. The dated PASS lands in design/QA.md, and ultraweb:gate-performance reads the same client-file census next for bundle weight.
+
 ## Composes with
 
 - ultraweb:scaffold — its final smoke test is this gate's preview: same commands, Phase 5
@@ -87,3 +100,5 @@ Issues fixed: removed unused `date-fns`; moved "use client" from app/page.tsx to
 - ultraweb:gate-performance — reads the same "use client" census for bundle weight; this gate owns correctness, that one owns cost
 - ultraweb:ship — re-runs build + start against production env vars before deploy
 - stack-doctor (subagent) — receives every build/type/tooling failure with the verbatim error
+- ultraweb:routing — check 4 serves every route in the tree it owns; an unawaited `params`/`searchParams` caught by check 2 is handed back here to fix
+- ultraweb:server-actions — when tsc or the boundary audit flags a form action's `(prevState, formData)` signature or its `useActionState` wiring, the fix lands there

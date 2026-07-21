@@ -86,3 +86,4 @@ Six case studies, editorial direction. Not 6 clones: row 1 is one wide media-top
 - ultraweb:micro-interactions — hover/press choreography beyond the CSS defaults here.
 - ultraweb:ui-states — skeletons that mirror card layout 1:1.
 - ultraweb:imagery — image treatment and placeholder strategy for media-top and feature-object.
+- ultraweb:social-proof — testimonial and "proof number" (stat variant) cards are card compositions: this skill owns the box and its states, social-proof owns the trust content and where proof appears.

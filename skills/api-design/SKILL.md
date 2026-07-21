@@ -100,6 +100,29 @@ Every public unauthenticated POST (contact, newsletter, sign-up) gets a rate-lim
 - `fetch("/api/` from an RSC in the same app — self-HTTP round trip; call the query function directly
 - `app/api/[...slug]` catch-all re-implementing Express inside Next
 
+## Worked example — Tidepool, versioned read API for Fleet customers
+
+design/BRIEF.md §Backend: needs — "Fleet-tier customers pull berth windows into their own dashboards: a keyable, versioned read API under `/api/v1`, documented on `/docs`." A partner's server is a non-browser consumer, so this endpoint wins a route handler over a server action.
+
+`GET /api/v1/berths?port=NLRTM&window=7d` — searchParams validated with zod v4, Better Auth session gate first:
+
+```ts
+// app/api/v1/berths/route.ts
+const querySchema = z.object({
+  port: z.string().length(5, { error: "port must be a UN/LOCODE" }),
+  window: z.enum(["24h", "7d", "30d"]).default("7d"),
+});
+export async function GET(req: Request) {
+  const session = await auth.api.getSession({ headers: req.headers });
+  if (!session) return apiError(401, "unauthorized", "API key required.");
+  const parsed = querySchema.safeParse(Object.fromEntries(new URL(req.url).searchParams));
+  if (!parsed.success) return apiError(400, "validation_failed", parsed.error.issues[0].message);
+  return Response.json(await listBerths(parsed.data));
+}
+```
+
+Rejected a server action for this read: actions are RPC bound to Tidepool's own forms and invisible to a partner's `curl` — a versioned GET route is the contract they build against. The route lands at `app/api/v1/berths/route.ts`; the hero's live berth timeline fetches it client-side (ultraweb:data-fetching) and `listBerths` is the Drizzle+Neon query from ultraweb:database.
+
 ## Composes with
 
 - **ultraweb:server-actions** — the default for internal mutations; this skill covers what actions can't
@@ -107,3 +130,5 @@ Every public unauthenticated POST (contact, newsletter, sign-up) gets a rate-lim
 - **ultraweb:database** — handlers call the Drizzle query layer, never inline SQL
 - **ultraweb:payments** — the Stripe webhook is a route handler with its own raw-body + signature rules
 - **ultraweb:data-fetching** — RSC reads skip HTTP entirely; consult before adding any GET endpoint
+- **ultraweb:brief** — its §Backend: needs list names every endpoint this skill builds; step 1 reads BRIEF.md and anything not traced there is cut
+- **ultraweb:storage** — its upload token/presign route is a route handler that borrows this skill's error envelope and status-code discipline

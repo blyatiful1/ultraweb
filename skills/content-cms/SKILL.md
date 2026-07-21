@@ -124,6 +124,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 - Draft reachable via direct URL — `generateStaticParams` filtering alone does not block on-demand rendering (`dynamicParams` defaults to `true`); guard with `notFound()` or set `dynamicParams = false`.
 - Lorem ipsum or "First post!" filler in content/ — copy is design (taste bans it outright).
 
+## Worked example — Aldermoor Trust, MDX stories volunteers maintain
+
+BRIEF.md §Backend: needs → "content-cms — stories + news as MDX, maintained by volunteers after handoff"; §Content tags every story to one of three grant programmes.
+
+- Pipeline: **content-collections** (0.15.2), not plain `@next/mdx` — stories are a real collection with a listing on the home page `/`, programme tags, and date ordering; MDX-files-as-routes can't emit the typed, sorted array the index needs.
+- Frontmatter typed at the boundary with a zod v4 schema whose programme field is `z.enum(['neighbourhood', 'youth', 'climate'], { error: 'Unknown programme' })`, so a mistyped tag is a build error, not a silently broken filter. `draft` is filtered out of `generateStaticParams`, the page's `notFound()` guard, AND sitemap.ts alike.
+- Prose consumes SYSTEM.md, never `prose-gray`: stories render in Source Serif 4, links in the deep-green accent `oklch(0.45 0.1 155)`, AAA-checked against warm paper:
+
+```tsx
+// components map for story MDX — Open Civic type, no gray plugin prose
+p: (props) => <p className="font-serif text-lg/[1.75] max-w-[70ch]" {...props} />,
+a: (props) => <a className="text-accent underline decoration-accent/40 underline-offset-4 hover:decoration-accent" {...props} />,
+```
+
+- Rejected: a headless CMS for the volunteer editors. The brief's cadence is monthly and the volume dozens, not the weekly+/hundreds that earns that infrastructure — MDX-in-repo stays versioned with the site, and handoff documents the git edit path instead.
+- Handoff: lands in content/stories/*.mdx + the collection config + prose rules in app/globals.css; `ultraweb:seo` reads the frontmatter for Article JSON-LD and registers each `/stories/[slug]` in sitemap.ts, and `ultraweb:handoff` writes the volunteer editing map.
+
 ## Composes with
 
 - **ultraweb:typography** — the scale, pairing, and leading rules the prose layer draws from.
@@ -132,3 +149,5 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 - **ultraweb:seo** — generateMetadata from frontmatter, Article JSON-LD, posts registered in sitemap.ts.
 - **ultraweb:data-fetching** — cache lifetimes and tags when content comes from a CMS instead of the repo.
 - **ultraweb:gate-content** — verifies real titles/descriptions and zero dead copy across every content page.
+- **ultraweb:brief** — its §Backend: needs and per-page content inventory are what step 1 reads to choose the pipeline (plain MDX vs collections vs CMS).
+- **ultraweb:handoff** — documents this skill's MDX/collection editing flow so the non-developer editors who maintain content after ship can edit it safely.

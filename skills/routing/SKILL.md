@@ -76,6 +76,33 @@ app/
 - `[...slug]` catch-all as a lazy router when SITEMAP.md names a finite page list.
 - `href="#"` anywhere in nav wiring — banned by taste; every link resolves to a real segment.
 
+## Worked example — Tidepool, port-logistics analytics route tree
+
+`design/SITEMAP.md`: marketing pages `/`, `/product`, `/pricing`, `/changelog`; a docs tree at
+`/docs`; `/login` as the door to the gated app shell. `design/SYSTEM.md` fixes General Sans (display) +
+JetBrains Mono (numerals) on dark surface `oklch(0.18 0.015 250)`.
+
+Grouped by shared layout, not by taxonomy:
+
+```
+app/
+  (marketing)/layout.tsx         ← header + footer chrome
+    page.tsx  product/  pricing/  changelog/
+  (docs)/layout.tsx              ← sidebar shell, independent scroll
+    docs/[[...slug]]/page.tsx     ← docs depth genuinely varies → catch-all earns its place
+  (auth)/login/page.tsx          ← chromeless; Better Auth email + SSO
+  api/v1/                        ← route handlers, no page chrome
+  global-not-found.tsx           ← dark 404 carrying the berth-timeline motif, own <html>
+```
+
+`docs/[[...slug]]/page.tsx` does `const { slug } = await params`, then `notFound()` on an unknown path.
+Rejected a single flat `/docs` with client-side routing — it breaks deep links and refresh, the two
+things doc readers depend on. Route protection sits in `proxy.ts` (not `middleware.ts`), redirecting
+unauthenticated app-shell hits to `/login`.
+
+Tree lands as `app/` directories; **ultraweb:app-structure** draws the RSC/client boundary inside each
+segment next, and **ultraweb:seo** attaches `generateMetadata` awaiting these same params.
+
 ## Composes with
 
 - **ultraweb:sitemap** — the tree implements SITEMAP.md part 1; amend the artifact before deviating.
@@ -84,3 +111,5 @@ app/
 - **ultraweb:page-transitions** — route-level motion sits on this tree; template.tsx decisions coordinate there.
 - **ultraweb:seo** — per-segment `generateMetadata` awaits the same params this skill defines.
 - **ultraweb:gate-code** — the build gate catches missing slot defaults and boundary errors; run it after any tree change.
+- **ultraweb:scaffold** — creates the `app/` directory and `next.config` this tree populates, and re-verifies Next 16 versions before the route files land here.
+- **ultraweb:i18n** — owns the `[locale]` segment (or `/en`, `/pt` groups) this tree nests every route inside; localized `not-found` and awaited params flow back through here.

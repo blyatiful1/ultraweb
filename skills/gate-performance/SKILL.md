@@ -74,6 +74,26 @@ fixed: hero image priority → preload · testimonial avatar fill missing sizes 
 - A wildcard lucide import or `icons[name]` lookup map — defeats tree-shaking
 - Chasing 100: past a verified-90 with clean LCP/CLS, further points rarely beat spending the time in gate-visual
 
+## Worked example — Framewalk, Hollow Cartographer Steam launch site
+
+design/QA.md §gate-performance, first pass. SITEMAP.md routes: `/`, `/game`, `/devlog`, `/devlog/[slug]`, `/press`.
+build clean · first-load JS `/` 132kB · `/game` 129kB (budget 140). `npm start`, then mobile Lighthouse.
+`/` scored 78 — LCP 4.2s. `audits["largest-contentful-paint-element"]` named the base fog layer, the
+near-black `oklch(0.16 0.02 200)` art. It rendered inside the `"use client"` `<FogParallax>` boundary, so
+the three cursor-answering layers only painted after hydration — the LCP image waited on JS, Speed Index high.
+That is the scroll-motion smell exactly: content should paint first, motion enhances.
+
+Fix (owner: ultraweb:hero): the base layer became a server-rendered `next/image` with `preload` +
+`sizes="100vw"` + `placeholder="blur"`; `<FogParallax>` enhances the already-painted layers on mousemove,
+still `m.`-only under the one `LazyMotion features={domAnimation}`. Re-ran Lighthouse mobile on `/`
+(median of 3): LCP 2.1s · CLS 0.00 · perf 93. Space Grotesk + Inter both self-hosted via next/font, swap ok.
+
+Full sweep before the handoff — the other four routes passed on their first Lighthouse run, no fix
+needed: `/game` 92 (LCP 2.3s) · `/devlog` 96 (1.9s) · `/devlog/[slug]` 94 (2.1s) · `/press` 97 (1.8s);
+CLS 0.00 on all; first-load JS `/devlog` 121kB · `/devlog/[slug]` 124kB · `/press` 118kB (budget 140).
+
+Handoff: PASS row written to design/QA.md; ultraweb:ship reads this gate green before cutting the deploy.
+
 ## Composes with
 
 - ultraweb:media-optimization — implements the next/image and asset pipeline this gate measures.
@@ -82,3 +102,7 @@ fixed: hero image priority → preload · testimonial avatar fill missing sizes 
 - ultraweb:ui-states — skeletons that reserve space so async content cannot shift layout.
 - ultraweb:showpiece — its 60fps-on-mid-hardware and static-fallback mandate is re-verified here when one exists.
 - ultraweb:gate-code — must be green first; this gate assumes a clean build.
+- ultraweb:data-fetching — when LCP blocks on a slow request, this gate hands the fix here: stream it behind Suspense rather than block the paint.
+- ultraweb:hero — when the LCP element traces to the hero, this gate hands the preload/boundary fix to hero, which owns the above-fold image and its client split.
+- ultraweb:scroll-motion — its "content renders, motion enhances" rule is the fix this gate prescribes when entrance animations hide above-fold content until hydration (Speed Index).
+- ultraweb:physics — this gate's bundle audit only passes `domMax` (+25kb over domAnimation) when physics' drag/layout animation actually needs it.

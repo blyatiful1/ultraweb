@@ -21,18 +21,20 @@ Shipped means three proven facts, not a feeling: (1) every env var the code read
 # .env.example — every key the code reads; placeholders only, never real values
 DATABASE_URL=postgresql://user:password@host:5432/db   # Neon dashboard → connection string
 BETTER_AUTH_SECRET=generate-with-openssl-rand-base64-32
+BETTER_AUTH_URL=https://example.com                    # Better Auth base URL — production domain
 RESEND_API_KEY=re_xxxxxxxxxxxxxxxx                     # resend.com → API keys
 STRIPE_SECRET_KEY=sk_test_xxxxxxxx                     # Stripe dashboard → developers
 STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxx                   # per endpoint — dev and prod DIFFER
 NEXT_PUBLIC_SITE_URL=https://example.com               # public: shipped to the browser
+# ...plus whatever feature keys the brief pulled in — e.g. BLOB_READ_WRITE_TOKEN when storage ships uploads
 ```
 
    Key in code but not in .env.example → fail, add it. Key in .env.local but never read → delete or justify.
-4. **Secret scan of tracked files:** `git grep -nE "sk_live_|sk_test_|whsec_|re_[A-Za-z0-9]{16}|-----BEGIN|://[^/@[:space:]]+:[^@[:space:]]+@" -- . ':(exclude).env.example'` must return nothing — .env.example is the only file permitted to contain pattern-shaped placeholder values, and eyeball it separately: every value there must be an obvious placeholder (all-x, CHANGEME), never a real key. Then `git check-ignore .env.local` must exit 0, and `git ls-files | grep -E "^\.env"` may list only `.env.example`. Any hit: the key is burned the moment it was committed — rotate it first, then purge the file.
+4. **Secret scan of tracked files:** `git grep -nE "sk_live_|sk_test_|whsec_|re_[A-Za-z0-9]{16}|vercel_blob_rw_|-----BEGIN|://[^/@[:space:]]+:[^@[:space:]]+@" -- . ':(exclude).env.example'` must return nothing — .env.example is the only file permitted to contain pattern-shaped placeholder values, and eyeball it separately: every value there must be an obvious placeholder (all-x, CHANGEME), never a real key. Then `git check-ignore .env.local` must exit 0, and `git ls-files | grep -E "^\.env"` may list only `.env.example`. Any hit: the key is burned the moment it was committed — rotate it first, then purge the file.
 5. **NEXT_PUBLIC_ review.** Every `NEXT_PUBLIC_*` value ships to the browser verbatim. Site URL, publishable/anon keys: fine. API secrets, DB URLs, webhook secrets behind that prefix: never — moving the secret server-side is the fix, not renaming it.
 6. **Build-time env safety.** SDK clients must be lazy-instantiated so `npm run build` doesn't crash where a key is absent (STACK: Stripe client lazy-instantiation). A module-scope `new Stripe(process.env.STRIPE_SECRET_KEY!)` that throws at import time is a ship blocker.
 7. **Production smoke test — the core of this skill.** Kill any dev server. `npm run build` → exit 0. `npm run start` → fetch every route in design/SITEMAP.md on localhost:3000 expecting 200, plus `/robots.txt` and `/sitemap.xml` → zero errors in server output → kill it. Dev green ≠ prod green: the production server surfaces missing runtime env and real caching behavior (`fetch` is not cached by default; `'use cache'` boundaries now actually run).
-8. **Deploy — only when asked.** If the user never asked for deployment: report ready-to-ship status with the audit summary and stop here. If they asked: confirm once, plainly ("Deploying <project> to Vercel production — go?"), and wait for the answer. Then push EVERY key from step 2 — including `NEXT_PUBLIC_*`, which are inlined at build time and must exist in the Vercel environment (the step-5 review already guarantees no secret hides behind the public prefix) — into the Vercel project environment (dashboard, or `vercel env` — verify flags against current CLI docs first) and deploy with `npx vercel --prod` (or the Vercel MCP deploy tool when available).
+8. **Deploy — only when asked.** If the user never asked for deployment: report ready-to-ship status with the audit summary and stop here. If they asked: confirm once, plainly ("Deploying <project> to Vercel production — go?"), and wait for the answer. Then push EVERY key from step 2 — including `NEXT_PUBLIC_*`, which are inlined at build time and must exist in the Vercel environment (the step-5 review already guarantees no secret hides behind the public prefix) — into the Vercel project environment (dashboard, or `vercel env` — verify flags against current CLI docs first) and deploy with a PINNED CLI — `npx vercel@56 --prod` (verify the current major with `npm view vercel version` at ship time) — never floating `npx vercel`, so an upstream release can't silently shift deploy behavior; or the Vercel MCP deploy tool when available.
 9. **Post-deploy verification** — run the checklist below on the live URL, empirically. Never report a deploy done from the CLI's success line alone.
 10. **Record.** Append the ship entry (format below) to design/QA.md.
 
@@ -85,6 +87,27 @@ Then wire the outside world:
 - Real values pasted into .env.example "temporarily"
 - Module-scope SDK construction that throws when the env key is missing
 
+## Worked example — Loop & Thread, shipping the textiles shop to production
+
+design/QA.md handed up all gates green; design/SITEMAP.md lists `/`, `/shop`, `/shop/alpine-wool-throw`, `/journal`, `/about`. Env enumeration returns exactly the eight keys the code reads, each an obvious placeholder in .env.example:
+
+```bash
+STRIPE_SECRET_KEY=sk_test_xxxxxxxx              # Stripe dashboard → developers
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxx            # prod endpoint differs from the dev CLI secret
+DATABASE_URL=postgresql://user:password@host/db # Neon → connection string
+BETTER_AUTH_SECRET=generate-with-openssl-rand-base64-32
+BETTER_AUTH_URL=https://loopandthread.com       # Better Auth base URL — production domain
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxx       # Vercel → Storage → Blob (product photos)
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxx              # resend.com → API keys
+NEXT_PUBLIC_SITE_URL=https://loopandthread.com  # public: shipped to the browser
+```
+
+Secret scan clean, `git check-ignore .env.local` exits 0. `npm run build` exit 0; `npm run start` then returns 200 for all five routes plus `/robots.txt` and `/sitemap.xml`, zero server errors. Only after the user answered "Deploying Loop & Thread to Vercel production — go?" do all eight keys go into the Vercel env and `npx vercel@56 --prod` run.
+
+Rejected: reusing the Stripe CLI-forwarding `whsec_` for production — it never validates live events, so post-deploy I create a NEW webhook endpoint at the live `/api/stripe/webhook` with its own secret.
+
+Handoff: the ship entry lands in design/QA.md and ultraweb:handoff runs next, documenting the deploy target and the eight audited keys.
+
 ## Composes with
 
 - ultraweb:gate-code — must be green before ship starts; step 7's build is final confirmation, not a substitute
@@ -93,3 +116,6 @@ Then wire the outside world:
 - ultraweb:handoff — runs immediately after; documents the deploy target and the env keys audited here
 - pixel-qa (subagent) — drives the post-deploy live-URL screenshots
 - stack-doctor (subagent) — receives any production build/start failure verbatim
+- ultraweb:payments — owns the Stripe webhook handler that ship points a NEW production `whsec_` endpoint at during post-deploy wiring
+- ultraweb:email — verified the Resend sending domain ship confirms live before exercising the order-confirmation email flow
+- ultraweb:database — owns the schema/migrations behind the `DATABASE_URL` ship audits and must have run against the production database before deploy

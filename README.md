@@ -21,6 +21,7 @@ For changes to an existing ultraweb site: just ask ("make the hero bolder") — 
 - **`taste`** — the constitution. Anti-slop banned list (no purple-gradient AI look, no untouched shadcn, no dead startup copy), required list (OKLCH palette, real type pairing, deliberate asymmetry, reduced-motion), decision heuristics. Every skill defers to it.
 - **Quality gates** — seven gates (`gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content`) that verify empirically: real builds, real Playwright screenshots at 375/768/1440, computed contrast, Lighthouse. A site isn't done until `design/QA.md` is green.
 - **`STACK.md`** — stack facts verified against live npm + official docs (last: 2026-07-16). Skills cite it instead of training memory: Next 16's `proxy.ts`, Turbopack-default, `preload` (not `priority`), Cache Components, Tailwind v4 `@theme`, Motion 12 `motion/react`, zod v4, Better Auth. When versions drift, update this one file.
+- **Worked examples** — nearly every skill closes with a real-project decision traced end to end, drawn from a shared bank of eight recurring clients (a Berlin roastery, a port-logistics SaaS, an Oslo design agency, a Lisbon restaurant, a law firm, a game studio, a community foundation, a textiles shop). Skills that share a client agree on its palette, type, and routes — so the examples themselves demonstrate how the skills hand off to each other.
 
 ## Map
 
@@ -36,7 +37,7 @@ For changes to an existing ultraweb site: just ask ("make the hero bolder") — 
 | Gates | `gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content` |
 | Ship | `ship`, `handoff`, `retrofit` |
 
-Subagents: `design-judge` (adversarial screenshot critic), `pixel-qa` (Playwright breakpoint sweeps), `stack-doctor` (toolchain repair without downgrades).
+Subagents: `design-judge` (adversarial screenshot critic — Opus 4.8), `pixel-qa` (Playwright breakpoint sweeps — Sonnet 5), `stack-doctor` (toolchain repair without downgrades — Opus 4.8). Each pins its model tier in frontmatter; the root skill's **Delegation & model routing** table extends the same policy to all fan-out work: judgment stays on the lead model, specialist builds and critiques run on Opus 4.8, mechanical sweeps run on Sonnet 5.
 
 Full scope of every skill: [ROSTER.md](ROSTER.md).
 

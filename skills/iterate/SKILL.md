@@ -5,11 +5,13 @@ description: Targeted revision pipeline for an existing ultraweb-built site — 
 
 # iterate — surgical changes that keep the system coherent
 
+**Stage:** post-ship, any change request - **Reads:** design/BRIEF.md, design/DIRECTION.md, design/SYSTEM.md, design/SITEMAP.md, design/QA.md - **Writes:** the affected code + amended design/* artifact + design/QA.md entry
+
 A change request against an existing ultraweb site is NOT a rebuild and NOT a freestyle patch. The design system is law until deliberately amended.
 
 ## Process
 
-1. **Load the record.** Read `design/BRIEF.md`, `DIRECTION.md`, `SYSTEM.md`, `SITEMAP.md`, `QA.md`. If they don't exist, this isn't an ultraweb site — run `ultraweb:retrofit` first.
+1. **Load the record.** Read `design/BRIEF.md`, `design/DIRECTION.md`, `design/SYSTEM.md`, `design/SITEMAP.md`, `design/QA.md`. If they don't exist, this isn't an ultraweb site — run `ultraweb:retrofit` first.
 2. **Classify the request** into the shallowest layer that truly satisfies it:
    - **Content** — copy, images, data. Touch content only. Consult `copywriting`/`imagery`. Re-gate: `gate-content`.
    - **Component** — one section looks wrong / needs variants. Consult that section's skill (`hero`, `pricing`, …). Re-gate: `gate-visual` on affected pages + `gate-code`.
@@ -27,3 +29,15 @@ A change request against an existing ultraweb site is NOT a rebuild and NOT a fr
 - Never edit token VALUES ad hoc inside components to satisfy a local request — that forks the system. Change the token, or add a deliberate variant.
 - If the same element gets its third revision request, the layer was misclassified — step up one layer and fix the cause (usually SYSTEM or DIRECTION).
 - Screenshots before/after for any visual change; the after-shot goes through `design-judge` if the change was Page-level or bigger.
+
+## Worked example — Kaffeewerk Ost, "make the hero bolder"
+
+The roastery's design/DIRECTION.md reads: *Warm Workshop — signature move: the roast-profile curve motif; type: Fraunces display.* The request sounds Component-sized, but the classification check catches it: hero scale lives in the global `--text-display` token, so "bolder" amends design/SYSTEM.md §type — that is **System** scope (patching the size inside hero.tsx instead would fork the system, the exact anti-pattern the rules below ban). The amendment follows `ultraweb:hero` scale rules: `--text-display` moves from `clamp(2.75rem, 1.5rem + 5.5vw, 6rem)` to `clamp(3rem, 1.5rem + 6.5vw, 7.5rem)` and display tracking tightens to -0.035em — token-only, so every display headline follows and no component markup changes. Rejected: pushing the accent color into the headline — "bolder" earns scale, not decoration (taste: the fix is hierarchy or asymmetry, never another effect). Re-gate per the System row: `gate-visual` + `gate-accessibility` + `gate-antislop` sweep; System scope is bigger than Page, so the after-shots go through `design-judge` (Opus 4.8), and `design/QA.md` gets the delta entry.
+
+## Composes with
+
+- ultraweb:taste — every request is checked against the constitution before classification; vibe words ("bolder", "warmer", "less corporate") resolve to its vocabulary.
+- ultraweb:retrofit — the entry point when design/* artifacts DON'T exist; iterate takes over only after retrofit has built the record.
+- ultraweb:brief — Feature-layer requests ("add a newsletter") amend design/BRIEF.md first, exactly as a fresh build would.
+- ultraweb:handoff — the maintenance notes it writes tell site owners which requests are token edits they can make themselves vs. iterate-worthy changes.
+- The seven gate-* skills — the classification table above decides which re-run, and `gate-performance` joins whenever a change touches media, motion, or bundle weight; a change is done when its slice of design/QA.md is green again.

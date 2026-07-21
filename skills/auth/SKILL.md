@@ -20,8 +20,8 @@ NextAuth v5 beta remains acceptable in exactly two cases: the project already ru
 ## Process
 
 1. Read BRIEF.md: which pages are protected, which sign-in methods (email+password? Google? magic link → `ultraweb:email`), whether roles exist. No auth requirement → stop. Never bolt accounts onto a brochure site.
-2. `npm i better-auth`. `BETTER_AUTH_SECRET` + `BETTER_AUTH_URL` into `.env`. Server config in `lib/auth.ts` (below).
-3. `npx @better-auth/cli generate` — emits the Drizzle auth tables (user, session, account, verification). Merge into `db/schema.ts` and migrate through `ultraweb:database`: one schema, one migration history.
+2. `npm i better-auth@1.6` (the STACK.md-verified line). `BETTER_AUTH_SECRET` + `BETTER_AUTH_URL` into `.env`. Server config in `lib/auth.ts` (below).
+3. `npx auth@1.6 generate` — the CLI pinned to the SAME 1.6.x line as the installed better-auth (they ship in lockstep; a floating CLI can emit a schema the installed lib doesn't match). Emits the Drizzle auth tables (user, session, account, verification). Merge into `db/schema.ts` and migrate through `ultraweb:database`: one schema, one migration history.
 4. Mount the handler and create the client (below).
 5. Protect in layers: proxy.ts cookie check for redirect UX, server-side session check where protected data renders, and a session re-check inside every mutating server action and route handler. All three, always.
 6. Build sign-in/sign-up as designed pages (rule below). Then verify the loop empirically: sign up → sign out → hit a protected page (must redirect) → sign in (must land back).
@@ -71,7 +71,7 @@ import { getSessionCookie } from "better-auth/cookies";
 
 export function proxy(request: NextRequest) {
   if (!getSessionCookie(request)) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
   return NextResponse.next();
 }
@@ -89,7 +89,7 @@ import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) redirect("/sign-in");
+  if (!session) redirect("/login");
   // session.user.id drives every query below
 }
 ```
@@ -115,6 +115,29 @@ The default unstyled form is banned — same severity as lorem ipsum. The sign-i
 - Hand-rolled password hashing or session tokens
 - `session?.user` from a client hook trusted for anything security-relevant — client session state is display data
 
+## Worked example — Tidepool, gating the port-analytics app shell
+
+BRIEF.md: "Marketing routes (`/`, `/product`, `/pricing`, `/docs`) stay public; the `/dashboard` app shell needs an account. Growth-tier accounts sign in with email+password, Fleet accounts require OIDC SSO." No roles beyond signed-in access.
+
+Config keeps both paths in one place, cookie plugin last so server actions can set the session:
+
+```ts
+// lib/auth.ts
+export const auth = betterAuth({
+  database: drizzleAdapter(db, { provider: "pg" }),
+  emailAndPassword: { enabled: true },
+  plugins: [sso(), nextCookies()], // sso() → OIDC for Fleet; nextCookies stays last
+});
+```
+
+`sso()` comes from `@better-auth/sso`, a separate install alongside `better-auth`; the Fleet OIDC provider is registered through that plugin — `sso()` in the config above plus its provider registration — and `npx auth@latest generate` regenerates the schema with the SSO tables beside the core four.
+
+proxy.ts matches `["/dashboard/:path*"]` on cookie presence only, redirecting to `/login`; the authoritative `auth.api.getSession` re-runs inside every `/api/v1/*` handler that returns berth data. The `/login` page is split-screen: the left panel runs the static berth-timeline SVG (the signature move) on dark surface `oklch(0.18 0.015 250)`, the right is a General Sans form with teal `oklch(0.68 0.12 200)` focus rings and JetBrains Mono on the account-ID field; error copy reads "That email and password don't match." — never "Invalid credentials".
+
+Rejected Google/GitHub social buttons: Tidepool's buyers are shipping-line ops teams behind corporate identity providers, so the OIDC SSO path replaces consumer logins entirely rather than sitting beside them.
+
+Handoff: the CLI-generated user/session/account/verification tables land in db/schema.ts and migrate through ultraweb:database; the login form's field layout and validation timing come from ultraweb:forms.
+
 ## Composes with
 
 - **ultraweb:database** — the Drizzle adapter; CLI-generated tables merge into the one schema and migrate there
@@ -122,3 +145,5 @@ The default unstyled form is banned — same severity as lorem ipsum. The sign-i
 - **ultraweb:email** — verification and magic-link mail through Resend
 - **ultraweb:server-actions** — every mutation re-checks the session; `nextCookies()` makes cookie-setting actions work
 - **ultraweb:ui-states** — signed-out, loading, and error states on every auth-aware surface
+- **ultraweb:brief** — reads which pages are protected, which sign-in methods the site needs, and whether roles exist; a BRIEF.md with no auth requirement is the signal to stop, never bolt accounts onto a brochure site
+- **ultraweb:api-design** — every route handler it defines under /api/v1/* re-checks the session with `auth.api.getSession`; the optimistic proxy.ts redirect never reaches a forged API request

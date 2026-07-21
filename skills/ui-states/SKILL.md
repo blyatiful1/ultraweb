@@ -87,6 +87,18 @@ Greppable: `Loading...`, `No data`, `Nothing here`, `Something went wrong` with 
 - Success toast for something the user is already looking at.
 - A different skeleton style per page — one skeleton language, tokenized, site-wide.
 
+## Worked example — Casa Verde, reservation states in EN/PT
+
+design/BRIEF.md fixes the reservation flow's three outcomes — pending, confirmed, fully-booked (waitlist offer) — and the job here is to make sure "fully-booked" is never modeled as an error.
+
+The four-cell row for the reservations surface: **loading** is the submit button's own pending state — `const [state, formAction, pending] = useActionState(reserve, null)` from `react` — not a page skeleton, since a two-field form has no shape to promise. **Success** returns two branches as action data: `confirmed` morphs the button to "Mesa reservada" / "Table booked" at 200ms then reverts; `fully-booked` renders an inline terracotta `bg-accent` panel reading "Tonight is full — join the waitlist?" with exactly ONE action. **Error** — a network or Resend failure — is the only `role="alert"` on the page: "We couldn't send your confirmation. Try again," written EN and PT by ultraweb:copywriting.
+
+The harvest strip above the menu gets a Card-Grid Skeleton at the real 3:4 photo aspect ratio; on a day the market feed returns `[]` the strip collapses to nothing rather than showing a Filtered-to-Zero empty — an empty harvest isn't a user dead-end.
+
+Rejected: routing "fully-booked" through `error.tsx`. It lost because a full table is a normal outcome; an error boundary would only offer `reset()` (retry the same date) instead of the waitlist that actually helps the guest.
+
+Handoff: the pending/success wiring lands in the reservations form component + `reserve-action.ts`; ultraweb:server-actions owns the action's return shape and ultraweb:forms owns the field-level zod errors this skill deliberately leaves alone.
+
 ## Composes with
 
 - ultraweb:routing — loading.tsx/error.tsx/not-found.tsx placement per segment
@@ -95,3 +107,7 @@ Greppable: `Loading...`, `No data`, `Nothing here`, `Something went wrong` with 
 - ultraweb:forms — field-level validation and error recovery
 - ultraweb:copywriting — the exact words in empty and error states
 - ultraweb:motion-language — pulse and morph durations, reduced-motion policy
+- ultraweb:cards — the Card-Grid Skeleton duplicates the card component's JSX and aspect ratio so the skeleton→card swap has zero shift
+- ultraweb:data-display — list and table skeletons are built from the real data-display row so widths, heights, and radii match exactly
+- ultraweb:gate-performance — hands off the skeleton→content overlay for CLS verification; a guessed skeleton dimension fails its check
+- ultraweb:icons — the empty state's optional glyph is pulled from here at the SYSTEM stroke width, never an emoji

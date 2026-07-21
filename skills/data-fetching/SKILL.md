@@ -86,6 +86,20 @@ const [project, related] = await Promise.all([getProject(slug), getRelatedProjec
 - A spinner fallback under a content grid — skeletons match layout or CLS eats the performance budget.
 - Client component taking `data` as a prop it fetched via its own API round-trip — pass server data down instead.
 
+## Worked example — Tidepool, streaming the live berth timeline
+
+design/BRIEF.md: "the hero carries a live-updating berth timeline — a static SVG must paint first, real vessel data fills in." On `/` that is a textbook block-then-stream split. The `<BerthTimelineShell>` static SVG is the LCP element — it blocks and paints instantly. Live vessel positions are per-request data (they change every poll), so they get **no cache** and stream behind a Suspense boundary whose skeleton matches the timeline's exact grid height — zero CLS on resolution:
+
+```tsx
+// app/(marketing)/page.tsx — shell paints as LCP, live rows stream in
+<BerthTimelineShell />
+<Suspense fallback={<BerthRowsSkeleton rows={24} />}>
+  <BerthRows promise={getBerthActivity()} />   {/* async RSC, no 'use cache' */}
+</Suspense>
+```
+
+Pricing and changelog are the opposite call: `getPlans()` carries `'use cache'` + `cacheLife('days')` + `cacheTag('plans')` (Starter $0 / Growth $490/mo / Fleet custom rarely move); `getChangelog()` carries `'use cache'` + `cacheLife('hours')` + `cacheTag('changelog')`, invalidated by the changelog publish action's `revalidateTag('changelog', 'hours')`. Rejected: wrapping the berth query in `cacheLife('seconds')` to "smooth database load" — a short TTL still serves a stale timeline that breaks the "live" promise, so per-request data streams uncached instead. Handoff: the query functions land in `lib/data/*` and their tags in the shared const map that **ultraweb:server-actions** reads — and because the berth stream is uncached, a berth-ingest write has nothing to revalidate here and must never touch the pricing `'plans'` tag; the skeleton is supplied by **ultraweb:ui-states**.
+
 ## Composes with
 
 - **ultraweb:app-structure** — this skill decides what streams and what blocks; app-structure decides what is client at all.
@@ -94,3 +108,4 @@ const [project, related] = await Promise.all([getProject(slug), getRelatedProjec
 - **ultraweb:api-design** — when a route handler genuinely earns its place, its shape lives there.
 - **ultraweb:ui-states** — every Suspense fallback, empty, and error surface is designed there.
 - **ultraweb:gate-performance** — verifies streaming actually protects LCP and that fallbacks land with zero CLS.
+- **ultraweb:content-cms** — the typed MDX/content-collection queries (docs, changelog) this skill wraps in `'use cache'` + `cacheLife`; content-cms owns how that content is loaded, this skill decides its lifetime and tag.
