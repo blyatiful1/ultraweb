@@ -127,7 +127,7 @@ export const t = {
 
 Rejected: rendering the site's signature roast-profile temperature-curve SVG inline in the email — Gmail strips inline SVG to a broken-image box, so the motif stays on the web and the email keeps the `<Hr>` divider instead.
 
-Handoff: the `getResend().emails.send({ react: OrderConfirmation(order) })` call drains the order-keyed outbox row the raw-body Stripe webhook writes per ultraweb:payments — not inline in the handler. The drain is idempotent: claim the row atomically by its Stripe event/order ID, skip any row already marked sent, and mark it sent only after Resend returns no `error` (it's `{ data, error }`, never a throw) — a failed send leaves the claim released so the next drain retries, and a redelivered webhook can't resend a confirmation already recorded. ultraweb:copywriting supplied the subject and the tasting-note line.
+Handoff: the `getResend().emails.send({ react: OrderConfirmation(order) })` call drains the order-keyed outbox row the raw-body Stripe webhook writes per ultraweb:payments — not inline in the handler. The drain is idempotent end to end: claim the row atomically by its Stripe event/order ID and pass that same ID to Resend as the send's idempotency key (covered on `POST /emails` for 24h — so even a crash between an accepted send and the sent-flag write can't duplicate), give claims an expiring lease so a crashed drainer's rows get reclaimed, skip any row already marked sent, and mark it sent only after Resend returns no `error` (it's `{ data, error }`, never a throw) — a failed send releases the claim so the next drain retries, and a redelivered webhook can't resend a confirmation already recorded. ultraweb:copywriting supplied the subject and the tasting-note line.
 
 ## Composes with
 
