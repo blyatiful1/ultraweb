@@ -91,7 +91,7 @@ Primary CTA: **"Wishlist on Steam"** (filled, phosphor accent `oklch(0.78 0.15 1
 
 Rejected: a second filled "Watch the trailer" button — the direction forbids a second filled CTA, so the trailer drops to a ghost arrow-link and Wishlist stands alone. Also rejected: a boxed gameplay screenshot (split variant) — it would sell fog-and-lantern like generic SaaS.
 
-Handoff: `components/sections/hero.tsx` stays a server component; the three-layer parallax is a lone `"use client"` island (LazyMotion + `m.` from `motion/react`) handed to ultraweb:scroll-motion for the cursor-answer and reduced-motion path, and ultraweb:gate-performance then confirms the far fog layer is the sole LCP with zero CLS.
+Handoff: `components/sections/hero.tsx` stays a server component; the three-layer parallax is a lone `"use client"` island (LazyMotion + `m.` from `motion/react`) handed to ultraweb:physics for the cursor-proximity answer and its reduced-motion path — cursor tracking is physics' contract, not scroll-motion's, and nothing in this hero is scroll-driven — and ultraweb:gate-performance then confirms the far fog layer is the sole LCP with zero CLS.
 
 ## Composes with
 
