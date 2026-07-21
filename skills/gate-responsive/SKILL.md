@@ -90,6 +90,19 @@ Also at 375 → ultraweb:i18n (it owns the switcher and the translated strings):
 
 Rejected: `overflow-hidden` on `<body>` — it zeroes the scrollWidth number while shipping the clipped harvest strip. Symptom hidden, defect shipped.
 
+Final sweep, zero fixes in between — all eight routes × three widths on disk, overflow `false` and no target under 44 anywhere:
+
+| Route | 375 | 768 | 1440 |
+|-------|-----|-----|------|
+| /en | qa/en-375.png | qa/en-768.png | qa/en-1440.png |
+| /en/menu | qa/en-menu-375.png | qa/en-menu-768.png | qa/en-menu-1440.png |
+| /en/story | qa/en-story-375.png | qa/en-story-768.png | qa/en-story-1440.png |
+| /en/reservations | qa/en-reservations-375.png | qa/en-reservations-768.png | qa/en-reservations-1440.png |
+| /pt | qa/pt-375.png | qa/pt-768.png | qa/pt-1440.png |
+| /pt/menu | qa/pt-menu-375.png | qa/pt-menu-768.png | qa/pt-menu-1440.png |
+| /pt/story | qa/pt-story-375.png | qa/pt-story-768.png | qa/pt-story-1440.png |
+| /pt/reservations | qa/pt-reservations-375.png | qa/pt-reservations-768.png | qa/pt-reservations-1440.png |
+
 Handoff: the PASS row lands in design/QA.md with `qa/en-menu-375.png` + `qa/en-menu-375-menu.png`; ultraweb:gate-visual then reuses this dev server and pixel-qa harness to score the corrected layouts, not the broken ones.
 
 ## Composes with

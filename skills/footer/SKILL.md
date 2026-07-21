@@ -90,6 +90,9 @@ Decision: **minimal strip**, not columnar — a two-partner firm wearing a colum
     © {new Date().getFullYear()} Ledger &amp; Lane LLP · Attorney Advertising ·
     Prior results do not guarantee a similar outcome.
   </p>
+  <p className="text-xs tracking-wide">
+    Attorneys admitted in New York &amp; Connecticut.
+  </p>
 </footer>
 ```
 
