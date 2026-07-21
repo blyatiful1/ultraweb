@@ -78,6 +78,16 @@ import { m } from "motion/react"; // under the app-level LazyMotion(domAnimation
 - Uniform feedback intensity everywhere — motion has hierarchy like type does.
 - Detached feedback: lift without shadow step, toggle whose track color never changes.
 
+## Worked example — Studio Norra, work-index row feedback
+
+design/SYSTEM.md §motion pins the micro band to 150–200ms on a single `--ease-out`; design/DIRECTION.md reserves signal red `oklch(0.6 0.21 25)` for interaction states only — it must never appear at rest.
+
+Decision: on `/work`, each index row's left rule draws in on hover and focus — the link-underline pattern turned vertical (`background-size: 2px 0% → 2px 100%`, 200ms `var(--ease-out)`) — and the only places red surfaces are that rule plus `focus-visible:ring-2 ring-[oklch(0.6_0.21_25)] ring-offset-2` against paper. Case-study titles set in Archivo Expanded stay dead-flat; no transform touches the type block.
+
+Rejected: `hover:-translate-y-1` + a `depth` shadow step on the rows. Editorial Brutalist is an exposed, flat grid — a lifting, drop-shadowed card reads as stock SaaS and softens the rawness the direction is built on. The rule-draw carries the whole feedback instead.
+
+The cursor-proximity image reveal (the signature move) is gesture-tracking, so it graduates to ultraweb:physics rather than being double-treated here. The focus-visible and reduced-motion states installed here hand off to ultraweb:gate-accessibility, which greps the build for any `focus:outline-none` left without a replacement.
+
 ## Composes with
 
 - ultraweb:motion-language — supplies the duration/easing tokens; this skill spends them, never mints them.
@@ -86,3 +96,6 @@ import { m } from "motion/react"; // under the app-level LazyMotion(domAnimation
 - ultraweb:depth — every hover lift pairs its transform with a step on the elevation scale.
 - ultraweb:physics — anything gesture-tracking (magnetic pull, drag) graduates there; don't double-treat one element.
 - ultraweb:gate-accessibility — verifies the focus-visible coverage and reduced-motion behavior installed here.
+- Consumed by the component-tier skills (cards, pricing, data-display, social-proof, …) — they pull their hover/press/focus timing from these patterns rather than inventing per-component motion.
+- ultraweb:navigation — the nav link-underline variants (grow-from-left, exit-through-right) and active-item treatment are specified here; navigation wires them onto the real nav.
+- ultraweb:faq — the accordion trigger's chevron rotate and expand timing come from this skill's icon-micro-motion patterns.
