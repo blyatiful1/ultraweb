@@ -128,3 +128,7 @@ Rejected the shortcut of citing the orb in DIRECTION.md just to survive the swee
 - ultraweb:feature-sections — the fix when the three-icon-cards check fails.
 - ultraweb:layout-grid — the fix for wallpaper rhythm and missing asymmetry.
 - ultraweb:gate-visual — supplies the screenshot set and takes the subjective judgments this gate refuses to make.
+- ultraweb:icons — when check 3 flags an emoji, the replacement lucide glyph, its size, and its stroke weight come from here, never an ad-hoc inline SVG.
+- ultraweb:imagery — when check 4 flags a placeholder.com src, the real photograph or generated asset that replaces it is specced here.
+- ultraweb:shape-language — when check 7 flags one radius+shadow pair across ≥6 elements, the corner-and-depth system that re-differentiates them is owned here.
+- ultraweb:social-proof — when the three-identical-cards check (11) fires on a logo wall or testimonial row rather than feature cards, the varied replacement lives here, not feature-sections.
