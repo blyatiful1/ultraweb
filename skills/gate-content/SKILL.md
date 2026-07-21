@@ -76,6 +76,29 @@ fixed: /pricing description 96ch → rewritten by copywriting · residual: 1 unv
 - Greening external links without hitting them, or hiding a timeout as a pass — UNVERIFIED is an honest state, a fake green is not
 - Fixing a duplicate description by shuffling word order — same information, same defect; copywriting rewrites from the page's actual content
 
+## Worked example — Ledger & Lane, first-run gate on /insights and /practice
+
+SITEMAP.md goals read here: `/insights/[slug]` → earn trust, route to /contact; `/practice/[area]`
+→ "book a consultation." First run against `npm start`, logged to design/QA.md §gate-content:
+
+```text
+metadata  /insights/[slug] <title> rendered "[object Promise] | Ledger & Lane" —
+          generateMetadata read `params` without `await` (Next 16: params is a Promise)
+unique    /practice/estate and /practice/probate shipped one description string, verbatim
+headings  /practice/litigation H1→H2 = "Litigation / Our Approach / Team / FAQ" —
+          a table of contents, not offer→proof→ask for "book a consultation"
+links     footer bar-association disclosure used href="#" — 0 of 3 disclosures resolved
+```
+
+Fixes by owner: `await params` in the [slug] generateMetadata (ultraweb:seo); two practice
+descriptions rewritten from each area's own content and the litigation headings recut to
+offer→proof→ask (ultraweb:copywriting); disclosures pointed at real state-bar URLs (ultraweb:footer).
+Re-run PASS: 6/6 titles unique (max 57ch), descriptions 142–159ch, 1 H1/page, 24 internal 200.
+
+Rejected: a static `metadata` export on [slug] to dodge the await bug — it stamps one article's
+title onto every slug, and the gate samples 3 real slugs and re-fails it. Handoff: QA.md flips to
+PASS; ultraweb:gate-accessibility takes the heading LEVELS this gate deliberately left it.
+
 ## Composes with
 
 - ultraweb:copywriting — wrote every string; all copy fixes route back through its voice spec and length limits.
@@ -84,3 +107,6 @@ fixed: /pricing description 96ch → rewritten by copywriting · residual: 1 unv
 - ultraweb:wireframe — the section order the heading story should mirror.
 - ultraweb:gate-accessibility — owns heading levels and landmarks; this gate owns the narrative.
 - ultraweb:gate-antislop — overlapping dead-copy greps; antislop sweeps clichés broadly, this gate ties copy to completeness.
+- ultraweb:footer — owns the disclosure and utility links this gate crawls for 200s and anchor resolution; broken ones route back here.
+- ultraweb:content-cms — owns the MDX article pipeline; a sampled /insights/[slug] with a missing or duplicate frontmatter title, or a dead in-body link, is fixed here.
+- ultraweb:i18n — on localized builds, supplies the per-locale route list and hreflang pairs this gate dedupes titles across before calling metadata complete.
