@@ -110,6 +110,27 @@ Client: `const [state, formAction, pending] = useActionState(submitContact, { st
 - Toast as the only surface for field-level errors
 - Asterisks on every field; inputs without `name=`; client-only validation with a trusting server
 
+## Worked example — Casa Verde, the reservation form (EN/PT)
+
+design/SITEMAP.md gives `/en/reserve` one job: a confirmed booking. Applying "cut every field the goal doesn't need," the table booking drops to six — name, email, party size, date, time, and `notes (optional)` — one zod schema in `lib/schemas/reservation.ts` imported by both locales' form and the action:
+
+```ts
+export const reservationSchema = z.object({
+  name: z.string().min(2, { error: "Tell us who the table's for" }),
+  email: z.email({ error: "An email like you@example.com — the confirmation goes there" }),
+  partySize: z.coerce.number().int().min(1).max(12, { error: "Over 12? Call us — we'll set it up" }),
+  date: z.iso.date({ error: "Pick a date" }),
+  time: z.enum(["18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00"]),
+  notes: z.string().max(280).optional(),
+});
+```
+
+Fields sit in a single 440px column on the warm-cream card (`oklch(0.97 0.01 85)`); Karla labels 14px above each input, focus ring terracotta (`oklch(0.66 0.13 45)`), Fraunces italic saved for the success heading alone. The action returns `status: "confirmed"` and replaces the form with "Table set — check your inbox."; the `fully-booked` branch swaps in a waitlist offer inline rather than a dead end, echoing every value back on any error.
+
+Rejected: a live-availability time `<select>` that fetches open slots on mount — it breaks the no-JS `<form action={submitReservation}>` post, so the server action re-checks the slot instead and returns `fully-booked` as data.
+
+Output lands in `components/forms/ReservationForm.tsx` + `app/[locale]/actions/reserve.ts`; ultraweb:email carries the confirmed booking to Resend (check `{ data, error }`, it never throws) and ultraweb:i18n supplies the PT label/error strings keyed to the same schema.
+
 ## Composes with
 
 - ultraweb:server-actions — owns the mutation side: 'use server' conventions, optimistic updates, error-as-data shape this wiring targets
@@ -118,3 +139,6 @@ Client: `const [state, formAction, pending] = useActionState(submitContact, { st
 - ultraweb:copywriting — labels, hints, and error voice in the brief's tone
 - ultraweb:micro-interactions — focus ring and error-appear motion, 150–250ms
 - ultraweb:email — where the contact payload lands (Resend: check `{ data, error }`, it never throws)
+- ultraweb:auth — sign-in/sign-up forms built here hand the credential check and session mutation off to auth
+- ultraweb:gate-accessibility — audits the label association, `aria-describedby`, and error-announcement contract this skill builds (its item 7)
+- ultraweb:storage — when a form field is a file upload the bytes hand off here, while the dropzone's label and error placement still follow this skill's rules

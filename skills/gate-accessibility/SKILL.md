@@ -85,6 +85,16 @@ fixed: footer link 3.9:1 → 4.7:1 (muted token bumped in color ramp) · residua
 - Passing reduced motion with a global `* { animation: none }` — color/opacity feedback must survive; state may never depend on movement alone
 - Testing only light theme, only desktop, or only the home page
 
+## Worked example — Aldermoor Trust, community foundation grants + stories
+
+design/DIRECTION.md set the bar as the aesthetic itself: "Open Civic — accessibility-first, all pairings AAA where possible." The gate ran the full pass on all five routes from design/SITEMAP.md (`/`, `/grants`, `/stories/[slug]`, `/volunteer`, `/donate`), both themes, 375 + 1440.
+
+Contrast (step 1, canvas-normalized) cleared the AA floor with room: Source Serif 4 story body on warm paper `oklch(0.97 0.008 85)` measured 13.6:1 (AAA); the deep green accent `oklch(0.45 0.1 155)` on that paper measured 5.2:1 — AA and AAA-large, acceptable for the link role, logged as below the AAA aspiration. Keyboard walk: 31 stops, focus-visible ring on all, Escape closed the mobile nav and returned focus to the toggle.
+
+The catch was step 5. On `/`, the signature story cards — the left rule that grows into the reading-progress indicator — entered via a scroll-linked `whileInView` with `initial={{ opacity: 0 }}` and no reduced-motion guard. Under `page.emulateMedia({ reducedMotion: "reduce" })` the entrance was skipped, so all six cards stayed at opacity 0, invisible forever; the re-shot `/` was blank below the fold.
+
+Fix owned by ultraweb:scroll-motion, per motion-language's policy: the reduced-motion branch now returns the cards at rest (opacity 1, rule at full height) instead of the banned blanket `* { animation: none }`. Re-ran step 5 on `/` under reduce → six cards visible. Lands in design/QA.md §gate-accessibility, which flipped to PASS.
+
 ## Composes with
 
 - ultraweb:color — owns the oklch contrast math and the token-level fix when a computed pair fails.
@@ -93,3 +103,6 @@ fixed: footer link 3.9:1 → 4.7:1 (muted token bumped in color ramp) · residua
 - ultraweb:navigation — skip link, Escape-closing mobile menu, and scroll-padding under sticky headers.
 - ultraweb:forms — label association and error announcement checked in item 7.
 - ultraweb:gate-responsive — holds the 44px mobile touch-target bar; this gate holds the WCAG 24px floor everywhere.
+- ultraweb:gate-content — the sibling gate that judges whether headings tell a story; this gate checks only heading structure (item 3) and hands narrative calls there.
+- ultraweb:faq — when the keyboard walk hits a disclosure/accordion missing `aria-expanded` or Enter/Escape handling, faq owns the fix this gate reports.
+- ultraweb:scroll-motion — when the reduced-motion re-test (item 5) finds a scroll-linked entrance left at opacity 0, scroll-motion owns the resting-state guard.

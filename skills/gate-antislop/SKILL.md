@@ -101,6 +101,25 @@ residual: none
 - Rewriting banned copy into synonyms of itself ("Elevate your" → "Uplift your") — route rewrites through copywriting's voice spec
 - Treating this gate as the design review — it catches clichés, not blandness; boring-but-clean escalates to gate-visual
 
+## Worked example — Tidepool, dark-first port-logistics analytics
+
+design/DIRECTION.md: "Precision Instrument — calm, data-forward, dark mode first-class. Signature move: the live berth timeline; no decorative glow." The dark ground is licensed; navy-glow furniture is not.
+
+Phase-11 sweep, written to design/QA.md §gate-antislop:
+
+```md
+## gate-antislop — FAIL→PASS (2026-07-16)
+greps: 8/10 clean · check 3 (emoji) 1 hit — content/changelog/2026-06-berth-eta.mdx:3, heading "⚓ Berth ETA v2"; no DIRECTION exception → defect
+check 9 (glow-orb) 1 hit — components/hero.tsx:34, absolute blur-3xl div oklch(0.68 0.12 200 / .35) behind the timeline; "Precision Instrument" is not the navy-glow archetype → defect
+screens: rhythm 3 distinct paddings/page · asymmetry present (timeline bleeds right on /) · icon-card rows none · shadcn restyled (teal accent, radius tightened from scaffold)
+fixed: changelog emoji → lucide Ship, 16px, stroke matched to accent teal — routed to ultraweb:icons
+fixed: hero glow-orb deleted; the live berth timeline (JetBrains Mono numerals) carries the hero, no crutch — routed to ultraweb:showpiece
+re-grep: check 3 + check 9 clean · hero reshot: reads as an instrument, not a template
+residual: none
+```
+
+Rejected the shortcut of citing the orb in DIRECTION.md just to survive the sweep — furniture is not the signature move, and a citation minted only to pass a gate is exactly the beauty-without-a-decision this gate exists to catch. Handoff: the corrected QA.md §gate-antislop feeds ultraweb:gate-visual, which re-judges the reshot hero against the required list.
+
 ## Composes with
 
 - ultraweb:taste — the banned list this gate mechanizes; on any ambiguity, the constitution wins.
