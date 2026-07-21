@@ -123,7 +123,7 @@ export const t = {
 }
 ```
 
-`emails/order-confirmation.tsx` leads with one Fraunces heading — "Deine Röstung ist unterwegs" — then a line-item block naming the roast in the brief's voice ("Röstung No. 14 · Washed Yirgacheffe — Apricot, black tea, honey"), one rust `<Button>` to `/shop/[slug]` for a reorder, and a hairline `<Hr>`. Subject: `Röstung No. 14 — bestätigt`.
+`emails/order-confirmation.tsx` leads with one Fraunces heading — "Deine Röstung ist unterwegs" — then a line-item block naming the roast in the brief's voice ("Röstung No. 14 · Washed Yirgacheffe — Apricot, black tea, honey"), one rust `<Button>` to an absolute `${process.env.NEXT_PUBLIC_SITE_URL}/shop/${order.productSlug}` — an email has no origin to resolve a relative path — for a reorder, and a hairline `<Hr>`. Subject: `Röstung No. 14 — bestätigt`.
 
 Rejected: rendering the site's signature roast-profile temperature-curve SVG inline in the email — Gmail strips inline SVG to a broken-image box, so the motif stays on the web and the email keeps the `<Hr>` divider instead.
 
