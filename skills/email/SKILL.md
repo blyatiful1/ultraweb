@@ -111,7 +111,7 @@ Rules:
 
 ## Worked example — Kaffeewerk Ost, order confirmation after Stripe checkout
 
-design/BRIEF.md: "Resend order confirmations after every purchase — sensory and direct, no marketing fluff." One transactional flow; the send is wired into the Stripe webhook per ultraweb:payments.
+design/BRIEF.md: "Resend order confirmations after every purchase — sensory and direct, no marketing fluff." One transactional flow; the send drains the order-keyed outbox row the Stripe webhook writes per ultraweb:payments — never inline in the handler, so a webhook retry can't resend.
 
 `emails/theme.ts` translates SYSTEM.md's warm-neutral tokens to hex by hand — oklch never reaches an inbox:
 
@@ -127,7 +127,7 @@ export const t = {
 
 Rejected: rendering the site's signature roast-profile temperature-curve SVG inline in the email — Gmail strips inline SVG to a broken-image box, so the motif stays on the web and the email keeps the `<Hr>` divider instead.
 
-Handoff: the `getResend().emails.send({ react: OrderConfirmation(order) })` call fires inside the raw-body Stripe webhook owned by ultraweb:payments; ultraweb:copywriting supplied the subject and the tasting-note line.
+Handoff: the `getResend().emails.send({ react: OrderConfirmation(order) })` call drains the order-keyed outbox row the raw-body Stripe webhook writes per ultraweb:payments — not inline in the handler. The drain is idempotent: claim the row atomically by its Stripe event/order ID, skip any row already marked sent, and mark it sent only after Resend returns no `error` (it's `{ data, error }`, never a throw) — a failed send leaves the claim released so the next drain retries, and a redelivered webhook can't resend a confirmation already recorded. ultraweb:copywriting supplied the subject and the tasting-note line.
 
 ## Composes with
 
