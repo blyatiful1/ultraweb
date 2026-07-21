@@ -135,6 +135,22 @@ Any `taste` banned-list item this direction uses (Dark Tech's look, a retro grad
 - Archetype chosen before BRIEF.md exists or without citing its tone tension
 - Catalog stance pasted verbatim with no brief-specific concretization (which hue? which section? which words?)
 
+## Worked example — Kaffeewerk Ost, Berlin roastery shop + subscriptions
+
+design/BRIEF.md: "Single-origin roastery, e-commerce (shop + `/abo` subscriptions). Tone tension: craft and tactile, but it has to sell — a workshop, not a supermarket shelf."
+
+Shortlist: Warm Organic/Humanist vs Swiss/International. The "tactile but exact" tension tempts Swiss, but Swiss's flat white + signal-red grid reads as a supermarket circular — craft warmth beats grid authority for a roastery. So **Warm Organic/Humanist**, pushed 20% past comfortable (real paper grain, not a hint of it); no recorded twist needed.
+
+Signature move: **the roast-profile temperature curve** — a hand-drawn SVG rise-and-plateau path — lives on `/` as the hero's spine and recurs as the section divider. Budget: ONE reusable path, no per-section variation, scroll draw-in only.
+
+Type stance: Fraunces (display, hero ~4× body) + Work Sans (body, 1.6 leading). Color stance: warm tinted neutral ground `oklch(0.97 0.008 75)` → ink `oklch(0.24 0.02 60)`, ONE accent rust `oklch(0.62 0.16 45)` on CTAs and price only; dark mode reads roasted, not black.
+
+We will NOT (excerpt): borrow Swiss's signal-red or flat grid; add a second accent; write dead startup copy — voice stays sensory and direct ("Röstung No. 14. Washed Yirgacheffe. Apricot, black tea, honey."); smear glassmorphism; add parallax.
+
+Rejected: Refined Luxury Serif — it would make €18 beans feel like a €180 bottle; the brief wants approachable craft, not hushed luxury.
+
+Handoff → design/DIRECTION.md. ultraweb:color, ultraweb:typography, and ultraweb:motion-language concretize the three stances into SYSTEM.md; ultraweb:shape-language systematizes the temperature curve; ultraweb:wireframe places it in the hero of `/`.
+
 ## Composes with
 
 - ultraweb:taste — the constitution; every stance above operates inside its required list, and step 8's banned-list re-read is non-negotiable.
@@ -143,3 +159,6 @@ Any `taste` banned-list item this direction uses (Dark Tech's look, a retro grad
 - ultraweb:wireframe — places the signature move in a concrete section of a concrete page.
 - ultraweb:showpiece — executes any canvas/3D signature move under its 60fps + static-fallback gate.
 - ultraweb:gate-visual — judges every screenshot against DIRECTION.md; the We-will-NOT list is its checklist.
+- ultraweb:gate-antislop — enforces the We-will-NOT list's banned-list items empirically (grep + screenshots); direction's step 8 re-read is what it later verifies shipped clean.
+- ultraweb:physics — when the chosen signature move is cursor- or scroll-velocity-driven (Playful Geometric, Art-House), direction hands it the motion spec and physics owns the spring/inertia execution.
+- ultraweb:shape-language — direction names the signature SVG/shape motif (e.g. the roast-curve divider); shape-language systematizes it into reusable primitives so it recurs consistently.
