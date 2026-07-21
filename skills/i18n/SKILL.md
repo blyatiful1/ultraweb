@@ -146,7 +146,7 @@ export default {
 
 The reservation confirmation date runs through `new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(booking.date)` — "21 de julho de 2026" for `pt`, "July 21, 2026" for `en` — before the zod-validated server action hands the booking to Resend.
 
-Rejected: IP-geolocation auto-redirect. A Berlin tourist's phone geolocates to Portugal but their `accept-language` says `de` → serve English; region is not a language decision. Accept-Language in `proxy.ts` plus the visible switcher wins.
+Rejected: IP-geolocation auto-redirect. A Berlin tourist's phone geolocates to Portugal, but region is not a language decision — their `accept-language` says `de`, which the site doesn't ship, so the unmatched language falls to the `pt` default and they reach English through the visible switcher. Accept-Language in `proxy.ts` plus that switcher wins, never the phone's location.
 
 Handoff: the `dictionaries/pt.ts` + `dictionaries/en.ts` pair is written natively per market by `ultraweb:copywriting`; `ultraweb:gate-responsive` then screenshots the Portuguese locale (the longer of the two here) at 375px so "Colheita de hoje" and the harvest strip don't overflow.
 
