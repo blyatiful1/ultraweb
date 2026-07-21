@@ -5,6 +5,8 @@ description: Targeted revision pipeline for an existing ultraweb-built site — 
 
 # iterate — surgical changes that keep the system coherent
 
+**Stage:** post-ship, any change request - **Reads:** design/BRIEF.md, DIRECTION.md, SYSTEM.md, SITEMAP.md, QA.md - **Writes:** the affected code + amended design/* artifact + QA.md entry
+
 A change request against an existing ultraweb site is NOT a rebuild and NOT a freestyle patch. The design system is law until deliberately amended.
 
 ## Process
@@ -27,3 +29,15 @@ A change request against an existing ultraweb site is NOT a rebuild and NOT a fr
 - Never edit token VALUES ad hoc inside components to satisfy a local request — that forks the system. Change the token, or add a deliberate variant.
 - If the same element gets its third revision request, the layer was misclassified — step up one layer and fix the cause (usually SYSTEM or DIRECTION).
 - Screenshots before/after for any visual change; the after-shot goes through `design-judge` if the change was Page-level or bigger.
+
+## Worked example — Kaffeewerk Ost, "make the hero bolder"
+
+The roastery's DIRECTION.md reads: *Warm Workshop — signature move: the roast-profile curve motif; type: Fraunces display.* The request names a look-feel but not a system change, so it classifies as **Component** (hero), not System — the palette and pairing stay law. The fix follows `ultraweb:hero` scale rules: `--text-display` moves from `clamp(2.75rem, 1.5rem + 5.5vw, 6rem)` to `clamp(3rem, 1.5rem + 6.5vw, 7.5rem)`, tracking tightens to -0.035em, and the eyebrow is dropped so the headline claims the full first viewport. Rejected: bumping the accent into the headline as a color effect — "bolder" earned scale, not decoration (taste: hierarchy or asymmetry, never another effect). SYSTEM.md §type is amended in the same change (the display clamp is a system token), the before/after screenshots go through `design-judge` (Opus 4.8), and only `gate-visual` + `gate-code` re-run — `design/QA.md` gets the delta entry.
+
+## Composes with
+
+- ultraweb:taste — every request is checked against the constitution before classification; vibe words ("bolder", "warmer", "less corporate") resolve to its vocabulary.
+- ultraweb:retrofit — the entry point when design/* artifacts DON'T exist; iterate takes over only after retrofit has built the record.
+- ultraweb:brief — Feature-layer requests ("add a newsletter") amend BRIEF.md first, exactly as a fresh build would.
+- ultraweb:handoff — the maintenance notes it writes tell site owners which requests are token edits they can make themselves vs. iterate-worthy changes.
+- The seven gate-* skills — the classification table above decides which of them re-run; a change is done when its slice of QA.md is green again.

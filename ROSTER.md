@@ -4,6 +4,8 @@ The complete map of the harness. 59 skills: 1 orchestrator (root `SKILL.md`) + 5
 
 Format: **name** — scope. *(reads → writes)*
 
+Most skills close with a **Worked example** traced from a shared bank of eight recurring clients — Kaffeewerk Ost (roastery e-commerce), Tidepool (B2B SaaS), Studio Norra (agency portfolio), Casa Verde (restaurant, EN/PT), Ledger & Lane (law firm), Framewalk (game studio), Aldermoor Trust (foundation), Loop & Thread (textiles shop). Skills sharing a client agree on its canonical palette, type, and routes, so reading two related skills shows the same project from both sides of the handoff.
+
 ## Tier 0 — Core
 - **taste** — the design constitution: first-grade bar, banned list, required list, heuristics, stack lock. *(— → judgment)*
 - **iterate** — targeted revision pipeline for an existing ultraweb site: locate the design/* artifacts, scope the change, touch only affected phases, re-run only affected gates. *(design/* → changed code + QA.md)*
@@ -81,6 +83,9 @@ Format: **name** — scope. *(reads → writes)*
 - **retrofit** — entry point for existing sites: audit any Next.js site against the constitution, produce a scored gap report and a phased upgrade plan mapping each gap to the ultraweb skill that fixes it. *(existing code → design/RETROFIT.md)*
 
 ## Subagents (agents/)
-- **design-judge** — scores screenshots against DIRECTION.md + taste rubric; returns ranked defects. Used by gate-visual.
-- **pixel-qa** — drives Playwright MCP: navigates, screenshots at breakpoints, reports console errors and layout breaks. Used by gate-responsive/gate-visual.
-- **stack-doctor** — fixes build/dependency/config failures: reads the error, checks current-version docs, repairs without downgrading the stack. Used whenever scaffold or gate-code hits tooling failures.
+
+Each subagent pins its model tier in frontmatter (`model:`) so delegated work runs on the cheapest model that genuinely handles it — see the root skill's "Delegation & model routing" table for the full policy.
+
+- **design-judge** (`model: opus` — Opus 4.8, judgment work) — scores screenshots against DIRECTION.md + taste rubric; returns ranked defects. Used by gate-visual.
+- **pixel-qa** (`model: sonnet` — Sonnet 5, mechanical sweeps) — drives Playwright MCP: navigates, screenshots at breakpoints, reports console errors and layout breaks. Used by gate-responsive/gate-visual.
+- **stack-doctor** (`model: opus` — Opus 4.8, diagnostic work) — fixes build/dependency/config failures: reads the error, checks current-version docs, repairs without downgrading the stack. Used whenever scaffold or gate-code hits tooling failures.

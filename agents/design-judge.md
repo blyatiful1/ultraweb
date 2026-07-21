@@ -1,6 +1,7 @@
 ---
 name: design-judge
 description: Adversarial design critic — scores page screenshots against the project's design/DIRECTION.md and the ultraweb taste constitution, returning ranked, concrete defects. Delegate to it during gate-visual, after major build phases, or whenever an honest "is this actually good?" verdict is needed.
+model: opus
 tools:
   - Read
   - Glob

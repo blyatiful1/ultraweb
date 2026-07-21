@@ -80,6 +80,34 @@ Production build, env audit, deploy if asked, and a handoff README.
 - **Solo mode** (default): run the pipeline yourself, sequentially. Phases 3 and 6 are where most of the time goes.
 - **Fan-out mode** (only when multi-agent orchestration is opted in — ultracode session, or the user asked for it): Phases 1–5 stay sequential (they are decision-making, one mind must own them). Phase 6 fans out one agent per page/section group, each given BRIEF+DIRECTION+SYSTEM+SITEMAP verbatim. Gates in Phase 11 fan out one agent per gate, then a fix pass.
 
+## Delegation & model routing
+
+Not every task deserves the lead model. Whenever work is delegated — the bundled subagents, or ad-hoc agents in either mode — route by judgment density, not phase prestige:
+
+| Tier | Model | Work that belongs here |
+|------|-------|------------------------|
+| Lead | the session's model | Phases 1–5 and 8 (brief, direction, foundation, structure, voice) — the decisions everything downstream obeys; any edit to DIRECTION.md or SYSTEM.md; cross-cutting fix passes after gates |
+| Specialist | Opus 4.8 (`model: opus`) | `design-judge` critiques, `stack-doctor` repairs, Phase 6 per-section build agents in fan-out mode, gate-visual judgment rounds |
+| Mechanical | Sonnet 5 (`model: sonnet`) | `pixel-qa` breakpoint sweeps, gate-code build/type/lint runs, gate-antislop pattern sweeps, gate-content link/metadata checks, artifact-conformance checks, screenshot capture |
+
+Rules:
+- **Verdicts flow up, never sideways.** A Sonnet agent may report that contrast fails at 3.8:1; deciding which color moves is Lead/Specialist work. Mechanical agents observe and report — they never amend design/* artifacts.
+- The bundled subagents pin their tier in frontmatter (`model:` in agents/*.md). Trust it: don't override upward "to be safe" or downward to save tokens on judgment work.
+- This table applies in solo mode too — any agent you spawn ad hoc gets the cheapest tier that genuinely handles it.
+
+## Worked example — one build, traced
+
+Prompt: *"build me a website for a Berlin specialty coffee roastery with an online shop"* (Kaffeewerk Ost — the same client used across the skill files' worked examples).
+
+- **Phase 1** `brief` → BRIEF.md: e-commerce + subscription ("Abo"); audience: specialty buyers who care about origin; tone: sensory, direct, zero fluff; routes `/`, `/shop`, `/shop/[slug]`, `/abo`, `/roasterei`, `/kontakt`; backend needs: Stripe, Drizzle (products/orders/subscriptions), Resend receipts.
+- **Phase 2** `direction` → DIRECTION.md: "Warm Workshop" archetype; signature move: the roast-profile temperature curve as a recurring SVG motif; will-not list: dark "premium" template, gradient headlines.
+- **Phase 3** foundation → SYSTEM.md, then `tokens` compiles it: warm neutrals `oklch(0.97 0.008 75)` → `oklch(0.24 0.02 60)`, rust accent `oklch(0.62 0.16 45)`, Fraunces + Work Sans, `--animate-curve-draw` for the motif — all as `@theme` tokens in `app/globals.css`.
+- **Phases 4–5**: SITEMAP.md blueprints every page section-by-section, naming the skill that builds each (hero: split variant, signature move lives here); `scaffold` pins the current stack and smoke-tests the dev server.
+- **Phase 6** (fan-out: one Opus 4.8 agent per page, artifacts passed verbatim) builds sections; **Phase 7** wires Stripe checkout + raw-body webhook, the Drizzle schema, Resend order receipt.
+- **Phase 8** `copywriting`: hero headline becomes "Röstung No. 14. Apricot, black tea, honey." — the product is the poetry; no "Elevate your mornings".
+- **Phase 11**: `pixel-qa` (Sonnet 5) sweeps 375/768/1440 and catches the `/shop` grid overflowing at 375; `design-judge` (Opus 4.8) scores pages and flags a uniform card row on `/shop`; fixes land via `cards` group-layout rules; re-gate green → QA.md.
+- **Phase 12** `ship`: env audit (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `DATABASE_URL`, `RESEND_API_KEY`), build + start smoke test, handoff README.
+
 ## Failure discipline
 
 - A gate that fails twice on the same issue: stop patching symptoms, re-read the relevant skill, fix the root cause.

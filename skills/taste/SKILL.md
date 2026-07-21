@@ -56,6 +56,16 @@ Non-negotiable in every build, regardless of direction:
 - **If a section looks boring, the fix is hierarchy or asymmetry — not another effect.**
 - **3D, shaders, canvas (`showpiece`) only when**: the direction demands it, it runs 60fps on mid hardware, and there's a static fallback. A fast plain site beats a janky impressive one, always.
 
+## Position in the system
+
+**Stage:** every phase — invoked FIRST by the root pipeline, consulted whenever any skill says "the constitution" - **Reads:** nothing - **Writes:** judgment, not files.
+
+- ultraweb:direction — the only skill allowed to grant exceptions to the banned list, and only in writing (design/DIRECTION.md).
+- ultraweb:gate-antislop — enforces the banned list empirically (grep + screenshots); a taste violation that ships is a gate failure, not a style choice.
+- ultraweb:gate-visual — scores against the required list via the `design-judge` subagent (Opus 4.8), which quotes this file in its rubric.
+- ultraweb:retrofit — audits existing sites against this file to produce the gap report.
+- ultraweb:iterate — checks every requested change against this file before classifying it; "make it pop" is answered from here.
+
 ## Stack lock
 
 All ultraweb skills build on ONE stack — never substitute without the user asking:
