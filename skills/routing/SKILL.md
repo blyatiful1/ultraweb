@@ -79,8 +79,8 @@ app/
 ## Worked example — Tidepool, port-logistics analytics route tree
 
 `design/SITEMAP.md`: marketing pages `/`, `/product`, `/pricing`, `/changelog`; a docs tree at
-`/docs`; `/login` as the door to the gated app shell. `design/SYSTEM.md` fixes General Sans (display)
-+ JetBrains Mono (numerals) on dark surface `oklch(0.18 0.015 250)`.
+`/docs`; `/login` as the door to the gated app shell. `design/SYSTEM.md` fixes General Sans (display) +
+JetBrains Mono (numerals) on dark surface `oklch(0.18 0.015 250)`.
 
 Grouped by shared layout, not by taxonomy:
 

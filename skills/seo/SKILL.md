@@ -158,7 +158,7 @@ Insights are MDX, so `/insights/[slug]` runs `generateMetadata` with `await para
 
 Rejected: aggregate `Review`/`AggregateRating` markup on the practice-area pages — nothing visible there shows a rating, and invisible structured data invites a manual penalty, so `LegalService` + `Attorney` stay the only entities marked up.
 
-Handoff: exports land as per-route `metadata`, `app/opengraph-image.tsx`, and an `app/sitemap.ts` mirroring the five routes from design/SITEMAP.md; `ultraweb:gate-content` then greps for duplicate titles and missing canonicals before Phase 10 closes.
+Handoff: exports land as per-route `metadata`, `app/opengraph-image.tsx`, and an `app/sitemap.ts` mirroring the six routes from design/SITEMAP.md; `ultraweb:gate-content` then greps for duplicate titles and missing canonicals before Phase 10 closes.
 
 ## Composes with
 

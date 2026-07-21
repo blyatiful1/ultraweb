@@ -128,7 +128,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 BRIEF.md §Backend: needs → "content-cms — stories + news as MDX, maintained by volunteers after handoff"; §Content tags every story to one of three grant programmes.
 
-- Pipeline: **content-collections** (0.15.2), not plain `@next/mdx` — stories are a real collection with a `/stories` listing, programme tags, and date ordering; MDX-files-as-routes can't emit the typed, sorted array the index needs.
+- Pipeline: **content-collections** (0.15.2), not plain `@next/mdx` — stories are a real collection with a listing on the home page `/`, programme tags, and date ordering; MDX-files-as-routes can't emit the typed, sorted array the index needs.
 - Frontmatter typed at the boundary with a zod v4 schema whose programme field is `z.enum(['neighbourhood', 'youth', 'climate'], { error: 'Unknown programme' })`, so a mistyped tag is a build error, not a silently broken filter. `draft` is filtered out of `generateStaticParams`, the page's `notFound()` guard, AND sitemap.ts alike.
 - Prose consumes SYSTEM.md, never `prose-gray`: stories render in Source Serif 4, links in the deep-green accent `oklch(0.45 0.1 155)`, AAA-checked against warm paper:
 
