@@ -91,7 +91,7 @@ design/SITEMAP.md lists six routes for the "Precision Instrument" build — `/`,
 
 The signature-move defect (check 5): the live-updating berth timeline animates its JetBrains Mono numerals with `useSpring` from `motion/react` but shipped as a server component, so `grep -rl "motion/react" app components | xargs -r grep -L "use client"` returned it. Fix: `"use client"` added at that one leaf — `app/(marketing)/page.tsx` stayed a server component composing it. Re-check returned empty; the census held at 11 client files, 0 in layouts.
 
-Rejected the lazy fix of hoisting `"use client"` onto `app/(marketing)/layout.tsx` to make the hook error vanish — that turns the whole marketing tree client and defeats the boundary plan; the directive belongs at the leaf. Both fixes owned by ultraweb:app-structure. The dated PASS lands in design/QA.md, and ultraweb:gate-performance reads the same client-file census next for bundle weight.
+Rejected the lazy fix of hoisting `"use client"` onto `app/(marketing)/layout.tsx` to make the hook error vanish — that turns the whole marketing tree client and defeats the boundary plan; the directive belongs at the leaf. Check 2's fix — `await`-ing `searchParams` before reading `.tag` in `app/(marketing)/changelog/page.tsx` — re-ran `npx tsc --noEmit` to exit 0, silent, and is owned by ultraweb:routing, which takes back every unawaited `params`/`searchParams`; the check 5 boundary fix stays with ultraweb:app-structure. The dated PASS lands in design/QA.md, and ultraweb:gate-performance reads the same client-file census next for bundle weight.
 
 ## Composes with
 
