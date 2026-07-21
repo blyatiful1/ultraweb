@@ -105,13 +105,15 @@ One `reserve` action, zod v4 at the boundary, availability decided server-side a
 ```ts
 // app/actions/reserve.ts
 'use server'
-const schema = z.object({
-  covers: z.coerce.number().int().min(1).max(8, { error: 'Máx. 8 pessoas' }),
-  email: z.email({ error: 'Email inválido' }),
-})
-export type ReserveState = { status: 'idle' | 'confirmed' | 'fully-booked'; errors?: Record<string, string[]> }
-// safeParse → seats left? deliverConfirmation() (check Resend { data, error }) + revalidateTag('covers', 'minutes') → { status: 'confirmed' }
-//           → no seats? return { status: 'fully-booked' }  ← form swaps its submit for the waitlist CTA, no throw
+import { reservationSchema } from '@/lib/schemas/reservation'   // the one schema ultraweb:forms owns — never re-declared here
+export type ReserveState = {
+  status: 'idle' | 'confirmed' | 'fully-booked'
+  errors?: Record<string, string[]>
+  values?: Record<string, string>   // echo the submission back so a failed parse or a full house never blanks the form
+}
+// reservationSchema.safeParse → invalid? { status: 'idle', errors, values } — fields stay filled
+//   → seats left? deliverConfirmation() (check Resend { data, error }) + revalidateTag('covers', 'minutes') → { status: 'confirmed' }
+//   → no seats? return { status: 'fully-booked', values }  ← form swaps its submit for the waitlist CTA, no throw
 ```
 
 The three brief states map cleanly: the in-flight submit is `pending` from `useActionState`; the resolved outcomes are `confirmed` (email fires) and `fully-booked` (the waitlist offer renders in place). Copy is Portuguese under `/pt/*`, mirrored under `/en/*`.

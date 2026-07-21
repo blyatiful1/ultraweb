@@ -140,11 +140,11 @@ const session = await getStripe().checkout.sessions.create({
 })
 ```
 
-Env stays `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET`, no `NEXT_PUBLIC_` prefix; the raw-body webhook fulfills on `checkout.session.completed`, idempotent on session id, marks the one-off piece sold, then sends the Resend confirmation after the write. Success page is designed to SYSTEM.md — Fraunces heading on undyed linen `oklch(0.94 0.012 80)`, walnut `oklch(0.35 0.04 60)` body, copy "Woven to order — your piece ships within five days," one CTA back to `/journal`.
+Env stays `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET`, no `NEXT_PUBLIC_` prefix; the raw-body webhook fulfills on `checkout.session.completed`. Session-id idempotency is not enough for one-off stock — two different sessions can race for the same piece — so the write is one transaction that marks it sold behind a unique constraint keyed on the inventory item, refunding the session on conflict (already gone). That transaction records an order-keyed outbox row rather than calling Resend inline, then acks Stripe promptly; ultraweb:email drains the outbox. Success page is designed to SYSTEM.md — Fraunces heading on undyed linen `oklch(0.94 0.012 80)`, walnut `oklch(0.35 0.04 60)` body, copy "Woven to order — your piece ships within five days," one CTA back to `/journal`.
 
 Rejected: a "monthly textile club" subscription — the brief sells finished one-off pieces, not a recurring box, and recurring billing on single inventory would keep charging for goods already gone.
 
-Handoff: `lib/prices.ts` is the single source ultraweb:pricing renders the shop buy tiles from; the webhook's fulfillment write hands to ultraweb:email for the order confirmation.
+Handoff: `lib/prices.ts` is the single source ultraweb:pricing renders the shop buy tiles from; the webhook's fulfillment write records the order-keyed outbox row ultraweb:email drains for the confirmation.
 
 ## Composes with
 
@@ -152,7 +152,7 @@ Handoff: `lib/prices.ts` is the single source ultraweb:pricing renders the shop 
 - **ultraweb:server-actions** — checkout follows its rules: zod at the boundary, `redirect()` outside try/catch.
 - **ultraweb:database** — fulfillment writes orders/subscriptions plus the processed-event ledger that makes the webhook idempotent.
 - **ultraweb:ui-states** — pending state on the buy button, the success confirmation, the canceled reassurance line.
-- **ultraweb:email** — receipt/confirmation mail sent from the webhook after the fulfillment write.
+- **ultraweb:email** — receipt/confirmation mail sent by draining the order outbox the webhook writes, not inline in the handler.
 - **ultraweb:ship** — env audit swaps to live keys, the production webhook endpoint secret, and `NEXT_PUBLIC_APP_URL` to the production origin at deploy, nowhere earlier.
 - **ultraweb:brief** — reads its design/BRIEF.md to decide one-time (`mode: 'payment'`) vs recurring (`mode: 'subscription'`) and how many Products/Prices to model in the Dashboard.
 - **ultraweb:api-design** — the Stripe webhook is a route handler built to its conventions: raw-body reading, explicit status-code contract (400 on bad signature, 200 on ack), no caching on the endpoint.
