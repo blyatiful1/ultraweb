@@ -87,11 +87,12 @@ Not every task deserves the lead model. Whenever work is delegated — the bundl
 | Tier | Model | Work that belongs here |
 |------|-------|------------------------|
 | Lead | the session's model | Phases 1–5 and 8 (brief, direction, foundation, structure, voice) — the decisions everything downstream obeys; any edit to DIRECTION.md or SYSTEM.md; cross-cutting fix passes after gates |
-| Specialist | Opus 4.8 (`model: opus`) | `design-judge` critiques, `stack-doctor` repairs, Phase 6 per-section build agents in fan-out mode, gate-visual judgment rounds |
-| Mechanical | Sonnet 5 (`model: sonnet`) | `pixel-qa` breakpoint sweeps, gate-code build/type/lint runs, gate-antislop pattern sweeps, gate-content link/metadata checks, artifact-conformance checks, screenshot capture |
+| Specialist | Opus 4.8 (`model: opus`) | `design-judge` critiques, `stack-doctor` repairs, gate-visual judgment rounds; in fan-out mode: Phase 6 per-section builds, Phase 7 backend modules, Phase 9 motion and Phase 10 findability passes |
+| Mechanical | Sonnet 5 (`model: sonnet`) | `pixel-qa` breakpoint sweeps, gate-code build/type/lint runs, gate-antislop pattern sweeps, gate-content link/metadata checks, the measurement halves of gate-responsive / gate-accessibility / gate-performance (screenshots, computed contrast, Lighthouse), artifact-conformance checks |
 
 Rules:
-- **Verdicts flow up, never sideways.** A Sonnet agent may report that contrast fails at 3.8:1; deciding which color moves is Lead/Specialist work. Mechanical agents observe and report — they never amend design/* artifacts.
+- **Fallback:** anything not named above is Lead work — in solo mode the Lead simply does it; delegation below Lead happens only for rows in this table.
+- **Verdicts flow up, never sideways.** A Sonnet agent may report that contrast fails at 3.8:1; deciding which color moves is Lead/Specialist work. Mechanical agents observe and report — they never amend design/* artifacts. Every gate's fix decisions escalate per this rule even when its measurements ran Mechanical.
 - The bundled subagents pin their tier in frontmatter (`model:` in agents/*.md). Trust it: don't override upward "to be safe" or downward to save tokens on judgment work.
 - This table applies in solo mode too — any agent you spawn ad hoc gets the cheapest tier that genuinely handles it.
 
@@ -103,7 +104,7 @@ Prompt: *"build me a website for a Berlin specialty coffee roastery with an onli
 - **Phase 2** `direction` → DIRECTION.md: "Warm Workshop" archetype; signature move: the roast-profile temperature curve as a recurring SVG motif; will-not list: dark "premium" template, gradient headlines.
 - **Phase 3** foundation → SYSTEM.md, then `tokens` compiles it: warm neutrals `oklch(0.97 0.008 75)` → `oklch(0.24 0.02 60)`, rust accent `oklch(0.62 0.16 45)`, Fraunces + Work Sans, `--animate-curve-draw` for the motif — all as `@theme` tokens in `app/globals.css`.
 - **Phases 4–5**: SITEMAP.md blueprints every page section-by-section, naming the skill that builds each (hero: split variant, signature move lives here); `scaffold` pins the current stack and smoke-tests the dev server.
-- **Phase 6** (fan-out: one Opus 4.8 agent per page, artifacts passed verbatim) builds sections; **Phase 7** wires Stripe checkout + raw-body webhook, the Drizzle schema, Resend order receipt.
+- **Phase 6** builds the sections (this trace assumes fan-out mode was opted in: one Opus 4.8 agent per page, artifacts passed verbatim — in default solo mode the Lead builds the same sections sequentially); **Phase 7** wires Stripe checkout + raw-body webhook, the Drizzle schema, Resend order receipt.
 - **Phase 8** `copywriting`: hero headline becomes "Röstung No. 14. Apricot, black tea, honey." — the product is the poetry; no "Elevate your mornings".
 - **Phase 11**: `pixel-qa` (Sonnet 5) sweeps 375/768/1440 and catches the `/shop` grid overflowing at 375; `design-judge` (Opus 4.8) scores pages and flags a uniform card row on `/shop`; fixes land via `cards` group-layout rules; re-gate green → QA.md.
 - **Phase 12** `ship`: env audit (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `DATABASE_URL`, `RESEND_API_KEY`), build + start smoke test, handoff README.
