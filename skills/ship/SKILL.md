@@ -21,10 +21,12 @@ Shipped means three proven facts, not a feeling: (1) every env var the code read
 # .env.example — every key the code reads; placeholders only, never real values
 DATABASE_URL=postgresql://user:password@host:5432/db   # Neon dashboard → connection string
 BETTER_AUTH_SECRET=generate-with-openssl-rand-base64-32
+BETTER_AUTH_URL=https://example.com                    # Better Auth base URL — production domain
 RESEND_API_KEY=re_xxxxxxxxxxxxxxxx                     # resend.com → API keys
 STRIPE_SECRET_KEY=sk_test_xxxxxxxx                     # Stripe dashboard → developers
 STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxx                   # per endpoint — dev and prod DIFFER
 NEXT_PUBLIC_SITE_URL=https://example.com               # public: shipped to the browser
+# ...plus whatever feature keys the brief pulled in — e.g. BLOB_READ_WRITE_TOKEN when storage ships uploads
 ```
 
    Key in code but not in .env.example → fail, add it. Key in .env.local but never read → delete or justify.
