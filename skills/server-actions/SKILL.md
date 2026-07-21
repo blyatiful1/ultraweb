@@ -96,6 +96,30 @@ const [optimisticItems, addOptimistic] = useOptimistic(items, (state, next: Item
 - `redirect()` inside try/catch — the catch eats the navigation.
 - Generic "An error occurred" as the only failure copy — `copywriting` owns error voice; every failure message says what to do next.
 
+## Worked example — Casa Verde, EN/PT reservation flow
+
+design/BRIEF.md: "Reservation form → server action → Resend confirmation; states pending, confirmed, fully-booked (waitlist offer)."
+
+One `reserve` action, zod v4 at the boundary, availability decided server-side and returned as a UI *state* — never thrown:
+
+```ts
+// app/actions/reserve.ts
+'use server'
+const schema = z.object({
+  covers: z.coerce.number().int().min(1).max(8, { error: 'Máx. 8 pessoas' }),
+  email: z.email({ error: 'Email inválido' }),
+})
+export type ReserveState = { status: 'idle' | 'confirmed' | 'fully-booked'; errors?: Record<string, string[]> }
+// safeParse → seats left? deliverConfirmation() (check Resend { data, error }) + revalidateTag('covers', 'minutes') → { status: 'confirmed' }
+//           → no seats? return { status: 'fully-booked' }  ← form swaps its submit for the waitlist CTA, no throw
+```
+
+The three brief states map cleanly: the in-flight submit is `pending` from `useActionState`; the resolved outcomes are `confirmed` (email fires) and `fully-booked` (the waitlist offer renders in place). Copy is Portuguese under `/pt/*`, mirrored under `/en/*`.
+
+Rejected: a client `fetch('/api/reserve')` — it breaks the no-JS submit PT diners on older phones still need, and forces the zod schema to be duplicated across the wire.
+
+Output lands in `app/actions/reserve.ts`; ultraweb:forms renders the field messages and the fully-booked waitlist swap, ultraweb:email owns the confirmation template.
+
 ## Composes with
 
 - **ultraweb:forms** — designs the fields, labels, and inline-error placement that this state shape feeds.
@@ -104,3 +128,7 @@ const [optimisticItems, addOptimistic] = useOptimistic(items, (state, next: Item
 - **ultraweb:email** — contact and magic-link actions call Resend; check its `{ data, error }` return explicitly, it does not throw.
 - **ultraweb:ui-states** — pending, success, and error surfaces the wiring renders.
 - **ultraweb:gate-code** — type-checks action signatures and state shapes; run after wiring each form.
+- **ultraweb:auth** — sign-in and sign-up submits are server actions built on this pattern; an auth denial returns `{ ok: false, errors: { form } }` here, never a thrown 500.
+- **ultraweb:api-design** — the action-vs-route-handler boundary: first-party form mutations stay server actions here, while webhooks and third-party callers go to route handlers there.
+- **ultraweb:payments** — Stripe checkout and subscription mutations run as actions but never optimistic (irreversible); payments owns the raw-body webhook that finalizes what the action starts.
+- **ultraweb:storage** — file-upload form submits are actions too; storage owns the blob write and hands back the URL the action then persists.

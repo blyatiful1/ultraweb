@@ -79,6 +79,16 @@ Record all six in design/SYSTEM.md (decision + bundle delta) and design/QA.md (m
 - A spinning 3D object with no relation to the brief — decoration is not direction; if DIRECTION.md can't say what it means, cut it.
 - Skipping the 4x-throttle run — "60fps on my machine" is not "60fps on mid hardware".
 
+## Worked example — Studio Norra, Oslo agency portfolio index
+
+design/DIRECTION.md commissions the signature move verbatim: "cursor-proximity case-study image reveals on the `/work` index." Editorial Brutalist, Archivo Expanded display over Inter body, paper `oklch(0.96 0.005 90)` / ink `oklch(0.2 0.01 270)` with signal red `oklch(0.6 0.21 25)` reserved for interaction states.
+
+The gate check's site-type arm passes (agency portfolio — spend boldly), but the cost-ladder arm decides it: the cheapest sufficient rung is the *floor*. The eight case-study photos stay real `<img>` in the DOM — crisp, indexable, alt-texted — revealed via `clip-path` and drawn toward the pointer by a `useSpring` follower. 0kb of WebGL, no canvas, no R3F. showpiece declines to escalate and records in design/SYSTEM.md: "no set piece — signature met at the DOM+spring rung; showpiece scope: none, bundle delta 0kb."
+
+Rejected: a fragment-shader displacement reveal on a raw WebGL quad. It lost because rasterizing the work onto a canvas destroys exactly what an agency index sells — image crispness, text-first LCP, per-image alt text — for zero gain over `clip-path`.
+
+Handoff: the pointer spring is owned by ultraweb:physics; the `/work` → `/work/[slug]` shared-element image transition (springs, not ease-out defaults) is owned by ultraweb:scroll-motion. The static fallback — the plain index list revealing each image on hover/focus — is what prefers-reduced-motion and no-JS receive, and it clears gate-visual on its own.
+
 ## Composes with
 
 - ultraweb:direction — the only authority that can commission a showpiece; no DIRECTION.md mandate, no showpiece.
@@ -87,3 +97,5 @@ Record all six in design/SYSTEM.md (decision + bundle delta) and design/QA.md (m
 - ultraweb:media-optimization — LCP protection and asset strategy when the showpiece shares the fold.
 - ultraweb:gate-performance — the 60fps recording, bundle delta, and LCP checks are its pass bar.
 - ultraweb:gate-accessibility — verifies the reduced-motion exit actually renders the static path.
+- ultraweb:physics — when the cheapest sufficient rung is a pointer/element spring rather than canvas or WebGL, showpiece hands the motion to physics and builds no set piece.
+- ultraweb:scroll-motion — a "showpiece" brief that is really a scroll-linked reveal or shared-element page transition is routed down to scroll-motion instead of mounting a canvas.

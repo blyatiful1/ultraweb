@@ -129,3 +129,5 @@ description: Compile the finished design-system decisions (color, typography, sp
 - ultraweb:shape-language — supplies the `--radius` base and its scale steps.
 - ultraweb:depth — supplies the shadow recipes and the per-theme `--shadow-color` strategy.
 - ultraweb:scaffold — creates the project and a skeleton globals.css; this skill replaces the skeleton, never runs before it.
+- Consumed by every component-tier and layout skill (ultraweb:buttons, ultraweb:data-display, ultraweb:layout-grid, ultraweb:content-cms, …) — they style off the utilities generated here; a raw hex or bare `oklch(` inside a component is their defect, not a missing token.
+- ultraweb:email — reads the raw palette oklch values from this file to inline into react-email templates, since email clients can't consume the `@theme` utilities the web build generates.

@@ -85,6 +85,24 @@ Then wire the outside world:
 - Real values pasted into .env.example "temporarily"
 - Module-scope SDK construction that throws when the env key is missing
 
+## Worked example — Loop & Thread, shipping the textiles shop to production
+
+design/QA.md handed up all gates green; design/SITEMAP.md lists `/`, `/shop`, `/shop/[slug]`, `/journal`, `/about`. Env enumeration returns exactly the five keys the code reads, each an obvious placeholder in .env.example:
+
+```bash
+STRIPE_SECRET_KEY=sk_test_xxxxxxxx              # Stripe dashboard → developers
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxx            # prod endpoint differs from the dev CLI secret
+DATABASE_URL=postgresql://user:password@host/db # Neon → connection string
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_xxxx       # Vercel → Storage → Blob (product photos)
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxx              # resend.com → API keys
+```
+
+Secret scan clean, `git check-ignore .env.local` exits 0. `npm run build` exit 0; `npm run start` then returns 200 for all five routes plus `/robots.txt` and `/sitemap.xml`, zero server errors. Only after the user answered "Deploying Loop & Thread to Vercel production — go?" do all five keys go into the Vercel env and `npx vercel --prod` run.
+
+Rejected: reusing the Stripe CLI-forwarding `whsec_` for production — it never validates live events, so post-deploy I create a NEW webhook endpoint at the live `/api/stripe/webhook` with its own secret.
+
+Handoff: the ship entry lands in design/QA.md and ultraweb:handoff runs next, documenting the deploy target and the five audited keys.
+
 ## Composes with
 
 - ultraweb:gate-code — must be green before ship starts; step 7's build is final confirmation, not a substitute
@@ -93,3 +111,6 @@ Then wire the outside world:
 - ultraweb:handoff — runs immediately after; documents the deploy target and the env keys audited here
 - pixel-qa (subagent) — drives the post-deploy live-URL screenshots
 - stack-doctor (subagent) — receives any production build/start failure verbatim
+- ultraweb:payments — owns the Stripe webhook handler that ship points a NEW production `whsec_` endpoint at during post-deploy wiring
+- ultraweb:email — verified the Resend sending domain ship confirms live before exercising the order-confirmation email flow
+- ultraweb:database — owns the schema/migrations behind the `DATABASE_URL` ship audits and must have run against the production database before deploy
