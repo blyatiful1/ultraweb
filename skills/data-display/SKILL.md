@@ -95,7 +95,7 @@ Decision for the `/product` berth table — **Dense** variant, 42px rows, 13px t
 - Avg wait (h) — number, right, 1 decimal
 - Utilization (%) — number, right, 1 decimal
 
-Units stated once in the header, values formatted via `Intl.NumberFormat`, never string math. Above it a 3-KPI stat row: value 2.75rem semibold JetBrains Mono ("4.2h", "12,480", "94.0%"), labels 0.8125rem muted, deltas a direction icon plus teal accent `oklch(0.68 0.12 200)`, captioned "last 30 days". Responsive: priority columns — Port + Utilization survive to 375px, Calls goes `hidden md:table-cell`.
+Units stated once in the header, values formatted via `Intl.NumberFormat`, never string math. Above it a 3-KPI stat row: value 2.75rem semibold JetBrains Mono ("4.2h", "12,480", "94.0%"), labels 0.8125rem muted, deltas a direction icon plus teal accent `oklch(0.68 0.12 200)`, captioned "last 30 days". Responsive: priority columns — Port + Utilization survive to 375px, Calls and Avg wait (h) both go `hidden md:table-cell`.
 
 Rejected a donut-with-centered-KPI for utilization: the question is "which ports are congested", which a ranked horizontal-bar list answers directly — a pie hides the ordering the analyst is scanning for.
 

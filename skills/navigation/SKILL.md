@@ -103,7 +103,7 @@ Six flat destinations, no grouping → **slim-bar**, not mega-menu. Logo left; f
 const nav = ["/product", "/pricing", "/docs", "/changelog"] as const;
 const pathname = usePathname();
 // General Sans links; teal underline marks the current route
-<Link href={href} aria-current={pathname === href ? "page" : undefined}
+<Link href={href} aria-current={(pathname === href || (href !== "/" && pathname.startsWith(href + "/"))) ? "page" : undefined}
   className="text-sm text-foreground/80 aria-[current=page]:text-foreground">
 ```
 

@@ -111,11 +111,16 @@ SYSTEM.md §motion caps section reveals at 550ms; DIRECTION.md ("Editorial Bruta
 Decision: the eight case-study rows on `/work` are one stagger group, 60ms apart, 20px rise + fade, settling on a spring so rows land rather than snap. The oversized Archivo Expanded row headings are the reveal unit; the exposed grid rules under them do not animate — the brutalist grid must read as fixed and honest. Signal red `oklch(0.6 0.21 25)` stays out of the entrance entirely (interaction states only). The above-fold `/work` masthead animates on load via hero, not on scroll.
 
 ```tsx
+const reduced = useReducedMotion(); // motion/react
+const row = reduced
+  ? { hidden: { opacity: 0 }, show: { opacity: 1 } }
+  : { hidden: { opacity: 0, y: 20 },
+      show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 30 } } };
+
 <m.ul initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}
   variants={{ show: { transition: { staggerChildren: 0.06 } } }}>
   {cases.map((c) => (
-    <m.li key={c.slug} variants={{ hidden: { opacity: 0, y: 20 },
-      show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 30 } } }} />
+    <m.li key={c.slug} variants={row} />
   ))}
 </m.ul>
 ```

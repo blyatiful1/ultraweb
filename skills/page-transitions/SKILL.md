@@ -100,7 +100,16 @@ Editorial/portfolio → decision-table row 2: Tier 1 + Tier 2. The Tier 1 templa
 // app/work/[slug]/page.tsx — same name on the destination cover → the browser morphs one into the other
 ```
 
-`experimental.viewTransition: true` in next.config.ts; `transitionTypes={["case-study"]}` scopes a spring-tuned `::view-transition-group` timing so the morph reads as a spring, not the browser's ease-out default — honoring the brief's "springs" note without a JS animation on the transition. Signal red `oklch(0.6 0.21 25)` stays out of it: it is reserved for interaction states, never motion chrome.
+```css
+/* app/globals.css — without this the case-study type only scopes; the UA ease-out still runs */
+:active-view-transition-type(case-study)::view-transition-old(*),
+:active-view-transition-type(case-study)::view-transition-new(*) {
+  animation-duration: 300ms;
+  animation-timing-function: linear(0, 0.65 22%, 1.04 52%, 0.99 78%, 1); /* spring-like, slight overshoot */
+}
+```
+
+`experimental.viewTransition: true` in next.config.ts; `transitionTypes={["case-study"]}` only scopes the navigation — the CSS above is what supplies the spring: `:active-view-transition-type(case-study)` targets the `::view-transition-old/new` snapshots so the morph reads as a spring, not the browser's ease-out default — honoring the brief's "springs" note without a JS animation on the transition. Signal red `oklch(0.6 0.21 25)` stays out of it: it is reserved for interaction states, never motion chrome.
 
 Rejected: keeping the Tier 1 template fade on the `/work` routes as well — cut because Tier 1 + Tier 2 on one surface double-fires (anti-pattern) and the fade would fight the image morph.
 

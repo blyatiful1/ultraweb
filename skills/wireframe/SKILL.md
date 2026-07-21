@@ -29,7 +29,7 @@ One line per section:
 
 Worked example:
 
-```
+```md
 ### / (Home) — goal: book a demo
 1. hero — skill: hero — variant: typographic — density: H1 ≤8 words + sub ≤20 + 1 primary CTA + 1 ghost — width: contained — rhythm: open, extra air below — job: state the claim — SIGNATURE: oversized kinetic headline (reduced-motion/static fallback: headline set at full size, no animation)
 2. proof-strip — skill: social-proof — variant: logo wall — density: 5 logos, monochrome, 1 line of context — width: narrow — rhythm: tight after hero — job: earn ten more seconds
@@ -87,7 +87,7 @@ design/DIRECTION.md: "Sunlit Rustic — full-bleed photography carries the emoti
 
 The signature homes to the first scroll transition after the hero — above a menu preview, where attention still peaks:
 
-```
+```md
 ### /en (Home) — goal: reserve a table
 1. hero — skill: hero — variant: full-bleed photo — density: H1 ≤6 words + 1 line + 1 CTA ("Reserve a table") — width: full-bleed — rhythm: open — job: set the table
 2. harvest-strip — skill: cards — variant: horizontal scroller — density: 6–9 market finds, photo + name + origin — width: full-bleed — rhythm: tight under hero — job: today is different — SIGNATURE: today's harvest strip (reduced-motion: static row, no auto-scroll)

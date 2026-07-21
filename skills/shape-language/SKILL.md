@@ -93,7 +93,7 @@ DIRECTION.md reads "Soft Craft — tactility through generous radius, close-up p
   --radius-sm: 0.625rem;  /* review pills, chips */
   --radius-md: 0.875rem;  /* buttons, form fields */
   --radius-lg: 1.25rem;   /* product cards */
-  --radius-xl: 1.75rem;   /* hero media, /journal covers */
+  --radius-xl: 1.5rem;    /* hero media, /journal covers */
 }
 ```
 
