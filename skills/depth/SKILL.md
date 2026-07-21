@@ -98,10 +98,10 @@ Never ship light-mode shadow tokens unmodified into `.dark`.
 }
 ```
 
-- Resting KPI cards + the berth-timeline panel: 1px border `oklch(0.2 0.02 245 / 0.10)`, no shadow. `shadow-lg` is spent only on the `/docs` command palette and the pricing "Fleet" contact modal (level 4).
+- Resting KPI cards + the berth-timeline panel: 1px border `oklch(0.2 0.02 245 / 0.10)`, no shadow. `shadow-lg` is spent only on the `/docs` command palette, `shadow-xl` on the pricing "Fleet" contact modal (level 4).
 - Dark mode (the default surface): elevation is lightness, not shadow — bg `oklch(0.18 0.015 250)` → card `oklch(0.22 0.015 250)` → popover `oklch(0.26 0.015 250)`, each paired with a `oklch(1 0 0 / 0.08)` hairline.
 - Rejected: the layered-soft 5-token scale with cards resting on `shadow-md` — it reads consumer-marketing-soft and blunts the instrument precision; a dashboard that floats looks less trustworthy, not more.
-- Glass verdict: **no glass**. The sticky header stays opaque, gaining a 1px bottom border + `shadow-sm` once scrolled — a precision instrument doesn't blur its own chrome.
+- Glass verdict: **no glass**. The sticky header stays opaque, gaining a 1px bottom border + `shadow-md` once scrolled — a precision instrument doesn't blur its own chrome.
 - Lands in design/SYSTEM.md §depth; the two tokens hand to ultraweb:tokens for app/globals.css `@theme`, and ultraweb:navigation reads the scrolled-header rule.
 
 ## Composes with
