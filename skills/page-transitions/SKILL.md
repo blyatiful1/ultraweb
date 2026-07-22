@@ -15,6 +15,8 @@ A route transition is seasoning on navigation, never a gate in front of it. Firs
 - **Two-tier architecture.** Tier 1 (default, stable APIs): `template.tsx` entrance animation. Tier 2 (enhancement, experimental): View Transitions for cross-route continuity. Never both animating the same surface — that double-fires.
 - **Chrome is stable.** Header, nav, footer never transition; only the page content wrapped below them.
 - **Entrance-only in Tier 1.** `template.tsx` remounts on navigation but cannot animate exit — the old page unmounts immediately. Accept it; don't hack exit with `AnimatePresence` around route children (fragile in App Router).
+- **The Masked Cut — only when DIRECTION.md justifies a full-bleed transition (`award-canon`).** Cover the swap with one brief full-bleed effect (color-flood, frost, dissolve) and fire the route or heavy swap *behind* the cover so the load is invisible; an incoming brand-color flood doubles as wayfinding. This is the disciplined form of the full-screen wipe the anti-patterns gate — ONE grammar reused site-wide, reduced-motion → plain crossfade or instant, and never a persistent-canvas SPA just to keep a scene alive across routes.
+- **Shared-Element Lift (`award-canon`): Browse → Elevate → Read.** A picked item *lifts into* its detail — the same element scales up via a shared-element transition (Motion `layoutId` for an in-page lift, or Tier 2 View Transitions cross-route) so the reader never loses their place. Even inside a looping/infinite field every card stays a real crawlable `<a href>` with its own URL (endless field, bounded meaning); browser Back returns to the field at the same scroll position.
 
 ## Process
 
@@ -122,3 +124,4 @@ Handoff: the strategy plus the `transitionTypes` map are recorded in design/SYST
 - ultraweb:routing — coordinate with loading.tsx: a slow route shows its loading UI; never stack an entrance animation on top of a skeleton swap.
 - ultraweb:navigation — the header's active-state change is part of the navigation choreography; keep it CSS, keep it instant.
 - ultraweb:gate-performance — verifies transitions add no INP or long-task regressions.
+- ultraweb:award-canon — The Masked Cut and Shared-Element Lift are the canon patterns this skill gates; the Masked Cut requires DIRECTION.md justification, and both keep a reduced-motion instant path and real URLs underneath.

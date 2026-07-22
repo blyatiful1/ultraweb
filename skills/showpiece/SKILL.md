@@ -15,6 +15,9 @@ Taste's rule verbatim: 3D, shaders, canvas only when the direction demands it, i
 - **The static fallback is itself designed** — a poster frame (gradient, SVG composition, or treated image via `imagery`) that would pass `gate-visual` alone. Reduced-motion users, no-WebGL browsers, and the pre-hydration frame all see it; it is not a degradation, it is the second edition of the design.
 - **Three exits wired**: `prefers-reduced-motion` → static; WebGL/context unavailable → static; tab hidden or element offscreen → animation loop paused.
 - **Cheapest rung wins.** Climb the cost ladder only as far as the direction requires.
+- **Progressive Spectacle Tiers (`award-canon`) is the operational form of this gate.** The three exits above ARE the tiers — a complete static/semantic baseline (no-JS, no-WebGL, reduced-motion), a CSS/Motion-enhanced tier, an optional WebGL top rung — identical content across all three, selected by capability + preference. Build the static tier FIRST as the durable edition, never a degraded stub.
+- **Weight as a Feature (`award-canon`): payload is a headline constraint set before richness, not after.** The winners that lasted ship full 3D worlds in single-digit MB — Messenger 5.7MB initial (Developer Site of the Year 2025), Bruno Simon ~2.8MB, Orano 901KB gzipped; set a byte budget before the first shader, because a 9MB/6s page will not win regardless of beauty. Most OLDER canvas-only winners in the corpus are now dead or replaced — Messenger is the living exception, and even it ships essentially no static/SEO path — so the semantic layer is what survives.
+- **What the set piece should BE (`award-canon`).** One Material World — commit every surface to a single primitive (ice, glass, points of light, grain) so the piece reads as one world, not a pile of unrelated effects; Fake-Depth Before Real Depth — layered 2D parallax, baked light, and matcaps buy the *look* of depth at a fraction of the cost, which is why the cost ladder climbs slowly; and one persistent hero object examined through scroll out-executes ten decorated sections.
 
 ## Process
 
@@ -99,3 +102,4 @@ Handoff: the pointer spring is owned by ultraweb:physics; the `/work` → `/work
 - ultraweb:gate-accessibility — verifies the reduced-motion exit actually renders the static path.
 - ultraweb:physics — when the cheapest sufficient rung is a pointer/element spring rather than canvas or WebGL, showpiece hands the motion to physics and builds no set piece.
 - ultraweb:scroll-motion — a "showpiece" brief that is really a scroll-linked reveal or shared-element page transition is routed down to scroll-motion instead of mounting a canvas.
+- ultraweb:award-canon — Weight as a Feature and Progressive Spectacle Tiers are the operational form of this skill's 60fps + static-fallback gate; One Material World, Fake-Depth Before Real Depth, and The Persistent Hero Object guide what the set piece should be. Cite the principle, never a winner's surface.

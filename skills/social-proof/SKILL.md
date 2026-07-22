@@ -14,7 +14,7 @@ The bar: a visitor who has been burned by fake reviews believes this section. Fa
 - Every testimonial carries full attribution: name + role + company, plus a face. "John D." or role-only attribution is banned.
 - Quotes are specific: a task, a number, a before/after. A quote that could sit on any competitor's site is filler.
 - Logos are monochrome at one visual weight, normalized to consistent optical height — never a rainbow of mismatched bounding boxes.
-- Stats are believable: max 4 per band; precise numbers ("2,340 teams") beat round bragging ("1M+ users") unless the round number is the actual fact.
+- Stats are believable: max 4 per band; precise numbers ("2,340 teams") beat round bragging ("1M+ users") unless the round number is the actual fact. The award record is blunt (`award-canon`): a real number with a cited source out-persuades a decorated one — a framed or animated stat still needs its timeframe/source caption, or the frame is lipstick on fiction.
 - Zero invented endorsements from real companies. If BRIEF.md supplies no proof, write plausible fictional attribution styled for this brand, mark it `// ponytail: placeholder proof — replace before launch`, and list it in handoff. Never name real brands the client hasn't earned.
 
 ## Process
@@ -30,7 +30,7 @@ The bar: a visitor who has been burned by fake reviews believes this section. Fa
 - **Single Spotlight** — one long, specific quote at 1.5–2× body size, attribution below, generous whitespace. Use when one killer quote exists; editorial/portfolio directions; placed just before the final CTA where doubt peaks.
 - **Testimonial Wall** — 3–6 quotes in a masonry/column layout with deliberately varying card heights (uniform heights read as generated). Use for SaaS with plural audience segments; tag each quote's role so segments see themselves.
 - **Logo Wall** — 5–12 customer/press logos, static grid or marquee (rules below). Normalize to a 24–32px optical cap height, not equal bounding boxes; monochrome via `grayscale opacity-70` or `currentColor` SVGs; optional full-color on hover.
-- **Stat Band** — 3–4 numbers with labels in one row (stacks at 375px). Numbers at display weight with `tabular-nums`; consult `ultraweb:data-display` for numeral alignment. Use when metrics are the strongest proof.
+- **Stat Band** — 3–4 numbers with labels in one row (stacks at 375px). Numbers at display weight with `tabular-nums`; consult `ultraweb:data-display` for numeral alignment. Use when metrics are the strongest proof. A single hero stat may take the Framed Data treatment (`award-canon`, mechanics owned with `ultraweb:data-display`): the count-up sits inside a thematic SVG mask/clip-path frame, static framed number as the reduced-motion fallback — real DOM text, never a canvas glyph. One framed figure per band, not four.
 - **Case-Study Teaser** — logo + one result metric + one-line outcome + link to the full story. Use only when BRIEF.md has real case studies; the strongest variant when it's available.
 
 ## Placement
@@ -104,3 +104,4 @@ Photos pull from blob-storage originals through `ultraweb:imagery` (warm treatme
 - ultraweb:cards — testimonial-wall card anatomy and non-uniform group layout
 - ultraweb:micro-interactions — hover/press timing on clickable teasers
 - ultraweb:gate-antislop — sweeps the greppable fake-proof strings above
+- ultraweb:award-canon — Framed Data (a hero stat inside a thematic frame) and its credibility rule (sourced real numbers over decorated ones) shape the stat band here

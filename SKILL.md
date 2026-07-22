@@ -24,7 +24,7 @@ A site is first-grade when ALL of these hold — verified, not assumed:
 
 ## Artifact contract
 
-Every phase writes its decisions to files in the generated project. Later phases READ these — this is how 59 skills stay coherent. Never skip an artifact.
+Every phase writes its decisions to files in the generated project. Later phases READ these — this is how 60 skills stay coherent. Never skip an artifact.
 
 | File | Written by | Contains |
 |------|-----------|----------|
@@ -42,7 +42,7 @@ Run the phases in order. Each phase names the skills to invoke — invoke them, 
 ### Phase 1 — Understand (skills: `brief`)
 Expand the one prompt into `design/BRIEF.md`. Decide: site type, audience, pages, tone, content, and which backend features are actually needed (contact form? auth? payments? CMS?). Decide, don't ask.
 
-### Phase 2 — Direction (skills: `direction`)
+### Phase 2 — Direction (skills: `direction` — `award-canon` consulted for references and signature-move precedent)
 Choose ONE aesthetic archetype from the catalog and ONE signature move. Write `design/DIRECTION.md`. This is the highest-leverage decision of the build — spend real thought here.
 
 ### Phase 3 — Foundation (skills: `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `imagery`, `motion-language` — then `tokens` LAST)
