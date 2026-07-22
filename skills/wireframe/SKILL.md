@@ -11,6 +11,8 @@ description: Section-by-section blueprint for every page of an ultraweb build �
 
 A first-grade page is a story with a rhythm, planned before code: hook → tension → proof → resolution → ask. Every section has one job, a named builder skill, and a density budget in counts, not adjectives. Read the section names alone, top to bottom — if that outline doesn't argue the page's conversion goal, no component polish will save it. The blueprint is the contract Phase 6 build agents execute verbatim.
 
+A long page is `award-canon`'s Scroll-as-Journey: authored acts with density rhythm — compression through the argument, release around the peak — never a uniform stack; section names obey the direction's governing metaphor (verbs/places, not "Section 2"). Place the signature move at that emotional peak, never in a corner a visitor may skip.
+
 ## Process
 
 1. Read part 1 of `design/SITEMAP.md`. For each page, take its purpose sentence and conversion goal — the blueprint walks the reader from arrival to that goal.
@@ -69,6 +71,7 @@ Header (`skill: navigation`) and footer (`skill: footer`) are site-level: bluepr
 - ≥2 width classes per page; all-contained is wallpaper rhythm and banned by taste.
 - Flag at least one deliberate asymmetry per page (offset grid, bleeding image, overlap) — name the section that carries it in its rhythm note.
 - Section spacing follows the arc: compression through the argument, release around the signature and the closing CTA. Encode as rhythm notes ("tight after hero", "double space before cta"); exact values belong to layout-grid.
+- Craft the corners (`award-canon`: Archive-as-Toy discipline — reward the visitor who pokes around): the 404, loader, and footer are designed moments, blueprinted with the hero's care, not framework defaults. For a library/index page, plan the browse itself as a filterable, rewarding surface, not a uniform grid.
 
 ## Anti-patterns
 
@@ -110,3 +113,4 @@ Handoff: part 2 appends to design/SITEMAP.md; ultraweb:hero builds line 1 from t
 - ultraweb:copywriting — density budgets become its per-section length ceilings
 - ultraweb:gate-content — verifies the headline-only read still tells the story planned here
 - ultraweb:feature-sections — blueprint lines with a capability-story job hand off here; it builds from the named variant and density budget on that line
+- ultraweb:award-canon — Scroll-as-Journey (named acts + density rhythm, the signature at the peak) and Archive-as-Toy (craft the corners, reward the browse) inform the narrative arc this skill blueprints

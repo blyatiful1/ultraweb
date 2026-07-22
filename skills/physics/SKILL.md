@@ -77,9 +77,11 @@ Pull factor 0.2–0.3; cap the result so buttons never travel more than ~12px. R
 
 Always constrain (`dragConstraints` as ref or `{ left, right }` bounds); `dragElastic` 0.1–0.2 gives edges a physical tug. Horizontal drag inside a vertically scrolling page is fine; free-axis `drag` inside scroll is not. Requires `domMax`.
 
-**Cursor follower** — a dot/label trailing the pointer with the Trailing recipe (`useSpring` per axis fed from pointer events). Hide the native cursor only inside the zone that replaces it (`cursor-none` scoped to that container), never site-wide. Pointer-fine only; the label must duplicate information available elsewhere (it's ornament, not UI).
+**Cursor follower** — a dot/label trailing the pointer with the Trailing recipe (`useSpring` per axis fed from pointer events). Hide the native cursor only inside the zone that replaces it (`cursor-none` scoped to that container), never site-wide. Pointer-fine only; the label must duplicate information available elsewhere (it's ornament, not UI). (`award-canon`: The Cursor as Narrator — the cursor may label an affordance ("explore"/"watch") or point direction, but only as pure enhancement over the native cursor and real focus/hover states, and never on touch.)
 
 **Spring press** — `whileTap={{ scale: 0.97 }}` with `transition={{ type: "spring", stiffness: 500, damping: 30 }}` on the 1–2 elements that deserve more than the CSS active state from `micro-interactions`.
+
+**Prove-It gesture** (`award-canon`: The Prove-It Gesture) — one deliberate press-and-hold or drag-to-intensify that reveals a hidden layer or teaches the model by consequence: `onPointerDown`/`onPointerUp` cross-fading an overlay, or a held pointer ramping a spring `useMotionValue` that eases home on release. ONE per site, tied to the signature move — never the only path to key info: pair a visible affordance and a click/tap fallback, keep it keyboard-operable, and snap to the end state under reduced motion.
 
 ## Anti-patterns
 
@@ -123,3 +125,4 @@ Handoff: `components/hero-fog.tsx` + the `fogTrail` constant in `lib/motion.ts`;
 - ultraweb:showpiece — a cursor-reactive canvas or WebGL moment graduates there with its gating rules.
 - ultraweb:gate-performance — 60fps verification of pointer-tracking effects is its pass bar.
 - ultraweb:gate-accessibility — verifies touch degradation and the reduced-motion path.
+- ultraweb:award-canon — The Prove-It Gesture and The Cursor as Narrator are the canon patterns this skill owns; their discipline (never the sole affordance, keyboard-operable, touch fallback) is its guardrail.

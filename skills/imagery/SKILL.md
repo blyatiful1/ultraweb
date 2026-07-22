@@ -11,6 +11,8 @@ description: Art direction for every visual asset in an ultraweb build — pick 
 
 Every image on the site passes through ONE named treatment derived from the OKLCH palette — untreated stock beside brand color reads as template. Zero gray boxes, zero placeholder.com, zero stock cliché (handshake, laptop-with-latte, team-laughing-at-salad). When no real photography exists — the usual case — generated SVG/CSS art is designed well enough to ship, and honestly labeled for replacement. Textures (mesh, grain) are subliminal: felt, not seen.
 
+Two art-direction moves shape the palette before any treatment is picked (`award-canon`; palette math stays in `color`): **Content-Derived Color** — sample the accent from the actual hero object/product (2–3 OKLCH values pulled from the hero image at build time) so the site's color IS the product's color; this is computed-from-content, never the authored Three-Token atlas. **Invert the Genre Palette** — name the category's default color story (fintech blue, sci-fi dark, luxury black/gold, wellness sage) and commit to its credible opposite. Both stay AA-safe: derived and inverted hues drive backgrounds and accents, never body copy.
+
 ## Photo treatments — pick ONE
 
 **Tint** — cheap duotone approximation for thumbnails, cards, hover states:
@@ -152,3 +154,4 @@ The class plus the generated `placeholder-harvest-01.svg` slots (olive-on-cream 
 - ultraweb:feature-sections — media-panel and textured backgrounds in feature blocks pull this skill's mesh + treatment classes
 - ultraweb:social-proof — testimonial and review-with-photo images pass through this skill's treatment before they ship
 - ultraweb:showpiece — hands off when a background must become an animated shader/canvas instead of CSS mesh or feTurbulence noise
+- ultraweb:award-canon — Content-Derived Color (palette sampled from the hero content) and Invert the Genre Palette are the art-direction stances this skill feeds into SYSTEM.md; palette math stays with `color`

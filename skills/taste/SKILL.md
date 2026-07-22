@@ -55,11 +55,15 @@ Non-negotiable in every build, regardless of direction:
 - **Whitespace is not empty; it is emphasis budget.** What you give room to is what the user reads as important.
 - **If a section looks boring, the fix is hierarchy or asymmetry — not another effect.**
 - **3D, shaders, canvas (`showpiece`) only when**: the direction demands it, it runs 60fps on mid hardware, and there's a static fallback. A fast plain site beats a janky impressive one, always.
+- **Spectacle never outscores usability.** Site-of-the-day winners average high across design AND usability AND content at once — the classic losing move is creativity bought with unusable navigation or a 20MB load. Never trade a usability point for a wow point.
+- **Craft the corners.** The last 2% — 404, loader, empty states, footer — is where site-of-the-day is won or lost. A flawless hero over an unfinished inner page reads as a template.
+- **The study library behind these calls is `award-canon`** — 30+ Awwwards SOTY/SOTD dossiers distilled to named patterns and the jury model; consult it for references and signature-move precedent, never to override this file.
 
 ## Position in the system
 
 **Stage:** every phase — invoked FIRST by the root pipeline, consulted whenever any skill says "the constitution" - **Reads:** nothing - **Writes:** judgment, not files.
 
+- ultraweb:award-canon — the study library behind this file's judgments: `taste` is what good means for us, `award-canon` is what the Awwwards record proves. `direction` consults it for references and signature-move precedent; `design-judge` scores against its invariants. It never overrides this file.
 - ultraweb:direction — the only skill allowed to grant exceptions to the banned list, and only in writing (design/DIRECTION.md).
 - ultraweb:gate-antislop — enforces the banned list empirically (grep + screenshots); a taste violation that ships is a gate failure, not a style choice.
 - ultraweb:gate-visual — scores against the required list via the `design-judge` subagent (Opus 4.8), which quotes this file in its rubric.

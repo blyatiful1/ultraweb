@@ -67,6 +67,8 @@ import { m } from "motion/react"; // under the app-level LazyMotion(domAnimation
 
 **Loading state.** Button label swaps to spinner via opacity crossfade 150ms; button keeps its width (`min-w` or absolutely-positioned spinner) — no layout jump.
 
+**Instant swap between heavy media** (`award-canon`: Instant Everything). When a component switches between heavy pieces — a media gallery, a tabbed panel with video, a before/after — prefetch the *adjacent* item(s), keep the incoming node **mounted** (`opacity-0 pointer-events-none`) and crossfade opacity rather than unmount-and-remount; the perceived instantaneousness is the delight. Cap it to the adjacent 2–3 neighbors — mounting the whole set is a memory trap on mid-range mobile — and if a neighbor isn't loaded, show a dimension-matched skeleton (no CLS), never a fake-instant blank. Reduced motion → instant show, no crossfade.
+
 ## Anti-patterns
 
 - `transition-all` — transition named properties; `all` animates layout properties by accident.
@@ -99,3 +101,4 @@ The cursor-proximity image reveal (the signature move) is gesture-tracking, so i
 - Consumed by the component-tier skills (cards, pricing, data-display, social-proof, …) — they pull their hover/press/focus timing from these patterns rather than inventing per-component motion.
 - ultraweb:navigation — the nav link-underline variants (grow-from-left, exit-through-right) and active-item treatment are specified here; navigation wires them onto the real nav.
 - ultraweb:faq — the accordion trigger's chevron rotate and expand timing come from this skill's icon-micro-motion patterns.
+- ultraweb:award-canon — the Instant Everything pattern (prefetch adjacent media, keep it mounted, opacity-crossfade heavy swaps) is cited here; perceived speed is its own polish signal.

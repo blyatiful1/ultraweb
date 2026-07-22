@@ -9,7 +9,7 @@ description: Defines the site-wide motion vocabulary every Tier-4 skill consumes
 
 ## Standard
 
-Every animation on the site draws its numbers from ONE token set and obeys ONE choreography plan. If two components (or two Tier-4 skills) would pick different values for the same interaction, this skill failed. Motion exists to direct attention, confirm an action, or express the direction's character — anything else doesn't animate. `prefers-reduced-motion` is honored on every animated surface, twice (CSS and JS).
+Every animation on the site draws its numbers from ONE token set and obeys ONE choreography plan. If two components (or two Tier-4 skills) would pick different values for the same interaction, this skill failed. Motion exists to direct attention, confirm an action, or express the direction's character — anything else doesn't animate. `prefers-reduced-motion` is honored on every animated surface, twice (CSS and JS). These are `award-canon`'s **Semantic Motion Only** (every animation encodes meaning or is cut) and **One Physics** (one easing personality, applied everywhere — consistency, not variety, is the signature) stated as this site's motion vocabulary.
 
 ## Duration tiers
 
@@ -66,6 +66,7 @@ export const ease = {
 - Header/nav render static — no entrance. The LCP element never mounts at `opacity: 0`; if the hero choreographs, the LCP headline/image leads with zero delay.
 - Animate `transform` and `opacity` only — never width/height/top/left/margin. motion's `layout` prop is the sanctioned exception (FLIP, still transforms underneath).
 - NEVER animates: focus outlines · body text while it's being read (display headlines may reveal; paragraphs may not) · form input positions · elements under the cursor (unless ultraweb:physics deliberately owns the moment) · theme switches (next-themes `disableTransitionOnChange` — a site-wide color crossfade is mud) · anything reacting to every scroll tick that isn't a designed scroll-linked moment (ultraweb:scroll-motion owns those).
+- One sanctioned ambient loop — `award-canon`'s **living idle** under Semantic Motion Only: low-amplitude perpetual drift on ≤2 hero elements, transform-only (`useTime`-driven `translateY(sin(t))`), permitted only at intensity ≥2 when DIRECTION.md names it and always behind `prefers-reduced-motion`. Any other autoplaying perpetual motion is a vestibular hazard and slop.
 
 ## Reduced motion — two layers, both mandatory
 
@@ -136,4 +137,5 @@ Handoff: the numbers land in design/SYSTEM.md §motion — ultraweb:tokens write
 - ultraweb:gate-accessibility — empirically verifies the reduced-motion policy
 - ultraweb:direction — read for the archetype that sets the intensity level (0-3) and selects the easing family
 - ultraweb:navigation — told the nav/header renders static: no entrance, and the LCP headline never mounts at opacity 0
-- ultraweb:ui-states — owns the skeleton pulse/shimmer that is the sole exception to the no-attention-loop rule
+- ultraweb:ui-states — owns the skeleton pulse/shimmer, one of only two permitted attention-loops (the other is the DIRECTION-sanctioned living idle above, always behind reduced-motion)
+- ultraweb:award-canon — One Physics and Semantic Motion Only name this skill's one-easing-family and meaning-or-cut rules; living idle is its one sanctioned ambient loop

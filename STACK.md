@@ -29,6 +29,11 @@ next 16.2.10 · react/react-dom 19.2.7 (create-next-app pins 19.2.4) · tailwind
 - **OKLCH is the native color format** — default palette and all custom tokens: `--color-accent: oklch(0.72 0.11 178)`.
 - **Container queries in core** — `@container`, `@sm:`, `@max-md:`, named containers. No plugin.
 
+## CSS scroll-driven animations — the facts (verified MDN + caniuse, 2026-07-22)
+
+- **`animation-timeline: scroll()` / `view()`** + `@property` typed custom props (e.g. `--split-position`) = native zero-JS scroll animation, but **progressive enhancement, NOT a default**. NOT Baseline: Chrome/Edge 115+ and Safari 26+ (shipped Sept 2025) unflagged; **Firefox stable still needs `layout.css.scroll-driven-animations.enabled`** (on in Nightly, an Interop 2026 priority — unflagged ship projected ~FF155, not yet landed as of FF152). ~84% global support — Firefox is the gap.
+- **Rule:** design so the **no-support state is already the correct static layout** — the animation only enhances it. NEVER gate content visibility on a scroll-driven animation (no `opacity:0`→reveal that stays hidden where unsupported). Wrap any reveal in `@supports (animation-timeline: view())`, default-visible otherwise; always pair with `prefers-reduced-motion`.
+
 ## shadcn/ui CLI 4 — the facts
 
 - `npx shadcn@latest init` / `add <component>` (the package `shadcn-ui` is long dead). Current default style lineage: "default" → deprecated (Feb 2025) → "new-york" → docs now show "base-nova"; `init` flags: `-t next`, `-b base|radix`, `--css-variables` (default true), `--rtl`.

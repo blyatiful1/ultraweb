@@ -12,6 +12,7 @@ description: Design and build the first-viewport hero section of an ultraweb sit
 The hero gets the largest share of craft budget — every visitor sees it, most see nothing else. First-grade means:
 
 - The headline is the design. Display size >=3.5x body on desktop, fluid via clamp() (the `--text-display` token, e.g. `clamp(2.75rem, 1.5rem + 5.5vw, 7rem)`), tracking -0.02 to -0.045em, line-height 0.95-1.08. If it doesn't feel almost too big, it's too small.
+- The strongest hero can make the words the picture (`award-canon`: Type as the Image) — the static stock-photo hero is a dated fashion. Media-led variants earn the image; otherwise the type IS the hero.
 - Exactly ONE primary CTA. A secondary may exist as ghost or arrow-link — never a second filled button.
 - The signature move (DIRECTION.md) usually lives here — check SITEMAP.md before placing it elsewhere.
 - LCP under control: the LCP element is named in a code comment and the perf rules below all hold.
@@ -33,7 +34,7 @@ The hero gets the largest share of craft budget — every visitor sees it, most 
 
 **full-bleed media** — edge-to-edge image or video with overlaid text. When: hospitality, food, photography, brands where the image carries the emotion. Overlay text needs a computed-AA scrim (dark gradient sized to the text zone, not smeared over the whole image). Video: muted, playsInline, poster set, <=4s loop, and no video at all under prefers-reduced-motion.
 
-**product-shot** — headline above, staged product render or UI screenshot as the anchor, often bleeding off the fold. When: e-commerce hero product, hardware, apps with genuinely beautiful UI. Screenshots are real app UI at 2x in a designed frame — SYSTEM.md §depth shadow, not a default `shadow-lg`.
+**product-shot** — headline above, staged product render or UI screenshot as the anchor, often bleeding off the fold. When: e-commerce hero product, hardware, apps with genuinely beautiful UI. Screenshots are real app UI at 2x in a designed frame — SYSTEM.md §depth shadow, not a default `shadow-lg`. For a hero object examined through scroll (`award-canon`: The Persistent Hero Object) — ONE anchor object transforming as context changes, concept + color system + tech story in one image — a static image-sequence on `sticky` scroll delivers ~80% of a rotatable 3D object at a fraction of the weight; real WebGL only via `showpiece`'s gate.
 
 **editorial-offset** — asymmetric grid: headline off-center, image bleeding one edge, an overlapping element or rotated caption. When: agency/portfolio/fashion; delivers taste's required asymmetry for free. Hardest to hold together at 768px — design the tablet layout explicitly.
 
@@ -43,7 +44,8 @@ The hero gets the largest share of craft budget — every visitor sees it, most 
 - Image LCP: static import + `<Image src={heroImg} alt="…" fill preload sizes="100vw" placeholder="blur" className="object-cover" />` inside a sized relative container. Never `loading="lazy"` here. `priority` is deprecated in Next 16 — the prop is `preload`.
 - No motion library on first paint when avoidable: entrance animation via CSS keyframes registered as `--animate-*` tokens in `@theme`, keeping hero.tsx a server component. If the signature move truly needs motion/react, isolate it in one `"use client"` child importing from `"motion/react"`, wrapped in `LazyMotion` with `m.` components — the hero never pulls the full motion bundle above the fold.
 - Zero CLS: `min-h-[100svh]` or explicit aspect boxes — never a height that depends on image load. next/font handles fallback metrics; no manual compensation.
-- One entrance choreography maximum: headline → subline → CTA, 400-700ms total, 40-80ms stagger, then STOP. Nothing in the hero loops forever except a `ultraweb:showpiece` element that earned it — or the scroll cue (Supporting cast), which is exempt.
+- One entrance choreography maximum: headline → subline → CTA, 400-700ms total, 40-80ms stagger, then STOP. Nothing in the hero loops forever except a `ultraweb:showpiece` element that earned it, the scroll cue (Supporting cast), or a DIRECTION-sanctioned living idle per `ultraweb:motion-language` (≤2 elements, transform-only, behind reduced-motion).
+- A heavy showpiece hero earns a designed loading moment, never a spinner (`award-canon`: The Loader is the Overture): its final frame IS the hero's first frame for a seamless handoff, it stays skippable, and it cuts instantly under reduced-motion. `page-transitions`/`showpiece` own the mechanism; the hero owns the frame handed to it.
 
 ## CTA hierarchy
 
@@ -106,3 +108,4 @@ Handoff: `components/sections/hero.tsx` stays a server component; the three-laye
 - ultraweb:layout-grid — the split and editorial-offset variants sit on the grid this skill defines; column ratios (55/45, 60/40) come from there, not ad-hoc widths.
 - ultraweb:imagery — full-bleed and product-shot heroes request their hero art and treatment (overlay scrim, grain) from here before media-optimization sizes the file.
 - ultraweb:wireframe — the hero's block skeleton — headline zone, CTA slot, media placement — is planned upstream in the wireframe; this skill builds that block to grade.
+- ultraweb:award-canon — names the hero-as-type stance (Type as the Image), The Persistent Hero Object these variants execute, and The Loader is the Overture a heavy hero earns; borrow the principle, never the winner's surface.

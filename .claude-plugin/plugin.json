@@ -1,8 +1,8 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "ultraweb",
-  "version": "0.2.0",
-  "description": "Ultimate one-prompt webdesign harness for Next.js: 59 interlocking skills with real-world worked examples, model-routed subagents (Opus 4.8 / Sonnet 5), design taste, design systems, components, motion, Next.js engineering, backend, and quality gates",
+  "version": "0.3.0",
+  "description": "Ultimate one-prompt webdesign harness for Next.js: 60 interlocking skills with real-world worked examples, model-routed subagents (Opus 4.8 / Sonnet 5), design taste, an award-canon study library distilled from Awwwards-winning sites, design systems, components, motion, Next.js engineering, backend, and quality gates",
   "author": {
     "name": "Iwan Braun",
     "email": "iwan.braun@gkd-el.de"

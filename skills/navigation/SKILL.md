@@ -15,6 +15,8 @@ Navigation is judged by how little you notice it until you need it — then it m
 - The mobile menu is a designed moment — typography, choreography, one extra beat of personality — not a shadcn Sheet with a link list dropped in.
 - Skip-link, aria-current, focus-visible, Escape handling: all present, all verified by an actual keyboard walkthrough.
 - <=7 top-level destinations. More is an information-architecture problem — push back to SITEMAP.md, or go mega-menu deliberately.
+- On a multi-section or multi-world page the incoming section's brand color doubles as wayfinding (`award-canon`: The Masked Cut — section color as a location signal, owned by `page-transitions`); the nav's active/location state mirrors it, but never by color alone — always keep the aria-current underline, dot, or weight shift.
+- Where SITEMAP.md holds an index or archive, offer Archive-as-Toy browse affordances (`award-canon`): filter by unexpected axes (mood, colour, medium — Frans Hals, SOTD 2018 — not just date) and a "surprise me," layered over a working, crawlable, filterable list, never replacing it.
 
 ## Process
 
@@ -123,3 +125,4 @@ Handoff: lands in `components/layout/header.tsx` + `mobile-menu.tsx`; `ultraweb:
 - ultraweb:gate-responsive — proves the desktop link-list collapses into the mobile menu at the breakpoint, catching a `hidden md:flex` with no drawer shipped.
 - ultraweb:i18n — when the site is multilingual the locale switcher sits in the header and nav labels are pulled from its message catalog, not hardcoded.
 - ultraweb:icons — supplies the hamburger, close, and mega-menu chevron from one lucide set at a consistent stroke width.
+- ultraweb:award-canon — The Masked Cut (section color as a wayfinding signal the active state mirrors) and Archive-as-Toy (unexpected browse axes for an index/archive) inform the wayfinding and filter affordances here.

@@ -11,6 +11,8 @@ description: The self-critique loop that separates working from first-grade — 
 
 The site is judged the way a client would judge it: from pixels, by a critic with no stake in the code. You never grade your own work — the design-judge subagent runs in fresh context and scores screenshots against DIRECTION.md and the taste constitution. First-grade means a SHIP verdict: ≥7/10 on all six rubric axes for every page, zero banned-list violations, and the committed direction plus signature move visibly delivered — not described in DIRECTION.md and absent on screen.
 
+Score Distinctiveness against the award-canon invariants (`award-canon`): a committed point of view, ONE signature move executed ~20% past comfortable (two competing signatures LOWER the score, not raise it), and craft in the corners — 404, footer, and loader matching the homepage. The jury weights Design + Usability at ~70% and Creativity at ~20%, so a janky wow move is a net loss; ≥7 on all axes clears the Honorable-Mention floor and puts SOTD contention in reach.
+
 ## Checklist
 
 1. Preconditions green: gate-code, gate-responsive
@@ -99,3 +101,4 @@ Rejected: bundling the /work type-scale fix into round 1 alongside the red-leak 
 - ultraweb:typography — owns the most common round-1 defect: undersized display type and weak scale contrast
 - ultraweb:layout-grid — owns the second most common: wallpaper rhythm and missing asymmetry
 - ultraweb:gate-responsive — precondition: its PASS must be recorded in design/QA.md before round 1, so the judge scores settled layouts instead of the overflow and orphan defects the responsive gate already owns
+- ultraweb:award-canon — supplies the invariants and jury model the Distinctiveness axis is scored against; the design-judge rubric quotes them
