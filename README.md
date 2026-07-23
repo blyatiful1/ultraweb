@@ -43,11 +43,11 @@ For changes to an existing ultraweb site: just ask ("make the hero bolder") — 
 - runs **12 phases**, each invoking real skills (loaded and followed, not summarized from memory);
 - **accumulates context** — every phase writes `design/*.md` artifacts that later phases read back, so the working set grows as the build proceeds;
 - ends in **multi-round quality gates** that screenshot every page at 375 / 768 / 1440 and critique it against a scored rubric, looping fix → re-gate until green;
-- and, in **fan-out mode**, spawns one agent per section and one per gate — multiplying all of the above.
+- and, in **fan-out mode**, spawns one agent per page/section group and one per gate — multiplying all of the above.
 
 Net: a single end-to-end build routinely costs **far more than an ordinary Claude Code task**, and takes a while to run. Plan for it. Model routing keeps the bill as honest as it can — mechanical sweeps run on Sonnet 5, judgment stays on the lead / Opus 4.8 tier (see [Map](#map)) — but cheaper *per call* is not cheap *overall*.
 
-**Keeping it down:** build once, then iterate. For any change to an existing ultraweb site, ask in plain language ("make the hero bolder") and `ultraweb:iterate` scopes the edit and re-runs only the phases and gates your change actually touches — not the whole pipeline. Reserve full `/ultraweb` runs for new sites and full redesigns.
+**Keeping it down:** build once, then iterate. For any change to an existing ultraweb site, ask in plain language ("make the hero bolder") and `ultraweb:iterate` scopes the edit and re-runs only the gates your change actually touches — not the whole pipeline. Reserve full `/ultraweb` runs for new sites and full redesigns.
 
 ## How it stays good
 
