@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  /* light — "blueprint paper" (SYSTEM.md §color) */
+  --background: oklch(0.965 0.004 90);
+  --foreground: oklch(0.22 0.012 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.012 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.012 250);
+  --primary: oklch(0.54 0.15 50);
+  --primary-foreground: oklch(0.98 0.005 90);
+  --secondary: oklch(0.93 0.006 90);
+  --secondary-foreground: oklch(0.28 0.012 250);
+  --muted: oklch(0.94 0.005 90);
+  --muted-foreground: oklch(0.47 0.012 250);
+  --accent: oklch(0.92 0.04 70);
+  --accent-foreground: oklch(0.35 0.09 50);
+  --destructive: oklch(0.54 0.19 25);
+  --border: oklch(0.89 0.006 90);
+  --input: oklch(0.89 0.006 90);
+  --ring: oklch(0.54 0.15 50);
+  --radius: 0.125rem;
+  --shadow-color: oklch(0.3 0.02 250 / 0.1);
+  /* era worlds — light accents (theme-worlds: accent re-map only) */
+  --world-goldsrc: oklch(0.55 0.12 80);
+  --world-goldsrc-fg: oklch(0.98 0.005 90);
+  --world-source: oklch(0.5 0.1 125);
+  --world-source-fg: oklch(0.98 0.005 90);
+  --world-go: oklch(0.54 0.15 50);
+  --world-go-fg: oklch(0.98 0.005 90);
+  --world-cs2: oklch(0.5 0.09 210);
+  --world-cs2-fg: oklch(0.98 0.005 90);
+  --dur-micro: 180ms;
+  --dur-small: 300ms;
+  --dur-section: 560ms;
+}
+
+.dark {
+  /* dark leads — graphite radar (re-decided per surface, never inverted) */
+  --background: oklch(0.17 0.012 250);
+  --foreground: oklch(0.93 0.008 250);
+  --card: oklch(0.205 0.014 250);
+  --card-foreground: oklch(0.93 0.008 250);
+  --popover: oklch(0.205 0.014 250);
+  --popover-foreground: oklch(0.93 0.008 250);
+  --primary: oklch(0.74 0.13 55);
+  --primary-foreground: oklch(0.16 0.012 250);
+  --secondary: oklch(0.25 0.015 250);
+  --secondary-foreground: oklch(0.9 0.008 250);
+  --muted: oklch(0.23 0.014 250);
+  --muted-foreground: oklch(0.73 0.012 250);
+  --accent: oklch(0.28 0.03 55);
+  --accent-foreground: oklch(0.9 0.06 60);
+  --destructive: oklch(0.68 0.17 25);
+  --border: oklch(0.26 0.014 250);
+  --input: oklch(0.26 0.014 250);
+  --ring: oklch(0.74 0.13 55);
+  --shadow-color: oklch(0 0 0 / 0.4);
+  --world-goldsrc: oklch(0.78 0.11 85);
+  --world-goldsrc-fg: oklch(0.16 0.012 250);
+  --world-source: oklch(0.75 0.09 125);
+  --world-source-fg: oklch(0.16 0.012 250);
+  --world-go: oklch(0.74 0.13 55);
+  --world-go-fg: oklch(0.16 0.012 250);
+  --world-cs2: oklch(0.78 0.09 200);
+  --world-cs2-fg: oklch(0.16 0.012 250);
+}
+
+/* era worlds — re-point the accent family for a subtree, nothing else */
+[data-world="goldsrc"] { --primary: var(--world-goldsrc); --primary-foreground: var(--world-goldsrc-fg); --ring: var(--world-goldsrc); }
+[data-world="source"] { --primary: var(--world-source); --primary-foreground: var(--world-source-fg); --ring: var(--world-source); }
+[data-world="go"] { --primary: var(--world-go); --primary-foreground: var(--world-go-fg); --ring: var(--world-go); }
+[data-world="cs2"] { --primary: var(--world-cs2); --primary-foreground: var(--world-cs2-fg); --ring: var(--world-cs2); }
+
+/* animatable tokens — typed so they interpolate (Compile stage cross-fades) */
+@property --compile-progress { syntax: "<number>"; inherits: true; initial-value: 0; }
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-archivo);
+  --font-display: var(--font-archivo);
+  --font-mono: var(--font-jetbrains);
+  --radius-sm: var(--radius);
+  --radius-md: calc(var(--radius) + 2px);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 6px);
+  --shadow-xs: 0 1px 2px var(--shadow-color);
+  --shadow-sm: 0 1px 3px var(--shadow-color), 0 1px 2px -1px var(--shadow-color);
+}
+
+@theme {
+  /* fluid scale 390→1440 (SYSTEM.md §type) */
+  --text-*: initial;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.125rem;
+  --text-xl: clamp(1.19rem, 1.07rem + 0.48vw, 1.5rem);
+  --text-2xl: clamp(1.375rem, 1.19rem + 0.76vw, 1.875rem);
+  --text-3xl: clamp(1.69rem, 1.39rem + 1.24vw, 2.5rem);
+  --text-4xl: clamp(2rem, 1.44rem + 2.29vw, 3.5rem);
+  --text-4xl--line-height: 1.08;
+  --text-5xl: clamp(2.5rem, 1.66rem + 3.43vw, 4.75rem);
+  --text-5xl--line-height: 1.02;
+  --text-6xl: clamp(3rem, 1.79rem + 4.95vw, 6.25rem);
+  --text-6xl--line-height: 0.96;
+  --text-display: clamp(3.5rem, 1.9rem + 8.5vw, 10.5rem);
+  --text-display--line-height: 0.92;
+  --spacing: 0.25rem;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);
+  --ease-in: cubic-bezier(0.64, 0, 0.78, 0);
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+  ::selection { background: var(--color-primary); color: var(--color-primary-foreground); }
+  :focus-visible { outline: 2px solid var(--color-ring); outline-offset: 2px; }
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+}
+
+@layer components {
+  /* display voice: one heroic face, wide + heavy (SYSTEM.md §type) */
+  .type-display {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-stretch: 125%;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  }
+  /* mono metadata chrome: de_dust2 // 2001 // D. JOHNSTON */
+  .type-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-muted-foreground);
+  }
+  /* corner ticks — the radar/HUD bracket (SYSTEM.md §shape) */
+  .corner-ticks { position: relative; }
+  .corner-ticks::before,
+  .corner-ticks::after {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-color: var(--color-primary);
+    border-style: solid;
+  }
+  .corner-ticks::before { top: 0; left: 0; border-width: 1px 0 0 1px; }
+  .corner-ticks::after { bottom: 0; right: 0; border-width: 0 1px 1px 0; }
+  /* dev-texture grid — showcase surfaces only, never behind body text */
+  .dev-grid {
+    background-image:
+      repeating-linear-gradient(0deg, var(--color-border) 0 1px, transparent 1px 24px),
+      repeating-linear-gradient(90deg, var(--color-border) 0 1px, transparent 1px 24px);
+    background-size: 24px 24px;
+  }
+  .survey-line { border-top: 1px dashed var(--color-border); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-up { animation: fade-up var(--dur-section) var(--ease-out) both; }
+  .animate-scale-in { animation: scale-in var(--dur-small) var(--ease-out) both; }
+}
