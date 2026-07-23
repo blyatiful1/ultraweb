@@ -30,7 +30,7 @@ export const eras: Era[] = [
     births: ["mirage", "cache"],
     definingMoment: {
       year: "2011",
-      text: "Volcano ships de_cache’s final Source version — a community map good enough that Valve would later buy it outright.",
+      text: "Volcano ships de_cache’s final Source version — a community map good enough that Valve reportedly acquired it outright.",
     },
   },
   {

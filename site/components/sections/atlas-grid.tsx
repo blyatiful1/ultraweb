@@ -100,7 +100,7 @@ export function AtlasGrid() {
         </ul>
       ) : (
         <p className="mt-8 max-w-[52ch] border-l border-t border-b border-r border-border bg-background p-6 font-mono text-xs leading-relaxed tracking-[0.04em] text-muted-foreground">
-          <span className="text-primary">// no entries</span>
+          <span className="text-primary">{"// no entries"}</span>
           <br />
           No map in this canon debuted in the CS2 era — every one is a veteran,
           ported forward from an older engine.

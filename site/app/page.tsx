@@ -16,7 +16,7 @@ import { JourneyCloser } from "@/components/sections/journey-closer";
 
 export default function Home() {
   return (
-    <main>
+    <main id="main" tabIndex={-1}>
       <JourneyCompileSpine>
         <JourneyHero />
         <JourneyStatsStrip />

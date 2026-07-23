@@ -1,5 +1,5 @@
 import type { MapDossier } from "@/lib/types";
-import { getRadar } from "@/components/radar";
+import { radars } from "@/components/radar";
 import { Reveal } from "@/components/sections/journey-reveal";
 
 // radar-dossier — the evidence wall. 5/7 split: radar SVG pinned in a
@@ -8,7 +8,7 @@ import { Reveal } from "@/components/sections/journey-reveal";
 // stacked and non-sticky. Calm level-1 motion: only the two section headings
 // fade up once; the data itself never animates (SYSTEM.md §motion).
 export function DossierRadar({ map }: { map: MapDossier }) {
-  const Radar = getRadar(map.slug);
+  const Radar = radars[map.slug];
 
   return (
     <section
@@ -31,7 +31,7 @@ export function DossierRadar({ map }: { map: MapDossier }) {
               <figcaption className="mt-6 border-t border-border pt-4 font-mono text-xs uppercase tracking-[0.06em] tabular-nums text-muted-foreground">
                 radar
                 <span aria-hidden className="mx-2 text-border">
-                  //
+                  {"//"}
                 </span>
                 {map.file}
               </figcaption>

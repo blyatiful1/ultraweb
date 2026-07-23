@@ -3,19 +3,25 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
+
+const emptySubscribe = () => () => {};
 
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  // false on the server and during hydration, true after — same contract as the
+  // setState-in-effect mounted flag, without the cascading render.
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
   // Render a fixed-size placeholder until mounted so the server and first
   // client render agree — no hydration mismatch, no layout shift.
   if (!mounted) {
-    return <span aria-hidden className="inline-flex h-8 w-8" />;
+    return <span aria-hidden className="inline-flex h-10 w-10" />;
   }
 
   const isDark = resolvedTheme === "dark";
@@ -24,7 +30,7 @@ function ThemeToggle() {
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      className="inline-flex h-8 w-8 items-center justify-center rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {isDark ? (
         <Sun size={16} strokeWidth={1.5} aria-hidden />

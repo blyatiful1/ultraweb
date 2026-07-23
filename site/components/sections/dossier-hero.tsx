@@ -50,7 +50,7 @@ export function DossierHero({ map }: { map: MapDossier }) {
         <p className="mt-6 font-mono text-xs uppercase tracking-[0.06em] tabular-nums text-muted-foreground">
           {map.authors.join(" · ")}
           <span aria-hidden className="mx-2 text-border">
-            //
+            {"//"}
           </span>
           {map.birthYear}
         </p>

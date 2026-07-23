@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { MapDossier } from "@/lib/types";
 import { eraLabel } from "@/lib/atlas-order";
-import { getRadar } from "@/components/radar";
+import { radars } from "@/components/radar";
 
 const cn = (...c: Array<string | false | null | undefined>) =>
   c.filter(Boolean).join(" ");
@@ -28,7 +28,7 @@ export function MapCard({
   headingLevel = "h2",
   className,
 }: MapCardProps) {
-  const Radar = getRadar(map.slug);
+  const Radar = radars[map.slug];
   const Heading = headingLevel;
 
   return (
@@ -90,7 +90,7 @@ export function MapCard({
             </Link>
           </Heading>
           <p className="mt-3 font-mono text-xs tracking-[0.06em] tabular-nums text-muted-foreground">
-            {map.file} // {map.birthYear} // {map.era}
+            {`${map.file} // ${map.birthYear} // ${map.era}`}
           </p>
           {featured && (
             <p className="mt-4 hidden max-w-[42ch] text-sm text-muted-foreground @md/card:block">
