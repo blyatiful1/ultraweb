@@ -24,7 +24,7 @@ Fifteen checks, each pass/fail in QA.md. Items 1–10 are the grep rows, 11–15
 7. **Uniform depth** — no radius+shadow pair repeated on ≥6 elements across different sections.
 8. **Glass smear** — at most 2 distinct glass surfaces without a citation.
 9. **Glow-orb furniture** — no blur-orb background decoration without a citation.
-10. **Motion on everything** — entrance animation on ≤70% of a page's sections.
+10. **Motion on everything** — entrance animation on ≤60% of a page's sections.
 11. **Three identical icon-cards** — no features row of three same-size icon-on-top cards.
 12. **Wallpaper rhythm** — ≥2 distinct section padding values per page, with compression and release.
 13. **All-centered symmetry** — at least one deliberate asymmetric moment per page.
@@ -56,7 +56,7 @@ Run every command, every time, against app/, components/, emails/, and content/.
    `rg -c "backdrop-blur" -g "*.tsx"`
 9. **Glow-orb furniture** — the navy-template tell: absolutely-positioned colored divs with heavy blur as background decoration; each needs a citation:
    `rg -n "blur-(2xl|3xl)" -g "*.tsx"`
-10. **Motion on everything** — entrance animation on >70% of a page's sections makes motion meaningless (motion-language owns the "what never animates" list):
+10. **Motion on everything** — entrance animation on >60% of a page's sections makes motion meaningless (motion-language owns the "what never animates" list):
     `rg -c "whileInView|animate=|variants=" -g "*.tsx"` per section file
 
 **Untouched-shadcn check (code side):** open app/globals.css — a neutral ramp with zero chroma throughout (pure-gray oklch), radius tokens unchanged since scaffold, and a lone default sans means the primitives shipped as the design. Cross-check every token against the decisions in design/SYSTEM.md.

@@ -9,10 +9,10 @@ description: Scroll-driven motion for ultraweb builds — section entrance revea
 
 ## Standard
 
-Scroll motion directs reading order; it never performs for its own sake. First-grade means: reveals fire once, travel 16–24px, land in 400–700ms, and at most ~60% of sections animate at all — taste bans "staggered fade-up on every element". The empirical test: scroll every page top to bottom, then bottom to top — nothing re-triggers, nothing janks, above-fold content never waits for an entrance.
+Scroll motion directs reading order; it never performs for its own sake. First-grade means: reveals fire once, travel ≤12px by default, land in 400–700ms, and at most ~60% of sections animate at all — taste bans "staggered fade-up on every element". The empirical test: scroll every page top to bottom, then bottom to top — nothing re-triggers, nothing janks, above-fold content never waits for an entrance.
 
 - **Once, always.** `viewport={{ once: true }}` is the default. Re-triggering reveals on scroll-up reads as broken.
-- **Small travel.** 16–24px rise + fade. 100px fly-ups are 2015 scroll-library slop.
+- **Small travel.** ≤12px rise + fade is the default; 16–24px only when the intensity dial is turned up (motion-language). 100px fly-ups are 2015 scroll-library slop.
 - **Reading order.** Elements within a section stagger 40–80ms in the order the eye should take, group total ≤ 600ms.
 - **Hero is exempt.** The first viewport animates on load, not on scroll — it's already visible.
 - **Parallax is decoration-only.** 10–15% displacement max, backgrounds and ornaments only, never body text or interactive elements.
@@ -24,7 +24,7 @@ Scroll motion directs reading order; it never performs for its own sake. First-g
 2. Map sections per SITEMAP.md: mark which reveal and which stay static. Data-dense sections, legal pages, and anything above the fold stay static.
 3. Build ONE `Reveal` client wrapper and reuse it site-wide. Children passed as props stay server components — never convert a section to a client component for its entrance.
 4. Mount `LazyMotion features={domAnimation} strict` once in a client provider near the root; use `m.` components everywhere below (per STACK.md, `motion.` throws under strict).
-5. Add stagger groups where a section has 3–8 sibling items; beyond 8, reveal in batches or as one block.
+5. Add stagger groups where a section has 3–6 sibling items; beyond 6, reveal in batches or as one block.
 6. Parallax and sticky sequences only if DIRECTION.md supports them — max one sticky sequence per site.
 7. Verify in the browser (Playwright MCP): full scroll pass both directions, DevTools performance check for long tasks, reduced-motion emulation pass.
 
@@ -35,14 +35,15 @@ Scroll motion directs reading order; it never performs for its own sake. First-g
 ```tsx
 "use client";
 import { m } from "motion/react"; // app-level LazyMotion(domAnimation) provider required
+import { dur, ease } from "@/lib/motion"; // motion-language's token mirror — no inline beziers/durations
 
 export function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   return (
     <m.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.55, ease: [0.21, 0.47, 0.32, 0.98], delay }}
+      transition={{ duration: dur.section, ease: ease.out, delay }}
     >
       {children}
     </m.div>
@@ -50,7 +51,7 @@ export function Reveal({ children, delay = 0 }: { children: React.ReactNode; del
 }
 ```
 
-`margin: "-80px"` fires the reveal after the section is meaningfully on screen, not at first pixel. Replace the ease array with the SYSTEM.md token values.
+`margin: "-80px"` fires the reveal after the section is meaningfully on screen, not at first pixel. `dur.section`/`ease.out` come from `lib/motion.ts` — motion-language's token mirror — so the numbers match SYSTEM.md §motion; never inline a bezier array or a raw duration here.
 
 **Stagger group** — parent orchestrates, children inherit:
 
@@ -58,7 +59,7 @@ export function Reveal({ children, delay = 0 }: { children: React.ReactNode; del
 <m.ul initial="hidden" whileInView="show" viewport={{ once: true }}
   variants={{ show: { transition: { staggerChildren: 0.06 } } }}>
   {items.map((it) => (
-    <m.li key={it.id} variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0 } }} />
+    <m.li key={it.id} variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0 } }} />
   ))}
 </m.ul>
 ```

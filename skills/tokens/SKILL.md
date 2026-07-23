@@ -20,7 +20,7 @@ description: Compile the finished design-system decisions (color, typography, sp
 1. Read SYSTEM.md §color/§type/§layout/§depth/§shape/§motion. A missing decision means the owning skill hasn't run — run it. Never invent values here.
 2. Write `:root` and `.dark` as plain CSS variables — the color skill's value table, verbatim.
 3. Bridge every var-referencing token through `@theme inline` (colors, fonts, radius math, shadows); literals (text scale, spacing, easings, keyframes) go in plain `@theme`. Rule: `inline` whenever a token references another CSS variable.
-4. Add `--animate-*` shorthands with their `@keyframes` inside `@theme`; durations and curves come from motion-language. Land its reduced-motion policy in the same file: a `@media (prefers-reduced-motion: reduce)` guard that finishes every `animate-*` utility instantly (worked example below) — an entrance keyframe with `both` fill must never leave content hidden for reduce users.
+4. Define the entrance `@keyframes` inside `@theme`; durations and curves come from motion-language's `--dur-*`/`--ease-*` tokens, never hardcoded. Land its reduced-motion policy the way motion-language mandates: author every entrance utility inside `@media (prefers-reduced-motion: no-preference)` (worked example below) so motion is opt-in — reduce users receive the static end state and no `both`-fill entrance leaves content hidden. No global `reduce` kill-switch.
 5. Base layer: body colors, default border-color, `::selection` in palette — craft in the last 2% (taste).
 6. Dark mode is class-strategy: `@custom-variant dark` in CSS + next-themes — `<html suppressHydrationWarning>` and a client `<ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>` wrapper.
 7. Verify: `npm run build` clean, then Playwright `browser_evaluate` → `getComputedStyle(document.body).backgroundColor` resolves to the token value in BOTH themes.
@@ -92,11 +92,11 @@ description: Compile the finished design-system decisions (color, typography, sp
   --text-6xl: clamp(3rem, 1.79rem + 4.95vw, 6.25rem);
   --text-6xl--line-height: 0.96;
   --spacing: 0.25rem; /* single multiplier — all spacing utilities derive from it */
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
-  --animate-fade-up: fade-up 0.6s cubic-bezier(0.25, 1, 0.5, 1) both;
-  --animate-scale-in: scale-in 0.35s cubic-bezier(0.25, 1, 0.5, 1) both;
-  @keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);      /* entrances, hover — Decisive family (motion-language) */
+  --ease-in-out: cubic-bezier(0.83, 0, 0.17, 1);   /* moves, morphs */
+  --ease-in: cubic-bezier(0.64, 0, 0.78, 0);       /* exits only */
+  --dur-micro: 200ms; --dur-small: 320ms; --dur-section: 560ms; /* motion-language duration tiers — plain custom props (no Tailwind namespace), mirrored in lib/motion.ts */
+  @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
   @keyframes scale-in { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: none; } }
 }
 
@@ -106,8 +106,9 @@ description: Compile the finished design-system decisions (color, typography, sp
   ::selection { background: var(--color-primary); color: var(--color-primary-foreground); }
 }
 
-@media (prefers-reduced-motion: reduce) { /* motion-language policy: entrances land instantly — `both` fill jumps to the end state, nothing stays hidden */
-  [class*="animate-"] { animation-duration: 0.01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; }
+@media (prefers-reduced-motion: no-preference) { /* motion-language policy: motion is opt-in. Entrance utilities attach their animation ONLY when the user allows motion — no `reduce` kill-switch fighting !important specificity, and a `both`-fill entrance can never leave reduce users staring at hidden content, because they receive the static end state directly. */
+  .animate-fade-up { animation: fade-up var(--dur-section) var(--ease-out) both; }
+  .animate-scale-in { animation: scale-in var(--dur-small) var(--ease-out) both; }
 }
 ```
 
@@ -119,13 +120,13 @@ description: Compile the finished design-system decisions (color, typography, sp
 - `text-[`, `p-[`, `rounded-[`, `shadow-[` arbitrary values — a value you need is a token you're missing.
 - `dark:bg-[` — per-component dark hacks instead of the `.dark` block re-decision.
 - Tokens defined but SYSTEM.md silent on them (invented here), or SYSTEM.md decisions with no token (system leaks into components).
-- globals.css defining `--animate-*` with no `prefers-reduced-motion` guard — reduce users get the full entrance choreography; taste requires the preference always honored.
+- Entrance utilities authored outside `@media (prefers-reduced-motion: no-preference)`, or a global `reduce` kill-switch standing in for opt-in authoring — reduce users must never receive motion they didn't opt into; taste requires the preference honored by construction, not overridden after the fact.
 
 ## Composes with
 
 - ultraweb:color — supplies every oklch value and the dark-theme table this file encodes verbatim.
 - ultraweb:typography — supplies the `--font-*` variables (via lib/fonts.ts) and the clamp() scale values.
-- ultraweb:motion-language — supplies the duration/easing vocabulary behind `--ease-*` and `--animate-*`, plus the reduced-motion policy the guard block enforces.
+- ultraweb:motion-language — supplies the duration/easing vocabulary behind `--ease-*`/`--dur-*` and the entrance keyframes, plus the opt-in `no-preference` reduced-motion policy this file authors.
 - ultraweb:shape-language — supplies the `--radius` base and its scale steps.
 - ultraweb:depth — supplies the shadow recipes and the per-theme `--shadow-color` strategy.
 - ultraweb:scaffold — creates the project and a skeleton globals.css; this skill replaces the skeleton, never runs before it.
