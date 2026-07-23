@@ -46,6 +46,7 @@ A first-grade data surface is scannable in 3 seconds: eyes land on the biggest n
 
 - **Stat row**: 3–4 KPIs. Value 2.5–3.5rem, semibold+, `tabular-nums`; label 0.8125–0.875rem, muted, consistently above or below across the row. Delta ("+12%") gets a direction icon plus semantic color — never color alone.
 - Count-up: 400–700ms, ease-out, once on first view; under `prefers-reduced-motion` render the final value immediately.
+- Framed Data (`award-canon`, an optional signature for ONE hero figure): wrap the count-up in a thematic SVG `<mask>`/`clip-path` frame that embodies the subject — a gauge, a filling vessel — so the figure reads as embodied, not floating (The Other Side of Truth framed war stats in bullet-hole vignettes, SOTY 2022). The frame is SVG/CSS; the number stays real DOM text with the full value in `aria-label`, never a canvas glyph. Static / reduced-motion fallback: the final number already inside the same frame. Reserve it for the hero stat — framing every figure is noise.
 - Caption the timeframe/source ("last 30 days") — an unanchored number reads as marketing fiction.
 
 ## Chart restraint
@@ -109,3 +110,4 @@ Output lands in `components/data/berth-table.tsx`; ultraweb:pricing inherits thi
 - ultraweb:pricing — its comparison matrix inherits these alignment and markup rules
 - ultraweb:social-proof — marketing stat rows reuse the stat-block spec
 - ultraweb:micro-interactions — sort, hover, and tooltip feedback timing
+- ultraweb:award-canon — Framed Data (a stat animating inside a thematic SVG/clip-path frame, the static framed number as fallback) is the canon technique for a hero figure here

@@ -1,6 +1,6 @@
 # ultraweb skill roster
 
-The complete map of the harness. 59 skills: 1 orchestrator (root `SKILL.md`) + 58 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
+The complete map of the harness. 60 skills: 1 orchestrator (root `SKILL.md`) + 59 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
 
 Format: **name** — scope. *(reads → writes)*
 
@@ -9,6 +9,7 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 ## Tier 0 — Core
 - **taste** — the design constitution: first-grade bar, banned list, required list, heuristics, stack lock. *(— → judgment)*
 - **iterate** — targeted revision pipeline for an existing ultraweb site: locate the design/* artifacts, scope the change, touch only affected phases, re-run only affected gates. *(design/* → changed code + QA.md)*
+- **award-canon** — the study library: 25 named patterns + per-site bank distilled from Awwwards Site-of-the-Year/SOTD-tier winners 2017-2026; direction consults it for references, design-judge scores against its invariants. *(— → judgment + reference)*
 
 ## Tier 1 — Discovery
 - **brief** — expand one prompt into a full creative brief: site type, audience, goals, tone words, page list, content inventory, backend needs. Decides, never interviews. *(user prompt → design/BRIEF.md)*

@@ -12,6 +12,8 @@ description: Choose and implement the site's type system — a display/body pair
 - A real pairing chosen for THIS direction — never default-Inter-only (pipeline ban).
 - ≤2 families (+1 optional mono for code/labels/figures), ≤4 loaded weights site-wide.
 - Hero display resolves to ≥3.5× body at 1440px (taste floor); fluid via clamp(), zero breakpoint jumps.
+- Type is the award record's cheapest, most durable win (`award-canon`: Type as Evidence) — commit to ONE heroic face and let extreme scale contrast *alone* build documentary hierarchy; jurors read that conviction in seconds.
+- That scale also feeds Kinetic Reveal Type — the headline animating as the signature moment (background-clip wipe, per-char stagger) built from real DOM text with CSS/Motion, owned by `scroll-motion`/`showpiece`, never body copy. Pioneer Corn (SOTD + Developer Award, July 2020; overall SOTY unconfirmed) rendered ALL type as canvas MSDF with no DOM text — reconstructed from the write-up, cautionary not exemplary: the razor-crisp glyphs are inseparable from an accessibility failure.
 - Tight tracking on large text, generous leading on body — the numbers below, not vibes.
 - Loaded via next/font/google: auto self-hosted, zero runtime Google requests, variable fonts need no weight.
 
@@ -121,3 +123,4 @@ Handoff: lands in design/SYSTEM.md §type + lib/fonts.ts; ultraweb:tokens bridge
 - ultraweb:content-cms — hands off the long-form prose type (article body face, measure, leading) that MDX article rendering applies.
 - ultraweb:gate-performance — verifies the next/font loading set here holds LCP and adds no font-swap CLS.
 - ultraweb:gate-visual — its design-judge rubric scores the hero ≥3.5× body floor and pairing conviction this skill commits.
+- ultraweb:award-canon — Type as Evidence (ONE face, scale contrast alone) and Kinetic Reveal Type are the canon patterns this scale serves; the never-render-type-to-canvas caution comes from there.

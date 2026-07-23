@@ -16,6 +16,8 @@ Scroll motion directs reading order; it never performs for its own sake. First-g
 - **Reading order.** Elements within a section stagger 40–80ms in the order the eye should take, group total ≤ 600ms.
 - **Hero is exempt.** The first viewport animates on load, not on scroll — it's already visible.
 - **Parallax is decoration-only.** 10–15% displacement max, backgrounds and ornaments only, never body text or interactive elements.
+- **Named moves & the #1 hazard (`award-canon`).** A long page is Scroll-as-Journey — authored acts (rooms/worlds/phases) with density rhythm, dense walls alternating with rest, not a uniform stack. Binding scroll to one continuous spatial move (Scroll-as-Camera) is the top rung: DIRECTION-gated and the #1 scroll-jack hazard — layer motion *on* native scroll, never hijack velocity; native scroll position stays authoritative (keyboard, PageDown, and the footer all still reach). The parallax above is Fake-Depth Before Real Depth — subtle, transform-only, off under reduced-motion.
+- **CSS scroll-driven animation is progressive enhancement, not a default.** `animation-timeline: view()/scroll()` buys scroll-linked reveals with zero JS, but cross-browser support landed late (Safari, late 2025) — use it only where the no-support state is *already* the correct static layout, never a broken one.
 - **Reduced motion:** reveals collapse to opacity-only or nothing; parallax and sticky sequences disable entirely.
 
 ## Process
@@ -138,3 +140,4 @@ Handoff: the Reveal + stagger land in `app/work/page.tsx`; the cursor-proximity 
 - ultraweb:showpiece — a scroll-linked moment that needs canvas/WebGL graduates there.
 - ultraweb:gate-performance — verifies zero CLS and no long tasks from the entrance layer.
 - ultraweb:gate-accessibility — verifies the reduced-motion collapse.
+- ultraweb:award-canon — Scroll-as-Journey, Scroll-as-Camera, and Fake-Depth Before Real Depth are the patterns this skill executes; their scroll-jack discipline is its guardrail.
