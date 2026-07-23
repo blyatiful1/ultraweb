@@ -1,6 +1,6 @@
 ---
 name: email
-description: Transactional email for a Next.js 16 site — Resend 6 (the { data, error } return; it does NOT throw on API errors, check error explicitly) with @react-email/components templates that carry the design system's palette and type into the inbox, the React component passed via the react property, a contact-form flow wired through a server action, the react-email dev preview server, and RESEND_API_KEY handling with a lazy client so builds pass without the key. Invoke during the backend phase whenever the brief needs outbound mail — contact-form notifications, magic links, welcome or receipt emails — when a template looks default or off-brand, or when sends fail silently. Trigger phrases — "contact form email", "send an email", "transactional email", "email template", "Resend", "magic link email", "the form submits but no email arrives".
+description: Transactional email for a Next.js 16 site — Resend 6 (the { data, error } return; it does NOT throw on API errors, check error explicitly) with @react-email/components templates that carry the design system's palette and type into the inbox, the React component passed via the react property, a contact-form flow wired through a server action, the react-email dev preview server, and RESEND_API_KEY handling with a lazy client so builds pass without the key. Invoke during the backend phase whenever the brief needs outbound mail — contact-form notifications, double-opt-in newsletter confirmations, magic links, welcome or receipt emails — when a template looks default or off-brand, or when sends fail silently. Trigger phrases — "contact form email", "send an email", "transactional email", "email template", "Resend", "magic link email", "double opt-in confirmation", "newsletter Bestätigungs-Mail", "the form submits but no email arrives".
 ---
 
 # email — mail the brand, not defaults
@@ -15,10 +15,11 @@ description: Transactional email for a Next.js 16 site — Resend 6 (the { data,
 - Every template is previewed in the react-email dev server before it's wired to a send.
 - Email CSS is 2009-grade: style props only, table-safe components from `@react-email/components`, ≤600px container, hex colors (no oklch), system-stack font fallbacks. The design must hold when Gmail strips the web font.
 - Transactional only: contact notifications, magic links, receipts, welcomes. No marketing machinery unless BRIEF.md demands it.
+- When the brief includes a newsletter, its signup is double opt-in wherever the audience is in the DACH region: single opt-in (subscribing on submit) is unlawful advertising under German UWG §7, so the address joins the list only after a confirmation link is clicked. A form that's legal in the US can be illegal here — check the jurisdiction, not the UX convention.
 
 ## Process
 
-1. Read design/BRIEF.md: which flows send mail? Contact form → notification to the team (and optionally a confirmation to the sender). Auth → magic-link/verification templates for ultraweb:auth to call. Commerce → receipt. No flows → skip this skill entirely.
+1. Read design/BRIEF.md: which flows send mail? Contact form → notification to the team (and optionally a confirmation to the sender). Newsletter → double-opt-in confirmation (the footer's newsletter row wires to this, never a fire-and-subscribe action — see below). Auth → magic-link/verification templates for ultraweb:auth to call. Commerce → receipt. No flows → skip this skill entirely.
 2. `npm i resend @react-email/components` and `npm i -D react-email`. Create `emails/` at the project root.
 3. Write `emails/theme.ts`: SYSTEM.md tokens translated to email-safe values (oklch → hex, display font + system fallback stack).
 4. Build one template per flow. Preview: `npx react-email dev --dir emails --port 3001` (3000 belongs to `next dev`). Iterate until it reads as this site's brand, not React Email's starter.
@@ -97,6 +98,58 @@ Rules:
 - Web fonts go through the `<Font>` component in `<Head>` with an explicit fallback family — Gmail and Outlook render the fallback, so check the preview in the system stack too. Exact props: verify against current docs first.
 - Dark mode in email clients is forced and unreliable: keep bg/fg away from pure `#fff`/`#000` so auto-inversion doesn't produce mud.
 
+## Double opt-in — the newsletter confirmation
+
+German UWG §7 (settled across OLG rulings) treats single opt-in — putting an address on the list the moment a form submits — as unlawful advertising: consent has to be *proven*, not assumed. So a DACH newsletter form never subscribes. Submit writes a **pending** (unconfirmed) record carrying a signed, single-use token that expires (~48h) — schema per ultraweb:database — and sends a Bestätigungs-Mail; the address becomes a real subscriber only when the confirmation link is clicked, which the confirm route verifies and flips per ultraweb:server-actions. The footer's newsletter row wires to this action, not a fire-and-subscribe one.
+
+```ts
+// app/actions/newsletter.ts — double opt-in: submit sends a confirmation link, it does NOT subscribe
+import { getResend } from '@/lib/email'
+import NewsletterConfirm from '@/emails/newsletter-confirm'
+import { createPendingSubscriber } from '@/lib/newsletter'   // writes status:'pending' + signed token, per ultraweb:database
+
+// inside the action, after zod validation:
+const { token } = await createPendingSubscriber(parsed.data.email)
+const confirmUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/newsletter/confirm?token=${token}`  // absolute: an email has no origin
+const { data, error } = await getResend().emails.send({
+  from: 'Acme <mail@mail.acme.com>',
+  to: parsed.data.email,
+  subject: 'Bitte bestätige deine Anmeldung',
+  react: NewsletterConfirm({ confirmUrl }),
+})
+if (error) return { ok: false, errors: { form: ['Bestätigung konnte nicht gesendet werden — bitte erneut versuchen.'] } }
+// success state: "Check your inbox and click the link" — never "You're subscribed"
+```
+
+```tsx
+// emails/newsletter-confirm.tsx — the Bestätigungs-Mail; the address joins the list only when this is clicked
+import { Html, Head, Preview, Body, Container, Text, Button } from '@react-email/components'
+import { t } from './theme'
+
+export default function NewsletterConfirm({ confirmUrl }: { confirmUrl: string }) {
+  return (
+    <Html>
+      <Head />
+      <Preview>Ein Klick bestätigt deine Anmeldung — sonst passiert nichts.</Preview>
+      <Body style={{ margin: 0, backgroundColor: t.bg, fontFamily: t.font, color: t.fg }}>
+        <Container style={{ maxWidth: 560, padding: '40px 24px' }}>
+          <Text style={{ fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 16px' }}>Fast geschafft</Text>
+          <Text style={{ fontSize: 15, lineHeight: '24px', margin: '0 0 24px' }}>
+            Bestätige mit einem Klick, dass du unseren Newsletter abonnieren möchtest. Ohne diese Bestätigung schicken wir dir nichts.
+          </Text>
+          <Button href={confirmUrl} style={{ backgroundColor: t.accent, color: '#fff', fontSize: 15, fontWeight: 600, padding: '14px 28px', borderRadius: 8, textDecoration: 'none' }}>
+            Anmeldung bestätigen
+          </Button>
+          <Text style={{ fontSize: 13, color: t.muted, margin: '24px 0 0' }}>
+            Nicht angefordert? Ignoriere diese Mail — ohne Klick landest du auf keiner Liste.
+          </Text>
+        </Container>
+      </Body>
+    </Html>
+  )
+}
+```
+
 ## Anti-patterns
 
 - `try {` around `emails.send` with no `error` check — Resend 6 does not throw on API errors; the catch never fires and mail vanishes silently.
@@ -107,6 +160,9 @@ Rules:
 - `NEXT_PUBLIC_RESEND` — the key is server-only; a public prefix ships it in the client bundle.
 - `new Resend(` at module scope of anything a page imports — build fails on machines without the key; lazy-init in the helper.
 - `from: 'onboarding@resend.dev'` reaching production — dev-only sender; swap to the verified domain before ship.
+- Adding the address to the list on submit (single opt-in) for a DACH audience — unlawful advertising under German UWG §7. On submit you write a *pending* record and send the Bestätigungs-Mail; the subscriber is real only after the confirmation link is clicked.
+- An unsigned or reusable confirmation token — a guessable or shared link lets a scraper confirm addresses that aren't theirs. Sign it, scope it to the one address, and let the pending record expire (~48h) so it can't be confirmed weeks later.
+- A newsletter success state that says "Subscribed!" when only the pending record exists — it isn't true yet; say "Check your inbox and click the link to confirm."
 - ✨/🚀 in subject lines — taste bans emoji in production copy, and subject lines are production copy.
 
 ## Worked example — Kaffeewerk Ost, order confirmation after Stripe checkout
@@ -131,9 +187,11 @@ Handoff: the `getResend().emails.send({ react: OrderConfirmation(order) })` call
 
 ## Composes with
 
-- **ultraweb:server-actions** — the contact action owns validation and error-as-state; this skill owns the send inside it.
+- **ultraweb:server-actions** — the contact action owns validation and error-as-state; this skill owns the send inside it. For the newsletter, that action writes the pending record and the `/newsletter/confirm` route flips it to subscribed; this skill only sends the confirmation mail between them.
 - **ultraweb:forms** — designs the contact form whose submit lands here; its success state reports what the email did.
+- **ultraweb:footer** — its newsletter row's server action lands here as the double-opt-in confirmation, never a fire-and-subscribe subscribe; the row owns the input and the "check your inbox" success state, this skill owns the confirmation template and send.
 - **ultraweb:auth** — Better Auth's magic-link/verification flows call a send function; the template and Resend call live here, the token logic stays there.
+- **ultraweb:database** — the pending (unconfirmed) subscriber record, its signed single-use token, and the ~48h expiry live in the schema there; this skill sends the confirmation mail that flips a pending row to subscribed.
 - **ultraweb:copywriting** — subject lines, preview text, and body copy are site voice, not boilerplate.
 - **ultraweb:tokens** — theme.ts is a hand-maintained mirror of the `@theme` tokens; when tokens change, re-translate.
 - **ultraweb:ship** — env audit covers RESEND_API_KEY and the verified production sender domain.

@@ -9,14 +9,15 @@ description: Voice definition and every string on an ultraweb site — derives a
 
 ## Standard
 
-Every string is written for THIS brief in a defined voice. Headlines survive the swap test: paste one onto a competitor's site — if it still works, it says nothing and fails. Microcopy gets the same care as heroes; alt text and aria-labels are copy too. A string that could have been generated without reading the brief is a defect, not a draft.
+Every string is written for THIS brief in a defined voice. Headlines survive the swap test: paste one onto a competitor's site — if it still works, it says nothing and fails. Microcopy gets the same care as heroes; alt text and aria-labels are copy too. A string that could have been generated without reading the brief is a defect, not a draft. Body copy is scannable, not a wall: readers scan in an F-pattern and rarely pass a paragraph's first two sentences, so front-load the point and break three-plus supporting clauses into a list rather than a subordinate-clause pile-up — the ≤45-word body limit below is the ceiling, not the target (long-form technical prose is exempt).
 
 ## Voice definition (always first)
 
-1. Take the 3 tone words from `design/BRIEF.md`. For each, write one "sounds like" and one "never sounds like" sentence pair — six sentences total.
-2. Fix 5 mechanics: person (we/you/it), contraction policy, sentence-length ceiling in words, jargon policy (which domain terms are in, which are out), humor policy (none / dry / warm — never wacky).
-3. Write 3 calibration strings — one hero headline, one button, one error message — and check each against every pair from step 1. These are the tuning fork for every later string.
-4. Append the result as `## Voice` to `design/DIRECTION.md`. Phase 6 agents draft against it; Phase 8 rewrites in it.
+1. Take the 3 tone words from `design/BRIEF.md` and score them onto the **Voice Matrix** — four orthogonal 1–5 sliders: Formal↔Casual, Serious↔Playful, Plain↔Expressive, Reserved↔Bold. Then write one "sounds like" and one "never sounds like" sentence pair per tone word — six sentences total. The four numbers are the drift detector: every later string batch (hero, nav, footer, errors) gets a one-line check against them, so a witty hero can't sit beside a corporate-flat footer undetected.
+2. **German register (de-DE — decide before any German string):** the Formal↔Casual slider made grammatical. Record **Sie** or **Du** plus a one-line brand rationale in `design/BRIEF.md`, then hold it across nav, forms, errors, confirmations, and transactional email. Sie for B2B, regulated, or trust-coded builds (Ledger & Lane; the Deutsche Bahn / Sparkasse convention); Du for D2C, playful, or modern ones (Loop & Thread, Framewalk; N26's deliberate break from bank convention). `gate-content` flags any mixed-register string the way it flags dead copy.
+3. Fix 5 mechanics: person (we/you/it), contraction policy, sentence-length ceiling in words, jargon policy (which domain terms are in, which are out), humor policy (none / dry / warm — never wacky).
+4. Write 3 calibration strings — one hero headline, one button, one error message — and check each against every pair from step 1 and the matrix scores. These are the tuning fork for every later string.
+5. Append the result as `## Voice` to `design/DIRECTION.md`. Phase 6 agents draft against it; Phase 8 rewrites in it.
 
 ## Headline formulas (rotate — no two adjacent sections share one)
 
@@ -44,8 +45,9 @@ Rules: every headline contains ≥1 concrete noun; abstract -ify/-ize verbs (sim
 | Testimonial pull quote | ≤30 words |
 | Error message | ≤2 sentences |
 | Meta title | ≤60 chars; meta description 140–160 chars |
+| Kinetic-reveal beat (only if a reveal is selected) | ≤6–8 words; German ≤5–6 |
 
-Density budgets in `design/SITEMAP.md` part 2 override these downward, never upward.
+Density budgets in `design/SITEMAP.md` part 2 override these downward, never upward. When a kinetic-type reveal is on, split any line longer than one beat into multiple reveal beats with pauses (40–80ms stagger) — never shrink the font to fit; the `prefers-reduced-motion` fallback shows the full string at once.
 
 ## Banned phrases (taste list, expanded — grep for every one)
 
@@ -81,11 +83,15 @@ No emoji in production copy (✨🚀🎉 — taste ban). Max 1 exclamation point
 - Title Case On Every Headline Word — default to sentence case; if DIRECTION.md decides otherwise, keep it consistent site-wide
 - Lorem ipsum or draft markers surviving into Phase 8 (grep: "lorem", "ipsum", "TBD")
 - Body copy that re-explains the headline directly above it — say it once
+- A marketing paragraph that buries its point in a subordinate-clause pile-up — lead with the conclusion, list the rest
+- Mixed German register — Sie in checkout, Du in a toast confirmation (decide once in BRIEF.md, hold everywhere)
+- A kinetic-reveal line too long to read before the stagger finishes — split into beats, never shrink the font
 - Alt text like "image" or "photo" — describe what the image argues, or mark it decorative
 
 ## Worked example — Kaffeewerk Ost, roastery shop voice + hero copy
 
 - Input read — BRIEF.md tone words: "sensory, direct, unhurried"; DIRECTION.md archetype: "Warm Workshop — craft, tactile, no marketing fluff."
+- Voice Matrix from those tone words: Formal↔Casual **4**, Serious↔Playful **2**, Plain↔Expressive **3**, Reserved↔Bold **3** — the casual-4 score sets the de-DE register to **Du**, logged in BRIEF.md ("a Berlin roaster talks to regulars, not account holders").
 - §Voice appended to DIRECTION.md: person "wir/du" (informal German); sentence ceiling 16 words; jargon IN: washed, natural, Röstprofil — OUT: "premium", "artisanal"; humor dry, never wacky.
 - Calibration hero H1 (Specific-number formula, 6 words): "Röstung No. 14. Frisch aus Berlin."
 - Subhead (11 words, one sentence): "Washed Yirgacheffe: Apricot, black tea, honey — dienstags geröstet, mittwochs bei dir."
@@ -101,7 +107,8 @@ No emoji in production copy (✨🚀🎉 — taste ban). Max 1 exclamation point
 - ultraweb:wireframe — its per-section density budgets are this skill's copy ceilings
 - ultraweb:ui-states — the error/empty/success standards here fill the states it designs
 - ultraweb:seo — meta titles and descriptions are written here, in the voice, within the char limits
-- ultraweb:gate-content — the empirical check that bans held and headlines tell the story
+- ultraweb:gate-content — the empirical check that bans held and headlines tell the story; for de-DE it also flags Sie/Du register drift across pages
+- ultraweb:motion-language / ultraweb:scroll-motion — when a kinetic-type reveal is selected there, copy caps at 6–8 words per beat and the `prefers-reduced-motion` fallback shows the full string
 - Consumed by every component-tier skill (hero, pricing, buttons, feature-sections, forms, social-proof, faq, footer) — they draft strings against §Voice rather than writing their own
-- ultraweb:i18n — every string written here is what i18n externalizes into per-locale message catalogs; the voice must survive translation intact
+- ultraweb:i18n — every string written here is what i18n externalizes into per-locale message catalogs; the voice — including the Sie/Du register decision — must survive translation intact
 - ultraweb:gate-antislop — runs the banned-phrase grep this skill sweeps for; a dead-copy phrase that ships is its gate failure, not a style call

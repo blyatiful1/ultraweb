@@ -34,6 +34,25 @@ next 16.2.10 · react/react-dom 19.2.7 (create-next-app pins 19.2.4) · tailwind
 - **`animation-timeline: scroll()` / `view()`** + `@property` typed custom props (e.g. `--split-position`) = native zero-JS scroll animation, but **progressive enhancement, NOT a default**. NOT Baseline: Chrome/Edge 115+ and Safari 26+ (shipped Sept 2025) unflagged; **Firefox stable still needs `layout.css.scroll-driven-animations.enabled`** (on in Nightly, an Interop 2026 priority — unflagged ship projected ~FF155, not yet landed as of FF152). ~84% global support — Firefox is the gap.
 - **Rule:** design so the **no-support state is already the correct static layout** — the animation only enhances it. NEVER gate content visibility on a scroll-driven animation (no `opacity:0`→reveal that stays hidden where unsupported). Wrap any reveal in `@supports (animation-timeline: view())`, default-visible otherwise; always pair with `prefers-reduced-motion`.
 
+## CSS platform features — verified Baseline (checked 2026-07-23)
+
+Verified live during the 2026-07-23 skill expansion. The Baseline-2026 ones are safe defaults with graceful degradation; the flagged ones stay progressive enhancement.
+
+- **CSS Anchor Positioning** (`anchor-name`/`position-anchor`/`position-area`/`position-try`) — **Baseline 2026** (Chrome 125+, Safari 18.2+, Firefox 132+). Powers `overlays`; pair with the Popover API + `@starting-style`. Older engines: give a static fallback position.
+- **Popover API** (`popover`, `popovertarget`, top-layer, `::backdrop`, light-dismiss) — widely available. For a true focus-trapping modal use `<dialog>.showModal()` + `inert`, NOT `popover="manual"` (manual popovers trap nothing).
+- **`:user-valid` / `:user-invalid`** — **Baseline 2026**; style validity only after interaction (kills the premature red-border-on-load bug). Used by `forms`.
+- **`field-sizing: content`** — **Baseline 2026** (Firefox 152, Safari 26.2 Dec 2025) — native auto-growing textareas; delete the JS resize handler.
+- **`text-wrap: balance` / `pretty`** — widely available; `balance` for headlines, `pretty` for body (widow/orphan fix, strong for German compounds).
+- **Container queries** (`@container`, size + style) — Tailwind v4 core, no plugin. The default responsive contract for reusable components (`cards`, `component-api`).
+- **`content-visibility: auto`** (+ `contain-intrinsic-size` to avoid CLS) — skip offscreen render work on long pages; never on the LCP element or sticky/showpiece sections.
+- **`@scope`** — scoped token re-mapping for `theme-worlds`; give a `data-world` attribute-selector fallback where unsupported.
+- **`text-box-trim` / `text-box-edge`** — Chrome/Edge/Safari ship it, **Firefox does not (2026-07)**; degradation is graceful (normal leading), safe to adopt.
+- **Speculation Rules API** (`<script type="speculationrules">`) — instant same-origin prerender/prefetch beyond `next/link`; use MODERATE eagerness (on hover/viewport), never eager-prerender-everything (wasted work + analytics skew).
+
+## Analytics & compliance defaults (added 2026-07-23)
+
+- **Default analytics = EU-hosted & cookieless** (Plausible, Fathom, or self-hosted Umami on the already-locked Postgres) — NOT Google Analytics 4 by default. GA4's US data transfers were ruled unlawful by the Austrian DSB and France's CNIL (2022); a cookieless EU-hosted tool needs no consent banner and is not a compliance landmine for a DACH studio. GA4 or any non-essential tracking loads ONLY behind the `consent` banner (TTDSG §25 / now TDDDG). Related DACH-legal skills: `consent`, `sitemap` (Impressum/Datenschutz), `pricing` (PAngV/Grundpreis), `gate-accessibility` (BFSG), `email` (double-opt-in), `seo` (AI-crawler/TDM opt-out).
+
 ## shadcn/ui CLI 4 — the facts
 
 - `npx shadcn@latest init` / `add <component>` (the package `shadcn-ui` is long dead). Current default style lineage: "default" → deprecated (Feb 2025) → "new-york" → docs now show "base-nova"; `init` flags: `-t next`, `-b base|radix`, `--css-variables` (default true), `--rtl`.

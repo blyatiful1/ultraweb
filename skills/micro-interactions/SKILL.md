@@ -1,6 +1,6 @@
 ---
 name: micro-interactions
-description: Component-level interaction feedback for ultraweb builds — hover lifts, press states, animated link underlines, input focus treatment, toggle motion — all transform/opacity only at 150–250ms using SYSTEM.md motion tokens. Invoke in the ultraweb motion phase (Phase 9) after components are built, or whenever the user says "hover states", "micro-interactions", "the UI feels dead/static", "button feedback", "link underline animation", "focus rings", or "polish the interactions". CSS-first — Motion (motion/react) only where CSS transitions cannot do the job.
+description: Component-level interaction feedback for ultraweb builds — hover lifts, press states, animated link underlines, input focus treatment, toggle motion (transform/opacity only, 150–250ms, SYSTEM.md tokens), plus keyboard/focus parity for every hover-reveal affordance, branded chrome surfaces (selection, caret, scrollbar, optional custom cursor), and a bounded text-scramble reveal. Invoke in the ultraweb motion phase (Phase 9) after components are built, or whenever the user says "hover states", "micro-interactions", "the UI feels dead/static", "button feedback", "link underline animation", "focus rings", "custom cursor", "branded scrollbar", "text scramble/decode reveal", "hover-reveal keyboard access", or "polish the interactions". CSS-first — Motion (motion/react) only where CSS transitions cannot do the job.
 ---
 
 # micro-interactions — feedback felt, not noticed
@@ -15,6 +15,7 @@ Every interactive element acknowledges input within 150–250ms, moves only via 
 - **One easing family** from SYSTEM.md tokens (`--ease-*`). Never invent a curve per component.
 - **CSS-first.** A hover lift is a `transition` + Tailwind utilities, not a client component. Reach for Motion 12 (`"use client"`, `LazyMotion` + `m.` per STACK.md) only for springs, exit animations, or orchestration.
 - **Feedback follows hierarchy.** The primary CTA gets the richest response; a footnote link gets an underline. Identical treatment everywhere flattens hierarchy.
+- **Hover parity.** Anything a pointer reveals on `:hover` must reveal identically on `:focus-within` and on tap — keyboard can't hover and touch has no hover, so a hover-only affordance (card metadata, a cursor-narrator label) is an accessibility defect, not a flourish (WCAG 2.2 SC 1.4.13). The focus-shown copy persists while focused, dismisses on `Escape` without moving focus, and never vanishes just because the pointer drifted off.
 - **Reduced motion:** transforms drop, color/opacity feedback stays — state change must never depend on movement alone.
 
 ## Process
@@ -67,6 +68,18 @@ import { m } from "motion/react"; // under the app-level LazyMotion(domAnimation
 
 **Loading state.** Button label swaps to spinner via opacity crossfade 150ms; button keeps its width (`min-w` or absolutely-positioned spinner) — no layout jump.
 
+**Chrome-level branding (last 2%).** The surfaces every page touches yet no other skill owns — text selection, caret, scrollbar, cursor — get one coherent pass off the palette. Leaving them at OS default is a top tell that an otherwise-crafted site is still templated.
+
+```css
+::selection { background: var(--color-primary); color: var(--color-primary-foreground); } /* verify AA — gate-accessibility */
+:root { scrollbar-color: var(--color-border) transparent; scrollbar-width: thin; caret-color: var(--color-primary); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: var(--radius-full); } /* radius from shape-language */
+```
+
+A custom cursor is optional and gated: an SVG dot with `mix-blend-mode: difference`, only under `@media (pointer: fine)` (never override the caret/pointer on touch), off by default for Data-Dense Utilitarian where the system cursor is the honest choice.
+
+**Text-scramble reveal (bounded variant).** A short string decodes into place — a hero word, a stat label, a nav wordmark — cycling random glyphs before it settles. Strictly bounded: short strings only (never body copy or a full headline), one-shot on reveal (never re-scrambles on hover), and settled fast inside the small band (~250–400ms). It animates `textContent`, not a transform, so it's the rare Motion/JS case — drive it with an interval you clear on completion, and cap the character set to the string's own alphabet so it never flashes visual noise. Reduced motion renders the final text immediately, no cycling.
+
 **Instant swap between heavy media** (`award-canon`: Instant Everything). When a component switches between heavy pieces — a media gallery, a tabbed panel with video, a before/after — prefetch the *adjacent* item(s), keep the incoming node **mounted** (`opacity-0 pointer-events-none`) and crossfade opacity rather than unmount-and-remount; the perceived instantaneousness is the delight. Cap it to the adjacent 2–3 neighbors — mounting the whole set is a memory trap on mid-range mobile — and if a neighbor isn't loaded, show a dimension-matched skeleton (no CLS), never a fake-instant blank. Reduced motion → instant show, no crossfade.
 
 ## Anti-patterns
@@ -79,16 +92,19 @@ import { m } from "motion/react"; // under the app-level LazyMotion(domAnimation
 - `focus:outline-none` with no focus-visible replacement — an accessibility defect, not a style choice.
 - Uniform feedback intensity everywhere — motion has hierarchy like type does.
 - Detached feedback: lift without shadow step, toggle whose track color never changes.
+- Hover-only reveal — metadata, a label, or a control that appears on `:hover` with no `:focus-within` twin and no tap equivalent; invisible to keyboard, switch, and touch users (WCAG 2.2 SC 1.4.13).
+- Default scrollbar and default `::selection` left at OS colors — one of the most common tells an otherwise-crafted site is still templated; the chrome-level pass owns them.
+- Scrambling long strings or body copy, or re-scrambling on every hover — a decode effect is a one-shot on a short string; past that it's noise that hurts readability.
 
 ## Worked example — Studio Norra, work-index row feedback
 
 design/SYSTEM.md §motion pins the micro band to 150–200ms on a single `--ease-out`; design/DIRECTION.md reserves signal red `oklch(0.6 0.21 25)` for interaction states only — it must never appear at rest.
 
-Decision: on `/work`, each index row's left rule draws in on hover and focus — the link-underline pattern turned vertical (`background-size: 2px 0% → 2px 100%`, 200ms `var(--ease-out)`) — and the only places red surfaces are that rule plus `focus-visible:ring-2 ring-[oklch(0.6_0.21_25)] ring-offset-2` against paper. Case-study titles set in Archivo Expanded stay dead-flat; no transform touches the type block.
+Decision: on `/work`, each index row's left rule draws in on hover and focus — the link-underline pattern turned vertical (`background-size: 2px 0% → 2px 100%`, 200ms `var(--ease-out)`) — and the only places red surfaces are that rule plus `focus-visible:ring-2 ring-[oklch(0.6_0.21_25)] ring-offset-2` against paper. Case-study titles set in Archivo Expanded stay dead-flat; no transform touches the type block. Chrome-level: `::selection` is paper-on-signal-red (checked AA in both themes), the scrollbar thumb the hairline `border` token, caret the signal red — no custom cursor, since the grid is already gesture-tracked and a second cursor layer would fight it.
 
 Rejected: `hover:-translate-y-1` + a `depth` shadow step on the rows. Editorial Brutalist is an exposed, flat grid — a lifting, drop-shadowed card reads as stock SaaS and softens the rawness the direction is built on. The rule-draw carries the whole feedback instead.
 
-The cursor-proximity image reveal (the signature move) is gesture-tracking, so it graduates to ultraweb:physics rather than being double-treated here. The focus-visible and reduced-motion states installed here hand off to ultraweb:gate-accessibility, which greps the build for any `focus:outline-none` left without a replacement.
+The cursor-proximity image reveal (the signature move) is gesture-tracking, so it graduates to ultraweb:physics rather than being double-treated here — but its hover-revealed client+year label is content, not chrome, so it gets a `:focus-within` twin that surfaces the same label when the row's link takes keyboard focus and holds it until blur or `Escape`. The focus-visible, hover-parity, and reduced-motion states installed here hand off to ultraweb:gate-accessibility, which greps the build for any `focus:outline-none` left without a replacement.
 
 ## Composes with
 
@@ -96,6 +112,8 @@ The cursor-proximity image reveal (the signature move) is gesture-tracking, so i
 - ultraweb:buttons — the CTA system's hover/active/loading states get their timing and physics here.
 - ultraweb:forms — input focus treatment and validation-feedback timing.
 - ultraweb:depth — every hover lift pairs its transform with a step on the elevation scale.
+- ultraweb:color — the chrome-level pass (`::selection`, caret, scrollbar, optional cursor) draws every value from the palette tokens; nothing here is a raw hex, and the `::selection` pair is AA-checked like any other.
+- ultraweb:gate-antislop — a default, unstyled scrollbar and default selection color are on its tell list; the chrome-level branding here clears them.
 - ultraweb:physics — anything gesture-tracking (magnetic pull, drag) graduates there; don't double-treat one element.
 - ultraweb:gate-accessibility — verifies the focus-visible coverage and reduced-motion behavior installed here.
 - Consumed by the component-tier skills (cards, pricing, data-display, social-proof, …) — they pull their hover/press/focus timing from these patterns rather than inventing per-component motion.

@@ -9,7 +9,7 @@ description: Design and build the card system — hierarchy inside the card, one
 
 ## Standard
 
-A card is a hierarchy exercise in a small box: one focal element, scannable in under 2 seconds, at most three type levels (kicker/meta → headline → body). A GROUP of cards is a composition exercise: three identical icon-cards as the default features row is banned outright (taste), and any longer run of visual twins is wallpaper — cap identical siblings at 3 (see group layouts). Restyle the shadcn Card after `npx shadcn@latest add card` — the default border+radius+shadow is a primitive, not a design. React 19 note: shadcn primitives ship without forwardRef and expose `data-slot` attributes — target sub-parts via `data-[slot=...]` selectors, not fragile child combinators.
+A card is a hierarchy exercise in a small box: one focal element, scannable in under 2 seconds, at most three type levels (kicker/meta → headline → body). A GROUP of cards is a composition exercise: three identical icon-cards as the default features row is banned outright (taste), and any longer run of visual twins is wallpaper — cap identical siblings at 3 (see group layouts). Restyle the shadcn Card after `npx shadcn@latest add card` — the default border+radius+shadow is a primitive, not a design. React 19 note: shadcn primitives ship without forwardRef and expose `data-slot` attributes — target sub-parts via `data-[slot=...]` selectors, not fragile child combinators. A reusable card owns its own responsive behavior: any variant that can appear in more than one context (grid, bento cell, sidebar) MUST reflow off its own container width via `@container`, never viewport breakpoints — a card built with `md:flex-row` silently breaks the moment it lands in a 1-of-4 cell narrower than the viewport implies.
 
 ## Process
 
@@ -56,7 +56,7 @@ Under `prefers-reduced-motion`, transform motifs (lift, zoom) fall back to the b
 - Bento sizing and placement belong to `ultraweb:feature-sections`; equal-importance content never gets bento.
 - Offset alternate columns (translate-y on even children, 24-48px) in editorial grids — one deliberate asymmetry, per taste.
 - Mixed grids (2 media-top + 1 stat) beat 3 clones.
-- Make cards container-aware, not viewport-aware: `@container` on the grid cell, `@sm:`/`@md:` variants inside the card — Tailwind 4 core, no plugin. The same card then works in a sidebar and a full-width grid.
+- Container-aware, not viewport-aware: name the container on the card wrapper (`@container/card`) and query IT (`@sm/card:grid-cols-[9rem_1fr]`), never the viewport — Tailwind v4 core, no plugin. The named query reads the wrapper's own width (24rem at `@sm`), so one component reflows correctly in a sidebar and a 4-up grid alike.
 
 ## Worked example — case-study grid
 
@@ -76,6 +76,7 @@ Six case studies, editorial direction. Not 6 clones: row 1 is one wide media-top
 - Three identical icon-cards in a row (banned; `ultraweb:feature-sections` owns the fix).
 - `Learn more` as every card's CTA text.
 - Border AND heavy shadow simultaneously at rest — pick one from the SYSTEM.md depth language.
+- `md:`/`lg:` viewport classes driving a card's INTERNAL layout when the card can appear in more than one grid context — it breaks in the narrower cell; use `@container` (see group layouts).
 - Gray placeholder rectangles where images belong — `ultraweb:imagery` owns honest placeholders.
 
 ## Composes with
@@ -86,4 +87,5 @@ Six case studies, editorial direction. Not 6 clones: row 1 is one wide media-top
 - ultraweb:micro-interactions — hover/press choreography beyond the CSS defaults here.
 - ultraweb:ui-states — skeletons that mirror card layout 1:1.
 - ultraweb:imagery — image treatment and placeholder strategy for media-top and feature-object.
+- ultraweb:component-api — the variant/prop contract a reusable card exposes; `@container` reflow is the responsive half of that same "the component owns its own behavior" contract.
 - ultraweb:social-proof — testimonial and "proof number" (stat variant) cards are card compositions: this skill owns the box and its states, social-proof owns the trust content and where proof appears.

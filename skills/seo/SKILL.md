@@ -9,7 +9,7 @@ description: Findability layer for the Next.js 16 App Router — Metadata API wi
 
 ## Standard
 
-Every route ships: a unique title ≤ 60 chars and a description of 140–160 chars in the site's voice (written by `ultraweb:copywriting`, never keyword mush), a canonical URL, a designed OG image built from the actual palette and type stance, and JSON-LD for whatever entity the page really is. `sitemap.xml` and `robots.txt` generated from real routes. Zero duplicate titles site-wide — `gate-content` checks.
+Every route ships: a unique title ≤ 60 chars and a description of 140–160 chars in the site's voice (written by `ultraweb:copywriting`, never keyword mush), a canonical URL, a designed OG image built from the actual palette and type stance, and JSON-LD for whatever entity the page really is. `sitemap.xml` and `robots.txt` generated from real routes, with robots.txt carrying an explicit, logged AI-crawler decision — never an unset default. Zero duplicate titles site-wide — `gate-content` checks.
 
 ## Process
 
@@ -95,14 +95,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
 ```
 
 ```ts
-// app/robots.ts
+// app/robots.ts — the AI-training-crawler policy is a logged CLIENT decision, not a default
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  return { rules: { userAgent: "*", allow: "/" }, sitemap: "https://kilnandco.com/sitemap.xml" };
+  return {
+    rules: [
+      { userAgent: "*", allow: "/" },
+      // brief.aiCrawlerPolicy === "disallow" → deny the AI-training set (a named group wins over "*")
+      {
+        userAgent: ["GPTBot", "ClaudeBot", "Google-Extended", "CCBot", "Bytespider", "Applebot-Extended"],
+        disallow: "/",
+      },
+    ],
+    sitemap: "https://kilnandco.com/sitemap.xml",
+  };
 }
 ```
 
+**AI-crawler policy is a logged decision, not a default.** Whether AI-training crawlers may scrape the site is `brief.aiCrawlerPolicy` (`"disallow"` default | `"allow"`) — set it and record the reason in design/SEO.md; an unset default silently reads as consent. For a DACH client it is legally operative: under the EU DSM Directive (2019/790) Art. 4 TDM exception, transposed as German **UrhG §44b**, a *maschinenlesbarer Nutzungsvorbehalt* in robots.txt IS the opt-out act — silence reads as permission to train. Trust-critical or editorial clients (law firms, portfolios, publications) default to `disallow`; a docs-heavy SaaS may `allow` for answer-engine reach, logged with that reason. Citability is a separate lever from training rights: `Google-Extended` gates Gemini training but not Google Search, and blocking the live fetchers (`ChatGPT-User`, `PerplexityBot`) is what actually drops you from AI answers — so disallow the training set to stop uncompensated reuse while staying citable, or block the fetchers too and accept that cost.
+
+- `llms.txt`: a proposed `/llms.txt` markdown site summary for LLMs — cheap and harmless to emit, but treat it as unproven: no major crawler has confirmed it reads the file. Ship it if the client asks; never trade real robots.txt directives for it.
 - `manifest.ts`: name, short_name, `theme_color`/`background_color` from the palette — not defaults.
 - `icon.tsx`: ImageResponse at 32×32 rendering a real mark (consult `ultraweb:shape-language`). The constitution demands "favicon real" — the framework default is a defect.
 
@@ -136,6 +149,7 @@ Type per page: `Organization`/`LocalBusiness` on home · `Article`/`BlogPosting`
 - `keywords` meta tag — dead weight since 2009
 - `display: "grid"` inside ImageResponse — unsupported, renders nothing
 - JSON-LD stringified without the `<` escape
+- `robots.ts` shipped with the AI-crawler policy unset for a DACH client — under UrhG §44b, silence is a machine-readable *yes* to AI training
 - titles stuffed with `| Home | Welcome` — the template owns the suffix, the page owns one clean name
 
 ## Worked example — Ledger & Lane, boutique law-firm findability
@@ -156,6 +170,8 @@ const jsonLd = {
 
 Insights are MDX, so `/insights/[slug]` runs `generateMetadata` with `await params`, and its `BlogPosting` reads `headline`, `datePublished`, and `author` from the article frontmatter.
 
+As a German-facing law firm, Ledger & Lane sets `aiCrawlerPolicy: "disallow"`: robots.ts denies the training set (GPTBot, ClaudeBot, Google-Extended, CCBot, Bytespider) as its UrhG §44b *Nutzungsvorbehalt*, while `*: allow` plus the sitemap keep Google indexing every page; design/SEO.md logs the reason. `llms.txt` is skipped as unproven.
+
 Rejected: aggregate `Review`/`AggregateRating` markup on the practice-area pages — nothing visible there shows a rating, and invisible structured data invites a manual penalty, so `LegalService` + `Attorney` stay the only entities marked up.
 
 Handoff: exports land as per-route `metadata`, `app/opengraph-image.tsx`, and an `app/sitemap.ts` mirroring the six routes from design/SITEMAP.md; `ultraweb:gate-content` then greps for duplicate titles and missing canonicals before Phase 10 closes.
@@ -163,6 +179,7 @@ Handoff: exports land as per-route `metadata`, `app/opengraph-image.tsx`, and an
 ## Composes with
 
 - **ultraweb:copywriting** — writes every title and description in voice; this skill only wires them.
+- **ultraweb:brief** — logs `aiCrawlerPolicy` and its reason at brief stage; robots.ts only enforces that decision.
 - **ultraweb:sitemap** — the route inventory that sitemap.ts and canonicals must mirror exactly.
 - **ultraweb:i18n** — adds `alternates.languages` hreflang when the brief is multilingual.
 - **ultraweb:faq** — owns FAQPage schema inside its section markup.

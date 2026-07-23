@@ -1,6 +1,6 @@
 ---
 name: depth
-description: Design the elevation language for an ultraweb build — an oklch tinted-shadow scale (never pure black) shipped as --shadow-* @theme tokens, the border-vs-shadow decision rule, semantic elevation levels 0-4, a dark-mode elevation strategy, and glass rules (rare, one surface max) — written to design/SYSTEM.md §depth during the foundation phase. Invoke in Phase 3 of the ultraweb pipeline after color has decided the neutral ramp, or whenever shadows look gray or muddy, everything floats identically, dark-mode cards read flat, or someone asks about "shadows", "elevation", "depth", "glassmorphism", or "borders vs shadows".
+description: Design the elevation language for an ultraweb build — an oklch tinted-shadow scale (never pure black) shipped as --shadow-* @theme tokens, the border-vs-shadow decision rule, semantic elevation levels 0-4, a dark-mode elevation strategy, and glass rules (rare, one surface max) — written to design/SYSTEM.md §depth during the foundation phase. Invoke in Phase 3 of the ultraweb pipeline after color has decided the neutral ramp, or whenever shadows look gray or muddy, everything floats identically, dark-mode cards read flat, or someone asks about "shadows", "elevation", "depth", "glassmorphism", "borders vs shadows", or "high contrast mode / forced-colors".
 ---
 
 # depth — tinted light, earned elevation
@@ -9,7 +9,7 @@ description: Design the elevation language for an ultraweb build — an oklch ti
 
 ## Standard
 
-Depth is a hierarchy tool, not decoration. First-grade means: shadows are tinted with the palette's own hue — gray shadows on tinted backgrounds look dirty — every elevated element can state WHY it floats, borders and shadows have distinct jobs, dark mode re-decides elevation from scratch, and ≤3 elevation levels are visible in any one viewport. The test: hide the shadows; hierarchy should still mostly read from size, position, and contrast. Shadows confirm, never carry.
+Depth is a hierarchy tool, not decoration. First-grade means: shadows are tinted with the palette's own hue — gray shadows on tinted backgrounds look dirty — every elevated element can state WHY it floats, borders and shadows have distinct jobs, dark mode re-decides elevation from scratch, and ≤3 elevation levels are visible in any one viewport. The test: hide the shadows; hierarchy should still mostly read from size, position, and contrast. Shadows confirm, never carry — literally so under Windows High Contrast Mode, where the OS discards `box-shadow` outright and only a structural fallback survives.
 
 ## Process
 
@@ -19,7 +19,8 @@ Depth is a hierarchy tool, not decoration. First-grade means: shadows are tinted
 4. Map semantic elevation levels 0-4 to tokens and border pairings.
 5. Decide the dark-mode strategy: surface lightness steps + borders; shadows demoted.
 6. Glass: grant at most ONE surface if the direction earns it; otherwise write "no glass" explicitly in §depth.
-7. Write SYSTEM.md §depth (stance, scale, level map, dark rules, glass verdict); hand tokens to ultraweb:tokens.
+7. Add the forced-colors fallback to every level 1-4 surface (and the glass one, below) — a hard accessibility floor, not optional.
+8. Write SYSTEM.md §depth (stance, scale, level map, dark rules, forced-colors fallback, glass verdict); hand tokens to ultraweb:tokens.
 
 ## Tinted shadow construction (oklch)
 
@@ -69,6 +70,26 @@ Shadows are near-invisible on dark surfaces. Re-decide per level:
 
 Never ship light-mode shadow tokens unmodified into `.dark`.
 
+## Forced colors — elevation is never the only affordance
+
+Under `forced-colors: active` (Windows High Contrast Mode, Edge) the OS throws away author colors AND `box-shadow` entirely, snapping every surface to a handful of system keywords (`Canvas`, `CanvasText`, `Highlight`…). A shadow-only or glass-only surface loses its whole visible boundary — the dropdown, modal, and command palette become unfindable. Rule: **elevation must never be the sole affordance.** Every level 1-4 surface carries a border drawn in OS-resolved system keywords — a literal color defeats the point, because the OS won't remap it:
+
+```css
+@media (forced-colors: active) {
+  .elevated { border: 1px solid CanvasText; box-shadow: none; }
+}
+```
+
+Level 1 already has its border; the real work is levels 2-4, which lean on shadow alone. The one glass surface additionally drops its blur (invisible here anyway) and falls back to the same border — fold in the reduced-transparency users who never turned on HCM in one rule:
+
+```css
+@media (forced-colors: active), (prefers-reduced-transparency: reduce) {
+  .glass { backdrop-filter: none; background: Canvas; border: 1px solid CanvasText; }
+}
+```
+
+gate-accessibility emulates `forced-colors: active`, screenshots every route, and asserts no surface loses its boundary — a BFSG / EN 301 549 line item, not a nicety.
+
 ## Glass — rare, earned, singular
 
 - Max ONE glass surface per site. Default candidate: the sticky header. A hero panel is the alternative — never both.
@@ -85,6 +106,7 @@ Never ship light-mode shadow tokens unmodified into `.dark`.
 - Neumorphism: inset shadows sculpting inputs and buttons.
 - `drop-shadow` or `text-shadow` on text for "pop".
 - Animating `box-shadow` on scroll-linked elements — paint cost; cross-fade a pseudo-element's opacity between two shadow states instead.
+- Shadow-only elevated surface with no `forced-colors` border fallback — the float vanishes in Windows High Contrast Mode; grep every `box-shadow`/`shadow-lg`/`shadow-xl` for a sibling `forced-colors: active` rule.
 
 ## Worked example — Tidepool, port-logistics analytics SaaS
 
@@ -100,6 +122,7 @@ Never ship light-mode shadow tokens unmodified into `.dark`.
 
 - Resting KPI cards + the berth-timeline panel: 1px border `oklch(0.2 0.02 245 / 0.10)`, no shadow. `shadow-xl` is spent only on the level-4 transient overlays — the `/docs` command palette and the pricing "Fleet" contact modal; `shadow-md` belongs to the scrolled header (level 2).
 - Dark mode (the default surface): elevation is lightness, not shadow — bg `oklch(0.18 0.015 250)` → card `oklch(0.22 0.015 250)` → popover `oklch(0.26 0.015 250)`, each paired with a `oklch(1 0 0 / 0.08)` hairline.
+- Forced colors: the bordered KPI cards and berth-timeline panel survive HCM for free — borders are already the primary language. The catch is the level-4 `/docs` command palette and the Fleet modal, resting on `shadow-xl` alone: both take `@media (forced-colors: active) { border: 1px solid CanvasText }` so they don't dissolve into the Canvas when Windows strips the shadow.
 - Rejected: the layered-soft 5-token scale with cards resting on `shadow-md` — it reads consumer-marketing-soft and blunts the instrument precision; a dashboard that floats looks less trustworthy, not more.
 - Glass verdict: **no glass**. The sticky header stays opaque, gaining a 1px bottom border + `shadow-md` once scrolled — a precision instrument doesn't blur its own chrome.
 - Lands in design/SYSTEM.md §depth; the two tokens hand to ultraweb:tokens for app/globals.css `@theme`, and ultraweb:navigation reads the scrolled-header rule.
@@ -111,4 +134,4 @@ Never ship light-mode shadow tokens unmodified into `.dark`.
 - ultraweb:cards — consumes levels 1-2 and the border+shadow pairing for rest/hover.
 - ultraweb:navigation — sticky header takes level 2 on scroll and is the default (only) glass candidate.
 - ultraweb:micro-interactions — animates level transitions within the 150-250ms budget.
-- ultraweb:gate-accessibility — computationally verifies text contrast on any glass surface.
+- ultraweb:gate-accessibility — computationally verifies text contrast on any glass surface, and emulates `forced-colors: active` to prove every elevated surface keeps a visible boundary.
