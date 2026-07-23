@@ -260,11 +260,11 @@ export function StaticPoster({ era = 0, narrative }: { era?: Era | number; narra
 
       <figcaption className="type-meta mt-4 flex flex-wrap items-center gap-x-2 gap-y-1">
         <span className="text-primary">{meta.act}</span>
-        <span aria-hidden="true">//</span>
+        <span aria-hidden="true">{"//"}</span>
         <span>{meta.name}</span>
-        <span aria-hidden="true">//</span>
+        <span aria-hidden="true">{"//"}</span>
         <span>{meta.years}</span>
-        <span aria-hidden="true">//</span>
+        <span aria-hidden="true">{"//"}</span>
         <span>{meta.stage}</span>
       </figcaption>
 

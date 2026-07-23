@@ -10,7 +10,7 @@
 // Every state renders the designed poster, so there is never a blank frame.
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useReducedMotion } from "motion/react";
 import type { MotionValue } from "motion/react";
 import type { EraId } from "@/lib/types";
@@ -20,6 +20,10 @@ const Scene = dynamic(() => import("./scene"), {
   ssr: false,
   loading: () => <StaticPoster era={0} />,
 });
+
+// SSR-safe "is this the client?" flag without a setState-in-effect: the server snapshot
+// is false, the client snapshot is true, and the store never changes after hydration.
+const emptySubscribe = () => () => {};
 
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 
@@ -54,8 +58,7 @@ export type ShowpieceProps = {
 
 export function Showpiece({ progress, era, narrative }: ShowpieceProps) {
   const reduced = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
 
   const eraIdx = useEraIndex(progress, era);
 
