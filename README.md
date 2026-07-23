@@ -1,6 +1,9 @@
 # ultraweb
 
-**One prompt → first-grade Next.js website.** A Claude Code plugin: 60 interlocking skills + 3 subagents that give Claude the working discipline of a design studio — taste constitution, an award-canon study library distilled from Awwwards-winning sites, design-system-first pipeline, real quality gates, and current-stack engineering (Next.js 16, Tailwind v4, shadcn/ui, Motion, Better Auth, Drizzle).
+**One prompt → first-grade Next.js website.** A Claude Code plugin: 60 interlocking skills + 3 subagents that give Claude the working discipline of a design studio — a taste constitution, an award-canon study library distilled from Awwwards-winning sites, a design-system-first pipeline, real quality gates, and current-stack engineering (Next.js 16, Tailwind v4, shadcn/ui, Motion, Better Auth, Drizzle).
+
+> [!IMPORTANT]
+> **This pipeline uses a lot of tokens.** A full `/ultraweb` build runs a 12-phase studio pipeline with multi-round, screenshot-driven quality gates — expect it to consume far more tokens (and run far longer) than a typical prompt. That's deliberate: it's the price of the quality discipline described below. See [What it costs](#what-it-costs) for the why, and how to keep it down.
 
 ## Install
 
@@ -33,6 +36,19 @@ That's it. The root skill runs the full pipeline: brief → aesthetic direction 
 
 For changes to an existing ultraweb site: just ask ("make the hero bolder") — `ultraweb:iterate` scopes the change and re-runs only the affected gates. For an existing non-ultraweb site: `ultraweb:retrofit` produces a scored gap report.
 
+## What it costs
+
+`/ultraweb` is a full design-studio pipeline, not a single generation call — and it's priced accordingly in tokens. A complete build:
+
+- runs **12 phases**, each invoking real skills (loaded and followed, not summarized from memory);
+- **accumulates context** — every phase writes `design/*.md` artifacts that later phases read back, so the working set grows as the build proceeds;
+- ends in **multi-round quality gates** that screenshot every page at 375 / 768 / 1440 and critique it against a scored rubric, looping fix → re-gate until green;
+- and, in **fan-out mode**, spawns one agent per section and one per gate — multiplying all of the above.
+
+Net: a single end-to-end build routinely costs **far more than an ordinary Claude Code task**, and takes a while to run. Plan for it. Model routing keeps the bill as honest as it can — mechanical sweeps run on Sonnet 5, judgment stays on the lead / Opus 4.8 tier (see [Map](#map)) — but cheaper *per call* is not cheap *overall*.
+
+**Keeping it down:** build once, then iterate. For any change to an existing ultraweb site, ask in plain language ("make the hero bolder") and `ultraweb:iterate` scopes the edit and re-runs only the phases and gates your change actually touches — not the whole pipeline. Reserve full `/ultraweb` runs for new sites and full redesigns.
+
 ## How it stays good
 
 - **`taste`** — the constitution. Anti-slop banned list (no purple-gradient AI look, no untouched shadcn, no dead startup copy), required list (OKLCH palette, real type pairing, deliberate asymmetry, reduced-motion), decision heuristics. Every skill defers to it.
@@ -64,3 +80,4 @@ Full scope of every skill: [ROSTER.md](ROSTER.md). The per-site award study bank
 - Claude Code (CLI, desktop, or web)
 - Node.js + npm (Next.js builds)
 - Playwright MCP (bundled with the playwright plugin) — needed by `gate-responsive`/`gate-visual`/`pixel-qa`; without it those gates degrade to honest "unverified" reports, never fake passes.
+- Token headroom — see [What it costs](#what-it-costs). A full build is a heavy, long-running job; budget for it.
