@@ -1,6 +1,6 @@
 # ultraweb skill roster
 
-The complete map of the harness. 60 skills: 1 orchestrator (root `SKILL.md`) + 59 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
+The complete map of the harness. 70 skills: 1 orchestrator (root `SKILL.md`) + 69 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
 
 Format: **name** — scope. *(reads → writes)*
 
@@ -28,6 +28,7 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **icons** — icon system: lucide-react as default, stroke-width consistency, sizing scale, when custom SVG beats a library icon, never emoji. *(SYSTEM.md → icon usage in code)*
 - **imagery** — art direction for images: photo treatment (duotone/grain/overlay), gradient meshes, noise textures, SVG patterns, honest placeholder strategy (generated, on-brand — never gray boxes or stock-photo-cliché). *(DIRECTION.md → SYSTEM.md §imagery + assets)*
 - **motion-language** — the motion vocabulary: duration/easing token set, choreography rules (what animates, in what order, what never animates), reduced-motion policy. *(DIRECTION.md → SYSTEM.md §motion)*
+- **theme-worlds** — scoped multi-theme "worlds" beyond light/dark: per-route or per-case-study accent worlds via native CSS `@scope` + `data-world`/`data-mode` token re-mapping (no ThemeProvider); every world AA-verified, dark mode re-decided per world. *(DIRECTION.md → scoped @theme overrides)*
 
 ## Tier 3 — Components (each: quality bar, 3+ named layout variants, anti-patterns, states, a11y notes)
 - **hero** — first-viewport sections: variants (typographic, split, full-bleed media, product-shot, editorial), headline scale, CTA hierarchy, above-fold performance. *(DIRECTION+SYSTEM+SITEMAP → components/sections/hero.tsx)*
@@ -42,6 +43,12 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **social-proof** — testimonials, logo walls, stats, case-study teasers: credibility design, avoiding fake-looking proof, marquee dos/don'ts. *(BRIEF+SYSTEM → proof sections)*
 - **faq** — FAQ/accordion sections: native details vs JS accordion, typography, schema.org FAQ markup. *(SYSTEM → faq section)*
 - **ui-states** — empty, loading, error, success, skeleton states: every async surface gets all states designed; skeletons match real layout. *(SYSTEM → state components)*
+- **component-api** — the cross-cutting contract every component skill honors: the `variant`/`size`/`tone` prop vocabulary, `asChild`/Slot composition, `cn()` merge order, `data-slot` parts, controlled/uncontrolled parity — so the UI reads as authored, not assembled from ten prop dialects. *(SYSTEM → component prop conventions)*
+- **overlays** — the native overlay layer: HTML Popover API + CSS Anchor Positioning (Baseline 2026) for menus/tooltips/comboboxes/popovers, retiring z-index wars, portals, and JS focus-trap libs; `<dialog>` for true modals. *(SYSTEM → overlay primitives)*
+- **cart** — cart / mini-cart state and UI: the in-place add-to-cart moment, slide-drawer vs page, honest gross totals, one anti-three-cards cross-sell slot, a designed empty cart, optimistic server actions. *(BRIEF+SYSTEM → cart layer)*
+- **product-detail** — the Product Detail Page: swatch-driven variant crossfade with URL state, media gallery, buy-box hierarchy (one CTA), mobile sticky buy-box; WebGL-free by default. *(BRIEF+SYSTEM → product page)*
+- **command-palette** — the ⌘K command-palette / on-site-search composite: keyboard trigger + visible affordance, combobox ARIA, focus-trap, ranked/grouped results, an accelerator layered over real nav (never the only path). *(SYSTEM → search/command layer)*
+- **marginalia** — print-derived page furniture for long-form: running folio, reading-progress, sticky TOC rail, Tufte-style sidenote gutters, marginal pull-quotes; long-form pages only, degrades to inline at 375px. *(SYSTEM → long-form furniture)*
 
 ## Tier 4 — Motion & interaction
 - **micro-interactions** — hover/focus/press feedback, link underline animations, input focus, toggle physics: 150–250ms, transform/opacity only. *(SYSTEM §motion → component-level motion)*
@@ -49,6 +56,7 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **page-transitions** — route transition strategy: View Transitions API/next-view-transitions, template.tsx animations, shared-element continuity, when NOT to transition. *(SYSTEM §motion → app-level transitions)*
 - **physics** — spring-based interaction: drag, magnetic hover, cursor followers, gesture response via motion springs; restraint rules. *(DIRECTION → interactive moments)*
 - **showpiece** — hero-grade set pieces: canvas/WebGL/R3F, shader gradients, particle systems, 3D product views. Gated: only when DIRECTION demands, 60fps verified, static fallback + reduced-motion path mandatory. *(DIRECTION → one signature element)*
+- **hidden-craft** — the opt-in last-2% reward layer that signals human authorship: a tasteful console signature, one keyboard/view-source egg, a playful on-brand 404, `humans.txt`; hard discipline — never gates content, zero LCP cost, ONE gesture per site. *(SYSTEM → easter-egg layer)*
 
 ## Tier 5 — Next.js engineering
 - **scaffold** — project init: create-next-app current flags, Tailwind v4 wiring, shadcn init, motion/lucide/zod install, strict tsconfig, folder conventions, globals.css token skeleton, dev-server smoke test. *(SITEMAP → running app)*
@@ -59,6 +67,7 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **media-optimization** — next/image (sizes, preload, placeholder), next/font pipeline, video embedding, asset strategy, LCP protection. *(imagery → optimized assets)*
 - **seo** — Metadata API per route, generateMetadata, ImageResponse OG images, sitemap.ts/robots.ts, JSON-LD structured data, canonical/i18n alternates. *(BRIEF+copy → metadata layer)*
 - **i18n** — internationalization when the brief needs it: locale routing strategy, dictionary pattern, hreflang, date/number formatting, RTL awareness. *(BRIEF → i18n layer)*
+- **print-craft** — the print stylesheet (`@media print`) as a designed surface: chrome-hiding reset, page-break control, `@page` margins, ink economy; a real DACH angle for print-to-PDF Impressum/AGB/Datenschutz and invoices. *(SYSTEM → print layer)*
 
 ## Tier 6 — Backend
 - **api-design** — route handlers: REST shape, typed responses, zod-validated input, error envelope convention, status codes, rate-limit hook points. *(BRIEF → app/api/*)*
@@ -68,6 +77,7 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **payments** — Stripe: checkout sessions, webhook route handler with signature verification, product/price modeling, test-mode discipline, success/cancel pages designed. *(BRIEF → payments layer)*
 - **content-cms** — content layer: MDX pipeline for blogs/docs (typed frontmatter, styled prose that matches SYSTEM.md — never default prose-gray), when to reach for a headless CMS instead. *(BRIEF → content layer)*
 - **storage** — file upload/storage: blob storage setup, upload UX (progress, drag-drop, validation), image handling post-upload. *(BRIEF → storage layer)*
+- **consent** — GDPR/TTDSG §25 cookie & tracking consent as an anti-dark-pattern design problem: equal-weight Accept/Reject in the site's own language, a consent-state context gating third-party script injection, a footer "Cookie-Einstellungen" resurface link. *(BRIEF → consent layer)*
 
 ## Tier 7 — Quality gates (each: checklist + how to verify empirically + pass criteria + QA.md entry format)
 - **gate-code** — build/type/lint gate: npm run build clean, tsc strict, ESLint, no unused deps, RSC boundary correctness, no console errors. *(code → QA.md entry)*

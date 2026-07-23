@@ -1,6 +1,6 @@
 # ultraweb
 
-**One prompt → first-grade Next.js website.** A Claude Code plugin: 60 interlocking skills + 3 subagents that give Claude the working discipline of a design studio — a taste constitution, an award-canon study library distilled from Awwwards-winning sites, a design-system-first pipeline, real quality gates, and current-stack engineering (Next.js 16, Tailwind v4, shadcn/ui, Motion, Better Auth, Drizzle).
+**One prompt → first-grade Next.js website.** A Claude Code plugin: 70 interlocking skills + 3 subagents that give Claude the working discipline of a design studio — a taste constitution, an award-canon study library distilled from Awwwards-winning sites, a design-system-first pipeline, real quality gates, and current-stack engineering (Next.js 16, Tailwind v4, shadcn/ui, Motion, Better Auth, Drizzle).
 
 > [!IMPORTANT]
 > **This pipeline uses a lot of tokens.** A full `/ultraweb` build runs a 12-phase studio pipeline with multi-round, screenshot-driven quality gates — expect it to consume far more tokens (and run far longer) than a typical prompt. That's deliberate: it's the price of the quality discipline described below. See [What it costs](#what-it-costs) for the why, and how to keep it down.
@@ -63,11 +63,11 @@ Net: a single end-to-end build routinely costs **far more than an ordinary Claud
 |------|--------|
 | Core | `ultraweb` (root pipeline), `taste`, `iterate`, `award-canon` |
 | Discovery | `brief`, `direction` (12-archetype catalog), `sitemap`, `wireframe`, `copywriting` |
-| Design system | `tokens`, `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `icons`, `imagery`, `motion-language` |
-| Components | `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states` |
-| Motion | `micro-interactions`, `scroll-motion`, `page-transitions`, `physics`, `showpiece` |
-| Next.js | `scaffold`, `app-structure`, `routing`, `data-fetching`, `server-actions`, `media-optimization`, `seo`, `i18n` |
-| Backend | `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage` |
+| Design system | `tokens`, `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `icons`, `imagery`, `motion-language`, `theme-worlds` |
+| Components | `component-api`, `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`, `overlays`, `cart`, `product-detail`, `command-palette`, `marginalia` |
+| Motion | `micro-interactions`, `scroll-motion`, `page-transitions`, `physics`, `showpiece`, `hidden-craft` |
+| Next.js | `scaffold`, `app-structure`, `routing`, `data-fetching`, `server-actions`, `media-optimization`, `seo`, `i18n`, `print-craft` |
+| Backend | `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`, `consent` |
 | Gates | `gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content` |
 | Ship | `ship`, `handoff`, `retrofit` |
 

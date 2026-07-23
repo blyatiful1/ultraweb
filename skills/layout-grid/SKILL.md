@@ -45,6 +45,7 @@ Layout is where decisions become visible. First-grade means: ONE container syste
 - Base: `grid grid-cols-12`, `gap-4` (16px) mobile, `gap-6`–`gap-8` (24-32px) desktop.
 - Named splits: **Lead 7/5** (text-led feature), **Heavy 8/4** (media-led), **Reverse 5/7** (alternating sections), **Margin Note 3/9** (editorial meta rail). 6/6 only for comparisons and before/afters.
 - Sub-layouts inside grid cells respond via container queries (`@container` on the cell, `@sm:` inside — Tailwind v4 core, no plugin).
+- **Dev grid overlay** — confirm alignment against visible guides during the build, not retroactively at gate time: a dev-only `<GridOverlay />` (rendered only when `process.env.NODE_ENV === 'development'`, toggled by a keyboard shortcut) paints the 12 columns as semi-transparent stripes plus a fixed readout of the active breakpoint, gap, and container width. Pure CSS, zero deps, tree-shaken from production.
 
 ## Vertical rhythm — compression and release
 
@@ -62,6 +63,8 @@ Rules:
 - Adjacent sections sharing a background are one surface — split the boundary (`pb-10` + `pt-10`), never stack two full paddings.
 - Space within a section < space between sections, always. Heading-to-content: `mt-12`–`mt-16` (48-64px).
 
+**Offscreen wrappers** — any section past the third fold (FAQ, blog/case archives, footer sitemap) wraps in `content-visibility: auto` with a *measured* `contain-intrinsic-size` (e.g. `auto 900px`): the browser skips style/layout/paint for offscreen DOM entirely — native virtualization for static content, strictly stronger than image lazy-load. Never ship a bare `auto` size — an unmeasured height trades paint cost for CLS. Exempt the LCP-holding section, sticky-scroll sequences, and the showpiece; ultraweb:gate-performance verifies the property and a zero CLS delta.
+
 ## Asymmetry patterns (named)
 
 1. **Offset Split** — Lead 7/5 or Heavy 8/4 with the two blocks' top edges deliberately misaligned by 2-4rem (`mt-8`–`mt-16` on one side). The workhorse; safe everywhere.
@@ -69,6 +72,7 @@ Rules:
 3. **Overlap Stack** — a card or stat block crosses a section boundary with `-mt-16`–`-mt-24` (64-96px), z-indexed above a contrasting surface. Stitches hero to first section; one per page.
 4. **Staggered Rail** — a 2-column item grid where column two is pushed down `mt-12`–`mt-24` (48-96px). Breaks card-grid monotony; suits portfolios and testimonials.
 5. **Margin Note** — 3/9 split: narrow sticky rail (section number, eyebrow, TOC) beside wide content. Editorial directions; pairs with long-form.
+6. **Editorial Collage** — 2-3 `next/image` in a shared `relative` wrapper, each rotated 2-6deg one consistent direction and overlapping 10-20%, separated by depth's shadow tokens; one image bleeds past `max-w` via negative margin. Deliberate print-spread layering — never a wallpaper photo grid. Max one per page, never on the section carrying the signature move. Below 768px: rotation off, stacked full-width — a decided fallback, not inherited.
 
 ## Bento composition
 
@@ -108,7 +112,7 @@ Exposed grid means the columns must stay legible, so the site commits to two rec
 }
 ```
 
-Rhythm on /work/[slug]: `release` hero exit (`py-28 md:py-40`), then a `compressed` credits/role strip (`py-12 md:py-16`), then `standard` narrative sections — never three py-24s in a row. Rejected a centered 6/6 gallery for the index: equal halves flatten the exposed-grid tension the direction is built on, and 6/6 is reserved for true comparisons. Output lands in design/SYSTEM.md §layout (tiers + split names + rhythm map); ultraweb:tokens mints the `--container-*` tokens and ultraweb:wireframe blueprints each /work section against the split names.
+Rhythm on /work/[slug]: `release` hero exit (`py-28 md:py-40`), then a `compressed` credits/role strip (`py-12 md:py-16`), then `standard` narrative sections — never three py-24s in a row. The featured case study takes the site's one **Editorial Collage** — three cursor-reveal thumbnails rotated 3deg and overlapped, one bleeding to the `--container-wide` edge — while the long /work archive below the third fold wraps in `content-visibility: auto` (`contain-intrinsic-size: auto 1100px`), so offscreen case rows cost no layout or paint until scrolled to. Rejected a centered 6/6 gallery for the index: equal halves flatten the exposed-grid tension the direction is built on, and 6/6 is reserved for true comparisons. Output lands in design/SYSTEM.md §layout (tiers + split names + rhythm map); ultraweb:tokens mints the `--container-*` tokens and ultraweb:wireframe blueprints each /work section against the split names.
 
 ## Composes with
 
@@ -117,6 +121,7 @@ Rhythm on /work/[slug]: `release` hero exit (`py-28 md:py-40`), then a `compress
 - ultraweb:hero — builds its variants on Offset Split and Edge Bleed at full energy.
 - ultraweb:feature-sections — governed by the bento and split rules here.
 - ultraweb:gate-responsive — verifies rhythm and asymmetry survive 375/768/1440 screenshots.
+- ultraweb:gate-performance — verifies the `content-visibility` wrappers on offscreen sections are present and introduce zero CLS.
 - ultraweb:taste — supplies the asymmetry mandate and anti-wallpaper rule this skill operationalizes.
 - ultraweb:gate-antislop — greps the anti-patterns defined here (`py-24` wallpaper, `max-w-[` arbitrary widths, repeated centered columns) and fails the build when the rhythm or tier system leaks.
 - ultraweb:gate-visual — its design-judge scores this skill's compression-and-release rhythm and recurring asymmetry against taste's required list; flat spacing or a missing asymmetry reads as a required-list miss.

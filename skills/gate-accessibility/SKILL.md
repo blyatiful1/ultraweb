@@ -1,15 +1,15 @@
 ---
 name: gate-accessibility
-description: WCAG 2.2 AA quality gate for ultraweb builds — computes real contrast ratios in the browser (computed colors canvas-normalized to sRGB, so oklch tokens measure correctly), walks the full keyboard path via Playwright (tab order, focus-visible ring on every interactive element, Escape closes every overlay), audits landmarks, heading structure, and alt text, and re-tests every page under emulated prefers-reduced-motion. Invoke in Phase 11 (Gates) of every ultraweb build before reporting done, and whenever the user says "accessibility check", "a11y audit", "WCAG", "contrast check", "keyboard navigation", "screen reader", "focus states", or "is this accessible".
+description: WCAG 2.2 AA quality gate for ultraweb builds — computes real contrast ratios in the browser (computed colors canvas-normalized to sRGB, so oklch tokens measure correctly), walks the full keyboard path via Playwright (tab order, focus-visible ring on every interactive element, Escape closes every overlay), audits landmarks, heading structure, and alt text, re-tests every page under emulated prefers-reduced-motion, injects the WCAG 1.4.12 text-spacing override to catch clipped or overlapping text, and for DACH-market builds verifies a real BFSG /barrierefreiheit statement. Invoke in Phase 11 (Gates) of every ultraweb build before reporting done, and whenever the user says "accessibility check", "a11y audit", "WCAG", "contrast check", "keyboard navigation", "screen reader", "focus states", "text spacing", "BFSG", "Barrierefreiheitserklärung", or "is this accessible".
 ---
 
 # gate-accessibility — exclusion is a defect
 
-**Stage:** Phase 11 — Gates - **Reads:** running production build (`npm run build` + `npm start`), design/SYSTEM.md §color + §motion, design/SITEMAP.md (route list), built components - **Writes:** design/QA.md §gate-accessibility
+**Stage:** Phase 11 — Gates - **Reads:** running production build (`npm run build` + `npm start`), design/SYSTEM.md §color + §motion, design/SITEMAP.md (route list), design/BRIEF.md (market), built components - **Writes:** design/QA.md §gate-accessibility
 
 ## Standard
 
-WCAG 2.2 AA on every route, in both themes, verified by measurement — never by reading code and assuming. Contrast is computed, the keyboard path is driven key by key, reduced motion is emulated and re-screenshotted. The constitution calls this the floor, not a feature: a red here blocks ship regardless of how the site looks. Always gate the production server, never `next dev`.
+WCAG 2.2 AA on every route, in both themes, verified by measurement — never by reading code and assuming. Contrast is computed, the keyboard path is driven key by key, reduced motion is emulated and re-screenshotted. The constitution calls this the floor, not a feature: a red here blocks ship regardless of how the site looks. Always gate the production server, never `next dev`. For a DACH commercial brief that floor is also legal — the BFSG (in force since 2025-06-28) makes WCAG/EN 301 549 statutory for many B2C digital products — so the gate additionally verifies a truthful `/barrierefreiheit` statement whose conformance claim matches what these checks actually measured.
 
 ## Checklist
 
@@ -20,6 +20,8 @@ WCAG 2.2 AA on every route, in both themes, verified by measurement — never by
 5. **Reduced motion** — with `prefers-reduced-motion: reduce` emulated: no transform-based entrances play, every piece of content is still visible, all state changes read without movement.
 6. **WCAG 2.2 specifics** — pointer targets ≥24×24 CSS px everywhere (2.5.8; gate-responsive separately enforces ≥44px on mobile); focused elements never hidden under the sticky header (2.4.11); any drag interaction has a click alternative (2.5.7).
 7. **Forms** — every input has an associated `<label>` (for/id); errors are text tied via `aria-describedby` and announced (`role="alert"` or `aria-live="polite"`); invalid state exposed via `aria-invalid`.
+8. **Text spacing (1.4.12)** — under the standard user override (line-height 1.5, letter-spacing .12em, word-spacing .16em, paragraph 2em) nothing clips, truncates, or overlaps; cards, badges, and every fixed-height container grow to fit their text. This stack's fluid `clamp()` type inside fixed-height cards is the exact risk.
+9. **Accessibility statement (DACH commercial builds)** — when design/BRIEF.md sets market DE/AT/CH, a real `/barrierefreiheit` route states the claimed conformance level, known gaps in plain language, a working feedback route, and the enforcement body (Schlichtungsstelle BGG), linked in the footer beside Impressum + Datenschutz. Since the BFSG (in force 2025-06-28) made WCAG/EN 301 549 statutory for B2C products this is a legal floor, not voluntary craft — and the claimed level must match this gate's actual result.
 
 ## How to verify
 
@@ -59,11 +61,24 @@ Empty array = pass. The canvas round-trip is load-bearing: the stack's oklch tok
 
 **7. Forms.** `browser_evaluate`: `[...document.querySelectorAll("input,select,textarea")].filter(e=>!e.labels?.length && !e.getAttribute("aria-label")).length` must be 0. Then submit each form empty on the running server and assert via `browser_evaluate` on the invalid field: `aria-invalid` is `"true"`; its `aria-describedby` resolves — `document.getElementById(f.getAttribute("aria-describedby"))` returns the visible error node; and that node (or a wrapper containing it) carries `role="alert"` or `aria-live="polite"`. A validation message that only changes color or only exists visually fails here.
 
-**8. axe sweep (supplement, not substitute).** `npm i -D axe-core`, inject `node_modules/axe-core/axe.min.js` via `browser_evaluate`, run `await axe.run()` — zero critical or serious violations. axe cannot judge focus order, ring design, or reduced-motion behavior; the walks above stay mandatory.
+**8. Text spacing (1.4.12).** `browser_evaluate` injects the WCAG bookmarklet's overrides, then reads the cheap overflow signal:
+
+```js
+document.head.insertAdjacentHTML("beforeend", '<style id="ts">' +
+  '*{line-height:1.5!important;letter-spacing:.12em!important;word-spacing:.16em!important}' +
+  'p{margin-block-end:2em!important}</style>');
+document.documentElement.scrollWidth > innerWidth   // true = horizontal blowout
+```
+
+`scrollWidth > innerWidth` catches horizontal overflow, but vertical clipping inside a fixed `h-*` won't move it — so re-screenshot every route at 375/768/1440 under the override and inspect for truncated titles, cut-off buttons, and overlapping lines. Remove `#ts` before the next step. This is the German BITV-Test's manual text-spacing procedure; the stack's fluid `clamp()` type in fixed-height cards is where it bites.
+
+**9. Accessibility statement (DACH).** Skip unless design/BRIEF.md market ∈ {DE, AT, CH}. On the running server, confirm `/barrierefreiheit` resolves and its copy names all four required parts — conformance level, known gaps in plain language, a working feedback route, and the Schlichtungsstelle BGG — and grep the footer for the link beside `Impressum`/`Datenschutz`. Then cross-check the claimed level against this run: if steps 1–8 logged residual fails, the statement must read *teilweise konform* and list them, never *vollständig*. A page claiming clean conformance while the gate is red is a false-conformance defect — worse than an honest partial, and the one thing the BFSG statement must never be.
+
+**10. axe sweep (supplement, not substitute).** `npm i -D axe-core`, inject `node_modules/axe-core/axe.min.js` via `browser_evaluate`, run `await axe.run()` — zero critical or serious violations. axe cannot judge focus order, ring design, or reduced-motion behavior; the walks above stay mandatory.
 
 ## Pass criteria
 
-All 7 Checklist items green (verify steps 1–7) on every route in design/SITEMAP.md, both themes, at 375px and 1440px, plus the axe supplement (verify step 8) at zero critical/serious violations. Every fix re-runs the exact check that failed — no "fixed, trust me".
+All 9 Checklist items green (verify steps 1–9) on every route in design/SITEMAP.md, both themes, at 375px and 1440px — item 9 applies only to DACH-market builds — plus the axe supplement (verify step 10) at zero critical/serious violations. Every fix re-runs the exact check that failed — no "fixed, trust me".
 
 ## QA.md entry
 
@@ -72,6 +87,7 @@ All 7 Checklist items green (verify steps 1–7) on every route in design/SITEMA
 routes: / /about /pricing · themes: light+dark · viewports: 375/1440
 contrast: 0 failing pairs (214 checked, min 4.61) · keyboard: 42 stops, ring on all, Esc closes menu+modal
 landmarks/alt/targets: clean · forms: labels 0 missing, empty-submit announces on contact form · reduced-motion: re-shot, no hidden content · axe: 0 critical/serious
+text-spacing (1.4.12): override on, 0 clips/overlaps · a11y statement (DE): /barrierefreiheit present, 'vollständig konform' matches 0 residual
 fixed: footer link 3.9:1 → 4.7:1 (muted token bumped in color ramp) · residual: none
 ```
 
@@ -83,6 +99,8 @@ fixed: footer link 3.9:1 → 4.7:1 (muted token bumped in color ramp) · residua
 - `tabindex` greater than 0 (grep `tabindex="[1-9]`) — forces tab order instead of fixing DOM order
 - `onClick` on a `div`/`span` without `role="button"` + key handling — use a real `<button>`
 - Passing reduced motion with a global `* { animation: none }` — color/opacity feedback must survive; state may never depend on movement alone
+- Fixed-height title clamps (`line-clamp` inside a hard `h-*`) that truncate under the text-spacing override instead of growing — use `min-h-*` + flex so the card expands (ultraweb:cards owns the fix)
+- Auto-generating a clean `/barrierefreiheit` claim ("vollständig barrierefrei") while the gate still shows residual fails — the statement must match the measured result; evidence-before-claims governs compliance copy too
 - Testing only light theme, only desktop, or only the home page
 
 ## Worked example — Aldermoor Trust, community foundation grants + stories
@@ -93,7 +111,11 @@ Contrast (step 1, canvas-normalized) cleared the AA floor with room: Source Seri
 
 The catch was step 5. On `/`, the signature story cards — the left rule that grows into the reading-progress indicator — entered via a scroll-linked `whileInView` with `initial={{ opacity: 0 }}` and no reduced-motion guard. Under `page.emulateMedia({ reducedMotion: "reduce" })` the entrance was skipped, so all six cards stayed at opacity 0, invisible forever; the re-shot `/` was blank below the fold.
 
-Fix owned by ultraweb:scroll-motion, per motion-language's policy: the reduced-motion branch now returns the cards at rest (opacity 1, rule at full height) instead of the banned blanket `* { animation: none }`. Re-ran step 5 on `/` under reduce → six cards visible. Lands in design/QA.md §gate-accessibility, which flipped to PASS.
+Fix owned by ultraweb:scroll-motion, per motion-language's policy: the reduced-motion branch now returns the cards at rest (opacity 1, rule at full height) instead of the banned blanket `* { animation: none }`. Re-ran step 5 on `/` under reduce → six cards visible.
+
+Step 8 surfaced a quieter defect: under the text-spacing override, the `/grants` cards — grant title `line-clamp-2` inside a fixed `h-56` — clipped the longest programme name mid-word. ultraweb:cards traded the hard height for `min-h-56` + `flex-col`; re-shot at 375/768/1440 under the override, every card grew clean. Step 9 didn't fire — design/BRIEF.md sets market=UK, so the BFSG `/barrierefreiheit` check logged N/A; a DACH commercial brief (e.g. Ledger & Lane) would instead have to ship that statement and match its claimed conformance level to this run's residuals.
+
+Lands in design/QA.md §gate-accessibility, which flipped to PASS.
 
 ## Composes with
 
@@ -106,3 +128,6 @@ Fix owned by ultraweb:scroll-motion, per motion-language's policy: the reduced-m
 - ultraweb:gate-content — the sibling gate that judges whether headings tell a story; this gate checks only heading structure (item 3) and hands narrative calls there.
 - ultraweb:faq — when the keyboard walk hits a disclosure/accordion missing `aria-expanded` or Enter/Escape handling, faq owns the fix this gate reports.
 - ultraweb:scroll-motion — when the reduced-motion re-test (item 5) finds a scroll-linked entrance left at opacity 0, scroll-motion owns the resting-state guard.
+- ultraweb:cards — fixed-height card titles (and ultraweb:data-display's stat blocks) are the primary text-spacing (1.4.12) clip risk; they own the `min-height` + flex fix item 8 reports.
+- ultraweb:footer — carries the `/barrierefreiheit` link beside Impressum + Datenschutz that item 9 checks.
+- ultraweb:i18n — owns the German-language `/barrierefreiheit` route and copy; this gate only verifies it exists and tells the truth.

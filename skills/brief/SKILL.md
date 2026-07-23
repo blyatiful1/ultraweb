@@ -46,8 +46,11 @@ Map stated or implied features to Tier-6 skills. Take the cheapest set that fulf
 | Selling — one-time or subscription | `payments` + `database` | both, if "buy" is a link to an external checkout |
 | User file uploads (avatars, attachments, submissions) | `storage` | — |
 | Third parties calling in: webhooks, public API, a mobile client | `api-design` | route handlers for the site's own forms — `server-actions` owns those |
+| "Ask anything" chatbot, AI assistant, AI/semantic search, generative UI | **Default reject** — an AI-feature skill enters `needs` only with an accepted variant + reason logged | any AI chat/search widget the brief doesn't demand — reflexive "every modern site has one" sprawl |
 
 Write the outcome as two lists: **Backend: needs** (skill → the feature demanding it) and **Backend: rejected** (skill → one-line reason). The rejected list is what stops Phase 7 scope creep.
+
+AI features are the one class that defaults to **rejected**: an assistant, chatbot, or AI/semantic search earns a place in **needs** only with an explicit variant and one-line reason, and a downstream AI-feature skill must find that acceptance logged here before it may build — it may never self-justify inclusion. Tidepool's B2B SaaS docs accept a grounded docs-RAG with inline citations; Ledger & Lane (law firm) rejects — unvetted legal answers are a liability and undercut the firm's authority; Casa Verde (restaurant) rejects — menu and hours change faster than any index, so stale answers erode trust.
 
 ## BRIEF.md format
 
@@ -71,7 +74,7 @@ Grep a finished BRIEF.md for these:
 - `TBD`, `TODO`, `?`, `to be decided`, `ask the user`, `depending on` — the brief interviews nobody, including future-you
 - `modern`, `clean`, `professional`, `sleek` as tone words — they describe nothing
 - `various`, `etc.`, `and more` in a content inventory — the inventory exists so `copywriting` never improvises
-- A `database` for a contact form; `auth` "for later"; a CMS for a 3-post launch blog — backend maximalism
+- A `database` for a contact form; `auth` "for later"; a CMS for a 3-post launch blog; an AI chat/search widget with no accepted-variant reason logged — backend maximalism
 - Pages without a stated job ("About — about the company")
 - An audience section that survives the swap test
 - A stated user constraint silently dropped ("must be in German", "no stock photos")

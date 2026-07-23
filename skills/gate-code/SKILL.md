@@ -1,6 +1,6 @@
 ---
 name: gate-code
-description: Build/type/lint quality gate for the ultraweb pipeline — proves the codebase green with commands, not claims. Runs npm run build to exit 0, npx tsc --noEmit clean under strict, ESLint via the CLI directly (next lint is REMOVED in Next 16), serves every route in dev with a clean console, audits every "use client" directive for count and placement (leaves, never layouts), greps for stack relics (middleware.ts, framer-motion, priority prop, Tailwind v3 patterns), and sweeps package.json for unused dependencies. Invoke in Phase 11 of the ultraweb pipeline as the FIRST gate — nothing visual gets judged on a broken build — after any multi-file code change to an ultraweb site, or when the user says "run the code gate", "does it build", "check types and lint", or "is the build clean". Writes a dated pass/fail entry with command evidence to design/QA.md.
+description: Build/type/lint quality gate for the ultraweb pipeline — proves the codebase green with commands, not claims. Runs npm run build to exit 0, npx tsc --noEmit clean under strict, ESLint via the CLI directly (next lint is REMOVED in Next 16), serves every route in dev with a clean console, audits every "use client" directive for count and placement (leaves, never layouts), greps for stack relics (middleware.ts, framer-motion, priority prop, Tailwind v3 patterns), and sweeps package.json for unused dependencies, then runs a dependency-free token-contract linter that fails on undeclared @theme tokens or any foreground/surface pair below WCAG AA. Invoke in Phase 11 of the ultraweb pipeline as the FIRST gate — nothing visual gets judged on a broken build — after any multi-file code change to an ultraweb site, or when the user says "run the code gate", "does it build", "check types and lint", "is the build clean", or "check the token contract". Writes a dated pass/fail entry with command evidence to design/QA.md.
 ---
 
 # gate-code — green by command, not claim
@@ -9,7 +9,7 @@ description: Build/type/lint quality gate for the ultraweb pipeline — proves t
 
 ## Standard
 
-Every item on this gate is an exit code or a zero-hit grep — "looked fine" does not exist here. First-grade means: cold `npm run build` exits 0, `tsc --noEmit` is silent under strict with zero suppression comments, ESLint reports 0 problems with zero inline disables, every route in design/SITEMAP.md serves 200 with a clean dev terminal, `"use client"` lives only at interactive leaves, and package.json carries nothing the code doesn't import.
+Every item on this gate is an exit code or a zero-hit grep — "looked fine" does not exist here. First-grade means: cold `npm run build` exits 0, `tsc --noEmit` is silent under strict with zero suppression comments, ESLint reports 0 problems with zero inline disables, every route in design/SITEMAP.md serves 200 with a clean dev terminal, `"use client"` lives only at interactive leaves, and package.json carries nothing the code doesn't import. Every `var(--token)` resolves to a declared `@theme` token and every semantic foreground/surface pair clears WCAG AA — proven by a script each build, not eyeballed once at design time.
 
 ## Checklist
 
@@ -20,6 +20,7 @@ Every item on this gate is an exit code or a zero-hit grep — "looked fine" doe
 5. RSC boundaries at the leaves
 6. Zero stack relics
 7. Zero unused dependencies
+8. Token contract holds — no undeclared tokens, every pair passes AA
 
 ## How to verify
 
@@ -49,9 +50,52 @@ done
 
    The prefix match catches subpath imports (`from "next/image"` matches `next`). Before uninstalling a hit, confirm it isn't consumed by a root config file (next.config.ts, proxy.ts, drizzle.config.ts) or globals.css (`@import "tailwindcss"`). Then `npm uninstall` it and re-run check 1. A dedicated analyzer (knip) can replace the loop — verify against current docs first.
 
+8. **Token contract + AA, by script:** the `@theme` contract and WCAG AA are computable facts — assert them every build, not once by eye at design time. `node qa/token-contract.mjs` → exit 0. No new dependency (pure `node:fs` + math). It does two things: (a) fails on any `var(--token)` used in `app`/`components` that `app/globals.css` never declares — a typo, or a token renamed in globals.css but not its call sites, silently renders the CSS default; (b) re-derives contrast for every semantic foreground/surface pair (OKLCH tokens, which this stack mandates) — `--foreground`/`--background` plus every `--*-foreground`/`--*` — in BOTH `:root` and `.dark`, failing any below 4.5:1 (loosen to 3:1 per pair only where you know it is large-text-only). This turns ultraweb:color's one-time AA pass into a gate, so weeks of iterate/retrofit can't slip a `text-white`-on-`--warning` pair or a stale token past the other checks.
+
+```js
+// qa/token-contract.mjs — dependency-free; run: node qa/token-contract.mjs
+import { readFileSync, readdirSync, existsSync } from "node:fs";
+
+const css = readFileSync("app/globals.css", "utf8");
+const declared = new Set([...css.matchAll(/--([\w-]+)\s*:/g)].map(m => m[1]));
+let fail = 0;
+
+// (1) every var(--token) used in app/components must be declared in globals.css
+const walk = d => readdirSync(d, { withFileTypes: true }).flatMap(e =>
+  e.isDirectory() ? walk(`${d}/${e.name}`) : [`${d}/${e.name}`]);
+for (const f of ["app", "components"].filter(existsSync).flatMap(walk).filter(f => /\.(tsx?|css)$/.test(f)))
+  for (const [, t] of readFileSync(f, "utf8").matchAll(/var\(\s*--([\w-]+)/g))
+    if (!declared.has(t)) (console.error(`UNDECLARED  var(--${t})  ${f}`), fail = 1);
+
+// (2) WCAG-AA contrast for every foreground/surface pair, in both themes
+const lum = ([L, C, H]) => {                        // oklch -> WCAG relative luminance
+  const h = H * Math.PI / 180, a = C * Math.cos(h), b = C * Math.sin(h), cube = x => x ** 3;
+  const l = cube(L + .3963377774*a + .2158037573*b),
+        m = cube(L - .1055613458*a - .0638541728*b),
+        s = cube(L - .0894841775*a - 1.2914855480*b),
+        [r, g, bl] = [ 4.0767416621*l - 3.3077115913*m + .2309699292*s,
+                      -1.2684380046*l + 2.6097574011*m - .3413193965*s,
+                      -.0041960863*l - .7034186147*m + 1.7076147010*s ].map(v => Math.min(1, Math.max(0, v)));
+  return .2126*r + .7152*g + .0722*bl;
+};
+const ratio = (x, y) => { const [hi, lo] = [lum(x), lum(y)].sort((p, q) => q - p); return (hi + .05) / (lo + .05); };
+const parse = block => Object.fromEntries([...block.matchAll(/--([\w-]+)\s*:\s*oklch\(([^)]+)\)/g)].map(
+  ([, n, v]) => [n, v.split("/")[0].trim().split(/\s+/).map(x => parseFloat(x) / (x.endsWith("%") ? 100 : 1))]));
+for (const [name, sel] of [["root", ":root"], ["dark", "\\.dark"]]) {
+  const t = parse((css.match(new RegExp(`${sel}\\s*{([^}]*)}`, "s")) || [, ""])[1]);
+  for (const fg in t) {
+    const bg = fg === "foreground" ? "background" : fg.endsWith("-foreground") ? fg.slice(0, -11) : null;
+    if (!bg || !t[bg]) continue;
+    const r = ratio(t[fg], t[bg]);
+    if (r < 4.5) (console.error(`AA FAIL [${name}]  --${fg} on --${bg}  ${r.toFixed(2)}:1 (<4.5)`), fail = 1);
+  }
+}
+process.exit(fail);
+```
+
 ## Pass criteria
 
-All seven checks green in ONE final sequential pass after the last fix — any fix invalidates earlier results, so checks 1–4 re-run to completion at the end. Zero unjustified suppressions (`@ts-ignore`, `eslint-disable`, boundary hits in layouts). Every result recorded as the command's actual output line, not a memory of it.
+All eight checks green in ONE final sequential pass after the last fix — any fix invalidates earlier results, so checks 1–4 re-run to completion at the end, and check 8 re-runs whenever a fix touched globals.css or a component's tokens. Zero unjustified suppressions (`@ts-ignore`, `eslint-disable`, boundary hits in layouts). Every result recorded as the command's actual output line, not a memory of it.
 
 ## QA.md entry
 
@@ -66,7 +110,8 @@ All seven checks green in ONE final sequential pass after the last fix — any f
 | 5 | RSC boundary audit | PASS | 9 client files, all leaves, 0 in layouts |
 | 6 | stack relics | PASS | 0 hits across 5 checks |
 | 7 | unused dependencies | PASS | 11 deps audited, 0 unused |
-Issues fixed: removed unused `date-fns`; moved "use client" from app/page.tsx to components/sections/hero.tsx.
+| 8 | token contract + AA | PASS | node qa/token-contract.mjs exit 0 — 0 undeclared, 14 pairs ≥4.5:1 |
+Issues fixed: removed unused `date-fns`; moved "use client" from app/page.tsx to components/sections/hero.tsx; raised `--muted-foreground` lightness to clear AA in `.dark`.
 ```
 
 ## Anti-patterns
@@ -79,6 +124,8 @@ Issues fixed: removed unused `date-fns`; moved "use client" from app/page.tsx to
 - Reporting green from a stale `.next` or a build run before the last edit
 - Downgrading next/tailwindcss/motion to dodge an error — hand it to stack-doctor instead
 - Skipping the route sweep because "/" worked — dev compiles per route; unrequested routes are unverified routes
+- Eyeballing contrast once at design time, then stacking new components on top for weeks — an AA-failing pair sails through every other gate; `node qa/token-contract.mjs` re-derives it each build
+- Treating a `var(--token)` typo, or a token renamed in globals.css but not its call sites, as harmless — it silently renders the CSS default; check 8 is the only thing that catches it
 
 ## Worked example — Tidepool, first cold pass of the code gate
 
@@ -88,8 +135,11 @@ design/SITEMAP.md lists six routes for the "Precision Instrument" build — `/`,
 |---|-------|--------|----------|
 | 2 | npx tsc --noEmit | FAIL → PASS | `app/(marketing)/changelog/page.tsx` read `searchParams.tag` without `await` — a Promise in Next 16 |
 | 5 | RSC boundary audit | FAIL → PASS | `components/hero/berth-timeline.tsx` imports `motion/react`, no `"use client"` |
+| 8 | token contract + AA | FAIL → PASS | `--muted-foreground` on `--muted` in `.dark` measured 4.19:1; `var(--surface-2)` in `components/pricing/tier-card.tsx` was undeclared |
 
 The signature-move defect (check 5): the live-updating berth timeline animates its JetBrains Mono numerals with `useSpring` from `motion/react` but shipped as a server component, so `grep -rl "motion/react" app components | xargs -r grep -L "use client"` returned it. Fix: `"use client"` added at that one leaf — `app/(marketing)/page.tsx` stayed a server component composing it. Re-check returned empty; the census held at 11 client files, 0 in layouts.
+
+The token-contract script (check 8) caught what eyeballing had missed on both counts: in `.dark`, `--muted-foreground` — the pricing fine-print color — sat at 4.19:1 on `--muted`, so its lightness went 0.62→0.68 to clear 4.5:1; and `components/pricing/tier-card.tsx` still referenced `var(--surface-2)`, a token renamed to `--surface-raised` weeks earlier, which had been rendering transparent unnoticed. Both fixes are owned by ultraweb:tokens/ultraweb:color; the script re-ran to exit 0.
 
 Rejected the lazy fix of hoisting `"use client"` onto `app/(marketing)/layout.tsx` to make the hook error vanish — that turns the whole marketing tree client and defeats the boundary plan; the directive belongs at the leaf. Check 2's fix — `await`-ing `searchParams` before reading `.tag` in `app/(marketing)/changelog/page.tsx` — re-ran `npx tsc --noEmit` to exit 0, silent, and is owned by ultraweb:routing, which takes back every unawaited `params`/`searchParams`; the check 5 boundary fix stays with ultraweb:app-structure. The dated PASS lands in design/QA.md, and ultraweb:gate-performance reads the same client-file census next for bundle weight.
 
@@ -102,3 +152,6 @@ Rejected the lazy fix of hoisting `"use client"` onto `app/(marketing)/layout.ts
 - stack-doctor (subagent) — receives every build/type/tooling failure with the verbatim error
 - ultraweb:routing — check 4 serves every route in the tree it owns; an unawaited `params`/`searchParams` caught by check 2 is handed back here to fix
 - ultraweb:server-actions — when tsc or the boundary audit flags a form action's `(prevState, formData)` signature or its `useActionState` wiring, the fix lands there
+- ultraweb:tokens — declares the `@theme` contract check 8 enforces; adding the token there is the only way to satisfy an undeclared-token failure
+- ultraweb:color — its design-time AA pass becomes this gate's every-build assertion; a failing pair is handed back there to re-decide the lightness step
+- ultraweb:component-api — a variant that resolves to an undeclared token or an AA-failing pair fails here at build time, not in visual review

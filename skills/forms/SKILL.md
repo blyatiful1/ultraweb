@@ -25,6 +25,7 @@ A first-grade form is one the user finishes on the first try and trusts on the s
 
 - Label ALWAYS visible, above the input: 13–14px, medium weight, 6–8px gap to the field. Placeholder is for a format example only ("you@company.com") and never repeats the label.
 - Input: 44–48px tall, text ≥16px on mobile (below 16px iOS zooms the viewport), radius/border/focus-ring from tokens.
+- Textarea grows with its text natively: `field-sizing: content` (Baseline 2026 — Chrome/Edge, Safari 26.2, Firefox 152) replaces every ResizeObserver/auto-height hook. Clamp it — `min-height: 3lh; max-height: 12lh; overflow-y: auto` — so a pasted essay can't shove the submit button off-screen.
 - Hint text (when needed) sits between label and input, muted; error text replaces or follows it below the field, 4–6px gap, icon + color + words — never color alone.
 - Fields stack 20–24px apart; form column max 400–480px. Mark exceptions "(optional)" — a form where most fields need asterisks has too many fields.
 - Right types: `type="email"`, `type="tel"` + `inputMode="tel"`, `inputMode="numeric"` for codes; `autocomplete` tokens: `name`, `email`, `tel`, `organization`, `postal-code`, `street-address`, `current-password`/`new-password`.
@@ -36,6 +37,14 @@ A first-grade form is one the user finishes on the first try and trusts on the s
 3. **Split contact** — form beside a context panel (address, response-time promise, alternative channels) on a contact page; stacks on mobile, form first.
 4. **Wizard** — multi-step for 8+ fields or distinct topics: ≤5 fields per step, "Step 2 of 3" as text (not dots alone), back never loses data, per-step validation, review step before anything irreversible.
 
+## DACH checkout
+
+Localizing a checkout is re-ordering it to the market's conventions, not translating labels — a US-shaped address block or a card-first payment row reads as a trust failure no visual polish repairs.
+
+- Address as two rows, never a US-style stack: `Straße` + `Hausnummer` on the first row, `PLZ` + `Ort` on the second — PLZ before Ort, always (`PLZ` = `autocomplete="postal-code"`, `Ort` = `address-level2`, Straße = `address-line1`). Country picker defaults to Deutschland / Österreich / Schweiz.
+- Payment methods ordered by DACH trust, never card-first: Klarna → PayPal → SEPA-Lastschrift → Kauf auf Rechnung → Kreditkarte. Keep Kauf auf Rechnung always visible, never behind a "weitere Optionen" fold (Otto, Zalando, dm precedent).
+- forms owns field order and payment-method priority only — ultraweb:i18n owns locale switching, ultraweb:payments wires the provider.
+
 ## Validation timing
 
 Reward early, punish late:
@@ -44,6 +53,15 @@ Reward early, punish late:
 2. First validation on blur.
 3. After a field has errored once, re-validate on change — the error clears the instant it's fixed.
 4. On submit: full-schema validation on BOTH sides. Client pass focuses the first invalid field; the server pass is the one that counts (client validation is UX, server validation is security — never skip it).
+
+Do the timing in CSS wherever you can — `:user-invalid` matches only after a real interaction (blur or a submit attempt) and clears live once fixed, so a bare CSS rule replicates points 1–3 for the border/ring with zero JS and can never drift out of sync with the DOM. Drive the wrapper's chrome from the input's own state with `:has()`:
+
+```css
+.field:has(:user-invalid) { border-color: var(--destructive); }
+.field:has(:focus-visible) { box-shadow: var(--ring); }
+```
+
+Never style on `:invalid`/`:has(:invalid)` alone — that paints a pristine, never-touched field red on load (the classic premature-error bug that `:user-invalid` exists to kill). `:user-invalid` is Baseline 2026; `:has()` has been Baseline since late 2023. Reserve JS-toggled state for what CSS can't express: `aria-invalid`, the human-worded error message, and the submit-time server verdict.
 
 ## Shared schema + wiring (zod v4, useActionState)
 
@@ -83,6 +101,7 @@ Client: `const [state, formAction, pending] = useActionState(submitContact, { st
 - Error copy states the fix in the field's own words — "Enter an email like you@company.com", never zod defaults or "Invalid input".
 - Unknown/server failures go to ONE form-level banner ("Couldn't send — your message is still here. Try again.") with values intact; field errors stay at fields.
 - On failed submit, move focus to the first invalid field; error containers get `role="alert"` (form-level) or are referenced via `aria-describedby` (field-level).
+- Multi-field forms (3+ inputs — checkout, contact, booking, a wizard step) also get a focus-managed error summary above the form: a `tabIndex={-1}` container you move focus to on a failed submit, listing each miss as `<a href="#field-id">Label: how to fix it</a>` that focuses its field on click. Additive to the inline errors, never a replacement (GOV.UK's AT research: one authoritative list beats forcing keyboard/AT users to re-tab the whole form to discover what failed). A single-field newsletter input just needs its inline message.
 - Keep the submit button ENABLED. A disabled submit hides why the form won't go; clicking it is how users ask.
 - Spam defense: honeypot field + server validation before any CAPTCHA — a contact form that interrogates humans loses more mail than it blocks.
 
@@ -109,6 +128,10 @@ Client: `const [state, formAction, pending] = useActionState(submitContact, { st
 - Clearing fields on server error (missing `values` echo)
 - Toast as the only surface for field-level errors
 - Asterisks on every field; inputs without `name=`; client-only validation with a trusting server
+- Styling validation on `:invalid`/`:has(:invalid)` instead of `:user-invalid` — reds a pristine field on load
+- A ResizeObserver/JS auto-height hook on a textarea where `field-sizing: content` does it natively
+- A card-first payment row or a US-stacked address block (PLZ after Ort) on a DACH checkout
+- Inline-only errors on a long multi-field form — no focus-managed summary for AT/keyboard users
 
 ## Worked example — Casa Verde, the reservation form (EN/PT)
 
@@ -125,7 +148,7 @@ export const reservationSchema = z.object({
 });
 ```
 
-Fields sit in a single 440px column on the warm-cream card (`oklch(0.97 0.01 85)`); Karla labels 14px above each input, focus ring terracotta (`oklch(0.66 0.13 45)`), Fraunces italic saved for the success heading alone. The action returns `status: "confirmed"` and replaces the form with "Table set — check your inbox."; the `fully-booked` branch swaps in a waitlist offer inline rather than a dead end, echoing every value back on any error.
+Fields sit in a single 440px column on the warm-cream card (`oklch(0.97 0.01 85)`); Karla labels 14px above each input, focus ring terracotta (`oklch(0.66 0.13 45)`), Fraunces italic saved for the success heading alone. The `notes` textarea grows with `field-sizing: content` (min 3lh, max 10lh) — no resize hook. Validation chrome is pure CSS: `.field:has(:user-invalid)` reddens the border only after a real blur or a failed submit, so an untouched field never flashes red. On a failed submit the six-field form moves focus to an error summary listing each miss as a link back to its input, additive to the inline messages. The action returns `status: "confirmed"` and replaces the form with "Table set — check your inbox."; the `fully-booked` branch swaps in a waitlist offer inline rather than a dead end, echoing every value back on any error.
 
 Rejected: a live-availability time `<select>` that fetches open slots on mount — it breaks the no-JS `<form action={submitReservation}>` post, so the server action re-checks the slot instead and returns `fully-booked` as data.
 
@@ -140,5 +163,7 @@ Output lands in `components/forms/ReservationForm.tsx` + `app/[locale]/actions/r
 - ultraweb:micro-interactions — focus ring and error-appear motion, 150–250ms
 - ultraweb:email — where the contact payload lands (Resend: check `{ data, error }`, it never throws)
 - ultraweb:auth — sign-in/sign-up forms built here hand the credential check and session mutation off to auth
+- ultraweb:i18n — owns locale switching and translated label/error strings; forms owns field order and the DACH payment-method priority
+- ultraweb:payments — wires the Stripe/provider integration behind the DACH payment methods forms orders (Klarna/PayPal/SEPA/Rechnung)
 - ultraweb:gate-accessibility — audits the label association, `aria-describedby`, and error-announcement contract this skill builds (its item 7)
 - ultraweb:storage — when a form field is a file upload the bytes hand off here, while the dropzone's label and error placement still follow this skill's rules

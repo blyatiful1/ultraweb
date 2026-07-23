@@ -1,6 +1,6 @@
 ---
 name: payments
-description: Stripe payments for a Next.js 16 site — Stripe 22 with a lazy-instantiated client (no apiVersion pin; the SDK ships its own), Checkout Session creation in a server action redirecting to Stripe-hosted checkout, a webhook route handler that reads the raw body via await req.text() before constructEvent (the classic parsed-body signature failure), prices modeled in the Dashboard and allowlisted in code, strict test-mode discipline with the Stripe CLI, and success/cancel pages designed to the system — never bare. Invoke during the backend phase when the brief sells anything — one-time purchases, subscriptions, pricing-page checkout — when webhook signature verification keeps failing, or when fulfillment logic lives on the success page. Trigger phrases — "add Stripe", "checkout", "payments", "subscriptions", "billing", "buy button", "webhook signature error", "payment succeeded but nothing happened".
+description: Stripe payments for a Next.js 16 site — Stripe 22 with a lazy-instantiated client (no apiVersion pin; the SDK ships its own), Checkout Session creation in a server action redirecting to Stripe-hosted checkout, a webhook route handler that reads the raw body via await req.text() before constructEvent (the classic parsed-body signature failure), prices modeled in the Dashboard and allowlisted in code, strict test-mode discipline with the Stripe CLI, and success/cancel pages designed to the system — never bare. Invoke during the backend phase when the brief sells anything — one-time purchases, subscriptions, pricing-page checkout — when webhook signature verification keeps failing, or when fulfillment logic lives on the success page. Trigger phrases — "add Stripe", "checkout", "payments", "subscriptions", "billing", "buy button", "webhook signature error", "payment succeeded but nothing happened", "SEPA Lastschrift / Klarna for DACH", "Widerrufsrecht at checkout".
 ---
 
 # payments — Stripe without the classic footguns
@@ -68,6 +68,25 @@ export async function checkout(formData: FormData) {
 
 `{CHECKOUT_SESSION_ID}` is a literal — Stripe substitutes it on redirect; never template it yourself.
 
+## DACH storefront — payment methods are a localization surface
+
+German-speaking buyers reach for credit cards far less than the default assumes; SEPA Lastschrift, Klarna / Kauf auf Rechnung and PayPal carry most DACH checkouts. The method mix is localization — the same lane as language and currency (ultraweb:i18n) — and a per-market decision, never one global default.
+
+Hosted Checkout still holds: the redirect surfaces every eligible method, so you only widen the set. Enable the methods in the Dashboard and omit `payment_method_types` (currency + buyer country gate them — SEPA Debit and Klarna need EUR), or pin them when you want control:
+
+```ts
+const session = await getStripe().checkout.sessions.create({
+  mode: 'payment',
+  payment_method_types: ['card', 'sepa_debit', 'klarna'],  // + 'paypal'; EUR required for SEPA/Klarna
+  line_items: [{ price: parsed.data, quantity: 1 }],
+  // success_url / cancel_url as above
+})
+```
+
+Klarna is one-time only — recurring plans fall back to SEPA Debit or card. Embedded rather than redirect uses the same idea on the PaymentIntent behind Stripe's Payment Element (`automatic_payment_methods: { enabled: true }` lets the Dashboard drive the set), but hosted Checkout stays the default; embedded only if BRIEF.md demands it. giropay was wound down by the German banking industry — confirm it in Stripe's current docs before listing it; SEPA + Klarna + PayPal are the durable core.
+
+**Widerrufsrecht is not optional.** EU distance-selling contracts carry a 14-day right of withdrawal, and the buyer must be told before they commit — one line by the checkout CTA linking a full Widerrufsbelehrung, e.g. „Es besteht ein 14-tägiges Widerrufsrecht — Einzelheiten in der Widerrufsbelehrung.“ routed to `/widerruf`. It is a statutory pre-contract disclosure independent of which rails ship, and distinct from the PAngV price rules in pricing's lane. For digital goods or services delivered immediately the right lapses only against explicit consent — collect it, never assume it. The checkout form's field order and payment-icon layout stay in ultraweb:forms; this skill owns the session params and the disclosure copy.
+
 ## Webhook — the raw-body rule
 
 ```ts
@@ -124,6 +143,9 @@ export async function POST(req: Request) {
 - `NEXT_PUBLIC_STRIPE_SECRET` — a secret with a public prefix ships to the browser.
 - A success page rendering "Payment successful" without retrieving and checking the session — celebrates unpaid and forged visits.
 - Bare unstyled success/cancel surfaces — designed pages, per Standard.
+- Card-only checkout on a DACH storefront — German buyers underuse cards; SEPA Lastschrift and Klarna are table stakes, and the payment-method set is a per-market decision, not a global default.
+- No Widerrufsrecht notice at the checkout CTA (or buried three clicks deep in the footer) — the 14-day withdrawal right is a statutory pre-contract disclosure that belongs beside the commit action.
+- Assuming the withdrawal right lapses for immediately-delivered digital goods without collecting explicit consent — the waiver is opt-in, never automatic.
 
 ## Worked example — Loop & Thread, one-time checkout for handmade goods
 
@@ -156,3 +178,5 @@ Handoff: `lib/prices.ts` is the single source ultraweb:pricing renders the shop 
 - **ultraweb:ship** — env audit swaps to live keys, the production webhook endpoint secret, and `NEXT_PUBLIC_APP_URL` to the production origin at deploy, nowhere earlier.
 - **ultraweb:brief** — reads its design/BRIEF.md to decide one-time (`mode: 'payment'`) vs recurring (`mode: 'subscription'`) and how many Products/Prices to model in the Dashboard.
 - **ultraweb:api-design** — the Stripe webhook is a route handler built to its conventions: raw-body reading, explicit status-code contract (400 on bad signature, 200 on ack), no caching on the endpoint.
+- **ultraweb:i18n** — the DACH payment-method mix, EUR currency, and locale are one localization surface; the SEPA/Klarna set is a per-market decision made alongside language, not a global default.
+- **ultraweb:forms** — the checkout form's field order, payment-method icon layout, and where the Widerrufsrecht line sits follow its rules; this skill owns the session params and the disclosure copy, not the form chrome.

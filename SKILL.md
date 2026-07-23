@@ -45,7 +45,7 @@ Expand the one prompt into `design/BRIEF.md`. Decide: site type, audience, pages
 ### Phase 2 — Direction (skills: `direction` — `award-canon` consulted for references and signature-move precedent)
 Choose ONE aesthetic archetype from the catalog and ONE signature move. Write `design/DIRECTION.md`. This is the highest-leverage decision of the build — spend real thought here.
 
-### Phase 3 — Foundation (skills: `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `imagery`, `motion-language` — then `tokens` LAST)
+### Phase 3 — Foundation (skills: `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `imagery`, `motion-language`, plus `theme-worlds` if the brief needs per-route/per-case-study worlds — then `tokens` LAST)
 Design the system before any component: OKLCH palette with dark mode, font pairing (never default-Inter-only), spacing rhythm, elevation and shape language, image treatment, easing/duration vocabulary. Each skill writes its `design/SYSTEM.md` section; `tokens` runs last and compiles every decision into `@theme` tokens in `app/globals.css`.
 
 ### Phase 4 — Structure (skills: `sitemap`, `wireframe`)
@@ -54,19 +54,19 @@ Pages, routes, and a section-by-section blueprint for each page in `design/SITEM
 ### Phase 5 — Scaffold (skills: `scaffold`, `app-structure`)
 Init the Next.js app (current stable, App Router, TS strict, Tailwind v4, shadcn/ui, motion, lucide). Wire tokens into `globals.css`. Commit the RSC/client boundary plan.
 
-### Phase 6 — Build (skills: per section — `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`; system usage — `icons`; engineering — `routing`, `data-fetching`, `media-optimization`)
+### Phase 6 — Build (skills: contract — `component-api` (every component obeys it); per section — `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`, `overlays`; commerce — `cart`, `product-detail`; search — `command-palette`; long-form — `marginalia`; system usage — `icons`; engineering — `routing`, `data-fetching`, `media-optimization`)
 Build section by section following `design/SITEMAP.md`. Each section consults its skill for the quality bar and anti-patterns. Desktop AND mobile designed together, not mobile-as-afterthought.
 
-### Phase 7 — Backend (skills as needed: `server-actions`, `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`)
+### Phase 7 — Backend (skills as needed: `server-actions`, `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`, plus `consent` whenever any third-party tracking/cookies load)
 Only what `design/BRIEF.md` demands — a brochure site gets a contact form action, not a database. Whatever is built gets validation (zod), error states, and honest failure UX.
 
 ### Phase 8 — Voice (skills: `copywriting`)
 Rewrite every string on the site in the brief's voice. Headlines earn their size. Microcopy (buttons, empty states, errors, form hints) gets the same care as heroes.
 
-### Phase 9 — Motion (skills: `micro-interactions`, `scroll-motion`, `page-transitions`; `physics`/`showpiece` only if DIRECTION.md calls for them)
+### Phase 9 — Motion (skills: `micro-interactions`, `scroll-motion`, `page-transitions`; `physics`/`showpiece` only if DIRECTION.md calls for them; `hidden-craft` for the opt-in easter-egg layer)
 The choreography pass, applied to the finished layout. Respect `prefers-reduced-motion` everywhere.
 
-### Phase 10 — Findability (skills: `seo`; `i18n` if multilingual)
+### Phase 10 — Findability (skills: `seo`; `i18n` if multilingual; `print-craft` when the site has document/legal pages — Impressum, invoices, quotes)
 Metadata API, generated OG images, sitemap/robots, JSON-LD where it fits.
 
 ### Phase 11 — Gates (skills: `gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content`)

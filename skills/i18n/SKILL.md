@@ -1,6 +1,6 @@
 ---
 name: i18n
-description: Internationalization for the Next.js 16 App Router without an i18n framework — [locale] segment routing, server-only dictionary pattern, Accept-Language negotiation in proxy.ts, hreflang via metadata alternates, Intl date/number formatting, RTL awareness — plus the discipline to skip all of it when the brief targets a single market. Invoke when design/BRIEF.md names two or more languages or markets, or when the user mentions translations, multilingual, locales, hreflang, language switcher, RTL, or "add a German/French/Spanish version".
+description: Internationalization for the Next.js 16 App Router without an i18n framework — [locale] segment routing, server-only dictionary pattern, Accept-Language negotiation in proxy.ts, hreflang via metadata alternates, Intl date/number formatting, RTL awareness — plus the discipline to skip all of it when the brief targets a single market. Invoke when design/BRIEF.md names two or more languages or markets, or when the user mentions translations, multilingual, locales, hreflang, language switcher, RTL, or "add a German/French/Spanish version". Also covers German/DACH typesetting (guillemets, ß/ẞ, DIN-5008 spacing, comma decimals) and the Leichte-Sprache plain-language register for civic/foundation DACH builds.
 ---
 
 # i18n — locales without a framework
@@ -15,7 +15,7 @@ description: Internationalization for the Next.js 16 App Router without an i18n 
 
 ## Standard
 
-Locale lives in the URL (`/de/arbeiten`), never only in a cookie. Every shipped locale is 100% written — a half-translated locale is worse than none. Dictionaries never reach the client bundle. hreflang is complete, including `x-default`. All dates and numbers go through `Intl` with an explicit locale. The longest locale (German runs ~30% longer than English) is the one verified at 375px.
+Locale lives in the URL (`/de/arbeiten`), never only in a cookie. Every shipped locale is 100% written — a half-translated locale is worse than none. Dictionaries never reach the client bundle. hreflang is complete, including `x-default`. All dates and numbers go through `Intl` with an explicit locale. The longest locale (German runs ~30% longer than English) is the one verified at 375px. A `de` build is typeset to German rules — `„…"` quotes, `hyphens:auto`, DIN-5008 spacing — not English with umlauts; a civic or foundation `de` brief also owes a Leichte-Sprache register.
 
 ## Process
 
@@ -113,9 +113,22 @@ Bare `toLocaleDateString()` uses the runtime's locale; server and client disagre
 
 Only when an RTL locale (ar, he, fa, ur) is actually in the brief: set `dir` on `<html>` per locale, and write ALL spacing and alignment with logical utilities from day one — `ps-*`/`pe-*`, `ms-*`/`me-*`, `text-start`/`text-end` — never `pl`/`pr`/`ml`/`mr`/`text-left`/`text-right`. shadcn `init --rtl` covers the primitives. Retrofitting physical properties to logical is a full-codebase sweep; deciding up front is free.
 
+## German & DACH typesetting
+
+Only when a `de` locale (`de`, `de-DE`, `de-AT`, `de-CH`) is in the brief — German is not English with umlauts. Set these on the `:lang(de)` prose containers; let `Intl` do the numbers. A Berlin roastery's `de-DE` shop carries `„Kaffee aus Leidenschaft"` and `4,50 €` end to end.
+
+- **Hyphenate the compounds.** `Rechtsschutzversicherung` rags brutally and overflows heroes unbroken. `hyphens: auto` on prose — it relies on the `lang` the `[locale]` layout already sets. Keep it off display type (auto-hyphenated heroes read cheap); break those with a soft hyphen `&shy;` at a chosen seam or `text-wrap: balance`.
+- **Quotation glyphs.** German quotes are `„…"` (open low, close high — `„Kaffee aus Leidenschaft"`), not `"…"`. The editorial register uses guillemets `»…«` (inward-pointing; Swiss `de-CH` uses `«…»`). Copywriting writes the real glyphs into the dictionary; set the property for any `<q>`: `:lang(de){ quotes:"„" "“" "‚" "‘" }`.
+- **ß, ẞ, and de-CH.** `de-DE`/`de-AT` keep `ß`; Switzerland (`de-CH`) never uses it — always `ss`. In an uppercase headline decide the cap deliberately: `text-transform: uppercase` emits `SS` (STRASSE), while the modern capital `ẞ` (STRAẞE) only renders if the font ships U+1E9E — verify the glyph or keep SS.
+- **Numbers, money, dates — through `Intl`, never by hand.** Decimals are a comma, thousands a period (DIN-5008 prefers a thin space in tables): `Intl.NumberFormat("de-DE")` → `1.234,56`. Currency trails with a no-break space: `{style:"currency",currency:"EUR"}` → `1.234,56 €`, never `€15`. Dates: `dateStyle:"long"` → `23. Juli 2026`; numeric is `DD.MM.YYYY`. A period decimal (`1.5`) reads as fifteen hundred — an error, not a nit.
+- **DIN-5008 spacing.** A `&nbsp;` between value and unit or symbol and inside spaced abbreviations, so nothing wraps: `15&nbsp;€`, `20&nbsp;%` (German spaces before `%`), `z.&nbsp;B.`, `d.&nbsp;h.`
+- **Re-check the hero.** The same headline runs 15–35% longer in German, so a `clamp()` tuned on English overflows or orphans a lone compound. Re-verify each German hero at 375px against the `ultraweb:typography` clamp scale — tighten the `min`, add a `&shy;`, or let `text-wrap: balance` resolve the rag.
+
 ## Copy discipline
 
 Each locale is WRITTEN by `ultraweb:copywriting` in that market's voice — never machine-transliterated English. Idioms, formality register (du/Sie), and CTA verbs are per-market decisions. `gate-responsive` screenshots run on the longest locale, not on English.
+
+**Leichte Sprache** is register, not translation — a third axis beside tone and locale, serving cognitive disabilities, non-native readers, and low-literacy users at once. Turn it on only for `de`-locale civic, foundation, government-adjacent, or regulated-consumer briefs (never a game studio or textiles shop absent a real audience); it is legally expected in German public contexts (BITV 2.0) and BFSG-relevant for regulated consumer services from June 2025. Ship it as a genuine `/de/leichte-sprache/<page>` route for the pages that matter — mission/about, contact or donation, the load-bearing legal/process pages (Impressum, AGB, Datenschutz, checkout) — plus a visible "Leichte Sprache" link, top-right and in the footer. Its rules are real craft: one statement per sentence, one idea per line, active voice and present tense, no Konjunktiv or Genitive, spelled-out abbreviations, long compounds split with a hyphen (`Kaffee-Bestellung`). `ultraweb:copywriting` writes it natively and the target group validates it — never machine-simplified from the standard copy, which produces confident nonsense.
 
 ## Anti-patterns
 
@@ -128,6 +141,9 @@ Each locale is WRITTEN by `ultraweb:copywriting` in that market's voice — neve
 - `toLocaleDateString(` / `toLocaleString(` with no locale argument — hydration mismatch
 - shipping a locale with untranslated fallback strings mixed in — cut the locale instead
 - installing an i18n framework for a 2-locale brochure site
+- straight `"…"`, `€15`, or a period decimal in a `de` locale — German is `„…"` and `1.234,56 €` via `Intl.NumberFormat("de-DE")`; `1.5` reads as a thousands separator
+- `text-transform: uppercase` on German `ß` with no `SS`/`ẞ` decision — verify the glyph the font actually emits
+- Leichte Sprache as a PDF, a footer afterthought, or machine-simplified from the standard copy — it is a real `/de/leichte-sprache/` page written natively, or it is not done
 
 ## Worked example — Casa Verde, EN/PT restaurant menu + reservations
 
@@ -152,7 +168,9 @@ Handoff: the `dictionaries/pt.ts` + `dictionaries/en.ts` pair is written nativel
 
 ## Composes with
 
-- **ultraweb:copywriting** — writes every dictionary natively per locale.
+- **ultraweb:copywriting** — writes every dictionary natively per locale, and the Leichte-Sprache register where a civic `de` brief calls for it.
+- **ultraweb:typography** — German headlines re-check against its clamp scale; the language runs 15–35% longer than the English it was tuned on.
+- **ultraweb:gate-accessibility** — the Leichte-Sprache register answers the cognitive-accessibility gap beside the WCAG floor it enforces.
 - **ultraweb:seo** — owns `metadataBase`; this skill adds hreflang alternates and per-locale metadata.
 - **ultraweb:routing** — the `[locale]` segment reshapes the whole route tree; coordinate loading/error files per segment.
 - **ultraweb:navigation** — houses the locale switcher as a designed moment.

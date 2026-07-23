@@ -1,6 +1,6 @@
 ---
 name: showpiece
-description: Hero-grade set pieces for ultraweb builds — 2D canvas, shader/mesh gradients, particles, R3F/three.js 3D — under taste's hard gate — only when DIRECTION.md demands it, 60fps verified on mid hardware, static fallback and reduced-motion path mandatory, one per site. Covers the cost ladder (CSS → canvas → shader → R3F), next/dynamic ssr:false mounting, and LCP protection. Invoke in the ultraweb motion phase (Phase 9) when DIRECTION.md commissions it, or when the user says "WebGL hero", "3D product view", "shader gradient", "particles", "something jaw-dropping in the hero", or "an interactive centerpiece".
+description: Hero-grade set pieces for ultraweb builds — 2D canvas, shader/mesh gradients, particles, R3F/three.js 3D — under taste's hard gate — only when DIRECTION.md demands it, 60fps verified on mid hardware, static fallback and reduced-motion path mandatory, one per site. Covers the cost ladder (CSS → canvas → shader → R3F), next/dynamic ssr:false mounting, and LCP protection. Invoke in the ultraweb motion phase (Phase 9) when DIRECTION.md commissions it, or when the user says "WebGL hero", "3D product view", "shader gradient", "particles", "something jaw-dropping in the hero", "an interactive centerpiece", or "make a 3D view shareable / deep-linkable".
 ---
 
 # showpiece — one set piece, fully earned
@@ -13,7 +13,9 @@ Taste's rule verbatim: 3D, shaders, canvas only when the direction demands it, i
 
 - **The showpiece never owns LCP.** Hero headline and CTA render from server HTML and paint first; the canvas mounts behind or after them.
 - **The static fallback is itself designed** — a poster frame (gradient, SVG composition, or treated image via `imagery`) that would pass `gate-visual` alone. Reduced-motion users, no-WebGL browsers, and the pre-hydration frame all see it; it is not a degradation, it is the second edition of the design.
+- **The fallback carries the argument in words, not just a picture.** A showpiece asserts a claim — about the product, the craft, the world; the accessible edition must state that claim, not gesture at it. Every canvas/WebGL/R3F section ships a sibling narrative — 2–4 sentences of real copy authored in Phase 8 (`ultraweb:copywriting`), never template alt text like "an interactive 3D scene" — in an `sr-only` block that becomes visible under `prefers-reduced-motion`. The meaning survives without the spectacle; that is the test. (Germany's BFSG, in force since 2025-06-28, makes this a legal floor for DACH sites, not a courtesy.)
 - **Three exits wired**: `prefers-reduced-motion` → static; WebGL/context unavailable → static; tab hidden or element offscreen → animation loop paused.
+- **A navigable scene is app state, not a demo reel.** If the showpiece is an explorable 3D/canvas view — an R3F scene, multiple camera framings, a scene selector — its camera (position, target, fov) and active scene belong in the URL, not trapped in `useState`. Encode them into a `?view=` search param and restore on mount, so the moment is bookmarkable, shareable, and reachable by back/forward — a place, not a reel. `ultraweb:routing` owns the URL contract; the discipline that keeps it cheap is in the mounting pattern below.
 - **Cheapest rung wins.** Climb the cost ladder only as far as the direction requires.
 - **Progressive Spectacle Tiers (`award-canon`) is the operational form of this gate.** The three exits above ARE the tiers — a complete static/semantic baseline (no-JS, no-WebGL, reduced-motion), a CSS/Motion-enhanced tier, an optional WebGL top rung — identical content across all three, selected by capability + preference. Build the static tier FIRST as the durable edition, never a degraded stub.
 - **Weight as a Feature (`award-canon`): payload is a headline constraint set before richness, not after.** The winners that lasted ship full 3D worlds in single-digit MB — Messenger 5.7MB initial (Developer Site of the Year 2025), Bruno Simon ~2.8MB, Orano 901KB gzipped; set a byte budget before the first shader, because a 9MB/6s page will not win regardless of beauty. Most OLDER canvas-only winners in the corpus are now dead or replaced — Messenger is the living exception, and even it ships essentially no static/SEO path — so the semantic layer is what survives.
@@ -59,6 +61,22 @@ export function Showpiece() {
 
 Inside `scene.tsx`: feature-detect the WebGL context and return `<StaticPoster />` on failure; register `visibilitychange` + IntersectionObserver to pause the loop. The hero section renders headline/CTA as server HTML and places `<Showpiece />` in the background/media slot — never the other way around.
 
+**Scene state in the URL (navigable scenes only).** Serialize a small pose object to base64 in `?view=` and hydrate from it on mount. Commit discrete scenes with `router.push` (each is a back-button entry); stream continuous camera drags with `router.replace` so a drag doesn't spam history — and write back only once a tween settles, never inside `useFrame`.
+
+```tsx
+// inside the "use client" scene wrapper — navigable scenes only
+const params = useSearchParams();
+const router = useRouter();                         // next/navigation
+const initial = decodePose(params.get("view"));    // base64 → { pos, target, fov }
+
+// on settle (tween end / OrbitControls 'end' event) — NOT per frame:
+const persist = (pose: Pose, discrete: boolean) => {
+  const href = `?view=${encodePose(pose)}`;
+  discrete ? router.push(href, { scroll: false })
+           : router.replace(href, { scroll: false });
+};
+```
+
 ## Pass criteria
 
 Record all six in design/SYSTEM.md (decision + bundle delta) and design/QA.md (measurements) before the gates run:
@@ -66,7 +84,7 @@ Record all six in design/SYSTEM.md (decision + bundle delta) and design/QA.md (m
 1. Performance recording shows steady 60fps over ≥5s of interaction, zero long tasks >50ms.
 2. 4x CPU throttle stays fluid (≥30fps) or the piece detects and falls back.
 3. LCP element is server-rendered text/image, not the canvas — confirmed in DevTools.
-4. Reduced-motion emulation renders `StaticPoster`, and the poster alone reads as designed.
+4. Reduced-motion emulation renders `StaticPoster` with its narrative text visible, and the poster plus that narrative carry the argument on their own (real copy, not template alt text).
 5. Kill WebGL (or test a no-WebGL context): static path renders, console clean.
 6. Client bundle delta measured via `npm run build` before/after and accepted deliberately.
 
@@ -81,6 +99,9 @@ Record all six in design/SYSTEM.md (decision + bundle delta) and design/QA.md (m
 - Particle-count flexing: thousands of particles at 20fps loses to hundreds at 60fps every time.
 - A spinning 3D object with no relation to the brief — decoration is not direction; if DIRECTION.md can't say what it means, cut it.
 - Skipping the 4x-throttle run — "60fps on my machine" is not "60fps on mid hardware".
+- Camera or scene locked in `useState` on a navigable piece — a view no link can reach and the back button can't undo is a demo reel wearing a URL bar. Grep an explorable scene for `useSearchParams`; its absence is the smell.
+- Writing the URL every frame — `router.replace` inside `useFrame` thrashes history and re-renders; sync only when the tween settles.
+- An `sr-only` narrative that parrots template alt text ("an interactive 3D scene") instead of the claim the visual makes — it must carry the argument, or it fails both the screen-reader user and the BFSG.
 
 ## Worked example — Studio Norra, Oslo agency portfolio index
 
@@ -90,7 +111,7 @@ The gate check's site-type arm passes (agency portfolio — spend boldly), but t
 
 Rejected: a fragment-shader displacement reveal on a raw WebGL quad. It lost because rasterizing the work onto a canvas destroys exactly what an agency index sells — image crispness, text-first LCP, per-image alt text — for zero gain over `clip-path`.
 
-Handoff: the pointer spring is owned by ultraweb:physics; the `/work` → `/work/[slug]` shared-element image transition (springs, not ease-out defaults) is owned by ultraweb:scroll-motion. The static fallback — the plain index list revealing each image on hover/focus — is what prefers-reduced-motion and no-JS receive, and it clears gate-visual on its own.
+Handoff: the pointer spring is owned by ultraweb:physics; the `/work` → `/work/[slug]` shared-element image transition (springs, not ease-out defaults) is owned by ultraweb:scroll-motion. The static fallback — the plain index list revealing each image on hover/focus — is what prefers-reduced-motion and no-JS receive, and it clears gate-visual on its own. Because the case-study images stay real DOM with authored alt text and the list names each project, that fallback already carries the argument in words — the narrative text-track is satisfied without a separate `sr-only` block; and with no camera, there is no scene state to route.
 
 ## Composes with
 
@@ -99,7 +120,9 @@ Handoff: the pointer spring is owned by ultraweb:physics; the `/work` → `/work
 - ultraweb:imagery — designs the static poster fallback (gradient meshes, noise, treated imagery).
 - ultraweb:media-optimization — LCP protection and asset strategy when the showpiece shares the fold.
 - ultraweb:gate-performance — the 60fps recording, bundle delta, and LCP checks are its pass bar.
-- ultraweb:gate-accessibility — verifies the reduced-motion exit actually renders the static path.
+- ultraweb:gate-accessibility — verifies the reduced-motion exit renders the static path AND that its narrative text-track carries the argument (real copy, not template alt text).
+- ultraweb:copywriting — authors the narrative text-track in Phase 8 (2–4 sentences per showpiece section stating the visual's actual claim), so the accessible edition argues instead of leaving a placeholder.
 - ultraweb:physics — when the cheapest sufficient rung is a pointer/element spring rather than canvas or WebGL, showpiece hands the motion to physics and builds no set piece.
 - ultraweb:scroll-motion — a "showpiece" brief that is really a scroll-linked reveal or shared-element page transition is routed down to scroll-motion instead of mounting a canvas.
+- ultraweb:routing — the home for camera/scene URL state: showpiece serializes the pose into a `?view=` search param, routing owns the search-param contract that makes a navigable scene bookmarkable and back/forward-navigable.
 - ultraweb:award-canon — Weight as a Feature and Progressive Spectacle Tiers are the operational form of this skill's 60fps + static-fallback gate; One Material World, Fake-Depth Before Real Depth, and The Persistent Hero Object guide what the set piece should be. Cite the principle, never a winner's surface.
