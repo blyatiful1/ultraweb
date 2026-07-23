@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     template: "%s — BLOCKOUT",
   },
   description:
-    "Four engines, 27 years, nine maps. The history of Counter-Strike's levels, from the 1999 beta to CS2 — told as one scroll.",
+    "Three engines, 27 years, nine maps. The history of Counter-Strike's levels, from the 1999 beta to CS2 — told as one scroll.",
 };
 
 export default function RootLayout({

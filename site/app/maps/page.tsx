@@ -57,7 +57,7 @@ export default function AtlasPage() {
           The Atlas
         </h1>
         <p className="mt-6 max-w-[54ch] text-lg text-muted-foreground">
-          Nine maps, four engines, one competitive canon — each drawn as the
+          Nine maps, three engines, one competitive canon — each drawn as the
           radar you already read in your head. Open a file to trace its whole
           life.
         </p>

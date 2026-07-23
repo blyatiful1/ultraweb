@@ -25,15 +25,15 @@ export function JourneyHero() {
             The maps outlived every engine
           </h1>
           <p className="mt-6 max-w-[60ch] text-lg text-muted-foreground">
-            Four engines, twenty-seven years, nine bomb sites. The history of
-            Counter-Strike&rsquo;s maps, from a 1999 mod to Source&nbsp;2 —
+            Three engines, twenty-seven years, nine maps. The history of
+            Counter-Strike&rsquo;s levels, from a 1999 mod to Source&nbsp;2 —
             told as one scroll.
           </p>
           <p
             className="type-meta animate-fade-up mt-8"
             style={{ animationDelay: "120ms" }}
           >
-            1999 — 2026 // 4 engines // 9 maps
+            1999 — 2026 // 3 engines // 9 maps
           </p>
           <div
             className="animate-fade-up mt-10"
