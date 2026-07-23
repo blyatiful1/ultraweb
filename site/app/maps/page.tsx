@@ -13,8 +13,10 @@ export const metadata: Metadata = {
 
 // Static, non-interactive twin of the atlas grid. It is what useSearchParams
 // prerenders as the Suspense fallback, so the canonical /maps HTML always ships
-// all nine dossier links (crawlable, and fully usable before JS). The client
-// AtlasGrid hydrates over this identical markup — no swap, no layout jump.
+// all nine dossier links (crawlable, and fully usable before JS). For the
+// canonical unfiltered /maps this matches the hydrated grid exactly; a deep
+// link to /maps?era=X shows the full grid until hydration applies the filter —
+// the accepted cost of keeping this page static instead of request-rendered.
 function AtlasGridStatic() {
   return (
     <>

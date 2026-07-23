@@ -95,6 +95,13 @@ export function StatFigure({ stat }: { stat: Stat }) {
     () => target.toFixed(decimals) + suffix,
   );
 
+  // SSR/no-JS/reduced-motion show the final value; motion users get reset to 0
+  // at mount — off-screen, before the count-up — so the figure never flashes
+  // final → 0 as it enters view.
+  useEffect(() => {
+    if (reduced === false) setDisplay((0).toFixed(decimals) + suffix);
+  }, [reduced, decimals, suffix]);
+
   useEffect(() => {
     if (!inView || reduced) return;
     let raf = 0;

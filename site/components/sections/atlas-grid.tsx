@@ -77,11 +77,15 @@ export function AtlasGrid() {
                   layout={!reduced}
                   initial={reduced ? false : { opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={reduced ? { opacity: 0 } : { opacity: 0 }}
-                  transition={{
-                    layout: { duration: dur.small, ease: ease.out },
-                    opacity: { duration: dur.micro, ease: ease.out },
-                  }}
+                  exit={reduced ? undefined : { opacity: 0 }}
+                  transition={
+                    reduced
+                      ? { duration: 0 }
+                      : {
+                          layout: { duration: dur.small, ease: ease.out },
+                          opacity: { duration: dur.micro, ease: ease.out },
+                        }
+                  }
                   className={span ? "sm:col-span-2" : undefined}
                 >
                   <MapCard

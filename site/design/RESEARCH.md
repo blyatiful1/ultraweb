@@ -143,7 +143,7 @@ Compiled for editorial use. Every fact was checked against at least one web sour
 - **~19 CS:GO Majors (2013–2023)**, with additional CS2-era Majors added since — total Major count through 2026 is (UNVERIFIED, low-20s).
 - **2 community-made maps** ever promoted to the official Active Duty competitive pool: Cache and Anubis.
 - **3 game engines** across the franchise's history: GoldSrc → Source → Source 2.
-- **13 years**: CS:GO's run as the flagship title (Aug 2012 – Sept 2023) before CS2 replaced it.
+- **~11 years**: CS:GO's run as the flagship title (Aug 2012 – Sept 2023) before CS2 replaced it.
 
 ---
 *Sources consulted include: Wikipedia (Counter-Strike, Dust II, Mirage, Inferno, Nuke, Counter-Strike 2 articles), HLTV.org news archive, Liquipedia Counter-Strike wiki, Counter-Strike Fandom wiki, Valve/counter-strike.net blog posts, Red Bull esports, PCGamesN, PC Gamer, and other esports trade outlets. Where sources disagreed or a claim could not be independently corroborated, it is flagged (UNVERIFIED) above rather than stated as settled fact.*

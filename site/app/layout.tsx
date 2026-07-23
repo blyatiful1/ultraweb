@@ -3,6 +3,7 @@ import { ThemeProvider } from "next-themes";
 import { archivo, jetbrains } from "@/lib/fonts";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { WebsiteJsonLd } from "@/components/seo/json-ld";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <WebsiteJsonLd />
           <Header />
           <div className="flex-1">{children}</div>
           <Footer />

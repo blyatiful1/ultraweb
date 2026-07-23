@@ -22,7 +22,7 @@ export function RadarAncient({ className }: { className?: string }) {
       {/* B site — cave, left arm */}
       <rect x="28" y="92" width="44" height="40" />
       {/* Donut — ring cover on B */}
-      <circle cx="50" cy="112" r="9" />
+      <circle cx="38" cy="104" r="7" />
       {/* Cave mouth into B */}
       <path d="M72 112 L84 112" />
       {/* dashed mid down the spine */}
@@ -31,8 +31,8 @@ export function RadarAncient({ className }: { className?: string }) {
       <g className="text-primary">
         <rect x="142" y="104" width="16" height="16" rx="1" />
         <text x="150" y="112" fill="currentColor" stroke="none" className="font-mono" fontSize="11" fontWeight={600} textAnchor="middle" dominantBaseline="central">A</text>
-        <rect x="94" y="104" width="16" height="16" rx="1" />
-        <text x="102" y="112" fill="currentColor" stroke="none" className="font-mono" fontSize="11" fontWeight={600} textAnchor="middle" dominantBaseline="central">B</text>
+        <rect x="50" y="104" width="16" height="16" rx="1" />
+        <text x="58" y="112" fill="currentColor" stroke="none" className="font-mono" fontSize="11" fontWeight={600} textAnchor="middle" dominantBaseline="central">B</text>
       </g>
     </svg>
   );

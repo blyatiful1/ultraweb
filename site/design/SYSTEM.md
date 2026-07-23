@@ -4,6 +4,7 @@
 Dark leads (class strategy, next-themes, `defaultTheme="dark"`). Neutrals carry a cool graphite tint (H 250, C 0.008–0.015) — the radar at night. ONE accent: dev-texture orange (H 55). Light theme is "blueprint paper" — re-decided per surface, not inverted.
 
 ### Value table (semantic tokens)
+
 | Token | `.dark` (default) | `:root` (light) |
 |---|---|---|
 | background | oklch(0.17 0.012 250) | oklch(0.965 0.004 90) |
@@ -26,6 +27,7 @@ Dark leads (class strategy, next-themes, `defaultTheme="dark"`). Neutrals carry 
 | shadow-color | oklch(0 0 0 / 0.4) | oklch(0.3 0.02 250 / 0.10) |
 
 ### Era worlds (theme-worlds scroll-act variant — accent re-map ONLY, on `/` era sections)
+
 | World (`data-world`) | `.dark` accent | light accent | meaning |
 |---|---|---|---|
 | goldsrc | oklch(0.78 0.11 85) | oklch(0.55 0.12 80) | dust gold — the 1999–2003 act |

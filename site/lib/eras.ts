@@ -41,7 +41,7 @@ export const eras: Era[] = [
     engine: "Source",
     title: "The Sport Era",
     narrative:
-      "Counter-Strike: Global Offensive launched August 21, 2012, and almost nobody flinched — a modest update. Then the Arms Deal, August 14, 2013, bolted skins and cases onto the game; the player base reportedly grew roughly sixfold, and an economy was born. Months earlier the first Valve Major, DreamHack Winter 2013, had crowned Fnatic in Sweden. The pool professionalized around it. Mirage went official in June 2013; Overpass became the first map built only for CS:GO that December. Cache and, later, Anubis crossed from the Workshop into Active Duty — the only community maps ever to. Ancient arrived in 2020 and ended Train’s long tenure. This was the decade Counter-Strike stopped being a game and became a job.",
+      "Counter-Strike: Global Offensive launched August 21, 2012, and almost nobody flinched — a modest update. Then the Arms Deal, August 14, 2013, bolted skins and cases onto the game; the player base reportedly grew roughly sixfold, and an economy was born. Months later the first Valve Major, DreamHack Winter 2013, crowned Fnatic in Sweden. The pool professionalized around it. Mirage went official in June 2013; Overpass became the first map built only for CS:GO that December. Cache and, later, Anubis crossed from the Workshop into Active Duty — the only community maps ever to do so. Ancient arrived in 2020 and ended Train’s long tenure. This was the decade Counter-Strike stopped being a game and became a job.",
     births: ["overpass", "anubis", "ancient"],
     definingMoment: {
       year: "2013",

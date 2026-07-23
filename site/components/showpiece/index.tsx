@@ -28,6 +28,21 @@ function eraFromProgress(p: number | MotionValue<number>): number {
   return clamp(Math.floor(v * 4), 0, 3);
 }
 
+// The poster/fallback paths render from React state, so the era bucket must be
+// a subscription, not a render-time .get() — otherwise reduced-motion and
+// no-WebGL users stay frozen on the mount-time era for the whole journey.
+function useEraIndex(progress: number | MotionValue<number>, era?: number) {
+  const [idx, setIdx] = useState(() => era ?? eraFromProgress(progress));
+  useEffect(() => {
+    if (era !== undefined || typeof progress === "number") return;
+    return progress.on("change", (v) => {
+      const next = clamp(Math.floor(v * 4), 0, 3);
+      setIdx((prev) => (prev === next ? prev : next));
+    });
+  }, [progress, era]);
+  return era ?? idx;
+}
+
 export type ShowpieceProps = {
   /** Journey scroll progress 0..1 — a Motion scroll value or a plain number. */
   progress: number | MotionValue<number>;
@@ -42,7 +57,7 @@ export function Showpiece({ progress, era, narrative }: ShowpieceProps) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 
-  const eraIdx = era ?? eraFromProgress(progress);
+  const eraIdx = useEraIndex(progress, era);
 
   // Server render + first client render + reduced-motion all show the poster:
   // identical markup on both sides (no hydration mismatch), and the canvas is
