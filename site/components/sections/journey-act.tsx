@@ -29,8 +29,8 @@ export function JourneyAct({
       id={id}
       data-world={era.id}
       aria-labelledby={`${id}-title`}
-      className={`relative flex min-h-[100svh] items-center ${
-        release ? "pt-40" : ""
+      className={`relative flex min-h-[72svh] items-start pt-24 sm:min-h-[100svh] sm:items-center ${
+        release ? "sm:pt-40" : "sm:pt-0"
       }`}
     >
       <div
@@ -38,10 +38,16 @@ export function JourneyAct({
           side === "right" ? "justify-end" : "justify-start"
         }`}
       >
-        <div className="corner-ticks relative w-full max-w-[36rem] border bg-background/80 p-8 backdrop-blur-[2px] sm:p-10">
+        <div
+          className={`corner-ticks relative w-full max-w-[36rem] border bg-background p-8 sm:p-10 ${
+            side === "right"
+              ? "border-r-2 border-r-primary"
+              : "border-l-2 border-l-primary"
+          }`}
+        >
           <Reveal>
             <p className="type-meta text-primary">
-              {era.act} // {era.name} // {era.years}
+              {era.act}{" // "}{era.name}{" // "}{era.years}
             </p>
             <h2
               id={`${id}-title`}

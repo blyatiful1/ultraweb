@@ -19,9 +19,15 @@ export function JourneyAtlasTeaser() {
   return (
     <section
       aria-labelledby="atlas-title"
-      className="relative border-t border-border py-28"
+      className="relative border-t border-border pb-28 pt-10"
     >
       <div className="mx-auto max-w-[1280px] px-6">
+        {/* waypoint bridge — carries the eye across the spine's un-pin so the
+            hand-off from act IV never leaves a contentless viewport */}
+        <div className="survey-line mb-16 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 pt-6">
+          <span className="type-meta">{"// compile complete"}</span>
+          <span className="type-meta">csgo/atlas/index</span>
+        </div>
         <Reveal>
           <p className="type-meta">The archive</p>
           <h2 id="atlas-title" className="type-display mt-3 text-4xl">
@@ -48,7 +54,7 @@ export function JourneyAtlasTeaser() {
                   </div>
                   <p className="type-display mt-5 text-2xl">{m.name}</p>
                   <p className="type-meta mt-1">
-                    {m.file} // {m.birthYear}
+                    {m.file}{" // "}{m.birthYear}
                   </p>
                 </Link>
               </StaggerItem>

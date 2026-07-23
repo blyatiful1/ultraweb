@@ -97,9 +97,13 @@ export function StatFigure({ stat }: { stat: Stat }) {
 
   // SSR/no-JS/reduced-motion show the final value; motion users get reset to 0
   // at mount — off-screen, before the count-up — so the figure never flashes
-  // final → 0 as it enters view.
+  // final → 0 as it enters view. Deferred a frame so hydration markup matches.
   useEffect(() => {
-    if (reduced === false) setDisplay((0).toFixed(decimals) + suffix);
+    if (reduced !== false) return;
+    const raf = requestAnimationFrame(() =>
+      setDisplay((0).toFixed(decimals) + suffix),
+    );
+    return () => cancelAnimationFrame(raf);
   }, [reduced, decimals, suffix]);
 
   useEffect(() => {

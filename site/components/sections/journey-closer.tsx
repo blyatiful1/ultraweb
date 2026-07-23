@@ -9,20 +9,20 @@ export function JourneyCloser() {
   return (
     <section
       aria-labelledby="closer-title"
-      className="relative overflow-hidden border-t border-border"
+      className="relative scroll-mt-14 overflow-hidden border-t border-border"
     >
       <div
         aria-hidden
         className="dev-grid pointer-events-none absolute inset-0 opacity-[0.05]"
       />
-      <div className="relative mx-auto max-w-[1280px] px-6 py-40 text-center">
+      <div className="relative mx-auto max-w-[1280px] px-6 pt-[calc(3.5rem+10rem)] pb-40 text-center">
         <Reveal>
-          <p className="type-meta">// end of file</p>
+          <p className="type-meta">{"// end of file"}</p>
           <h2
             id="closer-title"
             className="mx-auto mt-6 max-w-[26ch] text-2xl leading-snug text-balance text-foreground md:text-3xl"
           >
-            Twenty-three years later, the double doors on Long&nbsp;A still open
+            Twenty-five years later, the double doors on Long&nbsp;A still open
             the same way. Nobody would dare touch them.
           </h2>
           <p className="type-meta mt-8">de_dust2 // grid 034,178 // long a</p>
