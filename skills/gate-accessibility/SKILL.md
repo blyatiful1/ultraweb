@@ -17,7 +17,7 @@ WCAG 2.2 AA on every route, in both themes, verified by measurement — never by
 2. **Keyboard** — every interactive element reachable by Tab in visual order; a designed focus-visible ring on every stop (never browser-default blue, never nothing); skip link is the first stop and works; Escape closes every overlay (mobile menu, modal, lightbox) and returns focus to its trigger; modals trap focus while open.
 3. **Landmarks & structure** — exactly one `<main>`; `<header>`/`<footer>` present; multiple `<nav>`s get distinct `aria-label`s; exactly one `<h1>` per page; heading levels never skip (h2→h4 is a defect).
 4. **Alt text** — every image has `alt`: a real description when the image argues something, `alt=""` when decorative; icon-only buttons/links have `aria-label`; no alt starting "image of"/"photo of".
-5. **Reduced motion** — with `prefers-reduced-motion: reduce` emulated: no transform-based entrances play, every piece of content is still visible, all state changes read without movement.
+5. **Reduced motion** — with `prefers-reduced-motion: reduce` emulated: no transform-based entrances play, every piece of content is still visible (an animated SVG path included — it must land drawn, not parked at full dashoffset), all state changes read without movement.
 6. **WCAG 2.2 specifics** — pointer targets ≥24×24 CSS px everywhere (2.5.8; gate-responsive separately enforces ≥44px on mobile); focused elements never hidden under the sticky header (2.4.11); any drag interaction has a click alternative (2.5.7).
 7. **Forms** — every input has an associated `<label>` (for/id); errors are text tied via `aria-describedby` and announced (`role="alert"` or `aria-live="polite"`); invalid state exposed via `aria-invalid`.
 8. **Text spacing (1.4.12)** — under the standard user override (line-height 1.5, letter-spacing .12em, word-spacing .16em, paragraph 2em) nothing clips, truncates, or overlaps; cards, badges, and every fixed-height container grow to fit their text. This stack's fluid `clamp()` type inside fixed-height cards is the exact risk.
@@ -57,6 +57,8 @@ Empty array = pass. The canvas round-trip is load-bearing: the stack's oklch tok
 
 **5. Reduced motion.** Emulate via Playwright `page.emulateMedia({ reducedMotion: "reduce" })` (browser_run_code_unsafe), or relaunch Chromium with `--force-prefers-reduced-motion`. Reload each route, scroll to the bottom, screenshot: nothing slides or scales in, and NO content is missing. The classic failure: initial `opacity: 0` whose entrance is skipped → invisible forever. Grep `whileInView|initial={{ opacity: 0` and confirm each sits behind the motion-language reduced-motion policy.
 
+On a build that commissioned the second engine, sweep it by import specifier — `rg -l 'from "animejs"' app components` — never by bare API name, since `animate(` is also motion/react and WAAPI; every hit must carry the Scope `mediaQueries.reduceMotion` branch that policy mandates. Its failure mode is quieter than the opacity one because there is no faint shape to notice: a `stroke-dashoffset`/`draw` path left undrawn under `reduce` renders as blank whitespace, not as a still frame. The reduce branch must land the FINAL state — completed path, assembled text — never the starting one. In the same files, `rg -n "accessible: false"` → zero hits: `splitText`'s visually-hidden mirror is on by default, and turning it off shreds the text for screen readers.
+
 **6. Targets & obscuring.** `[...document.querySelectorAll("a,button,input,select,[role=button]")].map(e=>e.getBoundingClientRect()).filter(r=>r.width>0&&(r.width<24||r.height<24)).length` → 0. Tab through a long page: the focused element must land clear of the sticky header (`scroll-padding-top` on `html` is the usual fix — navigation owns it).
 
 **7. Forms.** `browser_evaluate`: `[...document.querySelectorAll("input,select,textarea")].filter(e=>!e.labels?.length && !e.getAttribute("aria-label")).length` must be 0. Then submit each form empty on the running server and assert via `browser_evaluate` on the invalid field: `aria-invalid` is `"true"`; its `aria-describedby` resolves — `document.getElementById(f.getAttribute("aria-describedby"))` returns the visible error node; and that node (or a wrapper containing it) carries `role="alert"` or `aria-live="polite"`. A validation message that only changes color or only exists visually fails here.
@@ -74,7 +76,7 @@ document.documentElement.scrollWidth > innerWidth   // true = horizontal blowout
 
 **9. Accessibility statement (DACH).** Skip unless design/BRIEF.md market ∈ {DE, AT, CH}. On the running server, confirm `/barrierefreiheit` resolves and its copy names all four required parts — conformance level, known gaps in plain language, a working feedback route, and the Schlichtungsstelle BGG — and grep the footer for the link beside `Impressum`/`Datenschutz`. Then cross-check the claimed level against this run: if steps 1–8 logged residual fails, the statement must read *teilweise konform* and list them, never *vollständig*. A page claiming clean conformance while the gate is red is a false-conformance defect — worse than an honest partial, and the one thing the BFSG statement must never be.
 
-**10. axe sweep (supplement, not substitute).** `npm i -D axe-core`, inject `node_modules/axe-core/axe.min.js` via `browser_evaluate`, run `await axe.run()` — zero critical or serious violations. axe cannot judge focus order, ring design, or reduced-motion behavior; the walks above stay mandatory.
+**10. axe sweep (supplement, not substitute).** `npm i -D axe-core`, inject `node_modules/axe-core/axe.min.js` via `browser_evaluate`, run `await axe.run()` — zero critical or serious violations. Then a second, scoped pass against the standard this gate actually claims: `await axe.run(document, { runOnly: ["wcag22aa"] })` — that tag set maps rules onto WCAG 2.2 AA, so its violations are precisely the ones step 9's conformance statement is asserting about. Keep the unscoped run for breadth; report both. Injection is the mechanism, not a workaround: the harness drives Playwright over MCP, so there is no Node `Page` object for `@axe-core/playwright` to attach to. axe cannot judge focus order, ring design, or reduced-motion behavior; the walks above stay mandatory.
 
 ## Pass criteria
 
@@ -86,7 +88,7 @@ All 9 Checklist items green (verify steps 1–9) on every route in design/SITEMA
 ## gate-accessibility — PASS (2026-07-16)
 routes: / /about /pricing · themes: light+dark · viewports: 375/1440
 contrast: 0 failing pairs (214 checked, min 4.61) · keyboard: 42 stops, ring on all, Esc closes menu+modal
-landmarks/alt/targets: clean · forms: labels 0 missing, empty-submit announces on contact form · reduced-motion: re-shot, no hidden content · axe: 0 critical/serious
+landmarks/alt/targets: clean · forms: labels 0 missing, empty-submit announces on contact form · reduced-motion: re-shot, no hidden content · axe: 0 critical/serious (unscoped + runOnly wcag22aa)
 text-spacing (1.4.12): override on, 0 clips/overlaps · a11y statement (DE): /barrierefreiheit present, 'vollständig konform' matches 0 residual
 fixed: footer link 3.9:1 → 4.7:1 (muted token bumped in color ramp) · residual: none
 ```
@@ -128,6 +130,7 @@ Lands in design/QA.md §gate-accessibility, which flipped to PASS.
 - ultraweb:gate-content — the sibling gate that judges whether headings tell a story; this gate checks only heading structure (item 3) and hands narrative calls there.
 - ultraweb:faq — when the keyboard walk hits a disclosure/accordion missing `aria-expanded` or Enter/Escape handling, faq owns the fix this gate reports.
 - ultraweb:scroll-motion — when the reduced-motion re-test (item 5) finds a scroll-linked entrance left at opacity 0, scroll-motion owns the resting-state guard.
+- ultraweb:animejs — owns the Scope `mediaQueries.reduceMotion` branch item 5 sweeps for; an SVG path left undrawn under `reduce` is its defect to fix, and the fix is the drawn end state.
 - ultraweb:cards — fixed-height card titles (and ultraweb:data-display's stat blocks) are the primary text-spacing (1.4.12) clip risk; they own the `min-height` + flex fix item 8 reports.
 - ultraweb:footer — carries the `/barrierefreiheit` link beside Impressum + Datenschutz that item 9 checks.
 - ultraweb:i18n — owns the German-language `/barrierefreiheit` route and copy; this gate only verifies it exists and tells the truth.

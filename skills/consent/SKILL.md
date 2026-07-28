@@ -108,6 +108,15 @@ export function ConsentEmbed({ label, children }: { label: string; children: Rea
 
 The `<ConsentBanner>` renders two buttons from the *same* `ultraweb:buttons` variant — not `primary` vs `ghost`. A gated tag is a leaf: `function Analytics(){ const {consent}=useConsent(); return consent.analytics ? <Script … /> : null; }`.
 
+## Embeds & third-party governance
+
+Generalize the Munich Google-Fonts ruling past fonts: the exposure is the *request*, not the cookie. Any origin your HTML reaches for — map tiles, a video frame, an avatar CDN, a chat widget — receives the visitor's IP and User-Agent before a single byte of storage is written, so the question is never "does it set a cookie" but "is the site allowed to contact this host at all". The cheapest answer is almost always deleting the origin rather than gating it.
+
+- **Maps render first-party by default.** MapLibre GL against an OSM/MapTiler source you control, or — for one café pin — a static map image plus a plain "In Google Maps öffnen" link. Neither contacts Google from the page, so neither needs a category, a placeholder, or a banner.
+- **Google Maps only behind the click-to-load shim.** If the brief insists on the interactive embed, it renders through `ConsentEmbed` — branded placeholder in the site's tokens, real `<iframe>` mounted only after the visitor loads it. A "privacy-enhanced" host does not change this; gate the frame.
+- **Video embeds are the same problem.** Self-host short clips via `ultraweb:media-optimization`; YouTube/Vimeo go through the identical shim, never an eager iframe with a play button drawn over it.
+- **Analytics should stay out of this lane entirely** — `ultraweb:analytics` defaults to cookieless, which means no category, no shim, no banner. Only a cookie-based tool falls back into the gate above, and that is a reason to reconsider the tool.
+
 ## Anti-patterns
 
 - **Unequal buttons** — filled/colored Accept beside a gray text-link or ghost Reject. Grep the banner: `rg -n 'variant="(ghost|link|outline|secondary)"' components/consent` — if the reject control's variant differs from accept's, it's a nudge.
@@ -121,7 +130,7 @@ The `<ConsentBanner>` renders two buttons from the *same* `ultraweb:buttons` var
 
 ## Worked example — Kaffeewerk Ost, Berlin roastery shop + /abo (German-first, TTDSG applies directly)
 
-The Phase-7 inventory finds three third parties across the built pages: product analytics, an interactive Google Map on `/kontakt` for the Prenzlauer-Berg café, and a YouTube roast-film on `/rösterei`. Applying "When NOT" first: analytics moves to **Plausible** (cookieless, §25(2)-exempt → *no consent needed*), and the Fraunces/Karla pair is already self-hosted via `next/font`, so there is no font-CDN and no `fonts.googleapis.com` in source. That leaves one surviving category — `embeds` — so the banner is scoped to exactly that.
+The Phase-7 inventory finds three third parties across the built pages: product analytics, an interactive Google Map on `/kontakt` for the Prenzlauer-Berg café, and a YouTube roast-film on `/roesterei`. Applying "When NOT" first: analytics moves to **Plausible** (cookieless, §25(2)-exempt → *no consent needed*), and the Fraunces/Work Sans pair is already self-hosted via `next/font`, so there is no font-CDN and no `fonts.googleapis.com` in source. That leaves one surviving category — `embeds` — so the banner is scoped to exactly that.
 
 The banner is a **bottom bar** in the warm palette (cream ground `oklch(0.97 0.01 85)`, roast-brown text `oklch(0.28 0.03 60)`), `--radius-lg` corners, the site's 250ms ease-out slide-up honoring `prefers-reduced-motion`. Both decisions are one shared button variant: **"Alle akzeptieren"** and **"Alle ablehnen"** at identical size and contrast — terracotta fill on both, not terracotta-vs-gray — with **"Einstellungen"** as a quieter tertiary link (it opens the one `embeds` toggle, off by default). The Map and the roast-film each render through `ConsentEmbed` — a cream placeholder reading "Karte lädt externe Inhalte von Google" with an **"Karte laden"** button — so no Google or YouTube request fires until the visitor loads it. The footer carries a persistent **"Cookie-Einstellungen"** link calling `reopen()`.
 
@@ -137,6 +146,7 @@ Handoff: `ultraweb:footer` places the reopen link; `ultraweb:gate-antislop` runs
 - **ultraweb:footer** — hosts the persistent "Cookie-Einstellungen" reopen link as a designed footer element, not a stray line.
 - **ultraweb:i18n** — every shipped locale needs full consent copy in that market's voice ("Alle akzeptieren"/"Alle ablehnen"); a half-translated banner is its own defect.
 - **ultraweb:media-optimization** — self-hosted fonts and local/`next/video` assets keep third parties (and thus the banner) off the page; a YouTube embed that must stay routes through this skill's two-click gate.
+- **ultraweb:analytics** — its cookieless default is what usually deletes the banner outright (§25(2) exemption); a cookie-based tool it flags instead becomes the `analytics` category gated here.
 - **ultraweb:seo** — analytics and Search-Console tags are gated here; the Metadata API itself sets no cookie and needs none.
 - **ultraweb:buttons** — the Accept/Reject controls inherit the button system but MUST share one variant; equal weight is the constraint that overrides ordinary CTA hierarchy.
 - **ultraweb:app-structure** — the `ConsentProvider` is the client boundary in the root layout with `{children}` passed as a server slot, so the provider doesn't force the tree client.

@@ -1,6 +1,6 @@
 ---
 name: stack-doctor
-description: Build-and-tooling repair specialist — fixes failing builds, dependency conflicts, and config errors in the Next.js/Tailwind v4/shadcn/motion stack without downgrading it. Delegate to it when scaffold fails, npm/build errors block progress, or gate-code fails for tooling (not design) reasons.
+description: Build-and-tooling repair specialist — fixes failing builds, dependency conflicts, and config errors in the Next.js/Tailwind v4/shadcn/motion/anime.js stack without downgrading it. Delegate to it when scaffold fails, npm/build errors block progress, or gate-code fails for tooling (not design) reasons.
 model: opus
 ---
 

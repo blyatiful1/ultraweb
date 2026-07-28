@@ -22,7 +22,7 @@ Every async surface ships all four states — loading, empty, error, success —
 1. Inventory async surfaces from SITEMAP.md + BRIEF.md backend needs: every fetch, search, filter, form, upload.
 2. For each surface, write a four-column row (surface × loading/empty/error/success → file) before building it. Missing cell = unfinished surface.
 3. Build each skeleton FROM the real component: duplicate its JSX, replace content with token-colored blocks. Never guess dimensions.
-4. Wire the Next.js layer (below), then force each state in dev — throttle the network, throw in the fetch, return `[]` — and screenshot all four.
+4. Wire the Next.js layer (below), then force each state in dev — throttle the network, throw in the fetch, return `[]` — and screenshot all four; the shipped build gets the interception pass below.
 5. Verify the swap: skeleton and loaded content screenshots overlay with no layout shift.
 
 ## Variants
@@ -88,6 +88,21 @@ The one dead-end every site is guaranteed to serve, and the moment voice consist
 - Results announce via one `aria-live="polite"` region; errors use `role="alert"`. One live region per surface, never a chorus.
 - Retry is a real `<button>` with a `focus-visible` ring from tokens; after an error renders, focus lands on or adjacent to it.
 - Honor `prefers-reduced-motion` on every pulse, shimmer, and morph.
+
+## Adverse-condition verification
+
+Editing the fetch to force a state proves the component; intercepting the network proves the build a visitor actually gets. Against `npm start`, intercept via Playwright `page.route(pattern, handler)` (browser_run_code_unsafe) — the same house mechanism `ultraweb:gate-accessibility` uses for `page.emulateMedia()`. One condition per run, reload, screenshot; `page.unroute()` between runs or the next condition inherits the last.
+
+```js
+// browser_run_code_unsafe — one of these per run, against the production server
+await page.route("**/api/reservations*", async r => { await new Promise(k => setTimeout(k, 8000)); await r.continue() });        // slow
+await page.route("**/api/reservations*", r => r.fulfill({ status: 500, contentType: "application/json", body: '{"error":1}' })); // failed
+await page.route("**/api/reservations*", r => r.fulfill({ status: 200, contentType: "application/json", body: "[]" }));         // empty
+```
+
+- **Skeleton matches the loaded layout** — overlay the slow-route screenshot with the loaded one: same container, same grid, same heights, same radii, no shift on swap. A mismatch is the CLS `ultraweb:gate-performance` would fail two phases later, caught here for the price of one screenshot.
+- **Error copy surfaces** — under the 500, the recovery string and its action are on screen. A skeleton still pulsing over a dead request, a blank island, or an error that only reached the console each fail.
+- **Empty state renders** — under `[]`, the designed empty renders with its ONE action. A blank region means the path was assumed, never built.
 
 ## Anti-patterns
 

@@ -37,6 +37,8 @@ Taste's rule verbatim: 3D, shaders, canvas only when the direction demands it, i
 - **Shader gradient (WebGL, small).** Animated mesh/noise gradient as a hero backdrop — either a maintained shader-gradient library (verify current package options and React 19 compat against docs first) or a hand-rolled fragment shader on a raw WebGL quad (~150 lines, no dependency).
 - **R3F 3D (heaviest).** `@react-three/fiber` + `@react-three/drei` for product views, 3D type, scenes. three.js core alone adds on the order of 150kb+ min+gzip to the client bundle — the largest single dependency decision in the build; verify current versions and React 19 compatibility against docs before installing. Discipline: `dpr={[1, 2]}`, demand-driven frameloop for static-ish scenes, compressed models, no per-frame allocations in `useFrame`.
 
+**Side branch, not a rung — vector-authored moments (anime.js, +~19 KB gz per STACK.md).** A commissioned SVG timeline — multi-path draw, morph, motion path, split-text choreography — is a different medium, not a cheaper canvas, so it never sits between the two 0-dep rungs and never excuses skipping them: if CSS or a 2D canvas satisfies the brief, they still win. Take the branch only when the moment is *inherently* vector (a diagram that draws itself, a mark that assembles, a route that traces) and DIRECTION.md names it at intensity ≥2 (a scrubbed or pinned SVG timeline needs 3); ultraweb:animejs owns the install gate. Everything above holds unchanged — one showpiece per site, and the three exits wired: reduced motion → the final drawn state, no-WebGL/no-JS/pre-hydration → the server-rendered static SVG, hidden tab or offscreen → the timeline paused.
+
 ## Mounting pattern
 
 ```tsx
@@ -123,6 +125,7 @@ Handoff: the pointer spring is owned by ultraweb:physics; the `/work` → `/work
 - ultraweb:gate-accessibility — verifies the reduced-motion exit renders the static path AND that its narrative text-track carries the argument (real copy, not template alt text).
 - ultraweb:copywriting — authors the narrative text-track in Phase 8 (2–4 sentences per showpiece section stating the visual's actual claim), so the accessible edition argues instead of leaving a placeholder.
 - ultraweb:physics — when the cheapest sufficient rung is a pointer/element spring rather than canvas or WebGL, showpiece hands the motion to physics and builds no set piece.
+- ultraweb:animejs — the cost ladder's side branch: when the set piece is inherently vector rather than canvas, showpiece hands it there and the one-showpiece budget plus the three exits travel with it.
 - ultraweb:scroll-motion — a "showpiece" brief that is really a scroll-linked reveal or shared-element page transition is routed down to scroll-motion instead of mounting a canvas.
 - ultraweb:routing — the home for camera/scene URL state: showpiece serializes the pose into a `?view=` search param, routing owns the search-param contract that makes a navigable scene bookmarkable and back/forward-navigable.
 - ultraweb:award-canon — Weight as a Feature and Progressive Spectacle Tiers are the operational form of this skill's 60fps + static-fallback gate; One Material World, Fake-Depth Before Real Depth, and The Persistent Hero Object guide what the set piece should be. Cite the principle, never a winner's surface.

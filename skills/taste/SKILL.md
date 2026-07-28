@@ -66,7 +66,7 @@ Non-negotiable in every build, regardless of direction:
 - ultraweb:award-canon — the study library behind this file's judgments: `taste` is what good means for us, `award-canon` is what the Awwwards record proves. `direction` consults it for references and signature-move precedent; `design-judge` scores against its invariants. It never overrides this file.
 - ultraweb:direction — the only skill allowed to grant exceptions to the banned list, and only in writing (design/DIRECTION.md).
 - ultraweb:gate-antislop — enforces the banned list empirically (grep + screenshots); a taste violation that ships is a gate failure, not a style choice.
-- ultraweb:gate-visual — scores against the required list via the `design-judge` subagent (Opus 4.8), which quotes this file in its rubric.
+- ultraweb:gate-visual — scores against the required list via the `design-judge` subagent (Opus 5), which quotes this file in its rubric.
 - ultraweb:retrofit — audits existing sites against this file to produce the gap report.
 - ultraweb:iterate — checks every requested change against this file before classifying it; "make it pop" is answered from here.
 
@@ -74,3 +74,5 @@ Non-negotiable in every build, regardless of direction:
 
 All ultraweb skills build on ONE stack — never substitute without the user asking:
 Next.js 16+ (App Router, TypeScript strict, Turbopack) · Tailwind CSS v4 (`@theme` tokens in `app/globals.css`) · shadcn/ui as restyled primitives · `motion` (motion.dev, import from `motion/react`) for animation · lucide-react icons · next/font with self-hosted variable fonts · zod v4 for validation. Backend defaults: Drizzle + Postgres, Better Auth, Resend, Stripe — pulled in only when the brief needs them (see the backend-tier skills). Exact verified versions, APIs, and gotchas live in the plugin's `STACK.md` — code advice must match it.
+
+`motion` stays THE animation library — lifecycle, gestures, springs, layout, reveals. Exactly ONE specialist engine may join it: **anime.js**, for SVG choreography (multi-path timelines, morph, motion path, scroll-scrubbed vector sequences), installed only when `design/DIRECTION.md` commissions that moment BY NAME — the same construction as `showpiece`'s WebGL gate, and the same answer when nothing commissioned it: no. An uncommissioned second animation runtime is slop with a package.json entry. The engines weighed and rejected are argued once in `STACK.md`.

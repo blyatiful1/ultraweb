@@ -78,7 +78,7 @@ Greppable: `John D.`, `Happy Customer`, `Jane Doe`, `highly recommend`, `game ch
 
 ## Worked example — Loop & Thread, photo reviews as the proof
 
-BRIEF.md proof inventory: 40 real customer reviews, each with a customer-shot photo of the textile in use — no press, no logos the maker has permission to show. SITEMAP.md names one `#reviews` section on `/` and `/shop/[slug]`.
+BRIEF.md proof inventory: 40 real customer reviews, each with a customer-shot photo of the textile in use — no press, no logos the maker has permission to show. SITEMAP.md names one `#reviews` section on `/` and `/products/[slug]`.
 
 Proof this specific calls for the **Testimonial Wall**, letting the photo carry the trust: a 5-item masonry (`columns-2 break-inside-avoid`) of customer photo + quote, heights deliberately uneven. Quotes stay concrete — "The indigo runner has survived two toddlers and three washes; the color hasn't budged and it's softer now than the day it arrived." Attribution is name + city + product bought, not a business role:
 

@@ -24,7 +24,7 @@ A site is first-grade when ALL of these hold — verified, not assumed:
 
 ## Artifact contract
 
-Every phase writes its decisions to files in the generated project. Later phases READ these — this is how 60 skills stay coherent. Never skip an artifact.
+Every phase writes its decisions to files in the generated project. Later phases READ these — this is how 72 skills stay coherent. Never skip an artifact.
 
 | File | Written by | Contains |
 |------|-----------|----------|
@@ -57,13 +57,13 @@ Init the Next.js app (current stable, App Router, TS strict, Tailwind v4, shadcn
 ### Phase 6 — Build (skills: contract — `component-api` (every component obeys it); per section — `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`, `overlays`; commerce — `cart`, `product-detail`; search — `command-palette`; long-form — `marginalia`; system usage — `icons`; engineering — `routing`, `data-fetching`, `media-optimization`)
 Build section by section following `design/SITEMAP.md`. Each section consults its skill for the quality bar and anti-patterns. Desktop AND mobile designed together, not mobile-as-afterthought.
 
-### Phase 7 — Backend (skills as needed: `server-actions`, `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`, plus `consent` whenever any third-party tracking/cookies load)
+### Phase 7 — Backend (skills as needed: `server-actions`, `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`, `analytics` whenever the brief's conversion goals need measuring, plus `consent` whenever any third-party tracking/cookies load)
 Only what `design/BRIEF.md` demands — a brochure site gets a contact form action, not a database. Whatever is built gets validation (zod), error states, and honest failure UX.
 
 ### Phase 8 — Voice (skills: `copywriting`)
 Rewrite every string on the site in the brief's voice. Headlines earn their size. Microcopy (buttons, empty states, errors, form hints) gets the same care as heroes.
 
-### Phase 9 — Motion (skills: `micro-interactions`, `scroll-motion`, `page-transitions`; `physics`/`showpiece` only if DIRECTION.md calls for them; `hidden-craft` for the opt-in easter-egg layer)
+### Phase 9 — Motion (skills: `micro-interactions`, `scroll-motion`, `page-transitions`; `physics`/`showpiece`/`animejs` only if DIRECTION.md calls for them; `hidden-craft` for the opt-in easter-egg layer)
 The choreography pass, applied to the finished layout. Respect `prefers-reduced-motion` everywhere.
 
 ### Phase 10 — Findability (skills: `seo`; `i18n` if multilingual; `print-craft` when the site has document/legal pages — Impressum, invoices, quotes)
@@ -87,7 +87,7 @@ Not every task deserves the lead model. Whenever work is delegated — the bundl
 | Tier | Model | Work that belongs here |
 |------|-------|------------------------|
 | Lead | the session's model | Phases 1–5 and 8 (brief, direction, foundation, structure, voice) — the decisions everything downstream obeys; any edit to DIRECTION.md or SYSTEM.md; cross-cutting fix passes after gates |
-| Specialist | Opus 4.8 (`model: opus`) | `design-judge` critiques, `stack-doctor` repairs, gate-visual judgment rounds; in fan-out mode: Phase 6 per-section builds, Phase 7 backend modules, Phase 9 motion and Phase 10 findability passes |
+| Specialist | Opus 5 (`model: opus`) | `design-judge` critiques, `stack-doctor` repairs, gate-visual judgment rounds; in fan-out mode: Phase 6 per-section builds, Phase 7 backend modules, Phase 9 motion and Phase 10 findability passes |
 | Mechanical | Sonnet 5 (`model: sonnet`) | `pixel-qa` breakpoint sweeps, gate-code build/type/lint runs, gate-antislop pattern sweeps, gate-content link/metadata checks, the measurement halves of gate-responsive / gate-accessibility / gate-performance (screenshots, computed contrast, Lighthouse), artifact-conformance checks |
 
 Rules:
@@ -100,13 +100,13 @@ Rules:
 
 Prompt: *"build me a website for a Berlin specialty coffee roastery with an online shop"* (Kaffeewerk Ost — the same client used across the skill files' worked examples).
 
-- **Phase 1** `brief` → BRIEF.md: e-commerce + subscription ("Abo"); audience: specialty buyers who care about origin; tone: sensory, direct, zero fluff; routes `/`, `/shop`, `/shop/[slug]`, `/abo`, `/roasterei`, `/kontakt`; backend needs: Stripe, Drizzle (products/orders/subscriptions), Resend receipts.
+- **Phase 1** `brief` → BRIEF.md: e-commerce + subscription ("Abo"); audience: specialty buyers who care about origin; tone: sensory, direct, zero fluff; routes `/`, `/shop`, `/shop/[slug]`, `/abo`, `/roesterei`, `/kontakt`; backend needs: Stripe, Drizzle (products/orders/subscriptions), Resend receipts.
 - **Phase 2** `direction` → DIRECTION.md: "Warm Workshop" archetype; signature move: the roast-profile temperature curve as a recurring SVG motif; will-not list: dark "premium" template, gradient headlines.
 - **Phase 3** foundation → SYSTEM.md, then `tokens` compiles it: warm neutrals `oklch(0.97 0.008 75)` → `oklch(0.24 0.02 60)`, rust accent `oklch(0.62 0.16 45)`, Fraunces + Work Sans, `--animate-curve-draw` for the motif — all as `@theme` tokens in `app/globals.css`.
 - **Phases 4–5**: SITEMAP.md blueprints every page section-by-section, naming the skill that builds each (hero: split variant, signature move lives here); `scaffold` pins the current stack and smoke-tests the dev server.
-- **Phase 6** builds the sections (this trace assumes fan-out mode was opted in: one Opus 4.8 agent per page, artifacts passed verbatim — in default solo mode the Lead builds the same sections sequentially); **Phase 7** wires Stripe checkout + raw-body webhook, the Drizzle schema, Resend order receipt.
+- **Phase 6** builds the sections (this trace assumes fan-out mode was opted in: one Opus 5 agent per page, artifacts passed verbatim — in default solo mode the Lead builds the same sections sequentially); **Phase 7** wires Stripe checkout + raw-body webhook, the Drizzle schema, Resend order receipt.
 - **Phase 8** `copywriting`: hero headline becomes "Röstung No. 14. Apricot, black tea, honey." — the product is the poetry; no "Elevate your mornings".
-- **Phase 11**: `pixel-qa` (Sonnet 5) sweeps 375/768/1440 and catches the `/shop` grid overflowing at 375; `design-judge` (Opus 4.8) scores pages and flags a uniform card row on `/shop`; fixes land via `cards` group-layout rules; re-gate green → QA.md.
+- **Phase 11**: `pixel-qa` (Sonnet 5) sweeps 375/768/1440 and catches the `/shop` grid overflowing at 375; `design-judge` (Opus 5) scores pages and flags a uniform card row on `/shop`; fixes land via `cards` group-layout rules; re-gate green → QA.md.
 - **Phase 12** `ship`: env audit (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `DATABASE_URL`, `RESEND_API_KEY`), build + start smoke test, handoff README.
 
 ## Failure discipline

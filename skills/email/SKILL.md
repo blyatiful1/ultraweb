@@ -82,8 +82,8 @@ export default function ContactNotification({ name, email, message }: { name: st
 ```
 
 ```ts
-// emails/theme.ts — SYSTEM.md translated for email clients. Mirrors app/globals.css BY HAND:
-// email CSS can't parse oklch and never sees globals.css. Update both when tokens change.
+// emails/theme.ts — SYSTEM.md translated for email clients: email CSS can't parse oklch
+// and never sees globals.css. Read the hexes from lib/tokens.ts (ultraweb:tokens) — don't re-eyeball them.
 export const t = {
   bg: '#faf9f7', fg: '#1c1917', muted: '#78716c', border: '#e7e5e4', accent: '#0d7a68',
   font: "'Söhne', -apple-system, 'Segoe UI', Helvetica, sans-serif",  // display face + system stack
@@ -97,6 +97,15 @@ Rules:
 - CTA buttons: `<Button>` from `@react-email/components`, solid accent background, ≥44px tall via padding — never a bare link for the primary action.
 - Web fonts go through the `<Font>` component in `<Head>` with an explicit fallback family — Gmail and Outlook render the fallback, so check the preview in the system stack too. Exact props: verify against current docs first.
 - Dark mode in email clients is forced and unreliable: keep bg/fg away from pure `#fff`/`#000` so auto-inversion doesn't produce mud.
+
+## Can I Email — the hard floor
+
+Check any technique against caniemail.com before shipping it. These four fail often enough to be standing rules rather than lookups — Outlook's Word rendering engine still carries a large share of DACH business inboxes.
+
+- **Tables, not modern layout.** `display: flex`, `display: grid`, and `position` are ignored outright. Structure with `<Section>`/`<Row>`/`<Column>` from `@react-email/components`; a flex row that "looks fine in Gmail" is a collapsed email elsewhere.
+- **Inline style props only.** `<style>` blocks and classes are stripped or ignored per client, so the style attribute on the element is the only reliable delivery. Design one 560–600px column that works unchanged; treat any `@media` rule as an enhancement, never the structure.
+- **Resolved hex, never a custom property.** `var(--accent)` resolves to nothing in an inbox. `ultraweb:tokens` exports `lib/tokens.ts` with the palette already flattened to sRGB hex for exactly this case (and for OG images) — `emails/theme.ts` reads those values so a token change propagates instead of drifting into a stale hand-copy.
+- **No SVG, no background-image, no web-font dependency.** Outlook drops all three: ship logos as PNG with explicit `width`/`height`, paint color with a table cell's `backgroundColor`, and let the `<Font>` fallback stack carry the type.
 
 ## Double opt-in — the newsletter confirmation
 
@@ -169,7 +178,7 @@ export default function NewsletterConfirm({ confirmUrl }: { confirmUrl: string }
 
 design/BRIEF.md: "Resend order confirmations after every purchase — sensory and direct, no marketing fluff." One transactional flow; the send drains the order-keyed outbox row the Stripe webhook writes per ultraweb:payments — never inline in the handler, so a webhook retry can't resend.
 
-`emails/theme.ts` translates SYSTEM.md's warm-neutral tokens to hex by hand — oklch never reaches an inbox:
+`emails/theme.ts` reads SYSTEM.md's warm-neutral palette from `lib/tokens.ts` as resolved hex — oklch never reaches an inbox:
 
 ```ts
 export const t = {
@@ -193,7 +202,7 @@ Handoff: the `getResend().emails.send({ react: OrderConfirmation(order) })` call
 - **ultraweb:auth** — Better Auth's magic-link/verification flows call a send function; the template and Resend call live here, the token logic stays there.
 - **ultraweb:database** — the pending (unconfirmed) subscriber record, its signed single-use token, and the ~48h expiry live in the schema there; this skill sends the confirmation mail that flips a pending row to subscribed.
 - **ultraweb:copywriting** — subject lines, preview text, and body copy are site voice, not boilerplate.
-- **ultraweb:tokens** — theme.ts is a hand-maintained mirror of the `@theme` tokens; when tokens change, re-translate.
+- **ultraweb:tokens** — its `lib/tokens.ts` resolved-hex export is what theme.ts reads; email clients can't parse oklch or custom properties, so the flattened sRGB values are the only mirror that can't drift.
 - **ultraweb:ship** — env audit covers RESEND_API_KEY and the verified production sender domain.
 - **ultraweb:brief** — reading design/BRIEF.md is process step 1; it decides which flows (contact, auth, receipt) send mail at all, or whether this skill is skipped.
 - **ultraweb:payments** — its raw-body Stripe webhook writes the order-keyed outbox row this skill drains to send the receipt/order-confirmation (idempotent per event/order ID, never inline in the handler); the template and Resend call live here, the payment event stays there.

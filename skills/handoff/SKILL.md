@@ -14,7 +14,7 @@ The README lets two people succeed without the original author: the owner change
 ## Process
 
 1. **Kill the boilerplate.** The string "bootstrapped with" must not survive in README.md.
-2. **Stack map** from package.json's real versions (read the file or `npm ls --depth=0`) — exact numbers, never "latest". List backend pieces (Drizzle, Better Auth, Resend, Stripe) only if actually built.
+2. **Stack map** from package.json's real versions (read the file or `npm ls --depth=0`) — exact numbers, never "latest". List backend pieces (Drizzle, Better Auth, Resend, Stripe) only if actually built. A DIRECTION-gated dependency gets a WHY on its line, not just a version: `animejs` reads "drives the <named DIRECTION moment>" (+~19 KB gz, per STACK.md), so the day that moment is cut the maintainer can see the package leaves with it. A dependency whose reason isn't written down never gets removed.
 3. **Run section:** `npm install`, `npm run dev`, `npm run build && npm run start`, plus env bootstrap — copy .env.example → .env.local and fill it; the per-key comments ship wrote say where each value comes from.
 4. **Content map.** For every page in design/SITEMAP.md, one table row: what the owner sees → the file that owns that string. Build it by opening the actual components — not from memory of what Phase 6 built.
 5. **Token guide — the one-file promise.** All styling flows from the `:root`/`.dark`/`@theme` tokens in app/globals.css. Give 3 worked one-line recipes (accent color, radius, font swap). State the law: change the token or add a variant — never hardcode a value inside a component.
@@ -34,6 +34,8 @@ The README lets two people succeed without the original author: the owner change
 Next.js <16.x.y> (App Router, Turbopack) · Tailwind CSS <4.x> (CSS-first — all
 tokens in app/globals.css; there is no tailwind.config.js) · shadcn/ui (restyled
 primitives) · motion <12.x> (import from "motion/react") · lucide-react · zod v4
+<+ animejs <4.x> ONLY if installed — with the DIRECTION moment it drives named on
+  the same line; cut that moment and this package goes with it>
 <+ backend pieces actually built>
 
 ## Run it
@@ -70,6 +72,10 @@ the affected gates and logs results to design/QA.md.
 - Dark mode is re-decided per surface — check both themes after any color change.
 - prefers-reduced-motion paths must keep working; test with motion disabled.
 ```
+
+## Error monitoring — optional, and configured defensively
+
+Only worth a section when the owner will actually watch it; an unwatched SDK is weight and a data liability, and the honest answer for most brochure sites is none. If it goes in, Sentry is the default — and for a DACH audience its defaults are wrong out of the box. Turn `sendDefaultPii` off, leave Session Replay off (it records the DOM, so it is personal-data processing that needs a legal basis and its own `ultraweb:consent` category — never a silent default), set the EU ingest region so nothing leaves the EEA, and keep `tracesSampleRate` low enough that the free tier holds. The README states which of those are on, where the DSN lives, and who holds the login; a monitoring account nobody owns outlives the site.
 
 ## Anti-patterns
 

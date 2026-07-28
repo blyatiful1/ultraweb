@@ -28,7 +28,7 @@ Hidden craft is the deliberate reward left on the paths only a curious person wa
 import { useEffect } from "react";
 export function ConsoleSignature() {
   useEffect(() => {
-    const ink = "color:oklch(0.82 0.14 165);font:600 13px ui-monospace,monospace";
+    const ink = "color:oklch(0.78 0.15 160);font:600 13px ui-monospace,monospace";
     console.log("%c↖ N — you drifted off the charted edge.", ink);
     console.log("%cWe're hiring cartographers → framewalk.studio/careers", "color:inherit");
     // NEVER log secrets: no process.env values, tokens, internal URLs, or user data
@@ -92,7 +92,7 @@ export function useEasterEgg(onFound: () => void) {
 
 ## Worked example — Framewalk, "Hollow Cartographer" launch site (Atmospheric Dark)
 
-DIRECTION.md commits Atmospheric Dark with a bioluminescent signal-green accent `oklch(0.82 0.14 165)`; BRIEF.md's whole conceit is cartography and exploration. Two gestures, chosen; a third deliberately declined.
+DIRECTION.md commits Atmospheric Dark with a bioluminescent signal-green accent `oklch(0.78 0.15 160)`; BRIEF.md's whole conceit is cartography and exploration. Two gestures, chosen; a third deliberately declined.
 
 **Console signature:** a small compass-rose fragment and "you drifted off the charted edge" in signal-green, then a hiring nudge to `/careers` — the metaphor carried into devtools, no secrets logged, mounted once as a client leaf in the root layout.
 

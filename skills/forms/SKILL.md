@@ -26,6 +26,7 @@ A first-grade form is one the user finishes on the first try and trusts on the s
 - Label ALWAYS visible, above the input: 13–14px, medium weight, 6–8px gap to the field. Placeholder is for a format example only ("you@company.com") and never repeats the label.
 - Input: 44–48px tall, text ≥16px on mobile (below 16px iOS zooms the viewport), radius/border/focus-ring from tokens.
 - Textarea grows with its text natively: `field-sizing: content` (Baseline 2026 — Chrome/Edge, Safari 26.2, Firefox 152) replaces every ResizeObserver/auto-height hook. Clamp it — `min-height: 3lh; max-height: 12lh; overflow-y: auto` — so a pasted essay can't shove the submit button off-screen.
+- Styled `<select>`: `appearance: base-select` on the select *and* its `::picker(select)` opts into the customizable rendering, so the listbox finally carries the site's radius, tinted shadow, and richer options (an icon, a two-line label) while the browser keeps owning keyboard, typeahead, and the mobile picker. **Chrome/Edge only as of 2026-07** — style the plain native select first, put the base-select rules behind `@supports (appearance: base-select)`, and never let information live only inside the styled picker. Enhancement over the fallback, never a dependency; a genuine `aria-activedescendant` combobox still escalates per `ultraweb:overlays`.
 - Hint text (when needed) sits between label and input, muted; error text replaces or follows it below the field, 4–6px gap, icon + color + words — never color alone.
 - Fields stack 20–24px apart; form column max 400–480px. Mark exceptions "(optional)" — a form where most fields need asterisks has too many fields.
 - Right types: `type="email"`, `type="tel"` + `inputMode="tel"`, `inputMode="numeric"` for codes; `autocomplete` tokens: `name`, `email`, `tel`, `organization`, `postal-code`, `street-address`, `current-password`/`new-password`.
@@ -130,6 +131,7 @@ Client: `const [state, formAction, pending] = useActionState(submitContact, { st
 - Asterisks on every field; inputs without `name=`; client-only validation with a trusting server
 - Styling validation on `:invalid`/`:has(:invalid)` instead of `:user-invalid` — reds a pristine field on load
 - A ResizeObserver/JS auto-height hook on a textarea where `field-sizing: content` does it natively
+- `appearance: base-select` rules with no `@supports` gate or styled fallback — Chrome-only today, so everyone else gets the unstyled default
 - A card-first payment row or a US-stacked address block (PLZ after Ort) on a DACH checkout
 - Inline-only errors on a long multi-field form — no focus-managed summary for AT/keyboard users
 

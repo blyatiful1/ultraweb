@@ -124,6 +124,8 @@ export async function POST(req: Request) {
 
 - `sk_test_` + the `whsec_` from `stripe listen` live in .env.local; live keys exist only in the deploy platform's env, entered at ship — never in any file in the repo tree.
 - Card 4242 4242 4242 4242 (any future expiry, any CVC) proves the happy path; a declined test card proves Stripe-side handling — your designed surface for abandonment is the cancel path.
+- **The CLI proves the webhook; the redirect proves nothing.** Landing on `/checkout/success` says only that Stripe redirected — the handler runs out-of-band and fails silently. Keep `stripe listen --forward-to localhost:3000/api/webhooks/stripe` running in one terminal and fire `stripe trigger checkout.session.completed` in another: the passing result is a `200` printed beside the event *and* the fulfillment row actually written. A `400` there is the raw-body/signature bug, every time.
+- `stripe trigger` is also the only cheap way to reach the paths a happy-path click never takes — `payment_intent.payment_failed`, `charge.refunded`, `customer.subscription.deleted` — and firing the same event twice is the empirical test that fulfillment is genuinely idempotent rather than idempotent-looking.
 - The CLI's `whsec_` differs from the Dashboard endpoint's secret — at ship, create the production webhook endpoint and swap `STRIPE_WEBHOOK_SECRET`.
 
 ## Success and cancel — designed pages
@@ -142,6 +144,7 @@ export async function POST(req: Request) {
 - `sk_live_` anywhere in the repo tree — live keys belong only in deploy-platform env.
 - `NEXT_PUBLIC_STRIPE_SECRET` — a secret with a public prefix ships to the browser.
 - A success page rendering "Payment successful" without retrieving and checking the session — celebrates unpaid and forged visits.
+- Calling payments done because the checkout redirect worked — until `stripe trigger` shows the event returning 200 and the fulfillment row written, the half that matters is unverified.
 - Bare unstyled success/cancel surfaces — designed pages, per Standard.
 - Card-only checkout on a DACH storefront — German buyers underuse cards; SEPA Lastschrift and Klarna are table stakes, and the payment-method set is a per-market decision, not a global default.
 - No Widerrufsrecht notice at the checkout CTA (or buried three clicks deep in the footer) — the 14-day withdrawal right is a statutory pre-contract disclosure that belongs beside the commit action.
@@ -151,7 +154,7 @@ export async function POST(req: Request) {
 
 design/BRIEF.md: "Small-batch woven goods — every piece is one-off; when it sells, it's gone." Physical purchases, charged once, no recurring plan.
 
-The buy button lives on `/shop/[slug]`; each throw and runner is one Product + Price in the Dashboard (test mode), IDs allowlisted in `lib/prices.ts` as an as-const tuple the shop tiles and the checkout action both read. The action validates `formData.get('priceId')` through `z.enum(PRICE_IDS)` — never an amount — and creates a one-time session:
+The buy button lives on `/products/[slug]`; each throw and runner is one Product + Price in the Dashboard (test mode), IDs allowlisted in `lib/prices.ts` as an as-const tuple the shop tiles and the checkout action both read. The action validates `formData.get('priceId')` through `z.enum(PRICE_IDS)` — never an amount — and creates a one-time session:
 
 ```ts
 const session = await getStripe().checkout.sessions.create({

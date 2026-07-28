@@ -1,6 +1,6 @@
 # ultraweb
 
-**One prompt → first-grade Next.js website.** A Claude Code plugin: 70 interlocking skills + 3 subagents that give Claude the working discipline of a design studio — a taste constitution, an award-canon study library distilled from Awwwards-winning sites, a design-system-first pipeline, real quality gates, and current-stack engineering (Next.js 16, Tailwind v4, shadcn/ui, Motion, Better Auth, Drizzle).
+**One prompt → first-grade Next.js website.** A Claude Code plugin: 72 interlocking skills + 3 subagents that give Claude the working discipline of a design studio — a taste constitution, an award-canon study library distilled from Awwwards-winning sites, a design-system-first pipeline, real quality gates, and current-stack engineering (Next.js 16, Tailwind v4, shadcn/ui, Motion, Better Auth, Drizzle).
 
 > [!IMPORTANT]
 > **This pipeline uses a lot of tokens.** A full `/ultraweb` build runs a 12-phase studio pipeline with multi-round, screenshot-driven quality gates — expect it to consume far more tokens (and run far longer) than a typical prompt. That's deliberate: it's the price of the quality discipline described below. See [What it costs](#what-it-costs) for the why, and how to keep it down.
@@ -45,7 +45,7 @@ For changes to an existing ultraweb site: just ask ("make the hero bolder") — 
 - ends in **multi-round quality gates** that screenshot every page at 375 / 768 / 1440 and critique it against a scored rubric, looping fix → re-gate until green;
 - and, in **fan-out mode**, spawns one agent per page/section group and one per gate — multiplying all of the above.
 
-Net: a single end-to-end build routinely costs **far more than an ordinary Claude Code task**, and takes a while to run. Plan for it. Model routing keeps the bill as honest as it can — mechanical sweeps run on Sonnet 5, judgment stays on the lead / Opus 4.8 tier (see [Map](#map)) — but cheaper *per call* is not cheap *overall*.
+Net: a single end-to-end build routinely costs **far more than an ordinary Claude Code task**, and takes a while to run. Plan for it. Model routing keeps the bill as honest as it can — mechanical sweeps run on Sonnet 5, judgment stays on the lead / Opus 5 tier (see [Map](#map)) — but cheaper *per call* is not cheap *overall*.
 
 **Keeping it down:** build once, then iterate. For any change to an existing ultraweb site, ask in plain language ("make the hero bolder") and `ultraweb:iterate` scopes the edit and re-runs only the gates your change actually touches — not the whole pipeline. Reserve full `/ultraweb` runs for new sites and full redesigns.
 
@@ -54,7 +54,7 @@ Net: a single end-to-end build routinely costs **far more than an ordinary Claud
 - **`taste`** — the constitution. Anti-slop banned list (no purple-gradient AI look, no untouched shadcn, no dead startup copy), required list (OKLCH palette, real type pairing, deliberate asymmetry, reduced-motion), decision heuristics. Every skill defers to it.
 - **`award-canon`** — the study library. 31 Awwwards Site-of-the-Year/SOTD-tier winners (2017–2026) researched and distilled into 25 named, transferable patterns, plus the invariants that held across every era, the jury scoring model (Design 40% / Usability 30% / Creativity 20% / Content 10%), and a dated-fashions list. Every claim carries its verified award tier; dead sites are flagged as reconstructed, not inspected. `direction` consults it for references and signature-move precedent; `design-judge` scores against its invariants. Prime directive: **steal the principle, never the surface.**
 - **Quality gates** — seven gates (`gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content`) that verify empirically: real builds, real Playwright screenshots at 375/768/1440, computed contrast, Lighthouse. A site isn't done until `design/QA.md` is green.
-- **`STACK.md`** — stack facts verified against live npm + official docs (last: 2026-07-22). Skills cite it instead of training memory: Next 16's `proxy.ts`, Turbopack-default, `preload` (not `priority`), Cache Components, Tailwind v4 `@theme`, Motion 12 `motion/react`, zod v4, Better Auth, CSS scroll-driven animation support. When versions drift, update this one file.
+- **`STACK.md`** — stack facts verified against live npm + official docs (last: 2026-07-28). Skills cite it instead of training memory: Next 16's `proxy.ts`, Turbopack-default, `preload` (not `priority`), Cache Components, Tailwind v4 `@theme`, Motion 12 `motion/react`, zod v4, Better Auth, CSS scroll-driven animation support. When versions drift, update this one file.
 - **Worked examples** — nearly every skill closes with a real-project decision traced end to end, drawn from a shared bank of eight recurring clients (a Berlin roastery, a port-logistics SaaS, an Oslo design agency, a Lisbon restaurant, a law firm, a game studio, a community foundation, a textiles shop). Skills that share a client agree on its palette, type, and routes — so the examples themselves demonstrate how the skills hand off to each other.
 
 ## Map
@@ -65,13 +65,13 @@ Net: a single end-to-end build routinely costs **far more than an ordinary Claud
 | Discovery | `brief`, `direction` (12-archetype catalog), `sitemap`, `wireframe`, `copywriting` |
 | Design system | `tokens`, `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `icons`, `imagery`, `motion-language`, `theme-worlds` |
 | Components | `component-api`, `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`, `overlays`, `cart`, `product-detail`, `command-palette`, `marginalia` |
-| Motion | `micro-interactions`, `scroll-motion`, `page-transitions`, `physics`, `showpiece`, `hidden-craft` |
+| Motion | `micro-interactions`, `scroll-motion`, `page-transitions`, `physics`, `showpiece`, `animejs` (DIRECTION-gated SVG choreography), `hidden-craft` |
 | Next.js | `scaffold`, `app-structure`, `routing`, `data-fetching`, `server-actions`, `media-optimization`, `seo`, `i18n`, `print-craft` |
-| Backend | `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`, `consent` |
+| Backend | `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`, `consent`, `analytics` |
 | Gates | `gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content` |
 | Ship | `ship`, `handoff`, `retrofit` |
 
-Subagents: `design-judge` (adversarial screenshot critic — Opus 4.8, rubric extended with the award-canon invariants and jury model), `pixel-qa` (Playwright breakpoint sweeps — Sonnet 5), `stack-doctor` (toolchain repair without downgrades — Opus 4.8). Each pins its model tier in frontmatter; the root skill's **Delegation & model routing** table extends the same policy to all fan-out work: judgment stays on the lead model, specialist builds and critiques run on Opus 4.8, mechanical sweeps run on Sonnet 5.
+Subagents: `design-judge` (adversarial screenshot critic — Opus 5, rubric extended with the award-canon invariants and jury model), `pixel-qa` (Playwright breakpoint sweeps — Sonnet 5), `stack-doctor` (toolchain repair without downgrades — Opus 5). Each pins its model tier in frontmatter; the root skill's **Delegation & model routing** table extends the same policy to all fan-out work: judgment stays on the lead model, specialist builds and critiques run on Opus 5, mechanical sweeps run on Sonnet 5.
 
 Full scope of every skill: [ROSTER.md](ROSTER.md). The per-site award study bank: [skills/award-canon/CANON.md](skills/award-canon/CANON.md).
 

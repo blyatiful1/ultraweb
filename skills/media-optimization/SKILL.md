@@ -39,6 +39,16 @@ import hero from "@/public/hero.jpg";
 - SVG logos and icons: inline as JSX so they inherit `currentColor` — never through next/image.
 - Modern formats are the optimizer's job. Feed it a high-quality source (≥ 2× the largest rendered size); don't pre-convert or pre-compress to death.
 
+## SVGO discipline
+
+Every SVG that ships — logo, icon, divider, illustration — runs through SVGO once, with a config that knows whether the file will be animated. The default preset is lossy in exactly the ways an animation cares about.
+
+- **`cleanupIds: false` on anything animated or referenced.** The default minifies `id` attributes, which silently breaks `<use href="#…">`, gradient/filter references, and every selector a CSS keyframe or a commissioned `ultraweb:animejs` timeline targets. A static one-shot mark may keep the default.
+- **Keep the viewBox** (`removeViewBox: false`) — without it the graphic can't scale, and a fixed `width`/`height` reintroduces the layout shift the rest of this file exists to prevent.
+- **No `mergePaths` on morph targets.** Merging collapses separate `<path>` elements into one `d`, destroying both the per-path handles a multi-path draw needs and the point-count parity a morph pair depends on — `ultraweb:shape-language` authors those files, this one must not undo them.
+- Strip what is genuinely dead: editor metadata, comments, empty groups, and hardcoded `fill` on icons meant to inherit `currentColor`.
+- Run it as a build step or one deliberate pass over the asset folders — never hand-edit optimized output, and never re-run a lossy preset over a file you already tuned.
+
 ## next/font pipeline
 
 One central file. A font declared anywhere else is a defect.
@@ -64,11 +74,13 @@ export const body = Instrument_Sans({ subsets: ["latin"], variable: "--font-body
 4. No LCP element inside a `dynamic()` import or lazy boundary.
 5. Hero background media is a real `<Image fill preload>` — CSS `background-image` is unoptimizable and unpreloadable.
 
-## Video
+## Native video
 
-- Ambient loops: self-hosted H.264 MP4 ≤ 4MB, `<video autoPlay muted loop playsInline preload="metadata" poster={…}>` with a poster sized exactly like the video (zero CLS). `muted` is mandatory or autoplay silently fails.
+- Ambient loops: self-hosted H.264 MP4 ≤ 4MB, `<video autoPlay muted loop playsInline preload="metadata" poster={…}>` with a poster sized exactly like the video (zero CLS). Both attributes are load-bearing: without `muted` autoplay is blocked, without `playsInline` iOS hijacks the clip fullscreen.
+- **The poster is the LCP candidate, never a video frame.** Ship it as a real optimized still at the video's exact dimensions and give it the page's one `preload`; the clip then plays over an element that has already painted, and a slow connection degrades to a designed frame instead of a black box.
 - `prefers-reduced-motion`: pause ambient video — follow `ultraweb:motion-language`'s policy, not an ad-hoc check.
-- Third-party embeds (YouTube/Vimeo): facade pattern — render a poster + play button, inject the iframe on click. An eager YouTube iframe costs ~1MB of JS before anyone presses play.
+- Meaningful video ships captions — a `<track kind="captions" srcLang default>` file. WCAG 1.2.2 is a Level-A requirement, so `gate-accessibility` treats a missing track as a failure; only genuinely silent decorative loops are exempt, and those carry `aria-hidden`.
+- Third-party embeds (YouTube/Vimeo): facade pattern — render a poster + play button, inject the iframe on click. An eager YouTube iframe costs ~1MB of JS before anyone presses play. On a DACH build that facade is also the legal gate: mount it through `ultraweb:consent`'s click-to-load shim, since the request itself is the exposure.
 - Below-fold video: `preload="none"`.
 
 ## Anti-patterns

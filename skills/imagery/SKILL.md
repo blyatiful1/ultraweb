@@ -83,7 +83,15 @@ Combining: one treatment + grain is the ceiling. Grain rides on top of anything;
 
 **Noise** — the same feTurbulence data URI: `baseFrequency` 0.6-0.9 for fine grain, 0.15-0.3 for coarser paper texture. Keep `stitchTiles='stitch'` or the tile seams show.
 
-Both are CSS backgrounds: zero network requests (data URIs), zero layout cost, `pointer-events: none` on overlay layers.
+**Parametric geometry** — the texture for directions where organic noise is off-brief: Swiss, Brutalist, Playful Geometric, and Retro-Futurist grounds want structure, not grain. Generate the tile from a formula so it repeats seamlessly and re-derives at any size:
+
+- **Wave field** — sample `y = A·sin(2πx/λ)` at ~16 points per period into a cubic path; λ must divide the tile width exactly or the seam shows. Stack 2-3 phase-shifted copies at descending opacity for depth.
+- **Lattice** — an SVG `<pattern>` whose unit cell carries one mark (dot, plus, tick) at the cell node; half-drop by adding a second layer at `patternTransform="translate(w/2 0)"`. Cell 24-64px, mark at 4-6% opacity.
+- **Hatch** — parallel rules at the motif family's one fixed angle (ultraweb:shape-language owns that angle), spacing on the `--spacing` multiplier so the field lands on the grid.
+
+Amplitude, wavelength, and cell size are the only knobs — record the three numbers in SYSTEM.md §imagery so a divider, a section ground, and a card texture read as one field. `shape-language`'s blob-and-squiggle ban still holds: a parametric wave is a repeating structure, an amoeba is decoration.
+
+All three are CSS backgrounds: zero network requests (data URIs), zero layout cost, `pointer-events: none` on overlay layers.
 
 ## Honest placeholders
 
@@ -96,6 +104,8 @@ Both are CSS backgrounds: zero network requests (data URIs), zero layout cost, `
 
 - Raster photos: `placeholder="blur"` with a blurDataURL; `fill` always pairs with `sizes`; the LCP image gets `preload` — `priority` is deprecated in Next 16.
 - Generated SVGs: plain `<img>` or CSS background — next/image adds nothing for SVG. Decorative pieces get `alt=""` (or live as backgrounds); content images get real alt text describing content, never "image".
+- Every SVG this skill emits — generated art, pattern tiles, inline filters — ships through ultraweb:media-optimization's SVGO pass first; if the piece is animated, that pass keeps its IDs and viewBox.
+- Raster logo, no vector: ask the client for the real SVG first, always — it exists more often than they think. Only when it genuinely doesn't, trace the mark with `vtracer` and hand-clean the paths; never trace fine type or a wordmark, reset those in the site's own face.
 - Treatment layers (scrim, grain, tint) are CSS on a wrapper, never baked into exported assets — dark mode must be able to re-decide them.
 
 ## Dark mode
@@ -145,7 +155,7 @@ The class plus the generated `placeholder-harvest-01.svg` slots (olive-on-cream 
 ## Composes with
 
 - ultraweb:color — every treatment and mesh derives from its OKLCH palette
-- ultraweb:media-optimization — owns the delivery pipeline (sizes, blur, LCP preload) for what this skill creates
+- ultraweb:media-optimization — owns the delivery pipeline (sizes, blur, LCP preload) and the SVGO pass for what this skill creates
 - ultraweb:hero — full-bleed media variants consume the scrim + treatment classes
 - ultraweb:shape-language — geometry, masks, and clip-paths that shape image containers
 - ultraweb:gate-antislop — sweeps for the placeholder and cliché strings above

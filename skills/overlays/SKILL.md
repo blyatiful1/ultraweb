@@ -48,6 +48,14 @@ First-grade here: the invoker is always a real `<button popovertarget>`; positio
 - **Complex composite widgets** — comboboxes with `aria-activedescendant`, multi-level menus, rich date pickers: a shadcn/Radix primitive still earns its keep for the ARIA state machine. Keep it, but let it position via anchoring rather than a JS positioning engine where the version supports it.
 - Everything else — tooltips, single-level dropdowns, popovers, notifications — is native. Do not install a positioning or focus-trap dependency for these.
 
+## The graduated set — Invoker Commands, popover=hint
+
+Open UI keeps handing declarative HTML jobs React state used to do. Take each rung as an enhancement over the baseline above, never as its replacement.
+
+- **Invoker Commands** (`command` / `commandfor`) extend `popovertarget` past popovers to any native element: `<button command="show-modal" commandfor="confirm">` opens a `<dialog>` with no `showModal()` call in an effect, `command="close"` closes it, `command="toggle-popover"` covers the popover cases. Every `useState(false)` that exists only to open and shut a native element deletes with it — and with it, usually, the client component that held it.
+- **`popover=hint`** is the tooltip-shaped third state. A hint light-dismisses like `auto`, but opening one does NOT close an open `auto` popover — so a tooltip inside a menu stops nuking the menu the instant it appears. `auto` still owns menus; `manual` still owns toasts.
+- **Support gate.** Both land later than the Baseline-2026 core this skill defaults to (Chromium first) — check the current table before either becomes load-bearing. Keep `popovertarget` / `showModal()` as the real implementation and layer the attribute over it, or feature-detect (`"command" in HTMLButtonElement.prototype`) before deleting the handler. A dialog that never opens in Firefox is a defect, not a Baseline bet.
+
 ## Motion & degradation
 
 Entry/exit animates across the top-layer `display` toggle via discrete-property transitions — no `AnimatePresence`, no client component:
@@ -81,6 +89,7 @@ Durations and easing come from SYSTEM.md §motion (micro band, 150–250ms) — 
 - `popover="manual"` used as a modal expecting a focus trap or inert background — it provides neither; that's `<dialog>.showModal()`.
 - `role="menu"` with no arrow-key roving focus wired — broken menu semantics; either implement it or drop the role for a link/button list.
 - Anchoring with no `@supports (anchor-name)` / static-offset fallback — older engines render an unplaced box in flow.
+- `command`/`commandfor` or `popover="hint"` shipped as the only path, with no `popovertarget`/`showModal()` implementation underneath and no feature detection — these are the graduated set, not the baseline.
 - A `transition` on a popover with no `allow-discrete` on `display`/`overlay` — it pops in and snaps out with no exit motion.
 - A gray drop-shadowed panel with `rounded-xl shadow-lg` — overlay depth comes from SYSTEM.md §depth (tinted shadow), like every other surface.
 

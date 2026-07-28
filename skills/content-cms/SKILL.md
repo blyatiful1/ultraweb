@@ -1,11 +1,11 @@
 ---
 name: content-cms
-description: The content layer for a Next.js 16 site — plain @next/mdx for a handful of long-form pages (root mdx-components.tsx is mandatory, pageExtensions must include md/mdx, @next/mdx pinned to the next version), content-collections or velite for typed collections at scale, zod v4 frontmatter schemas, and long-form prose styled from SYSTEM.md tokens instead of default gray prose classes. Contentlayer is dead and never an option. Invoke during the backend phase when the brief calls for a blog, docs, changelog, case studies, or any markdown-driven content, when choosing between MDX-in-repo and a headless CMS, or when article pages render as unstyled or default-gray prose. Trigger phrases — "add a blog", "MDX pages", "docs section", "markdown content", "frontmatter", "content collections", "style the article page", "do we need a CMS".
+description: The content layer for a Next.js 16 site — plain @next/mdx for a handful of long-form pages (root mdx-components.tsx is mandatory, pageExtensions must include md/mdx, @next/mdx pinned to the next version), content-collections or velite for typed collections at scale, zod v4 frontmatter schemas, long-form prose styled from SYSTEM.md tokens instead of default gray prose classes, and Shiki code blocks highlighted at build inside RSCs (zero client JS). Contentlayer is dead and never an option. Invoke during the backend phase when the brief calls for a blog, docs, changelog, case studies, or any markdown-driven content, when choosing between MDX-in-repo and a headless CMS, or when article pages render as unstyled or default-gray prose. Trigger phrases — "add a blog", "MDX pages", "docs section", "markdown content", "frontmatter", "content collections", "style the article page", "syntax highlighting", "code blocks", "do we need a CMS".
 ---
 
 # content-cms — typed content, designed prose
 
-**Stage:** Phase 7 — Backend - **Reads:** design/BRIEF.md, design/DIRECTION.md, design/SYSTEM.md - **Writes:** content/*, mdx-components.tsx, next.config.ts MDX wiring, frontmatter schema, prose styles in app/globals.css
+**Stage:** Phase 7 — Backend - **Reads:** design/BRIEF.md, design/DIRECTION.md, design/SYSTEM.md - **Writes:** content/*, mdx-components.tsx, next.config.ts MDX wiring, frontmatter schema, lib/highlight.ts, prose styles in app/globals.css
 
 ## Standard
 
@@ -13,12 +13,13 @@ description: The content layer for a Next.js 16 site — plain @next/mdx for a h
 - Long-form prose consumes SYSTEM.md tokens — accent links, tinted-neutral code blocks, the site's type scale. Default gray prose classes on a designed site read as a template drop-in.
 - **Contentlayer is DEAD.** Never recommend, install, or migrate toward it. Migrate away from it to content-collections.
 - Every content page ships real metadata derived from its frontmatter, and drafts never leak — not into listings, not into sitemap.ts.
+- Code blocks are highlighted at build inside RSCs — a highlighter in the browser is a defect, not a choice.
 
 ## Process
 
 1. Read design/BRIEF.md: what content exists, who edits it, how often. That decides the pipeline (table below).
 2. Wire the pipeline — @next/mdx's two mandatory wires, or the collection tool's config with the zod frontmatter schema.
-3. Build the prose layer (component mapping + long-form styles from `@theme` tokens) BEFORE writing content, so the first article renders designed.
+3. Build the prose layer AND the highlighter (component mapping, long-form styles from `@theme` tokens, `lib/highlight.ts` + the code-surface tokens) BEFORE writing content, so the first article renders designed.
 4. Build routes: listing + `[slug]` with `generateStaticParams`, `generateMetadata` from frontmatter, drafts filtered everywhere.
 5. Hand every string to `copywriting`; wire posts into sitemap.ts and JSON-LD via `seo`.
 6. Verify: `npm run build` compiles every content file; deliberately break one frontmatter field and confirm the build fails — a schema that can't fail isn't validating.
@@ -105,6 +106,52 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 - Dark mode re-decided for prose: code-block backgrounds, blockquote borders, image borders get explicit dark values — inversion muddies long-form worst of all.
 - Prose headings use the display font only if DIRECTION.md's type stance says so — editorial directions often keep them in the body family with weight contrast instead.
 
+## Code blocks — Shiki, RSC-only
+
+Shiki (per STACK.md) is the highlighter, and it runs at **build time inside a server component** — a highlighted block ships styled HTML and zero client JavaScript. A client-side highlighter (`prismjs`, `highlight.js`, `react-syntax-highlighter`) sends a parser plus every grammar to the browser to redo work the server already finished, and flashes unstyled code while it boots.
+
+- **In MDX** — `@shikijs/rehype` (per STACK.md) wired into the pipeline config; every fenced block is highlighted during the build. Turbopack requires serializable plugin options, so verify how transformers are passed against current docs — where that fails, map `pre`/`code` in `mdx-components.tsx` to the same RSC component below and keep one path.
+- **Outside MDX** — `codeToHtml()` called directly in an RSC. Standalone marketing snippets (a dev-tool hero showing the install line, a feature section with three lines of API) render through this same component, never a second hand-styled `<pre>`; one code aesthetic site-wide.
+
+```tsx
+// lib/highlight.ts — server-only. Themes are a base; the token colours are mapped onto the site's palette.
+import { codeToHtml } from "shiki/bundle/web";   // not the full `shiki` barrel (per STACK.md)
+import { transformerNotationDiff, transformerNotationHighlight } from "@shikijs/transformers";
+
+export const highlight = (code: string, lang: string) =>
+  codeToHtml(code, {
+    lang,
+    themes: { light: "github-light", dark: "github-dark" }, // base themes only — nearest to the palette's hue family
+    defaultColor: false,                                    // emit --shiki-light / --shiki-dark instead of baked colors
+    // + the colour-replacement map that swaps the themes' palette entries for the site's var(--color-*)
+    //   — verify the current option name against the docs before writing it
+    transformers: [transformerNotationDiff(), transformerNotationHighlight()],
+  });
+
+// components/code-block.tsx — server component; only <CopyButton> below is "use client"
+export async function CodeBlock({ code, lang }: { code: string; lang: string }) {
+  return <div className="relative"><CopyButton value={code} /><div dangerouslySetInnerHTML={{ __html: await highlight(code, lang) }} /></div>;
+}
+```
+
+`defaultColor: false` is half the trick: Shiki emits paired custom properties per token and bakes no inline `color`, so a few CSS rules can map them onto the site's own tokens — and that swap is won by `@layer components` order, not the `!important` the docs reach for and `gate-code` sweeps for (per STACK.md). The other half is the palette: the stock pair earns its keep as scope coverage only, its colour entries replaced by the site's `var(--color-*)` values, or you author a minimal theme object from SYSTEM.md §color. Never ship a stock VS Code theme untouched; Dracula on a luxury-serif site is the same tell as untouched shadcn. And mind the entry point: the full `shiki` barrel carries every grammar and theme — build-time or not, prefer `shiki/bundle/web` or `createHighlighterCore` with explicit languages (per STACK.md).
+
+```css
+/* app/globals.css — the code surface is the tinted neutral ramp from SYSTEM.md §color, both themes re-decided */
+:root { --code-surface: oklch(0.96 0.008 85); }
+.dark { --code-surface: oklch(0.21 0.018 60); }               /* re-decided, never inverted */
+
+@theme inline { --color-code-surface: var(--code-surface); }  /* the bridge ultraweb:tokens requires */
+
+@layer components {
+  .shiki { background: var(--color-code-surface); }           /* surface: site token, not the theme's */
+  .shiki, .shiki span { color: var(--shiki-light); }          /* tokens: Shiki's paired variables */
+  .dark .shiki, .dark .shiki span { color: var(--shiki-dark); }
+}
+```
+
+`@shikijs/transformers` supplies the `// [!code ++]` / `// [!code highlight]` notations — annotations written in the source, styled by your CSS, still zero runtime. The **copy button is the one client leaf**: a `"use client"` button positioned beside the server-rendered `<pre>`, taking the raw string as a prop. The block never becomes a client component just to carry a button.
+
 ## When a headless CMS instead
 
 - MDX-in-repo is the default: versioned with the site, edited by whoever edits code, zero runtime dependency.
@@ -118,6 +165,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 - `pageExtensions` missing `'md', 'mdx'` — MDX pages 404 silently.
 - `@next/mdx` version ≠ `next` version — version-locked pair.
 - `prose prose-gray`, `prose-slate`, `prose-zinc` — greppable; default gray prose on a designed site.
+- `react-syntax-highlighter`, `prismjs`, `highlight.js` in package.json — a client-side highlighter redoing at runtime what Shiki did at build.
+- `"use client"` on the code-block component — only the copy button is a client leaf; the highlighted `<pre>` stays server-rendered.
 - YAML `---` frontmatter in a plain @next/mdx page — renders as body text; export metadata instead.
 - `post.frontmatter.title` reached without a schema — typos compile and render `undefined`.
 - Drafts visible in production listings or sitemap.ts.
@@ -149,5 +198,6 @@ a: (props) => <a className="text-accent underline decoration-accent/40 underline
 - **ultraweb:seo** — generateMetadata from frontmatter, Article JSON-LD, posts registered in sitemap.ts.
 - **ultraweb:data-fetching** — cache lifetimes and tags when content comes from a CMS instead of the repo.
 - **ultraweb:gate-content** — verifies real titles/descriptions and zero dead copy across every content page.
+- **ultraweb:gate-code** — asserts zero `!important` in the emitted CSS, which is why the Shiki swap is won by layer order.
 - **ultraweb:brief** — its §Backend: needs and per-page content inventory are what step 1 reads to choose the pipeline (plain MDX vs collections vs CMS).
 - **ultraweb:handoff** — documents this skill's MDX/collection editing flow so the non-developer editors who maintain content after ship can edit it safely.

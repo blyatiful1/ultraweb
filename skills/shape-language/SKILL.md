@@ -62,12 +62,20 @@ The motif must appear ≥3 places or be cut — a single occurrence reads as an 
 - Statement dividers — one style site-wide, used 2-4 times max:
   - Angled edge: `clip-path: polygon(0 0, 100% 0, 100% calc(100% - 3rem), 0 100%)` on the section. Add bottom padding equal to the cut (`pb-12` for 3rem) so content isn't clipped; keep the cut direction consistent all page.
   - SVG curve: inline SVG with `fill="currentColor"`, colored by the NEXT section's background so the seam disappears; `aria-hidden="true"`.
+- Parametric, not pasted — a statement divider is a formula with recorded numbers, so it re-derives at any width: angled edge = one angle θ, rise `tan(θ)·container-width` clamped to 2-5rem; arc = `M0,h Q 50%,h-r 100%,h` with sag r at 2-6% of the width; wave = `y = A·sin(2πx/λ)` sampled into cubics, λ dividing the container width exactly so the seam disappears. Record θ / r / A+λ in SYSTEM.md §shape — a downloaded wave-divider SVG with numbers nobody chose is the template tell.
 
 ## SVG accents
 
 - Inline or data-URI only — self-contained, theme-aware via `currentColor`. Every decorative SVG gets `aria-hidden="true" focusable="false"`.
 - Curated set: hand-drawn underline beneath ONE key headline word per page (animate `stroke-dashoffset` over 400-700ms on reveal if motion-language allows; under `prefers-reduced-motion` the underline renders fully drawn (static), no dashoffset animation); corner brackets on featured cards; dot/plus grid backgrounds at 4-6% opacity; circled-word or arrow annotations in editorial directions.
 - Accents obey the motif family — brackets on a Sharp site, arcs on a Round one. Decoration outside the family is slop.
+
+**Animation-ready authoring.** Any SVG a motion skill will later touch is drawn for it up front — retrofitting a flattened export costs more than authoring it right:
+
+- ONE path per independently animatable element; a merged path cannot stagger. Stable hand-written IDs (`#curve-rise`, never `#path-1247`) — selectors are a contract, and ultraweb:media-optimization's SVGO pass must preserve them (`cleanupIds: false`).
+- No baked `transform` attributes on animatable nodes: bake geometry into `d` and leave `transform` free for the engine. Keep `viewBox`, drop `width`/`height`, keep `stroke="currentColor" fill="none"` and `aria-hidden="true" focusable="false"`.
+- Morph pairs (state A → state B) need identical point counts, command order, and drawing direction, or the interpolation turns inside out. Draw B by editing a copy of A, never from scratch.
+- One path drawing on reveal is CSS `stroke-dashoffset` (above). Multi-path timelines, morphs, motion paths, and scroll-scrubbed sequences are a commissioned moment — ultraweb:animejs owns those, and only when DIRECTION.md names it.
 
 ## Focus & hit-area notes
 
@@ -101,7 +109,7 @@ The flat-lay→in-hand hover image sits in a `--radius-lg` card with `p-2` (0.5r
 
 Rejected **Stamp & notch** (ticket-edge product cards): the notched-coupon look reads as discount commerce and undercuts the unhurried, handmade calm the palette (`oklch(0.94 0.012 80)` linen, `oklch(0.45 0.08 265)` indigo) is buying.
 
-Output lands in design/SYSTEM.md §shape; the four `--radius-*` tokens hand to ultraweb:tokens, which writes them into app/globals.css `@theme`, and ultraweb:cards pulls the concentric calc for every `/shop/[slug]` gallery frame.
+Output lands in design/SYSTEM.md §shape; the four `--radius-*` tokens hand to ultraweb:tokens, which writes them into app/globals.css `@theme`, and ultraweb:cards pulls the concentric calc for every `/products/[slug]` gallery frame.
 
 ## Composes with
 

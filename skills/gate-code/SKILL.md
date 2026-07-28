@@ -9,7 +9,7 @@ description: Build/type/lint quality gate for the ultraweb pipeline — proves t
 
 ## Standard
 
-Every item on this gate is an exit code or a zero-hit grep — "looked fine" does not exist here. First-grade means: cold `npm run build` exits 0, `tsc --noEmit` is silent under strict with zero suppression comments, ESLint reports 0 problems with zero inline disables, every route in design/SITEMAP.md serves 200 with a clean dev terminal, `"use client"` lives only at interactive leaves, and package.json carries nothing the code doesn't import. Every `var(--token)` resolves to a declared `@theme` token and every semantic foreground/surface pair clears WCAG AA — proven by a script each build, not eyeballed once at design time.
+Every item on this gate is an exit code or a zero-hit grep — "looked fine" does not exist here. First-grade means: cold `npm run build` exits 0, `tsc --noEmit` is silent under strict with zero suppression comments, ESLint reports 0 problems with zero inline disables, every route in design/SITEMAP.md serves 200 with a clean dev terminal, `"use client"` lives only at interactive leaves, and package.json carries nothing the code doesn't import. Every `var(--token)` resolves to a declared `@theme` token and every semantic foreground/surface pair clears WCAG AA — proven by a script each build, not eyeballed once at design time. And the CSS that actually ships carries no vocabulary the system never decided.
 
 ## Checklist
 
@@ -21,6 +21,7 @@ Every item on this gate is an exit code or a zero-hit grep — "looked fine" doe
 6. Zero stack relics
 7. Zero unused dependencies
 8. Token contract holds — no undeclared tokens, every pair passes AA
+9. Emitted CSS stays inside the system's own vocabulary
 
 ## How to verify
 
@@ -40,6 +41,9 @@ Every item on this gate is an exit code or a zero-hit grep — "looked fine" doe
    - `grep -rn "onLoadingComplete" app components` — removed on next/image; it is `onLoad`.
    - `grep -rn "priority" app components --include="*.tsx"` → any hit that is an `<Image>` prop is deprecated; use `preload`.
    - `grep -rn "tailwind.config\|@tailwind base\|theme.extend" . --exclude-dir=node_modules` — Tailwind v3 relics; v4.3 is CSS-first via `@theme` in globals.css.
+   - `grep -rn "import anime from\|@types/animejs" package.json app components lib` — anime.js v3 relics; v4 has no default export and ships its own types (per STACK.md). Keep this grep tight: a bare `targets:` is too generic to mean anything.
+   - `grep -rn "createDraggable" app components lib` → zero hits. Drag is motion's at `domMax` — the engine boundary, not a style choice.
+   - `grep -rnE "ease: *['\"]cubicBezier" app components` → zero hits. The string form is silently linear; pass the imported `animeEase.*` function. Both of these can only land in the `from "animejs"` files check 7 already resolves.
 7. **Unused dependencies** — audit `dependencies` only (devDependencies serve tooling: typescript, eslint*, @types/*, @tailwindcss/postcss):
 
 ```bash
@@ -49,6 +53,8 @@ done
 ```
 
    The prefix match catches subpath imports (`from "next/image"` matches `next`). Before uninstalling a hit, confirm it isn't consumed by a root config file (next.config.ts, proxy.ts, drizzle.config.ts) or globals.css (`@import "tailwindcss"`). Then `npm uninstall` it and re-run check 1. A dedicated analyzer (knip) can replace the loop — verify against current docs first.
+
+   `animejs` is the one dependency the loop cannot judge alone, because it is DIRECTION-gated: it passes only with BOTH a `from "animejs"` import under app/components — the import specifier is the only tell, since `animate(` is also motion/react and WAAPI — AND a design/DIRECTION.md line commissioning the SVG moment that earned it. Either half missing is a defect: uninstall it, or send the moment back to ultraweb:direction to be named.
 
 8. **Token contract + AA, by script:** the `@theme` contract and WCAG AA are computable facts — assert them every build, not once by eye at design time. `node qa/token-contract.mjs` → exit 0. No new dependency (pure `node:fs` + math). It does two things: (a) fails on any `var(--token)` used in `app`/`components` that `app/globals.css` never declares — a typo, or a token renamed in globals.css but not its call sites, silently renders the CSS default; (b) re-derives contrast for every semantic foreground/surface pair (OKLCH tokens, which this stack mandates) — `--foreground`/`--background` plus every `--*-foreground`/`--*` — in BOTH `:root` and `.dark`, failing any below 4.5:1 (loosen to 3:1 per pair only where you know it is large-text-only). This turns ultraweb:color's one-time AA pass into a gate, so weeks of iterate/retrofit can't slip a `text-white`-on-`--warning` pair or a stale token past the other checks.
 
@@ -93,9 +99,17 @@ for (const [name, sel] of [["root", ":root"], ["dark", "\\.dark"]]) {
 process.exit(fail);
 ```
 
+9. **CSS entropy audit:** check 8 proves every `var(--token)` is declared; this one proves components aren't minting values the system never decided. The emitted stylesheet is the honest census — after `npm run build`, `npx wallace-cli .next/static/css/*.css` (one file per invocation if the glob expands to several). Read its counts against design/SYSTEM.md as ceilings, never equalities:
+   - unique colors ≤ palette + shadcn's base tokens — a long tail of near-duplicates is hardcoded hex/oklch in components
+   - unique font-sizes ≤ the `clamp()` scale length + a small tolerance; Tailwind utilities legitimately emit more, so judge the tail, never assert `==`
+   - `!important` count == 0 — the `@layer` order ultraweb:tokens sets is what overrides shadcn
+   - zero orphaned custom properties (declared in globals.css, referenced nowhere) — the mirror image of check 8's undeclared-token failure
+
+   Every excess traces back to a component. The fix is deleting the stray value, never widening the palette to match the census.
+
 ## Pass criteria
 
-All eight checks green in ONE final sequential pass after the last fix — any fix invalidates earlier results, so checks 1–4 re-run to completion at the end, and check 8 re-runs whenever a fix touched globals.css or a component's tokens. Zero unjustified suppressions (`@ts-ignore`, `eslint-disable`, boundary hits in layouts). Every result recorded as the command's actual output line, not a memory of it.
+All nine checks green in ONE final sequential pass after the last fix — any fix invalidates earlier results, so checks 1–4 re-run to completion at the end, and checks 8–9 re-run whenever a fix touched globals.css or a component's tokens. Zero unjustified suppressions (`@ts-ignore`, `eslint-disable`, boundary hits in layouts). Every result recorded as the command's actual output line, not a memory of it.
 
 ## QA.md entry
 
@@ -111,6 +125,7 @@ All eight checks green in ONE final sequential pass after the last fix — any f
 | 6 | stack relics | PASS | 0 hits across 5 checks |
 | 7 | unused dependencies | PASS | 11 deps audited, 0 unused |
 | 8 | token contract + AA | PASS | node qa/token-contract.mjs exit 0 — 0 undeclared, 14 pairs ≥4.5:1 |
+| 9 | CSS entropy | PASS | wallace: 19 colors (palette 16 + base), 11 font-sizes (scale 9), 0 !important, 0 orphans |
 Issues fixed: removed unused `date-fns`; moved "use client" from app/page.tsx to components/sections/hero.tsx; raised `--muted-foreground` lightness to clear AA in `.dark`.
 ```
 
@@ -155,3 +170,4 @@ Rejected the lazy fix of hoisting `"use client"` onto `app/(marketing)/layout.ts
 - ultraweb:tokens — declares the `@theme` contract check 8 enforces; adding the token there is the only way to satisfy an undeclared-token failure
 - ultraweb:color — its design-time AA pass becomes this gate's every-build assertion; a failing pair is handed back there to re-decide the lightness step
 - ultraweb:component-api — a variant that resolves to an undeclared token or an AA-failing pair fails here at build time, not in visual review
+- ultraweb:animejs — checks 6 and 7 enforce its v3-relic ban and its DIRECTION-citation gate

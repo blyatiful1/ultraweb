@@ -1,6 +1,6 @@
 # ultraweb skill roster
 
-The complete map of the harness. 70 skills: 1 orchestrator (root `SKILL.md`) + 69 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
+The complete map of the harness. 72 skills: 1 orchestrator (root `SKILL.md`) + 71 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
 
 Format: **name** — scope. *(reads → writes)*
 
@@ -56,6 +56,7 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **page-transitions** — route transition strategy: View Transitions API/next-view-transitions, template.tsx animations, shared-element continuity, when NOT to transition. *(SYSTEM §motion → app-level transitions)*
 - **physics** — spring-based interaction: drag, magnetic hover, cursor followers, gesture response via motion springs; restraint rules. *(DIRECTION → interactive moments)*
 - **showpiece** — hero-grade set pieces: canvas/WebGL/R3F, shader gradients, particle systems, 3D product views. Gated: only when DIRECTION demands, 60fps verified, static fallback + reduced-motion path mandatory. *(DIRECTION → one signature element)*
+- **animejs** — anime.js v4 as the SVG-choreography engine: multi-path draw timelines, morphs, motion paths, grid stagger fields, split-text and scroll-scrubbed sequences. Gated: installed only when DIRECTION.md commissions the moment by name; motion/react keeps component lifecycle, gestures, and route transitions. *(DIRECTION.md → commissioned SVG moments)*
 - **hidden-craft** — the opt-in last-2% reward layer that signals human authorship: a tasteful console signature, one keyboard/view-source egg, a playful on-brand 404, `humans.txt`; hard discipline — never gates content, zero LCP cost, ONE gesture per site. *(SYSTEM → easter-egg layer)*
 
 ## Tier 5 — Next.js engineering
@@ -78,6 +79,7 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **content-cms** — content layer: MDX pipeline for blogs/docs (typed frontmatter, styled prose that matches SYSTEM.md — never default prose-gray), when to reach for a headless CMS instead. *(BRIEF → content layer)*
 - **storage** — file upload/storage: blob storage setup, upload UX (progress, drag-drop, validation), image handling post-upload. *(BRIEF → storage layer)*
 - **consent** — GDPR/TTDSG §25 cookie & tracking consent as an anti-dark-pattern design problem: equal-weight Accept/Reject in the site's own language, a consent-state context gating third-party script injection, a footer "Cookie-Einstellungen" resurface link. *(BRIEF → consent layer)*
+- **analytics** — cookieless-first measurement (Plausible / self-hosted Umami): an event taxonomy derived from SITEMAP.md's per-page conversion goals, one typed `track()` helper, instrumented CTAs; cookie-based tools go behind consent, GA4-by-default stays banned. *(BRIEF+SITEMAP → analytics layer)*
 
 ## Tier 7 — Quality gates (each: checklist + how to verify empirically + pass criteria + QA.md entry format)
 - **gate-code** — build/type/lint gate: npm run build clean, tsc strict, ESLint, no unused deps, RSC boundary correctness, no console errors. *(code → QA.md entry)*
@@ -97,6 +99,6 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 
 Each subagent pins its model tier in frontmatter (`model:`) so delegated work runs on the cheapest model that genuinely handles it — see the root skill's "Delegation & model routing" table for the full policy.
 
-- **design-judge** (`model: opus` — Opus 4.8, judgment work) — scores screenshots against DIRECTION.md + taste rubric; returns ranked defects. Used by gate-visual.
+- **design-judge** (`model: opus` — Opus 5, judgment work) — scores screenshots against DIRECTION.md + taste rubric; returns ranked defects. Used by gate-visual.
 - **pixel-qa** (`model: sonnet` — Sonnet 5, mechanical sweeps) — drives Playwright MCP: navigates, screenshots at breakpoints, reports console errors and layout breaks. Used by gate-responsive/gate-visual.
-- **stack-doctor** (`model: opus` — Opus 4.8, diagnostic work) — fixes build/dependency/config failures: reads the error, checks current-version docs, repairs without downgrading the stack. Used whenever scaffold or gate-code hits tooling failures.
+- **stack-doctor** (`model: opus` — Opus 5, diagnostic work) — fixes build/dependency/config failures: reads the error, checks current-version docs, repairs without downgrading the stack. Used whenever scaffold or gate-code hits tooling failures.

@@ -60,6 +60,7 @@ Run every command, every time, against app/, components/, emails/, and content/.
    `rg -n "blur-(2xl|3xl)" -g "*.tsx"`
 10. **Motion on everything** — entrance animation on >60% of a page's sections makes motion meaningless (motion-language owns the "what never animates" list):
     `rg -c "whileInView|animate=|variants=" -g "*.tsx"` per section file
+    The cap counts moments, not libraries, so it is engine-agnostic. First find the files that ship the second engine — by import specifier, never by API name, since `animate(` is also motion/react and WAAPI: `rg -l 'from "animejs"' app components`. Inside those files only, `rg -c "animate\(|createTimeline\(|onScroll\("` counts toward the same 60%. And the dependency itself is a slop tell when uncited: a second animation engine with no DIRECTION.md line commissioning the moment that earned it is decoration bought with bytes — the same beauty-without-a-decision this gate exists to catch (gate-performance prices it; here it simply fails).
 11. **AI-era reflexes** — the 2024-26 wave's own clichés, named and banned the way gradient-text was: the four-point sparkle as a bare "AI" badge, and the reflexive bottom-right chat bubble. The ✨ glyph is already caught by check 3; the lucide icon is not — this hits the Sparkle/Sparkles/WandSparkles family:
     `rg -n "Sparkle" -g "*.tsx"` — a lone sparkle "AI" badge fails; it passes only paired with a direction-specific second icon (shape-language) or cited.
     Corner chat-bubble — a fixed bottom-right launcher is the Intercom reflex; grep the position, then confirm intent (also sweep raw `position:fixed` with `bottom`/`right` in `*.css`):
@@ -145,3 +146,4 @@ Rejected the shortcut of citing the orb in DIRECTION.md just to survive the swee
 - ultraweb:shape-language — when check 7 flags one radius+shadow pair across ≥6 elements, the corner-and-depth system that re-differentiates them is owned here.
 - ultraweb:social-proof — when the three-identical-cards check (12) fires on a logo wall or testimonial row rather than feature cards, the varied replacement lives here, not feature-sections.
 - ultraweb:consent — the corner-bubble screenshot check (17) flags Accept-primary/Reject-buried consent UI in passing; the fairness audit and the compliant, token-built banner it demands are specced here, not in this gate.
+- ultraweb:animejs — check 10 counts its calls toward the same 60% cap and fails an uncited second engine.

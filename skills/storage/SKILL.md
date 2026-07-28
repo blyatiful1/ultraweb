@@ -101,7 +101,7 @@ const reviewPhoto = z.object({
 // key: reviews/${crypto.randomUUID()}.${ext} — ext from the validated MIME, never the filename
 ```
 
-Server reads width/height at write time and persists url, width, height, alt, size beside the review row, so the photo renders through `<Image>` with zero CLS. Rejected server relay: a 12 MB phone photo blows past Vercel's ~4.5 MB function body cap and would fail before validation ever ran; client-direct has no body cap and gives a real bar. Handoff: the record lands in the reviews table via ultraweb:database and renders back on `/shop/[slug]` through ultraweb:media-optimization, with the Blob host added to `next.config.ts` `images.remotePatterns`.
+Server reads width/height at write time and persists url, width, height, alt, size beside the review row, so the photo renders through `<Image>` with zero CLS. Rejected server relay: a 12 MB phone photo blows past Vercel's ~4.5 MB function body cap and would fail before validation ever ran; client-direct has no body cap and gives a real bar. Handoff: the record lands in the reviews table via ultraweb:database and renders back on `/products/[slug]` through ultraweb:media-optimization, with the Blob host added to `next.config.ts` `images.remotePatterns`.
 
 ## Composes with
 

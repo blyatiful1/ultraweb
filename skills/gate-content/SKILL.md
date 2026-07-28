@@ -13,7 +13,7 @@ copywriting and seo write; this gate proves they finished. Every route ships one
 
 ## Checklist
 
-1. **Metadata completeness** — every SITEMAP.md route has `export const metadata` or `generateMetadata`; the root layout sets `metadataBase` and a title template; titles ≤60 chars, descriptions 140–160 chars.
+1. **Metadata completeness** — every SITEMAP.md route has `export const metadata` or `generateMetadata`; the root layout sets `metadataBase` and a title template; titles ≤60 chars, descriptions 140–160 chars; the OG card still reads at feed-thumbnail scale.
 2. **Metadata uniqueness** — zero duplicate titles and zero duplicate descriptions site-wide; no description that is a paste of the page's H1 or first paragraph.
 3. **Dead copy & microcopy** — zero hits on the taste absolutes and copywriting's expanded banned list; and the same rigor on controls: every button/link label is verb+object, never a bare "Submit"/"OK"/"Learn more"/"Click here"; every destructive confirm names its consequence, not "Are you sure?"; every tooltip adds information beyond its trigger or is deleted; no bare "Something went wrong" without an adjacent recovery; ≤1 "Learn more" per page.
 4. **Heading narrative** — exactly one H1 per page; the H1→H2 sequence, read aloud in order, argues the page's conversion goal from SITEMAP.md. (Heading LEVELS and landmarks belong to gate-accessibility; the STORY is judged here.)
@@ -24,6 +24,8 @@ copywriting and seo write; this gate proves they finished. Every route ships one
 ## How to verify
 
 **1–2. Metadata.** `rg -n "export const metadata|generateMetadata" app -g "*.tsx"` → map hits onto the SITEMAP.md route list; any route without one fails. Collect every `title:` and `description:`; for dynamic routes, render 2–3 real slugs on the server and read `<title>` and `<meta name="description">` from the HTML instead of trusting the source. Uniqueness: sort the collected values, any duplicate fails (compare the page-owned part — the template suffix does not make a title unique). Lengths: count characters against title ≤60 and description 140–160. Confirm `metadataBase` in the root layout — without it OG URLs render relative and share cards break (seo owns the fix). In Next 16 `params` is a Promise inside `generateMetadata` — a missing `await` shows up here as a literal "[object Promise]" in the rendered title.
+
+**OG legibility.** The mechanical half is ultraweb:seo's and stays there — its verify step fetches `/opengraph-image` on the running server, and its ImageResponse rules fix the card's dimensions; run them from there rather than restating them here. What no fetch can assert is the only thing that matters in a feed: legibility at the size the card is actually served. Social clients render it around 200–260px wide, roughly a fifth of its authored width. Screenshot the fetched image, scale it to ~240px, and read it. A headline that is confident at full size and dissolves into a gray smear at thumbnail scale is a defect, not a rendering artifact — the fix is fewer words set larger, and it lands in ultraweb:seo's template.
 
 **3. Dead copy & microcopy.** `rg -ni "welcome to|elevate your|unlock the power|seamlessly|empower" app components -g "*.tsx" -g "*.mdx"`, then every phrase from copywriting's expanded list. Plus: `rg -ni "oops|went wrong" -g "*.tsx"` (each hit needs a recovery path in the same string), `rg -c "Learn more" -g "*.tsx"` (≤1 per page; prefer a specific label).
 
@@ -69,7 +71,7 @@ All applicable items green for every route in SITEMAP.md, with dynamic routes sa
 
 ```md
 ## gate-content — PASS (2026-07-16)
-metadata: 6/6 routes · titles unique (max 54ch) · descriptions unique (141–158ch) · metadataBase ok
+metadata: 6/6 routes · titles unique (max 54ch) · descriptions unique (141–158ch) · metadataBase ok · OG card legible at 240px
 dead copy: 0 hits (28 patterns swept) · microcopy: 0 bare labels · 3 confirms name consequence · 2 tooltips pruned
 headings: 1 H1/page, story reads on all 6 pages · voice: 6 sections within 1 tone-point of median
 price-history: N/A (brief has no discounts) · links: 47 internal 200 · 9 anchors resolve · 12 external ok · 1 UNVERIFIED (partner timeout)
@@ -125,7 +127,7 @@ PASS; ultraweb:gate-accessibility takes the heading LEVELS this gate deliberatel
 ## Composes with
 
 - ultraweb:copywriting — wrote every string; all copy fixes route back through its voice spec and length limits.
-- ultraweb:seo — wired the metadata this gate audits; owns metadataBase, canonical, and template fixes.
+- ultraweb:seo — wired the metadata this gate audits; owns metadataBase, canonical, the OG fetch and dimension checks this gate defers to, and every template fix.
 - ultraweb:sitemap — the route list defining crawl coverage and each page's conversion goal.
 - ultraweb:wireframe — the section order the heading story should mirror.
 - ultraweb:gate-accessibility — owns heading levels and landmarks; this gate owns the narrative.

@@ -73,6 +73,15 @@ Playwright MCP: `browser_navigate` to `about:blank`, then `browser_evaluate`. Th
 
 Offline alternative: `culori` and its WCAG contrast helper — verify against current docs first. Aiming heuristics (the script decides; these only place the first guess): on an L≈0.98 ground, text needs L ≤≈0.55; on an L≈0.17 ground, text needs L ≥≈0.72.
 
+## CVD safety — same values, three more times
+
+Contrast is lightness; color-vision deficiency is hue. The canvas step above already resolved every token to gamut-mapped sRGB — reuse those triplets, never re-derive. Push each one through the deuteranopia, protanopia, and tritanopia simulation matrices (Machado/Brettel coefficients — verify against a current source before pasting), then re-check separation on the simulated values.
+
+- Check the palette as a MATRIX, not pair-by-pair: every semantically-opposed pair against the others, under all three deficiencies. A pair that survives in isolation can still collapse into its neighbor.
+- The pairs that must stay distinguishable: `destructive` vs `success` (the classic red/green collapse), `warning` vs `destructive`, `primary` vs `destructive` on the same surface, and every adjacent series color ultraweb:data-display hands to a chart.
+- A pair that merges under any deficiency is fixed with a LIGHTNESS gap (ΔL ≥ 0.15) or a second channel — icon, pattern, position, label. A hue nudge usually fixes one deficiency and breaks another.
+- This is where WCAG 1.4.1 is really tested: the check finds the places color quietly became the only carrier of meaning.
+
 ## Anti-patterns
 
 - `from-purple-`, `to-blue-`, `from-pink-`, `to-violet-` — the banned gradient aesthetic (taste), regardless of how it is smuggled in.
@@ -80,7 +89,7 @@ Offline alternative: `culori` and its WCAG contrast helper — verify against cu
 - `#`-hex, `rgb(`, `hsl(` anywhere; `oklch(` outside globals.css and SYSTEM.md.
 - Zero-chroma ramps (`oklch(0.5 0 0)` and friends) — gray pretending to be a decision.
 - Dark theme produced by flipping L only, or `dark:invert`.
-- Any AA claim without script output recorded in SYSTEM.md.
+- Any AA or CVD claim without script output recorded in SYSTEM.md.
 - Accent as decoration: chroma-0.19 background washes, gradient heroes. The accent marks actions and emphasis; surfaces belong to the neutrals.
 
 ## Worked example — Framewalk, "Hollow Cartographer" Steam launch

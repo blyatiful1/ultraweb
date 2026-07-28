@@ -8,8 +8,8 @@
     {
       "name": "ultraweb",
       "source": "./",
-      "description": "One prompt → first-grade Next.js website. 70 interlocking skills + 3 model-routed subagents: taste constitution, award-canon study library (25 patterns from Awwwards SOTY-tier winners), design-system-first pipeline, real quality gates, current-stack engineering.",
-      "version": "1.2.0",
+      "description": "One prompt → first-grade Next.js website. 72 interlocking skills + 3 model-routed subagents: taste constitution, award-canon study library (25 patterns from Awwwards SOTY-tier winners), design-system-first pipeline, real quality gates, current-stack engineering.",
+      "version": "1.3.0",
       "author": {
         "name": "Iwan Braun"
       }

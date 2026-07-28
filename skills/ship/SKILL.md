@@ -89,7 +89,7 @@ Then wire the outside world:
 
 ## Worked example — Loop & Thread, shipping the textiles shop to production
 
-design/QA.md handed up all gates green; design/SITEMAP.md lists `/`, `/shop`, `/shop/alpine-wool-throw`, `/journal`, `/about`. Env enumeration returns exactly the eight keys the code reads, each an obvious placeholder in .env.example:
+design/QA.md handed up all gates green; design/SITEMAP.md lists `/`, `/shop`, `/products/aran-throw`, `/journal`, `/about`. Env enumeration returns exactly the eight keys the code reads, each an obvious placeholder in .env.example:
 
 ```bash
 STRIPE_SECRET_KEY=sk_test_xxxxxxxx              # Stripe dashboard → developers

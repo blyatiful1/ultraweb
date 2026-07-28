@@ -54,7 +54,7 @@ Icon motion follows motion-language's micro tier — transform only, 2-4px of tr
 - A domain concept lucide genuinely lacks — search the set first; most "missing" icons exist under another name.
 - Third-party logos: use the official brand SVGs, normalized to the 24-viewBox scale and monochromed to currentColor. Never redraw a brand mark.
 
-Custom glyphs MUST match the system: 24×24 viewBox, the site's strokeWidth, `stroke-linecap="round" stroke-linejoin="round"` (lucide's caps), `stroke="currentColor" fill="none"`. Collect them in `components/icons.tsx` — one file, plain exported components, no abstraction layer beyond that:
+Custom glyphs MUST match the system: 24×24 viewBox, the site's strokeWidth, `stroke-linecap="round" stroke-linejoin="round"` (lucide's caps), `stroke="currentColor" fill="none"`. A supplied brand mark arrives as a file, not a component: run it through ultraweb:media-optimization's SVGO pass, replace every `fill="#…"`/`stroke="#…"` with `currentColor` (or one semantic token where the mark is legitimately two-color), then convert with `npx @svgr/cli`. Never paste the raw export — hardcoded hex, `<style>` blocks, `id="Layer_1"`, and inline `width`/`height` each defeat theming and trip the greps below. Collect them in `components/icons.tsx` — one file, plain exported components, no abstraction layer beyond that:
 
 ```tsx
 // components/icons.tsx — every custom glyph on lucide's grid
@@ -72,6 +72,25 @@ export function IconWave(props: React.SVGProps<SVGSVGElement>) {
 
 Icons never own states — they inherit the host element's. Color change on hover/active rides the host's transition (micro tier from motion-language). Disabled inherits the host's opacity. Loading swaps the icon for a spinning loader glyph (`animate-spin`) at the SAME size step so layout never shifts. A toggle icon that changes meaning (menu→close, play→pause) transitions within the micro tier and updates its accessible name with the swap.
 
+## Line-draw reveal — rationed
+
+Lucide glyphs are open stroke paths, so they draw. That makes it tempting everywhere; it earns at most three moments per site — the hero mark, one feature-section lede, the 404. Never in nav, buttons, list markers, or beside copy being read: an icon that draws while it is scanned past is noise, not meaning (motion-language's semantic-motion rule).
+
+- Micro or small tier (150-400ms), one-shot on the reveal, never on hover, never looping.
+- CSS owns it — `stroke-dasharray`/`stroke-dashoffset`, authored inside `@media (prefers-reduced-motion: no-preference)` per motion-language. Zero JS, zero dependency.
+- Under `prefers-reduced-motion` the glyph is DRAWN, not animated — the media query never applies the dash, so reduce users get the finished mark. A path parked at full dashoffset is an invisible icon, not a reduced animation.
+- Dash length: a bespoke mark in `components/icons.tsx` sets `pathLength={1}` so `1 → 0` is exact. A lucide glyph cannot take that attribute from CSS, so use a dash longer than any path on the 24-grid and accept the eased-in start.
+
+```css
+/* app/globals.css — @layer components; tokens from motion-language */
+@media (prefers-reduced-motion: no-preference) {
+  .icon-draw path { stroke-dasharray: 100; stroke-dashoffset: 100; animation: icon-draw var(--dur-small) var(--ease-out) forwards; }
+  @keyframes icon-draw { to { stroke-dashoffset: 0; } }
+}
+```
+
+Multi-path glyphs sequenced against each other, or drawn under scroll scrub, are a different animal: that is a commissioned moment ultraweb:animejs owns, and only when DIRECTION.md names it. One icon never justifies an engine.
+
 ## Process
 
 1. Read SYSTEM.md §type; pick the site strokeWidth from the weight table in rule 2. Record strokeWidth + size steps as §icons in SYSTEM.md.
@@ -86,7 +105,7 @@ Greppable — each should return zero:
 - Emoji in JSX/copy: `✨` `🚀` `🎉` `✅` `➡️` `🔥` `💡` — the constitution's hard ban
 - `import * as` from `"lucide-react"` — kills tree-shaking
 - `strokeWidth=` with more than one distinct value (excluding the documented ≥32px rule)
-- `stroke="#` — hardcoded icon color
+- `stroke="#` / `fill="#` — hardcoded icon color, and the tell of a pasted brand-mark export
 - An icon-only `<button` without `aria-label`
 
 Visual — caught by screenshots:
@@ -123,4 +142,5 @@ Handoff: §icons (strokeWidth 1.5 + the four steps) lands in design/SYSTEM.md; u
 - ultraweb:feature-sections — the escape route from icon-card-grid monotony
 - ultraweb:shape-language — custom glyphs and decorative geometry beyond UI-icon scale
 - ultraweb:ui-states — spinners and empty-state visuals that outgrow the icon scale
+- ultraweb:animejs — multi-path sequencing, scroll-scrubbed draws, and morphs graduate there; a single glyph draw stays CSS here and never pulls the dependency
 - ultraweb:gate-antislop — sweeps for emoji-as-icons and placeholder glyphs
