@@ -2,6 +2,8 @@
 
 **One prompt → first-grade Next.js website.** A Claude Code plugin: 72 interlocking skills + 3 subagents that give Claude the working discipline of a design studio — a taste constitution, an award-canon study library distilled from Awwwards-winning sites, a design-system-first pipeline, real quality gates, and current-stack engineering (Next.js 16, Tailwind v4, shadcn/ui, Motion, Better Auth, Drizzle).
 
+**See it argue for itself:** [ultraweb-site.vercel.app](https://ultraweb-site.vercel.app) — the showcase site, built BY this pipeline from one prompt. Its complete paper trail is public at [blyatiful1/ultraweb-site](https://github.com/blyatiful1/ultraweb-site): the `design/` artifacts (brief → direction → system → sitemap → QA), the 58/72 skill-coverage ledger, and every gate's command evidence. The homepage renders its own gate report, because the build report is the reference.
+
 > [!IMPORTANT]
 > **This pipeline uses a lot of tokens.** A full `/ultraweb` build runs a 12-phase studio pipeline with multi-round, screenshot-driven quality gates — expect it to consume far more tokens (and run far longer) than a typical prompt. That's deliberate: it's the price of the quality discipline described below. See [What it costs](#what-it-costs) for the why, and how to keep it down.
 
