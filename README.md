@@ -1,12 +1,12 @@
 # ultraweb
 
-### You hire a design studio. It fits in one prompt.
+## You hire a design studio. It fits in one prompt.
 
 Somewhere in a nicer timeline there's a small agency that does this properly. An art director who refuses the purple gradient. A design engineer who ships tokens before components. A critic who screenshots your site at 375px and tells you the truth about it. They cost forty thousand euros and they're booked until spring.
 
 **ultraweb is that studio, as a Claude Code plugin.** 72 skills and 3 subagents that argue with each other on your behalf until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it.
 
-```
+```text
 /ultraweb build me a website for a Berlin specialty coffee roastery with an online shop
 ```
 
@@ -29,7 +29,7 @@ The whole paper trail is public at [blyatiful1/ultraweb-site](https://github.com
 
 **From the marketplace,** inside any Claude Code session:
 
-```
+```text
 /plugin marketplace add blyatiful1/ultraweb
 /plugin install ultraweb@ultraweb
 ```
@@ -50,7 +50,7 @@ Loads itself next session as `ultraweb@skills-dir`. Update with `git pull`, unin
 
 One sentence about what you want. That's the entire interface.
 
-The pipeline takes it from there: understand the brief → commit to an aesthetic direction → build the design system → plan the pages → scaffold → build → wire the backend → write the copy → choreograph the motion → run the gates → ship. Every phase leaves a written record in `design/*.md` inside your project, which is how 72 skills manage to agree with each other three hours later.
+The pipeline takes it from there: understand the brief → commit to an aesthetic direction → build the design system → plan the pages → scaffold → build → wire the backend → write the copy → choreograph the motion → make it findable → run the gates → ship. Every phase leaves a written record in `design/*.md` inside your project, which is how 72 skills manage to agree with each other three hours later.
 
 **Already have an ultraweb site?** Just say what's wrong — *"the hero's too timid"* — and `ultraweb:iterate` scopes the change and re-runs only the gates you actually disturbed.
 
