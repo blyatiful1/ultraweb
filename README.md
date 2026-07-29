@@ -4,7 +4,7 @@
 
 Somewhere in a nicer timeline there's a small agency that does this properly. An art director who refuses the purple gradient. A design engineer who ships tokens before components. A critic who screenshots your site at 375px and tells you the truth about it. They cost forty thousand euros and they're booked until spring.
 
-**ultraweb is that studio, as a Claude Code plugin.** 72 skills and 3 subagents that argue with each other on your behalf until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it.
+**ultraweb is that studio, as a Claude Code plugin.** 73 skills and 3 subagents that argue with each other on your behalf until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it.
 
 ```text
 /ultraweb build me a website for a Berlin specialty coffee roastery with an online shop
@@ -18,7 +18,7 @@ Then go make coffee yourself. It'll be a while.
 
 **[ultraweb-site.vercel.app](https://ultraweb-site.vercel.app)** — built by this pipeline, from one prompt, with no human touch-ups.
 
-The whole paper trail is public at [blyatiful1/ultraweb-site](https://github.com/blyatiful1/ultraweb-site): every decision the studio made on the way (brief → direction → system → sitemap → QA), the 58/72 skill-coverage ledger, and each gate's receipts. The homepage renders its own report card. If the site were bad, you'd be able to prove it from the repo.
+The whole paper trail is public at [blyatiful1/ultraweb-site](https://github.com/blyatiful1/ultraweb-site): every decision the studio made on the way (brief → direction → system → sitemap → QA), the 58/72 skill-coverage ledger from that build (the harness has since grown to 73), and each gate's receipts. The homepage renders its own report card. If the site were bad, you'd be able to prove it from the repo.
 
 ### The build, measured
 
@@ -35,7 +35,7 @@ Every number below was counted from the session transcripts of that build — th
 | Cache reads | 733.0 million tokens |
 | Total tokens processed | 756.0 million |
 | Quality gates | 7 of 7 green — after three fix rounds, not on the first try |
-| Skill coverage | 58 of 72 (80.6%), all 14 exclusions recorded with reasons |
+| Skill coverage | 58 of 72 (80.6%) at build time, all 14 exclusions recorded with reasons |
 | Lighthouse, mobile, production | 93 performance · 94 accessibility · 94 best practices · 94 SEO |
 | Cumulative layout shift | 0.00 |
 | Commissioned animation weight | +22.9 KB gzip measured, against a ~23 KB budget set in writing before it was built |
@@ -72,7 +72,7 @@ Loads itself next session as `ultraweb@skills-dir`. Update with `git pull`, unin
 
 One sentence about what you want. That's the entire interface.
 
-The pipeline takes it from there: understand the brief → commit to an aesthetic direction → build the design system → plan the pages → scaffold → build → wire the backend → write the copy → choreograph the motion → make it findable → run the gates → ship. Every phase leaves a written record in `design/*.md` inside your project, which is how 72 skills manage to agree with each other three hours later.
+The pipeline takes it from there: understand the brief → commit to an aesthetic direction → build the design system → plan the pages → scaffold → build → wire the backend → write the copy → choreograph the motion → make it findable → run the gates → ship. Every phase leaves a written record in `design/*.md` inside your project, which is how 73 skills manage to agree with each other three hours later.
 
 **Already have an ultraweb site?** Just say what's wrong — *"the hero's too timid"* — and `ultraweb:iterate` scopes the change and re-runs only the gates you actually disturbed.
 
@@ -97,7 +97,7 @@ Four things do most of the work:
 
 **`taste` — the constitution.** A banned list (no purple AI gradient, no untouched shadcn, no "Empower your workflow" copy), a required list (OKLCH palette, a real type pairing, deliberate asymmetry, honored reduced-motion), and the heuristics for deciding everything in between. Every other skill bows to it.
 
-**`award-canon` — the library.** 31 Awwwards Site-of-the-Year and SOTD-tier winners from 2017 to 2026, studied and rendered down into 25 named, transferable patterns — plus the invariants that survived every era, the jury's own scoring weights, and a list of moves that have visibly aged. Each claim carries its verified award tier; dead sites are marked *reconstructed*, never passed off as inspected. The prime directive: **steal the principle, never the surface.**
+**`award-canon` — the library.** 32 Awwwards Site-of-the-Year and SOTD-tier winners from 2017 to 2026, studied and rendered down into 25 named, transferable patterns — plus the invariants that survived every era, the jury's own scoring weights, and a list of moves that have visibly aged. Each claim carries its verified award tier; dead sites are marked *reconstructed*, never passed off as inspected. The prime directive: **steal the principle, never the surface.**
 
 **Seven gates that don't take your word for it.** Code, responsive, visual, accessibility, performance, anti-slop, content — each verified empirically. Real builds. Real Playwright screenshots. Computed contrast. Lighthouse. The site isn't finished until `design/QA.md` is green, and nothing is allowed to fake green.
 
@@ -113,7 +113,7 @@ And underneath all of it: nearly every skill ends with a real decision traced en
 | **Discovery** | `brief`, `direction` (12 archetypes), `sitemap`, `wireframe`, `copywriting` |
 | **Design system** | `tokens`, `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `icons`, `imagery`, `motion-language`, `theme-worlds` |
 | **Components** | `component-api`, `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`, `overlays`, `cart`, `product-detail`, `command-palette`, `marginalia` |
-| **Motion** | `micro-interactions`, `scroll-motion`, `page-transitions`, `physics`, `showpiece`, `animejs`, `hidden-craft` |
+| **Motion** | `micro-interactions`, `scroll-motion`, `page-transitions`, `physics`, `showpiece`, `set-design`, `animejs`, `hidden-craft` |
 | **Engineering** | `scaffold`, `app-structure`, `routing`, `data-fetching`, `server-actions`, `media-optimization`, `seo`, `i18n`, `print-craft` |
 | **Backend** | `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`, `consent`, `analytics` |
 | **QA** | `gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content` |
@@ -127,7 +127,7 @@ Three specialists work outside the main line, each pinned to its own model tier:
 
 The same policy governs all fan-out work: judgment stays on the lead model, specialist builds and critiques on Opus 5, mechanical sweeps on Sonnet 5.
 
-Want the full scope of all 72? → [ROSTER.md](ROSTER.md). Want the per-site award study bank? → [skills/award-canon/CANON.md](skills/award-canon/CANON.md).
+Want the full scope of all 73? → [ROSTER.md](ROSTER.md). Want the per-site award study bank? → [skills/award-canon/CANON.md](skills/award-canon/CANON.md).
 
 ## What you need
 

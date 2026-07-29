@@ -39,6 +39,8 @@ Taste's rule verbatim: 3D, shaders, canvas only when the direction demands it, i
 
 **Side branch, not a rung — vector-authored moments (anime.js, +~19 KB gz per STACK.md).** A commissioned SVG timeline — multi-path draw, morph, motion path, split-text choreography — is a different medium, not a cheaper canvas, so it never sits between the two 0-dep rungs and never excuses skipping them: if CSS or a 2D canvas satisfies the brief, they still win. Take the branch only when the moment is *inherently* vector (a diagram that draws itself, a mark that assembles, a route that traces) and DIRECTION.md names it at intensity ≥2 (a scrubbed or pinned SVG timeline needs 3); ultraweb:animejs owns the install gate. Everything above holds unchanged — one showpiece per site, and the three exits wired: reduced motion → the final drawn state, no-WebGL/no-JS/pre-hydration → the server-rendered static SVG, hidden tab or offscreen → the timeline paused.
 
+**Past the top rung — when the scene is the site (`ultraweb:set-design`).** The ladder above ends at ONE set piece: a canvas that lives in one section, mounts behind server-rendered text, and can be deleted without the site changing shape. When DIRECTION.md commissions a *site-scale* immersion instead — a canvas persisting across routes, a camera the scroll drives through more than one page, one material world every route shares — that is not a taller rung, it is a different commission, and this skill hands it upward. The hand-off is one-way and narrow: escalate only when archetype 12 is committed, intensity 3 is recorded, and DIRECTION.md names `ultraweb:set-design` together with its route scope, its byte budget and its static edition, in writing. Everything on this page still binds — the three exits, the designed static edition, the `sr-only` narrative that carries the argument, the byte budget, the 60fps + 4×-throttle proof — and it binds at *every* route the scene survives, not just the one it started on. A brief that only wants a big hero stays here.
+
 ## Mounting pattern
 
 ```tsx
@@ -98,6 +100,7 @@ Record all six in design/SYSTEM.md (decision + bundle delta) and design/QA.md (m
 - Allocations per frame: `new THREE.Vector3(...)` or object literals inside `useFrame`/the draw loop — GC hitching.
 - A gray box or `null` as the fallback — the fallback is a designed deliverable, not an apology.
 - Two showpieces — taste allows one signature move; the second dilutes both.
+- A second set piece justified as "the site is immersive", with no DIRECTION.md line naming `ultraweb:set-design`, its route scope, and its byte budget — that is two showpieces wearing one word.
 - Particle-count flexing: thousands of particles at 20fps loses to hundreds at 60fps every time.
 - A spinning 3D object with no relation to the brief — decoration is not direction; if DIRECTION.md can't say what it means, cut it.
 - Skipping the 4x-throttle run — "60fps on my machine" is not "60fps on mid hardware".
@@ -126,6 +129,7 @@ Handoff: the pointer spring is owned by ultraweb:physics; the `/work` → `/work
 - ultraweb:copywriting — authors the narrative text-track in Phase 8 (2–4 sentences per showpiece section stating the visual's actual claim), so the accessible edition argues instead of leaving a placeholder.
 - ultraweb:physics — when the cheapest sufficient rung is a pointer/element spring rather than canvas or WebGL, showpiece hands the motion to physics and builds no set piece.
 - ultraweb:animejs — the cost ladder's side branch: when the set piece is inherently vector rather than canvas, showpiece hands it there and the one-showpiece budget plus the three exits travel with it.
+- ultraweb:set-design — the one-way upward hand-off: when the commission is a world across routes rather than a set piece in a section, showpiece stops and that skill takes it, carrying every rule on this page to every route the scene survives.
 - ultraweb:scroll-motion — a "showpiece" brief that is really a scroll-linked reveal or shared-element page transition is routed down to scroll-motion instead of mounting a canvas.
 - ultraweb:routing — the home for camera/scene URL state: showpiece serializes the pose into a `?view=` search param, routing owns the search-param contract that makes a navigable scene bookmarkable and back/forward-navigable.
 - ultraweb:award-canon — Weight as a Feature and Progressive Spectacle Tiers are the operational form of this skill's 60fps + static-fallback gate; One Material World, Fake-Depth Before Real Depth, and The Persistent Hero Object guide what the set piece should be. Cite the principle, never a winner's surface.

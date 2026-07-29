@@ -16,7 +16,7 @@ Anything that tracks a gesture uses a spring, not a duration — the hand is ana
 - **Overshoot belongs to gestures.** Section entrances use the easing curves from `motion-language`; bounce on a scroll reveal is slop.
 - **Touch degrades to nothing.** Magnetic hover and cursor followers are `(hover: hover) and (pointer: fine)` only. Drag must not fight page scroll.
 - **Bundle honesty (STACK.md):** hover/tap/spring animations run under `domAnimation`; `drag` and `layout` require `domMax` (+25kb). Adding one draggable element costs the whole delta — budget it consciously.
-- **Gestures never leave motion.** Even on a site whose DIRECTION.md commissioned anime.js for an SVG moment, drag and pointer tracking stay here: anime's `createDraggable` is its heaviest module (per STACK.md) and a second drag system is fragmentation, not capability.
+- **Gestures never leave motion.** Even on a site whose DIRECTION.md commissioned anime.js for an SVG moment, drag and pointer tracking stay here: anime's `createDraggable` is its heaviest module (per STACK.md) and a second drag system is fragmentation, not capability. The same line holds against a renderer: on a DIRECTION-commissioned `ultraweb:set-design` build, pointer→scene raycasting and camera damping are **scene input** and stay inside the canvas, while every DOM spring, magnetic hover and cursor follower stays here on `domMax`. If the thing that moves is a DOM node it is this skill; if it is an `Object3D` it is not. `OrbitControls`/`CameraControls` are never installed on a site-scale scene — a free camera fights an authored journey, and a camera the user can lose is not a site.
 
 ## Process
 
@@ -124,6 +124,7 @@ Handoff: `components/hero-fog.tsx` + the `fogTrail` constant in `lib/motion.ts`;
 - ultraweb:motion-language — spring recipes live beside the easing/duration vocabulary as one motion system.
 - ultraweb:micro-interactions — everything below the gesture threshold (plain hover/press/focus) stays there; never double-treat an element.
 - ultraweb:showpiece — a cursor-reactive canvas or WebGL moment graduates there with its gating rules.
+- ultraweb:set-design — the site-scale sibling: scene-graph input and camera damping live there, every DOM spring and cursor follower lives here, and no second drag system is installed on either side.
 - ultraweb:animejs — the other DIRECTION-gated engine, and the boundary is firm: it owns SVG choreography, this skill owns every gesture; `createDraggable` is never installed.
 - ultraweb:gate-performance — 60fps verification of pointer-tracking effects is its pass bar.
 - ultraweb:gate-accessibility — verifies touch degradation and the reduced-motion path.

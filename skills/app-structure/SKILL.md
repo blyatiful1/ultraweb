@@ -118,7 +118,9 @@ components/ui/             restyled shadcn primitives — client only when genui
 components/sections/       page sections — server by default, one section per file, kebab-case filename, PascalCase named export
 components/layout/         header.tsx, footer.tsx, providers.tsx
 components/motion/         thin "use client" motion wrappers (Reveal, Stagger…) that sections compose
+components/scene/          the DIRECTION-commissioned persistent canvas: one "use client" leaf holding next/dynamic({ssr:false}), deferred past LCP (ultraweb:set-design)
 lib/                       utils.ts (cn), fonts.ts (next/font instances)
+lib/scene/                 the journey map and the station registry — the route↔camera contract, and the single source the DOM nav and the scene hotspots both read
 ```
 
 Sections take data as props — pages fetch, sections render. Secrets (`process.env.*` without `NEXT_PUBLIC_`) are read in server files only.
@@ -131,7 +133,7 @@ Sections take data as props — pages fetch, sections render. Secrets (`process.
 - Importing a server component into a client file — pass it as `children`
 - `useState` for tab/filter/pagination state a URL should carry
 - `params.slug` or `searchParams.q` without `await` — they are Promises in Next 16
-- Provider pyramid in the root layout — one theme provider; each additional context needs written justification
+- Provider pyramid in the root layout — one theme provider; each additional context needs written justification. A DIRECTION-commissioned persistent canvas is that written-justification case and nothing more: the root layout stays a server component and renders a `"use client"` leaf beside `{children}`, the canvas is fixed-position and `aria-hidden` behind the route tree, and scene state is ONE small typed store, never a new provider level — the justification sentence names the route scope it serves
 - Client navigation that never moves focus — keyboard/SR users stay stranded on the old page; the root-layout focus leaf must move focus to `#main-heading` after every route change
 - Owning focus-on-navigate per page (an effect in each page.tsx) — it belongs to one leaf in the root layout, or pages fight each other
 - Functions or event handlers passed across the server→client boundary

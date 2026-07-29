@@ -1,8 +1,19 @@
 # CANON.md — the per-site study bank
 
-The 31 dossiers behind `award-canon`'s 25 patterns, grouped by year (newest first). Each is a study object, not a template — **steal the principle, never the surface.** Read alongside `SKILL.md`, which distils these into the named patterns and the invariants.
+The 32 dossiers behind `award-canon`'s 25 patterns, grouped by year (newest first). Each is a study object, not a template — **steal the principle, never the surface.** Read alongside `SKILL.md`, which distils these into the named patterns and the invariants.
 
 **Reading the entries.** Award tiers and jury scores are cited at the level the dossiers *verify* — many are Category / SOTD / Users'-Choice / Developer wins, not grand prizes; several circulating "Site of the Year" labels are corrected here. Never inflate a tier, and never retrofit a sub-score onto a site whose dossier doesn't publish one. **Reconstructed** flags a site studied from case studies + award pages, not live inspection (dead, replaced, or fetch-blocked) — teach its specifics as *reported*. **Unverified** flags a claim the sources don't confirm (typefaces, exact stacks, a reduced-motion path) — keep the hedge. The per-archetype map at the end wires these to `direction`'s 12 archetypes.
+
+---
+
+## 2026
+
+### hirotos.com "Signal Pole" — Hiroto Sato (Tokyo)
+**SOTD Jul 17 2026 · Developer Award Jul 17 2026.** Overall 7.24 — Design 7.08 · Usability 7.25 · Creativity 7.48 · Content 7.33 (no Dev sub-score breakdown published — do not invent one). Live-inspected 2026-07-29. Palette paper `#f7f5ef` / signal blue `#133afd` / lamp red `#ff2b1f` · amber `#ffd21f` · green `#12d7a8`.
+- **Essence:** an entire portfolio authored as ONE GLB — a Blender scene whose single baked camera action *is* the navigation, with the geometry, the nav targets and the "sections" all inside it; the runtime does almost nothing but map input onto that clip's playhead. Site-scale 3D as an asset-authoring problem, not a shader problem: the total hand-written GLSL is five lines and it still took a Developer Award.
+- **Signature:** a Japanese signal pole you travel past forever — the metaphor names the events, the geometry and the three-lamp colour story.
+- **Steal (with care):** The Persistent Hero Object (at site scale) · One Material World · The Metaphor Engine · Semantic Motion Only (the whole post-stack is one aberration that fires on impact and is otherwise at zero) · Scroll-as-Camera — **mechanism only**, see the anti-lesson.
+- **Anti-lesson:** the mechanism is the lesson and the delivery is the warning. `prefers-reduced-motion` appears **zero** times in 1.5 MB of JS and 27 KB of CSS; `keydown` appears zero times while `wheel` is `preventDefault`ed, so there is no keyboard path to the camera at all (WCAG 2.2 AA 2.1.1 — and the likeliest single reason Usability scored 7.25); all four routes serve a byte-identical empty `<body>` with one shared `<title>` and no OG, canonical or `<noscript>`, and robots.txt and sitemap.xml both 404; a full visit is ≈10 MB against the canon's <3 MB target, including a 6.73 MB eagerly-played showreel MP4, 2.74 MB of raw eager PNGs, one 570 KB monolithic chunk, and a render-path HDRI on a free GitHub-raw proxy. Studied as a **mechanism and cautionary dossier**, not a design exemplar — its weakest jury axis is Design (7.08). Typeface: Adobe Typekit `helvetica-neue-lt-pro`, **verified from the payload**.
 
 ---
 
@@ -276,8 +287,8 @@ Reference winners are *qualities to chase*, never URLs to reskin. `direction` re
 | 9 | Retro-Futurist | Prometheus Fuels (2021), Star Atlas (2021) | Invert the Genre Palette, One Material World (analog grain), Fake-Depth Before Real Depth |
 | 10 | Soft Depth | Bruno Simon (2019), New Mobile Workforce (2017) | Fake-Depth Before Real Depth, One Physics — glassmorphism stays banned; Noomo's disciplined glass (One Material World) is the reference |
 | 11 | Data-Dense Utilitarian | Orano (2018), DARK/Netflix SVG graphs (2020) | Type as Evidence, Weight as a Feature, Semantic Motion Only, Framed Data, Three-Token Contract |
-| 12 | Art-House Immersive | Igloo (2024), Lusion v3 (2023), Noomo (2023), Persepolis (2022), Lando (2025) | The Persistent Hero Object, One Material World, Scroll-as-Camera, The Loader is the Overture, The Masked Cut, Instant Everything, Shared-Element Lift, Progressive Spectacle Tiers, Weight as a Feature |
+| 12 | Art-House Immersive | Igloo (2024), Lusion v3 (2023), Noomo (2023), Persepolis (2022), Lando (2025), hirotos.com (2026, mechanism + cautionary) | The Persistent Hero Object, One Material World, Scroll-as-Camera, The Loader is the Overture, The Masked Cut, Instant Everything, Shared-Element Lift, Progressive Spectacle Tiers, Weight as a Feature |
 
 ---
 
-*31 dossiers, 2017–2026. Award tiers cited at the level the sources verify; reconstructed pre-2021 mechanics are reported, not live-inspected; typefaces, exact stacks, and unshipped reduced-motion paths stay hedged. The patterns these prove live in `SKILL.md`.*
+*32 dossiers, 2017–2026. Award tiers cited at the level the sources verify; reconstructed pre-2021 mechanics are reported, not live-inspected; typefaces, exact stacks, and unshipped reduced-motion paths stay hedged. The patterns these prove live in `SKILL.md`.*
