@@ -42,7 +42,7 @@ Lighthouse performance ≥90 on every route under default mobile emulation — t
 
 **Renderer half** (only when a scene shipped). three.js is not an animation engine, but it is gated on the same construction and it is the largest single dependency this harness ever installs. Detect it by import specifier, never by `<Canvas` or `useFrame(`, which appear in comments, prose and dead code: `rg -n 'from "three"|from "@react-three/' app components`.
 
-- the dependency exists only with a design/DIRECTION.md line naming `ultraweb:set-design` **and its route scope** (or `ultraweb:showpiece` for one set piece) — no citation, no dependency (gate-code's check 7 owns the package.json half)
+- the dependency exists only with a design/DIRECTION.md line naming `ultraweb:set-design` **with its route scope and byte budget** (or `ultraweb:showpiece` for one set piece) — no citation, no dependency (gate-code's check 7 owns the package.json half)
 - `rg -n 'import \* as .* from "@react-three/drei"|import \* as .* from "three"'` → zero hits; the barrels are multiples of the named-import cost (per STACK.md)
 - `rg -n 'gstatic.com/draco|cdn.jsdelivr.net/gh/pmndrs|raw.githack.com'` → zero hits; drei's three default CDNs must be self-hosted
 - `rg -n 'frameloop="always"' app components` → every hit carries its written justification in design/SYSTEM.md §scene naming the DIRECTION-commissioned living idle and its pause on `document.hidden`; `demand` is the default posture and an unjustified always-loop is a battery defect, not a preference
@@ -55,7 +55,7 @@ Lighthouse performance ≥90 on every route under default mobile emulation — t
 - `rg -n "next/font" app lib styles` → one central fonts module exporting the instances, variable fonts (no weight arrays)
 - inspect a served `@font-face` for `font-display: swap`; set `display: "swap"` explicitly in the loader if absent
 
-**7.** Same hard reload, same `browser_network_requests` log — sum the transfer sizes per route. A mobile marketing page over ~1.5 MB is a defect even at Lighthouse 90: the score forgives a fast test connection, a visitor's data plan does not. Record the actual per-route total in QA.md, not just the verdict. Offenders in the usual order: unoptimized hero media (media-optimization), a font family not earning its bytes (typography), a commissioned second engine (item 5). Optional on a sustainability-minded brief — run the totals through co2.js for a grams-per-visit figure the client can quote; a measured number, never a badge.
+**7.** Same hard reload, same `browser_network_requests` log — sum the transfer sizes per route. A mobile marketing page over ~1.5 MB is a defect even at Lighthouse 90: the score forgives a fast test connection, a visitor's data plan does not. A route inside a commissioned `set-design` scope is instead held to the transfer budget DIRECTION.md wrote for it — same measurement, same QA.md record, a different written ceiling. Record the actual per-route total in QA.md, not just the verdict. Offenders in the usual order: unoptimized hero media (media-optimization), a font family not earning its bytes (typography), a commissioned second engine (item 5). Optional on a sustainability-minded brief — run the totals through co2.js for a grams-per-visit figure the client can quote; a measured number, never a badge.
 
 ## Metric triage
 
@@ -68,7 +68,7 @@ When a route scores <90, the failing metric names the owner — fix at the sourc
 
 ## Pass criteria
 
-Every SITEMAP.md route: perf ≥90 mobile, LCP element verified optimized, CLS 0.00, budgets met, transfer weight recorded and inside ~1.5 MB, bundle and font sweeps clean. Every fix re-runs Lighthouse on the affected route — a code change without a re-measure is unverified.
+Every SITEMAP.md route: perf ≥90 mobile, LCP element verified optimized, CLS 0.00, budgets met, transfer weight recorded and inside ~1.5 MB — or, on a route inside a commissioned `set-design` scope, inside that build's DIRECTION.md transfer budget — bundle and font sweeps clean. Every fix re-runs Lighthouse on the affected route — a code change without a re-measure is unverified.
 
 ## QA.md entry
 

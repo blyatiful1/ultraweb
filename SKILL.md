@@ -86,7 +86,7 @@ Not every task deserves the lead model. Whenever work is delegated — the bundl
 
 | Tier | Model | Work that belongs here |
 |------|-------|------------------------|
-| Lead | the session's model | Phases 1–5 and 8 (brief, direction, foundation, structure, voice) — the decisions everything downstream obeys; any edit to DIRECTION.md or SYSTEM.md; cross-cutting fix passes after gates; on a `set-design` build, the persistent scene layer across Phases 6 and 9 (per-page agents build only the DOM chrome over it) |
+| Lead | the session's model | Phases 1–5 and 8 (brief, direction, foundation, structure, voice) — the decisions everything downstream obeys; any edit to DIRECTION.md or SYSTEM.md; cross-cutting fix passes after gates; on a `set-design` build, the persistent scene layer across Phases 6 and 9 (per-page agents build only the DOM chrome and the static edition over it) |
 | Specialist | Opus 5 (`model: opus`) | `design-judge` critiques, `stack-doctor` repairs, gate-visual judgment rounds; in fan-out mode: Phase 6 per-section builds, Phase 7 backend modules, Phase 9 motion and Phase 10 findability passes |
 | Mechanical | Sonnet 5 (`model: sonnet`) | `pixel-qa` breakpoint sweeps, gate-code build/type/lint runs, gate-antislop pattern sweeps, gate-content link/metadata checks, the measurement halves of gate-responsive / gate-accessibility / gate-performance (screenshots, computed contrast, Lighthouse), artifact-conformance checks |
 
