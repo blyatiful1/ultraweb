@@ -62,9 +62,10 @@ Header (`skill: navigation`) and footer (`skill: footer`) are site-level: bluepr
 ## Signature placement rules
 
 - Exactly ONE `SIGNATURE` flag per site. Two signatures equal zero signatures (taste).
+- A site-scale scene is still exactly ONE `SIGNATURE` flag: place it on the route where the world is first entered and annotate the blueprint line with the DIRECTION.md route scope it persists across; every other route in that scope names its poster frame instead of a second flag.
 - It lives where attention already peaks: the home hero, or the first scroll transition after it. Never the footer, never an interior page a visitor may skip.
 - Budget the neighbors DOWN: the two sections adjacent to the signature get the quietest variants on the page.
-- If the signature is motion-driven (scroll-motion, physics, or showpiece territory), the blueprint line names its static / reduced-motion fallback.
+- If the signature is motion-driven (scroll-motion, physics, showpiece, or set-design territory), the blueprint line names its static / reduced-motion fallback.
 
 ## Rhythm and width discipline
 

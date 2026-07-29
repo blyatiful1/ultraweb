@@ -1,6 +1,6 @@
 # ultraweb skill roster
 
-The complete map of the harness. 72 skills: 1 orchestrator (root `SKILL.md`) + 71 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
+The complete map of the harness. 73 skills: 1 orchestrator (root `SKILL.md`) + 72 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
 
 Format: **name** — scope. *(reads → writes)*
 
@@ -56,6 +56,7 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **page-transitions** — route transition strategy: View Transitions API/next-view-transitions, template.tsx animations, shared-element continuity, when NOT to transition. *(SYSTEM §motion → app-level transitions)*
 - **physics** — spring-based interaction: drag, magnetic hover, cursor followers, gesture response via motion springs; restraint rules. *(DIRECTION → interactive moments)*
 - **showpiece** — hero-grade set pieces: canvas/WebGL/R3F, shader gradients, particle systems, 3D product views. Gated: only when DIRECTION demands, 60fps verified, static fallback + reduced-motion path mandatory. *(DIRECTION → one signature element)*
+- **set-design** — site-scale immersive 3D: ONE persistent R3F canvas behind natively-scrolling DOM across every route in its commissioned scope, a DCC-authored camera clip scrubbed by a route-window journey map, material-names-as-API, patched stock materials, punctuation-only post, and a gltf-transform/DRACO pipeline. Gated: commissioned only when DIRECTION.md names the skill, its route scope AND its byte budget, at archetype 12 and intensity 3; one set piece in one section stays showpiece. *(DIRECTION.md → one persistent world + the static edition of every route)*
 - **animejs** — anime.js v4 as the SVG-choreography engine: multi-path draw timelines, morphs, motion paths, grid stagger fields, split-text and scroll-scrubbed sequences. Gated: installed only when DIRECTION.md commissions the moment by name; motion/react keeps component lifecycle, gestures, and route transitions. *(DIRECTION.md → commissioned SVG moments)*
 - **hidden-craft** — the opt-in last-2% reward layer that signals human authorship: a tasteful console signature, one keyboard/view-source egg, a playful on-brand 404, `humans.txt`; hard discipline — never gates content, zero LCP cost, ONE gesture per site. *(SYSTEM → easter-egg layer)*
 

@@ -24,7 +24,7 @@ A site is first-grade when ALL of these hold — verified, not assumed:
 
 ## Artifact contract
 
-Every phase writes its decisions to files in the generated project. Later phases READ these — this is how 72 skills stay coherent. Never skip an artifact.
+Every phase writes its decisions to files in the generated project. Later phases READ these — this is how 73 skills stay coherent. Never skip an artifact.
 
 | File | Written by | Contains |
 |------|-----------|----------|
@@ -63,7 +63,7 @@ Only what `design/BRIEF.md` demands — a brochure site gets a contact form acti
 ### Phase 8 — Voice (skills: `copywriting`)
 Rewrite every string on the site in the brief's voice. Headlines earn their size. Microcopy (buttons, empty states, errors, form hints) gets the same care as heroes.
 
-### Phase 9 — Motion (skills: `micro-interactions`, `scroll-motion`, `page-transitions`; `physics`/`showpiece`/`animejs` only if DIRECTION.md calls for them; `hidden-craft` for the opt-in easter-egg layer)
+### Phase 9 — Motion (skills: `micro-interactions`, `scroll-motion`, `page-transitions`; `physics`/`showpiece`/`set-design`/`animejs` only if DIRECTION.md calls for them; `hidden-craft` for the opt-in easter-egg layer)
 The choreography pass, applied to the finished layout. Respect `prefers-reduced-motion` everywhere.
 
 ### Phase 10 — Findability (skills: `seo`; `i18n` if multilingual; `print-craft` when the site has document/legal pages — Impressum, invoices, quotes)
@@ -78,7 +78,7 @@ Production build, env audit, deploy if asked, and a handoff README.
 ## Orchestration modes
 
 - **Solo mode** (default): run the pipeline yourself, sequentially. Phases 3 and 6 are where most of the time goes.
-- **Fan-out mode** (only when multi-agent orchestration is opted in — ultracode session, or the user asked for it): Phases 1–5 stay sequential (they are decision-making, one mind must own them). Phase 6 fans out one agent per page/section group, each given BRIEF+DIRECTION+SYSTEM+SITEMAP verbatim. Gates in Phase 11 fan out one agent per gate, then a fix pass.
+- **Fan-out mode** (only when multi-agent orchestration is opted in — ultracode session, or the user asked for it): Phases 1–5 stay sequential (they are decision-making, one mind must own them). Phase 6 fans out one agent per page/section group, each given BRIEF+DIRECTION+SYSTEM+SITEMAP verbatim. A DIRECTION-commissioned persistent scene (`ultraweb:set-design`) is the exception to per-page fan-out: the canvas is cross-route architecture, so the Lead keeps the scene layer across Phases 6 and 9 and per-page agents build only the DOM chrome and the static edition that sit over it. Gates in Phase 11 fan out one agent per gate, then a fix pass.
 
 ## Delegation & model routing
 
@@ -86,7 +86,7 @@ Not every task deserves the lead model. Whenever work is delegated — the bundl
 
 | Tier | Model | Work that belongs here |
 |------|-------|------------------------|
-| Lead | the session's model | Phases 1–5 and 8 (brief, direction, foundation, structure, voice) — the decisions everything downstream obeys; any edit to DIRECTION.md or SYSTEM.md; cross-cutting fix passes after gates |
+| Lead | the session's model | Phases 1–5 and 8 (brief, direction, foundation, structure, voice) — the decisions everything downstream obeys; any edit to DIRECTION.md or SYSTEM.md; cross-cutting fix passes after gates; on a `set-design` build, the persistent scene layer across Phases 6 and 9 (per-page agents build only the DOM chrome and the static edition over it) |
 | Specialist | Opus 5 (`model: opus`) | `design-judge` critiques, `stack-doctor` repairs, gate-visual judgment rounds; in fan-out mode: Phase 6 per-section builds, Phase 7 backend modules, Phase 9 motion and Phase 10 findability passes |
 | Mechanical | Sonnet 5 (`model: sonnet`) | `pixel-qa` breakpoint sweeps, gate-code build/type/lint runs, gate-antislop pattern sweeps, gate-content link/metadata checks, the measurement halves of gate-responsive / gate-accessibility / gate-performance (screenshots, computed contrast, Lighthouse), artifact-conformance checks |
 
