@@ -20,10 +20,32 @@ Then go make coffee yourself. It'll be a while.
 
 The whole paper trail is public at [blyatiful1/ultraweb-site](https://github.com/blyatiful1/ultraweb-site): every decision the studio made on the way (brief → direction → system → sitemap → QA), the 58/72 skill-coverage ledger, and each gate's receipts. The homepage renders its own report card. If the site were bad, you'd be able to prove it from the repo.
 
+### The build, measured
+
+Every number below was counted from the session transcripts of that build — the lead session plus all 37 agent transcripts. Counted, not estimated.
+
+| Measurement | Value |
+|---|---|
+| Wall clock | 6 h 06 min, one session (2026-07-28) |
+| Contexts | 38 — one lead, 37 delegated agents (35 across 6 workflow fan-outs, 2 direct) |
+| API calls | 4,753 |
+| Model split | 2,063 calls on Opus 5 (specialists) · 1,612 on Sonnet 5 (mechanical sweeps) · 1,078 on the lead |
+| Tokens generated | 2,780,330 |
+| Fresh context written to cache | 20.2 million tokens |
+| Cache reads | 733.0 million tokens |
+| Total tokens processed | 756.0 million |
+| Quality gates | 7 of 7 green — after three fix rounds, not on the first try |
+| Skill coverage | 58 of 72 (80.6%), all 14 exclusions recorded with reasons |
+| Lighthouse, mobile, production | 93 performance · 94 accessibility · 94 best practices · 94 SEO |
+| Cumulative layout shift | 0.00 |
+| Commissioned animation weight | +22.9 KB gzip measured, against a ~23 KB budget set in writing before it was built |
+
+Read the table twice. Once as an advertisement: one prompt became a gated, documented, production site in a working day. Once as a warning: it took three quarters of a billion processed tokens to get there. Both readings are correct, and both are the point.
+
 ---
 
 > [!IMPORTANT]
-> **This thing is expensive.** A full build runs twelve phases and loops through screenshot-driven critique until it stops finding problems. It burns far more tokens, and far more minutes, than a normal prompt. That's not inefficiency — that's the part that makes it good. [The honest math is below.](#the-bill)
+> **This thing is expensive.** A full build runs twelve phases and loops through screenshot-driven critique until it stops finding problems. It burns far more tokens, and far more minutes, than a normal prompt — the table above is what one full run actually looks like. That's not inefficiency; that's the part that makes it good. [The honest math is below.](#the-bill)
 
 ## Getting it
 
@@ -58,14 +80,14 @@ The pipeline takes it from there: understand the brief → commit to an aestheti
 
 ## The bill
 
-A full `/ultraweb` run is a studio engagement, not an API call, and the token count reflects that:
+The showcase table above is the receipt: 4,753 API calls, 2.78 million tokens generated, 756 million tokens processed, six hours and six minutes. A full `/ultraweb` run is a studio engagement, not an API call, and here is where those numbers come from:
 
 - **twelve phases**, each one actually loading and following its skills — not vibing them from memory;
-- **an accumulating context** — every phase writes artifacts the later phases read back, so the working set grows as the build does;
-- **quality gates that loop** — screenshots at 375 / 768 / 1440, scored against a rubric, fix → re-gate → fix again until it goes green;
-- **and in fan-out mode**, an agent per page group and an agent per gate, multiplying all of the above.
+- **an accumulating context** — every phase writes artifacts the later phases read back, so the working set grows as the build does. This is why 96.9 percent of all processed tokens were cache reads: the paper trail gets re-read on nearly every call. Prompt caching prices those far below fresh input, and the expensive habit doubles as the quality mechanism — a pipeline that re-reads its own decisions can't drift;
+- **quality gates that loop** — screenshots at 375 / 768 / 1440, scored against a rubric, fix → re-gate → fix again until it goes green. The showcase needed three rounds;
+- **and in fan-out mode**, an agent per page group and an agent per gate — 37 of them in the showcase build.
 
-Model routing keeps it as honest as it can — mechanical sweeps drop to Sonnet 5, judgment stays up on Opus 5 — but cheaper per call is not the same as cheap.
+Model routing keeps it as honest as it can — mechanical sweeps drop to Sonnet 5, judgment stays up on Opus 5 — but cheaper per call is not the same as cheap. It is still, plainly, an order of magnitude beyond an ordinary Claude Code task. Plan for it.
 
 **How to spend less:** build once, then talk to it. Full runs are for new sites and total redesigns. Everything after that is `iterate`, which touches only what your change touched.
 
@@ -73,13 +95,13 @@ Model routing keeps it as honest as it can — mechanical sweeps drop to Sonnet 
 
 Four things do most of the work:
 
-🧭 **`taste` — the constitution.** A banned list (no purple AI gradient, no untouched shadcn, no "Empower your workflow" copy), a required list (OKLCH palette, a real type pairing, deliberate asymmetry, honored reduced-motion), and the heuristics for deciding everything in between. Every other skill bows to it.
+**`taste` — the constitution.** A banned list (no purple AI gradient, no untouched shadcn, no "Empower your workflow" copy), a required list (OKLCH palette, a real type pairing, deliberate asymmetry, honored reduced-motion), and the heuristics for deciding everything in between. Every other skill bows to it.
 
-🏆 **`award-canon` — the library.** 31 Awwwards Site-of-the-Year and SOTD-tier winners from 2017 to 2026, studied and rendered down into 25 named, transferable patterns — plus the invariants that survived every era, the jury's own scoring weights, and a list of moves that have visibly aged. Each claim carries its verified award tier; dead sites are marked *reconstructed*, never passed off as inspected. The prime directive: **steal the principle, never the surface.**
+**`award-canon` — the library.** 31 Awwwards Site-of-the-Year and SOTD-tier winners from 2017 to 2026, studied and rendered down into 25 named, transferable patterns — plus the invariants that survived every era, the jury's own scoring weights, and a list of moves that have visibly aged. Each claim carries its verified award tier; dead sites are marked *reconstructed*, never passed off as inspected. The prime directive: **steal the principle, never the surface.**
 
-🚦 **Seven gates that don't take your word for it.** Code, responsive, visual, accessibility, performance, anti-slop, content — each verified empirically. Real builds. Real Playwright screenshots. Computed contrast. Lighthouse. The site isn't finished until `design/QA.md` is green, and nothing is allowed to fake green.
+**Seven gates that don't take your word for it.** Code, responsive, visual, accessibility, performance, anti-slop, content — each verified empirically. Real builds. Real Playwright screenshots. Computed contrast. Lighthouse. The site isn't finished until `design/QA.md` is green, and nothing is allowed to fake green.
 
-📌 **`STACK.md` — the reality check.** Stack facts checked against live npm and official docs rather than training memory, so skills cite Next 16's `proxy.ts` and `preload`, Tailwind v4's `@theme`, Motion 12's `motion/react`. When the ecosystem moves, one file moves.
+**`STACK.md` — the reality check.** Stack facts checked against live npm and official docs rather than training memory, so skills cite Next 16's `proxy.ts` and `preload`, Tailwind v4's `@theme`, Motion 12's `motion/react`. When the ecosystem moves, one file moves.
 
 And underneath all of it: nearly every skill ends with a real decision traced end to end, drawn from a recurring cast of eight fictional clients — a Berlin roastery, a port-logistics SaaS, an Oslo agency, a Lisbon restaurant, a law firm, a game studio, a foundation, a textiles shop. Skills sharing a client agree on its palette, its type, its routes. The examples don't just illustrate the skills; they demonstrate the handoff between them.
 
@@ -87,15 +109,15 @@ And underneath all of it: nearly every skill ends with a real decision traced en
 
 | Department | Who's in it |
 |------|--------|
-| 🎩 **Direction** | `ultraweb` (the pipeline itself), `taste`, `iterate`, `award-canon` |
-| 🔍 **Discovery** | `brief`, `direction` (12 archetypes), `sitemap`, `wireframe`, `copywriting` |
-| 🎨 **Design system** | `tokens`, `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `icons`, `imagery`, `motion-language`, `theme-worlds` |
-| 🧱 **Components** | `component-api`, `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`, `overlays`, `cart`, `product-detail`, `command-palette`, `marginalia` |
-| 💫 **Motion** | `micro-interactions`, `scroll-motion`, `page-transitions`, `physics`, `showpiece`, `animejs`, `hidden-craft` |
-| ⚙️ **Engineering** | `scaffold`, `app-structure`, `routing`, `data-fetching`, `server-actions`, `media-optimization`, `seo`, `i18n`, `print-craft` |
-| 🔌 **Backend** | `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`, `consent`, `analytics` |
-| 🚦 **QA** | `gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content` |
-| 📦 **Delivery** | `ship`, `handoff`, `retrofit` |
+| **Direction** | `ultraweb` (the pipeline itself), `taste`, `iterate`, `award-canon` |
+| **Discovery** | `brief`, `direction` (12 archetypes), `sitemap`, `wireframe`, `copywriting` |
+| **Design system** | `tokens`, `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `icons`, `imagery`, `motion-language`, `theme-worlds` |
+| **Components** | `component-api`, `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`, `overlays`, `cart`, `product-detail`, `command-palette`, `marginalia` |
+| **Motion** | `micro-interactions`, `scroll-motion`, `page-transitions`, `physics`, `showpiece`, `animejs`, `hidden-craft` |
+| **Engineering** | `scaffold`, `app-structure`, `routing`, `data-fetching`, `server-actions`, `media-optimization`, `seo`, `i18n`, `print-craft` |
+| **Backend** | `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`, `consent`, `analytics` |
+| **QA** | `gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content` |
+| **Delivery** | `ship`, `handoff`, `retrofit` |
 
 Three specialists work outside the main line, each pinned to its own model tier:
 
@@ -112,7 +134,7 @@ Want the full scope of all 72? → [ROSTER.md](ROSTER.md). Want the per-site awa
 - **Claude Code** — CLI, desktop, or web.
 - **Node + npm** — something has to build the Next.js app.
 - **Playwright MCP** — the eyes. Without it, the visual and responsive gates degrade to an honest *"unverified"* instead of quietly waving your site through.
-- **Token headroom** — see [the bill](#the-bill). This is a long job. Start it when you have room for it.
+- **Token headroom** — see [the bill](#the-bill). The showcase run processed 756 million tokens in six hours. Start it when you have room for it.
 
 ---
 
