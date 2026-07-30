@@ -1,5 +1,9 @@
 # ultraweb
 
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](https://code.claude.com/docs/en/plugins) [![Version](https://img.shields.io/badge/version-1.4.1-4C71F0)](.claude-plugin/plugin.json) [![Skills](https://img.shields.io/badge/skills-73-2EA44F)](ROSTER.md) [![Showcase](https://img.shields.io/badge/showcase-live-2EA44F)](https://ultraweb-site.vercel.app)
+
+*A Claude Code plugin for AI web design: one prompt in, a production-grade Next.js 16 + Tailwind CSS v4 website out — design system, copywriting, motion, backend, SEO, and seven screenshot-verified quality gates.*
+
 ## You hire a design studio. It fits in one prompt.
 
 Somewhere in a nicer timeline there's a small agency that does this properly. An art director who refuses the purple gradient. A design engineer who ships tokens before components. A critic who screenshots your site at 375px and tells you the truth about it. They cost forty thousand euros and they're booked until spring.

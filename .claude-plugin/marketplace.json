@@ -9,10 +9,32 @@
       "name": "ultraweb",
       "source": "./",
       "description": "One prompt → first-grade Next.js website. 73 interlocking skills + 3 model-routed subagents: taste constitution, award-canon study library (25 patterns from Awwwards SOTY-tier winners), design-system-first pipeline, real quality gates, current-stack engineering.",
-      "version": "1.4.0",
+      "version": "1.4.1",
       "author": {
         "name": "Iwan Braun"
-      }
+      },
+      "homepage": "https://ultraweb-site.vercel.app",
+      "repository": "https://github.com/blyatiful1/ultraweb",
+      "category": "web-development",
+      "keywords": [
+        "web-design",
+        "website-builder",
+        "nextjs",
+        "tailwindcss",
+        "design-system",
+        "ui-design",
+        "motion-design",
+        "quality-gates",
+        "awwwards",
+        "agent-skills"
+      ],
+      "tags": [
+        "design",
+        "frontend",
+        "nextjs",
+        "one-prompt",
+        "pipeline"
+      ]
     }
   ]
 }
