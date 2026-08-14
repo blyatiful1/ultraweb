@@ -1,6 +1,6 @@
 # ultraweb skill roster
 
-The complete map of the harness. 74 skills: 1 orchestrator (root `SKILL.md`) + 73 specialist skills in `skills/<name>/SKILL.md`. Nearly every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill (the core references — `taste`, `award-canon` — supply judgment instead of consuming artifacts). `taste` is the constitution; every skill defers to it.
+The complete map of the harness. 75 skills: 1 orchestrator (root `SKILL.md`) + 74 specialist skills in `skills/<name>/SKILL.md`. Nearly every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill (the core references — `taste`, `award-canon` — supply judgment instead of consuming artifacts). `taste` is the constitution; every skill defers to it.
 
 Format: **name** — scope. *(reads → writes)*
 
@@ -10,6 +10,7 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **taste** — the design constitution: first-grade bar, banned list, required list, heuristics, stack lock. *(— → judgment)*
 - **iterate** — targeted revision pipeline for an existing ultraweb site: locate the design/* artifacts, scope the change, touch only affected phases, re-run only affected gates. *(design/* → changed code + QA.md)*
 - **award-canon** — the study library: 25 named patterns + per-site bank distilled from Awwwards Site-of-the-Year/SOTD-tier winners 2017-2026; direction consults it for references, design-judge scores against its invariants. *(— → judgment + reference)*
+- **checkpoint** — the client-review mechanic on a real-studio cadence: six named checkpoints (brief read-back, direction approval, structure sign-off, first-page review, voice review, preflight/UAT), consolidated-feedback round discipline (two rounds, then escalate upstream), verdict routing to owning skills, written approvals; which ones block is the engagement level's call (hands-off / guided / studio), and unattended sessions auto-pass instead of stalling. *(phase artifacts → design/REVIEWS.md + routed verdicts)*
 
 ## Tier 1 — Discovery
 - **brief** — expand one prompt into a full creative brief: site type, audience, goals, tone words, page list, content inventory, backend needs. Guided mode runs a short scoping interview generated from the prompt's open forks (scope and substance only, never aesthetics); autonomous mode decides everything, interviewing nobody. *(user prompt + interview answers → design/BRIEF.md)*

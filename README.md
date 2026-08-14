@@ -1,6 +1,6 @@
 # ultraweb
 
-[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](https://code.claude.com/docs/en/plugins) [![Version](https://img.shields.io/badge/version-1.5.0-4C71F0)](.claude-plugin/plugin.json) [![Skills](https://img.shields.io/badge/skills-74-2EA44F)](ROSTER.md) [![Showcase](https://img.shields.io/badge/showcase-live-2EA44F)](https://ultraweb-site.vercel.app)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](https://code.claude.com/docs/en/plugins) [![Version](https://img.shields.io/badge/version-1.6.0-4C71F0)](.claude-plugin/plugin.json) [![Skills](https://img.shields.io/badge/skills-75-2EA44F)](ROSTER.md) [![Showcase](https://img.shields.io/badge/showcase-live-2EA44F)](https://ultraweb-site.vercel.app)
 
 *A Claude Code plugin for AI web design: a guided design session — a few sharp scoping questions, three fast mockups, your approval — then a production-grade Next.js 16 + Tailwind CSS v4 website out: design system, copywriting, motion, backend, SEO, and seven screenshot-verified quality gates.*
 
@@ -8,7 +8,7 @@
 
 Somewhere in a nicer timeline there's a small agency that does this properly. An art director who refuses the purple gradient. A design engineer who ships tokens before components. A critic who screenshots your site at 375px and tells you the truth about it. And before any of them lift a pen, someone sits you down, asks the four questions that actually matter for *your* site, and shows you three sketches to point at. They cost forty thousand euros and they're booked until spring.
 
-**ultraweb is that studio, as a Claude Code plugin.** 74 skills and 3 subagents that argue with each other on your behalf until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it.
+**ultraweb is that studio, as a Claude Code plugin.** 75 skills and 3 subagents that argue with each other on your behalf until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it.
 
 ```text
 /ultraweb build me a website for a Berlin specialty coffee roastery with an online shop
@@ -24,7 +24,7 @@ Prefer the classic fire-and-forget? Say **"just build it, no questions"** and th
 
 **[ultraweb-site.vercel.app](https://ultraweb-site.vercel.app)** — built by this pipeline, from one prompt, with no human touch-ups.
 
-The whole paper trail is public at [blyatiful1/ultraweb-site](https://github.com/blyatiful1/ultraweb-site): every decision the studio made on the way (brief → direction → system → sitemap → QA), the 58/72 skill-coverage ledger from that build (the harness has since grown to 74, and that run predates the guided session — it was a classic autonomous build), and each gate's receipts. The homepage renders its own report card. If the site were bad, you'd be able to prove it from the repo.
+The whole paper trail is public at [blyatiful1/ultraweb-site](https://github.com/blyatiful1/ultraweb-site): every decision the studio made on the way (brief → direction → system → sitemap → QA), the 58/72 skill-coverage ledger from that build (the harness has since grown to 75, and that run predates the guided session — it was a classic autonomous build), and each gate's receipts. The homepage renders its own report card. If the site were bad, you'd be able to prove it from the repo.
 
 ### The build, measured
 
@@ -82,9 +82,9 @@ One sentence about what you want — then a short conversation instead of a leap
 
 **Then, the mockups.** Three deliberately different directions, each rendered fast as a self-contained static HTML preview — real palette, real type pairing, your copy sketched in, no build step. You pick one, mix elements ("the warm one, but with B's grid"), or send the round back. Nothing expensive happens until you say yes; your approval is written into `design/MOCKUPS.md` and is literally the gate the build waits behind.
 
-**Then, the build.** From your approved direction, the pipeline runs as before: design system → pages → scaffold → build → backend → copy → motion → findability → gates → ship. Every phase leaves a written record in `design/*.md` inside your project, which is how 74 skills manage to agree with each other three hours later. The mockup files stay behind as reference — the site is re-derived from the decisions, never copy-pasted from a sketch.
+**Then, the build — with you in the loop where it counts.** From your approved direction, the pipeline runs: design system → pages → scaffold → build → backend → copy → motion → findability → gates → ship. Two more checkpoints are on by default, placed where real studios place client reviews: the **first-page review** — the homepage is built completely first and shown to you at phone and desktop widths, so the whole design system gets your sign-off on one real page before it's rolled across every other page — and **preflight/UAT** — after all seven gates are green (you're the acceptance test, never the first QA), you get the gate report, per-page screenshots, and a what-to-click list, and nothing ships until you accept. Every verdict is logged near-verbatim in `design/REVIEWS.md`; feedback runs in consolidated rounds (two per checkpoint, industry standard) and routes through the owning skill so a color complaint fixes the token, not one component.
 
-**Autonomous mode** — the original one-prompt behavior — is still there: say "just build it" / "no questions", and it decides everything itself (also the automatic fallback when nobody's around to answer, e.g. scheduled runs).
+**Want more or less of that?** It's a dial. Say *"walk me through it"* and you get the full studio cadence — brief read-back, structure sign-off, and voice review join the default three. Say **"just build it" / "no questions"** for the original hands-off autonomous mode (also the automatic fallback when nobody's around to answer, e.g. scheduled runs — a checkpoint never deadlocks a build; it auto-passes and logs it). Every phase leaves a written record in `design/*.md` inside your project, which is how 75 skills manage to agree with each other three hours later; the mockup files stay behind as reference — the site is re-derived from the decisions, never copy-pasted from a sketch.
 
 **Already have an ultraweb site?** Just say what's wrong — *"the hero's too timid"* — and `ultraweb:iterate` scopes the change and re-runs only the gates you actually disturbed.
 
@@ -121,7 +121,7 @@ And underneath all of it: nearly every skill ends with a real decision traced en
 
 | Department | Who's in it |
 |------|--------|
-| **Direction** | `ultraweb` (the pipeline itself), `taste`, `iterate`, `award-canon` |
+| **Direction** | `ultraweb` (the pipeline itself), `taste`, `iterate`, `award-canon`, `checkpoint` (the client-review cadence) |
 | **Discovery** | `brief` (with the guided scoping interview), `direction` (12 archetypes), `mockup` (the pick/mix/revise round), `sitemap`, `wireframe`, `copywriting` |
 | **Design system** | `tokens`, `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `icons`, `imagery`, `motion-language`, `theme-worlds` |
 | **Components** | `component-api`, `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`, `overlays`, `cart`, `product-detail`, `command-palette`, `marginalia` |
@@ -139,7 +139,7 @@ Three specialists work outside the main line, each pinned to its own model tier:
 
 The same policy governs all fan-out work: judgment stays on the lead model, specialist builds and critiques on Opus 5, mechanical sweeps on Sonnet 5.
 
-Want the full scope of all 74? → [ROSTER.md](ROSTER.md). Want the per-site award study bank? → [skills/award-canon/CANON.md](skills/award-canon/CANON.md).
+Want the full scope of all 75? → [ROSTER.md](ROSTER.md). Want the per-site award study bank? → [skills/award-canon/CANON.md](skills/award-canon/CANON.md).
 
 ## What you need
 
