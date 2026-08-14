@@ -107,23 +107,8 @@ Default and correct for almost every site: client-side fuzzy over the static ind
 
 ## Worked example — Tidepool, ⌘K over docs, pricing, and API reference
 
-DIRECTION.md: "Precision Instrument — Neo-grotesque Minimal, dark-first." SITEMAP: `/`, `/product`, `/pricing`, `/docs` (a real tree), `/changelog`, `/login`, plus an API reference under `/docs/api`. A dev-facing analytics tool with genuine docs depth → **gate passes**, Site-Search Palette chosen.
-
-The no-JS `/search` page ships first: a `<form method="get">` rendering grouped anchor results, marked `noindex` by seo. The index is built at build from SITEMAP pages + MDX docs frontmatter via content-cms into `search-index.json` (~30KB). The palette layers on: a "Search ⌘K" pill sits in the slim-bar (navigation), ⌘K/Ctrl-K and `/` both open it, guarded against firing in the docs feedback form. Groups render **Pages** (Product, Pricing, Changelog) → **Docs** (by section: Getting Started, API Reference…) → **Blog**; the empty query shows Recent (localStorage) beside Suggested — "Quickstart", "Pricing", "API keys". `CommandDialog title="Search Tidepool"` gives the sr-only name; the focus ring is Tidepool teal `oklch(0.68 0.12 200)`; a polite live region reads "8 results". Selecting an item `router.push`es its real route — the same URL the docs sidebar already links.
-
-Rejected: the **Product-Preview Palette** — Tidepool's product is a point-and-click dashboard, not command-driven, so an inline "action" would be a staged demo, not proof; and the **semantic-embeddings mode** — BRIEF never asked, and static fuzzy over ~40 docs is instant with no server round-trip, so the P2 rider stays unbuilt.
-
-Handoff: lands in `components/search/command-menu.tsx` (client leaf) + `app/search/page.tsx` (no-JS floor) + `lib/search/index.ts` (build-time index). `ultraweb:overlays` owns the dialog focus-trap, scroll-lock, and open choreography; `ultraweb:ui-states` owns the empty/loading/no-results copy; `ultraweb:navigation` places the pill and keeps every result independently reachable; `ultraweb:seo` marks `/search` noindex; `ultraweb:gate-accessibility` runs the keyboard walkthrough (open → arrow → Enter navigates → Escape closes and restores focus) and the JS-disabled test.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:navigation — hosts the visible ⌘K pill in the header and guarantees every indexed item also has a normal, crawlable link; the palette never replaces the nav, it accelerates it.
-- ultraweb:overlays — owns the dialog mechanics the palette rides on: focus-trap, focus restore to the trigger, scroll-lock, Escape, and open/close choreography.
-- ultraweb:ui-states — supplies the loading, empty (recent/suggested), no-results, and error states; the palette defers all four rather than inventing its own.
-- ultraweb:forms — the no-JS `/search` `<form method="get">` and the input's label/type/`role="search"` follow forms' field and validation contract.
-- ultraweb:content-cms — feeds the build-time index from MDX/page frontmatter (title, section, url, keywords); the palette consumes what content-cms structures.
-- ultraweb:seo — marks the `/search` results route `noindex` and keeps the crawlable link graph the palette is layered over.
-- ultraweb:icons — the search glyph, group icons, and the `↵`/`esc` hints come from one lucide set at the SYSTEM stroke width, never emoji.
-- ultraweb:copywriting — writes the empty-state suggestions, the no-results path-out line, and the pill label in the brief's voice.
-- ultraweb:app-structure — the palette is a `"use client"` leaf; the index build and `/search` page stay server-side.
-- ultraweb:gate-accessibility — runs the keyboard walkthrough and JS-disabled test that prove the accelerator-not-only-path and combobox-ARIA claims.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

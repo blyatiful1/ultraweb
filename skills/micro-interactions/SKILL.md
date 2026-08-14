@@ -98,26 +98,8 @@ A custom cursor is optional and gated: an SVG dot with `mix-blend-mode: differen
 
 ## Worked example — Studio Norra, work-index row feedback
 
-design/SYSTEM.md §motion pins the micro band to 150–200ms on a single `--ease-out`; design/DIRECTION.md reserves signal red `oklch(0.6 0.21 25)` for interaction states only — it must never appear at rest.
-
-Decision: on `/work`, each index row's left rule draws in on hover and focus — the link-underline pattern turned vertical (`background-size: 2px 0% → 2px 100%`, 200ms `var(--ease-out)`) — and the only places red surfaces are that rule plus `focus-visible:ring-2 ring-[oklch(0.6_0.21_25)] ring-offset-2` against paper. Case-study titles set in Archivo Expanded stay dead-flat; no transform touches the type block. Chrome-level: `::selection` is paper-on-signal-red (checked AA in both themes), the scrollbar thumb the hairline `border` token, caret the signal red — no custom cursor, since the grid is already gesture-tracked and a second cursor layer would fight it.
-
-Rejected: `hover:-translate-y-1` + a `depth` shadow step on the rows. Editorial Brutalist is an exposed, flat grid — a lifting, drop-shadowed card reads as stock SaaS and softens the rawness the direction is built on. The rule-draw carries the whole feedback instead.
-
-The cursor-proximity image reveal (the signature move) is gesture-tracking, so it graduates to ultraweb:physics rather than being double-treated here — but its hover-revealed client+year label is content, not chrome, so it gets a `:focus-within` twin that surfaces the same label when the row's link takes keyboard focus and holds it until blur or `Escape`. The focus-visible, hover-parity, and reduced-motion states installed here hand off to ultraweb:gate-accessibility, which greps the build for any `focus:outline-none` left without a replacement.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:motion-language — supplies the duration/easing tokens; this skill spends them, never mints them.
-- ultraweb:buttons — the CTA system's hover/active/loading states get their timing and physics here.
-- ultraweb:forms — input focus treatment and validation-feedback timing.
-- ultraweb:depth — every hover lift pairs its transform with a step on the elevation scale.
-- ultraweb:color — the chrome-level pass (`::selection`, caret, scrollbar, optional cursor) draws every value from the palette tokens; nothing here is a raw hex, and the `::selection` pair is AA-checked like any other.
-- ultraweb:gate-antislop — a default, unstyled scrollbar and default selection color are on its tell list; the chrome-level branding here clears them.
-- ultraweb:physics — anything gesture-tracking (magnetic pull, drag) graduates there; don't double-treat one element.
-- ultraweb:animejs — reachable only when a DIRECTION-commissioned SVG moment already installed it; the text-scramble may then escalate to `splitText`/`scrambleText`, never the reverse.
-- ultraweb:gate-accessibility — verifies the focus-visible coverage and reduced-motion behavior installed here.
-- Consumed by the component-tier skills (cards, pricing, data-display, social-proof, …) — they pull their hover/press/focus timing from these patterns rather than inventing per-component motion.
-- ultraweb:navigation — the nav link-underline variants (grow-from-left, exit-through-right) and active-item treatment are specified here; navigation wires them onto the real nav.
-- ultraweb:faq — the accordion trigger's chevron rotate and expand timing come from this skill's icon-micro-motion patterns.
-- ultraweb:award-canon — the Instant Everything pattern (prefetch adjacent media, keep it mounted, opacity-crossfade heavy swaps) is cited here; perceived speed is its own polish signal.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

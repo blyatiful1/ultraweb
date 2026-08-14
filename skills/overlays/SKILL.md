@@ -95,24 +95,8 @@ Durations and easing come from SYSTEM.md §motion (micro band, 150–250ms) — 
 
 ## Worked example — Tidepool, SaaS account menu
 
-DIRECTION.md: "Precision Instrument — calm, data-forward, dark-mode first-class"; General Sans, dark surface `oklch(0.18 0.015 250)`, teal accent `oklch(0.68 0.12 200)`. The authenticated header carries an avatar button top-right; clicking it opens a four-item account menu (Settings, Billing, Docs, Sign out).
-
-Before: a Radix `DropdownMenu` in a portal, carrying its own z-index and positioning engine. Rebuilt as a native `auto` popover — `<button class="acct-trigger" popovertarget="acct-menu">` with `anchor-name: --acct` on the trigger, `position-anchor: --acct` + `position-area: bottom span-left` on the panel so its right edge tracks the avatar, `position-try-fallbacks: flip-block` to open upward on a short viewport. It renders in the top layer, so the header's own `overflow` and the app grid's stacking context no longer matter — the whole z-index/portal problem evaporates. Panel surface is `oklch(0.21 0.015 250)` with a §depth tinted shadow (not gray), entry via `@starting-style` opacity+`translateY(-4px)` at 180ms on `--ease-out`, dropped under reduced motion. The four items are plain `<a>`/`<button>` — no `role="menu"`, so no arrow-key JS to maintain — and Escape or an outside click light-dismisses back to the avatar. Sign-out gets the destructive token; the focus-visible ring is teal `oklch(0.68 0.12 200)`.
-
-Rejected: keeping the Radix portal "because it works" — its portal-and-z-index machinery is precisely the class of bug the top layer retires, and it shipped 30KB to position four links. Also rejected: `showModal()` for the menu — trapping focus and inerting the app so someone can click "Billing" is modal overkill; a non-modal `auto` popover lets them click straight back into the dashboard.
-
-Handoff: `ultraweb:navigation` places the avatar trigger in `components/layout/header.tsx`; `ultraweb:gate-accessibility` runs the keyboard walk (Tab to avatar, Enter opens, Escape closes and returns focus, ring visible on every item) before it ships.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:navigation — mega-menus, mobile menus, and the header account menu are anchored popovers built on this primitive; navigation places the trigger, this skill owns the layer.
-- ultraweb:buttons — every overlay invoker is a button-system `<button>` at the right variant; the trigger's states come from there.
-- ultraweb:forms — the native select listbox, autocomplete/combobox panel, and validation popovers anchor with this skill (escalating to a Radix combobox only for `aria-activedescendant` widgets).
-- ultraweb:cards — a card's overflow/hover menu opens as a popover in the top layer instead of being clipped by the card's `overflow-hidden`.
-- ultraweb:cart — the add-to-cart confirmation is the manual toast-stack variant defined here.
-- ultraweb:command-palette — the palette is a modal `<dialog>` overlay; it inherits the focus-trap and scrim rules from the modal variant here.
-- ultraweb:data-display — chart and data-point tooltips are anchored popovers, positioned to the hovered mark.
-- ultraweb:micro-interactions — supplies the hover/focus timing for triggers and the tooltip show/hide feel; this skill owns the layer, that skill the polish.
-- ultraweb:motion-language — the `@starting-style`/`allow-discrete` durations and easing are spent from its §motion tokens, never minted here.
-- ultraweb:depth — overlay elevation (tinted shadow, surface tint) comes from SYSTEM.md §depth, not an ad-hoc `shadow-lg`.
-- ultraweb:gate-accessibility — runs the keyboard walkthrough (Escape dismiss, focus return, ring coverage, tooltip hoverability) that proves every claim above.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

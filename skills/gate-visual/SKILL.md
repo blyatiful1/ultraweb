@@ -49,7 +49,11 @@ Both subagents work only as well as what you hand them. Payloads, exactly:
 
 ## Pass criteria
 
-Final round verdict SHIP; every page ≥7 on all six axes (design-judge cannot say SHIP otherwise — enforce it if it tries); zero banned-list violations in the final sweep; ≥2 completed rounds; full round history — scores, defects, fixes, screenshot paths — in design/QA.md. FIX-THEN-SHIP is not a pass: apply the named fixes and run the next round.
+Final round verdict SHIP; every page ≥7 on all six axes (design-judge cannot say SHIP otherwise — enforce it if it tries); zero banned-list violations in the final sweep; ≥2 completed rounds; full round history — scores, defects, fixes, screenshot paths — in design/QA.md. FIX-THEN-SHIP is not a pass: apply the named fixes and run the next round. At sketch tier the round cap is one; at flagship the ceiling is five.
+
+## Degraded mode (no browser)
+
+When Phase 0's preflight reported no Playwright MCP, this gate's verdict is **UNVERIFIED** — a third state, never conflated with PASS or FAIL. What still runs: `design-judge` reads the code — token discipline in globals.css against SYSTEM.md, section structure against SITEMAP.md, the banned-list greps — and flags what it can from source. What cannot run: the screenshot rounds, which are this gate's entire empirical core. The QA.md entry states it plainly: `UNVERIFIED — no browser: source-level review only; no page has been SEEN. The visual bar is unproven.` Never write PASS from source review, and never let the judge score pages it hasn't looked at.
 
 ## QA.md entry
 

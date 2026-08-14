@@ -50,7 +50,7 @@ Icon motion follows motion-language's micro tier — transform only, 2-4px of tr
 
 ## When custom SVG beats lucide
 
-- The signature move or brand needs a proprietary glyph (logo mark, motif) — coordinate with ultraweb:shape-language.
+- The signature move or brand needs a proprietary glyph — the logo mark itself is ultraweb:identity's (public/brand is the single source); decorative motifs coordinate with ultraweb:shape-language.
 - A domain concept lucide genuinely lacks — search the set first; most "missing" icons exist under another name.
 - Third-party logos: use the official brand SVGs, normalized to the 24-viewBox scale and monochromed to currentColor. Never redraw a brand mark.
 

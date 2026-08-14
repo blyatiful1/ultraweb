@@ -84,6 +84,10 @@ document.documentElement.scrollWidth > innerWidth   // true = horizontal blowout
 
 All 9 Checklist items green (verify steps 1–9) on every route in design/SITEMAP.md, both themes, at 375px and 1440px — item 9 applies only to DACH-market builds — plus the axe supplement (verify step 10) at zero critical/serious violations. Every fix re-runs the exact check that failed — no "fixed, trust me".
 
+## Degraded mode (no browser)
+
+When Phase 0's preflight reported no Playwright MCP, the verdict is **UNVERIFIED**, never a fake PASS. The split is explicit. Still runs, in full, and still blocks on failure: computed contrast math on every token pair in globals.css (contrast is arithmetic, not pixels), semantic-HTML and landmark audit of the source, alt-text presence, `prefers-reduced-motion` guards in the motion code, focus-visible styles defined in CSS. Cannot run: the keyboard-only walkthrough, real focus-order observation, axe against a rendered DOM. QA.md records both halves: `UNVERIFIED — no browser: token contrast + source audit PASS; keyboard path, focus order, axe unproven.` Accessibility claimed from source alone is a claim, and the entry must read like one.
+
 ## QA.md entry
 
 ```md
@@ -109,31 +113,8 @@ fixed: footer link 3.9:1 → 4.7:1 (muted token bumped in color ramp) · residua
 
 ## Worked example — Aldermoor Trust, community foundation grants + stories
 
-design/DIRECTION.md set the bar as the aesthetic itself: "Open Civic — accessibility-first, all pairings AAA where possible." The gate ran the full pass on all five routes from design/SITEMAP.md (`/`, `/grants`, `/stories/[slug]`, `/volunteer`, `/donate`), both themes, 375 + 1440.
-
-Contrast (step 1, canvas-normalized) cleared the AA floor with room: Source Serif 4 story body on warm paper `oklch(0.97 0.008 85)` measured 13.6:1 (AAA); the deep green accent `oklch(0.45 0.1 155)` on that paper measured 5.2:1 — AA and AAA-large, acceptable for the link role, logged as below the AAA aspiration. Keyboard walk: 31 stops, focus-visible ring on all, Escape closed the mobile nav and returned focus to the toggle.
-
-The catch was step 5. On `/`, the signature story cards — the left rule that grows into the reading-progress indicator — entered via a scroll-linked `whileInView` with `initial={{ opacity: 0 }}` and no reduced-motion guard. Under `page.emulateMedia({ reducedMotion: "reduce" })` the entrance was skipped, so all six cards stayed at opacity 0, invisible forever; the re-shot `/` was blank below the fold.
-
-Fix owned by ultraweb:scroll-motion, per motion-language's policy: the reduced-motion branch now returns the cards at rest (opacity 1, rule at full height) instead of the banned blanket `* { animation: none }`. Re-ran step 5 on `/` under reduce → six cards visible.
-
-Step 8 surfaced a quieter defect: under the text-spacing override, the `/grants` cards — grant title `line-clamp-2` inside a fixed `h-56` — clipped the longest programme name mid-word. ultraweb:cards traded the hard height for `min-h-56` + `flex-col`; re-shot at 375/768/1440 under the override, every card grew clean. Step 9 didn't fire — design/BRIEF.md sets market=UK, so the BFSG `/barrierefreiheit` check logged N/A; a DACH commercial brief (e.g. Ledger & Lane) would instead have to ship that statement and match its claimed conformance level to this run's residuals.
-
-Lands in design/QA.md §gate-accessibility, which flipped to PASS.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:color — owns the oklch contrast math and the token-level fix when a computed pair fails.
-- ultraweb:micro-interactions — installs the focus-visible rings and reduced-motion feedback this gate measures.
-- ultraweb:motion-language — its reduced-motion policy is the spec that item 5 verifies.
-- ultraweb:navigation — skip link, Escape-closing mobile menu, and scroll-padding under sticky headers.
-- ultraweb:forms — label association and error announcement checked in item 7.
-- ultraweb:gate-responsive — holds the 44px mobile touch-target bar; this gate holds the WCAG 24px floor everywhere.
-- ultraweb:gate-content — the sibling gate that judges whether headings tell a story; this gate checks only heading structure (item 3) and hands narrative calls there.
-- ultraweb:faq — when the keyboard walk hits a disclosure/accordion missing `aria-expanded` or Enter/Escape handling, faq owns the fix this gate reports.
-- ultraweb:scroll-motion — when the reduced-motion re-test (item 5) finds a scroll-linked entrance left at opacity 0, scroll-motion owns the resting-state guard.
-- ultraweb:animejs — owns the Scope `mediaQueries.reduceMotion` branch item 5 sweeps for; an SVG path left undrawn under `reduce` is its defect to fix, and the fix is the drawn end state.
-- ultraweb:set-design — owns the per-route static edition and the DOM twin item 5 verifies; its reduced-motion contract is stricter than a pause (the canvas is never constructed), and a scene that leaves an empty page under `reduce` is a hard fail.
-- ultraweb:cards — fixed-height card titles (and ultraweb:data-display's stat blocks) are the primary text-spacing (1.4.12) clip risk; they own the `min-height` + flex fix item 8 reports.
-- ultraweb:footer — carries the `/barrierefreiheit` link beside Impressum + Datenschutz that item 9 checks.
-- ultraweb:i18n — owns the German-language `/barrierefreiheit` route and copy; this gate only verifies it exists and tells the truth.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

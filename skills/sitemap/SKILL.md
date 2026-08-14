@@ -1,6 +1,6 @@
 ---
 name: sitemap
-description: Information architecture for an ultraweb build — decides the page list, routes, nav structure, and per-page purpose plus conversion goal from design/BRIEF.md, and writes part 1 of design/SITEMAP.md. Invoke in Phase 4 (Structure) of the ultraweb pipeline, immediately before ultraweb:wireframe; also when the user asks "what pages does this site need", "plan the pages", "restructure the navigation", "should this be a one-pager", "which legal pages does my jurisdiction require" (Impressum + Datenschutz for a DE/AT/CH business), or (via ultraweb:iterate) "add a page".
+description: Information architecture for an ultraweb build — decides the page list, routes, nav structure, and per-page purpose plus conversion goal from design/BRIEF.md, and writes part 1 of design/SITEMAP.md. Invoke in Phase 4 (Structure) of the ultraweb pipeline, immediately before ultraweb:wireframe; also when the user asks "what pages does this site need", "plan the pages", "restructure the navigation", "should this be a one-pager", "which legal pages does my jurisdiction require" (Impressum + Datenschutz for a DE/AT/CH business), or (via ultraweb:iterate) "add a page". The sitemap.xml crawler file is ultraweb:seo's — this skill decides pages, not metadata.
 ---
 
 # sitemap — every page earns its route

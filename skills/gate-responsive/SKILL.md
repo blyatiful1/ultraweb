@@ -56,6 +56,10 @@ Route each defect to its owner and fix there — never patch with a stray `overf
 
 Final sweep, zero fixes in between: every route × 3 breakpoints has a screenshot on disk; overflow evaluation `false` everywhere; touch-target evaluation empty outside the inline exception; mobile-menu open + navigation proven with screenshots; console clean per pixel-qa's report. Anything pixel-qa listed as "could not verify" is a fail, not a footnote.
 
+## Degraded mode (no browser)
+
+When Phase 0's preflight reported no Playwright MCP, this gate's verdict is **UNVERIFIED** — a third state, never conflated with PASS or FAIL. What still runs, in full: the code-side responsive audit (grep for fixed pixel widths, missing `sizes` on fill images, viewport meta, absent breakpoint variants in section components) — defects it finds are real and get fixed. What cannot run: screenshots, overflow evaluation, touch-target measurement, the mobile-menu proof. The QA.md entry states exactly that: `UNVERIFIED — no browser: code audit clean; screenshots/overflow/touch-targets/menu unproven. Verify before relying on mobile.` The build proceeds and may ship — `ship` carries the UNVERIFIED line into its report. Banned: writing PASS on a code audit alone, or letting "could not verify" from a WORKING browser (a route that wouldn't load) hide inside UNVERIFIED — that one is still a fail.
+
 ## QA.md entry
 
 ```markdown

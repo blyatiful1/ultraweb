@@ -1,6 +1,6 @@
 ---
 name: hidden-craft
-description: The opt-in hidden-craft layer — one tasteful reward for the curious that signals human authorship: a styled console.log signature (never leaks secrets), an on-brand not-found.tsx micro-scene, one keyboard easter egg, and humans.txt / HTTP-header touches. Every gesture is pure enhancement — never gates content, never hurts LCP or a11y, always skippable, ONE per site not a scavenger hunt. Invoke in the last-2% craft pass, or when the user says "console easter egg", "custom 404", "not-found page", "Konami code", "humans.txt", "view-source comment", or "make it feel handcrafted"; skip it entirely for trust-critical clients (law, finance) who want none.
+description: The opt-in hidden-craft layer — one tasteful reward for the curious that signals human authorship: a styled console.log signature (never leaks secrets), an on-brand not-found.tsx micro-scene, one keyboard easter egg, and humans.txt / HTTP-header touches. Every gesture is pure enhancement — never gates content, never hurts LCP or a11y, always skippable, ONE per site not a scavenger hunt. Invoke in the last-2% craft pass, or when the user says "console easter egg", "Konami code", "humans.txt", "view-source comment", or "make it feel handcrafted"; skip it entirely for trust-critical clients (law, finance) who want none. Building the 404 route itself ("custom 404", "not-found page") is ultraweb:routing's — this skill only adds the reward layer on top of a 404 that already exists.
 ---
 
 # hidden-craft — rewards for the person who looks closer

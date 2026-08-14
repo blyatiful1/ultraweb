@@ -1,6 +1,6 @@
 ---
 name: analytics
-description: Conversion measurement closing the pipeline's open loop — brief defines the goals, sitemap assigns one per route, this skill counts them: cookieless-first tool choice (EU-hosted Plausible or self-hosted Umami on the locked Postgres, per STACK.md), the §25 TTDSG/TDDDG reasoning that makes a consent banner unnecessary, an event taxonomy transcribed from design/SITEMAP.md's conversion-goal column, a typed track() helper that won't compile an unlisted event, CTA instrumentation named after the goal not the widget, and the rule that anything cookie-based loads behind ultraweb:consent while GA4-by-default stays banned. Invoke in Phase 7 whenever the brief names a conversion worth counting — trigger phrases — "add analytics", "track conversions", "measure the funnel", "set up Plausible", "do we need a cookie banner for analytics".
+description: Conversion measurement closing the pipeline's open loop — brief defines the goals, sitemap assigns one per route, this skill counts them: cookieless-first tool choice (EU-hosted Plausible or self-hosted Umami on the locked Postgres, per STACK.md), the §25 TTDSG/TDDDG reasoning that makes a consent banner unnecessary, an event taxonomy transcribed from design/SITEMAP.md's conversion-goal column, a typed track() helper that won't compile an unlisted event, CTA instrumentation named after the goal not the widget, and the rule that anything cookie-based loads behind ultraweb:consent while GA4-by-default stays banned. Invoke in Phase 7 whenever the brief names a conversion worth counting — trigger phrases — "add analytics", "track conversions", "measure the funnel", "set up Plausible". The consent banner itself — building it, wording it, gating scripts behind it — is ultraweb:consent's; this skill only decides what gets measured and with which tool.
 ---
 
 # analytics — count the goals you promised
@@ -129,26 +129,8 @@ And the constitutional one: an event you couldn't defend to the visitor in one s
 
 ## Worked example — Kaffeewerk Ost, the shop → Abo funnel
 
-design/SITEMAP.md, Conversion goal column, verbatim: `/` → *"Buy"* (the exit to `/shop` lives in the Purpose column, per `ultraweb:sitemap` step 4), `/shop` → *"Buy"*, `/shop/[slug]` → *"Buy"*, `/abo` → *"Subscribe"*, `/roesterei` → *"Read next"*, `/kontakt` → *"Contact"*.
-
-Decision: **Plausible, EU-hosted**, proxied first-party through a `/stats/*` rewrite — script URL and `data-api` endpoint together. Six routes, four goals, **four events** — `add-to-cart` `{slug}`, `order-complete`, `abo-subscribe` `{plan}`, `kontakt-send`. `/roesterei` gets none. The two `add-to-cart` surfaces — the rust `oklch(0.62 0.16 45)` "In den Warenkorb" button on the `/shop` grid card and the same button on `/shop/[slug]` — fire the *same* event with `{ slug: "roestung-14" }`, so the roast comparison survives a layout change; `{ placement: "grid" | "detail" }` is the one prop added when the client asks which surface converts. `order-complete` and `abo-subscribe` `{ plan: "250g-monatlich" }` fire from the Stripe webhook, so a card decline can never register as a sale. Verification: Application tab empty on a fresh load, the events POST landing on `kaffeewerk-ost.de/stats/event` and not on the vendor's origin, one event per click in realtime.
-
-Rejected: GA4 plus a cookie banner, the agency's default — it sets cookies, so it drags back the banner `ultraweb:consent` just deleted for this exact client, and its US transfers were ruled unlawful (per STACK.md). Honestly conceded: **self-hosted Umami** was the closer call — the Drizzle Postgres is already locked and it costs no per-site fee — and it loses here only because Kaffeewerk has no one to own an upgrade; on any build that already runs a VPS, Umami is the better call.
-
-Handoff: `ultraweb:consent` keeps its single `embeds` category — this skill added nothing to the banner; `ultraweb:gate-performance` counts the deferred script in the page budget; `ultraweb:gate-content` already checks each page's headings argue for the same goal this now counts; the dictionary ships in the `ultraweb:handoff` README.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- **ultraweb:consent** — the boundary: cookieless tools live outside it, anything writing to the device (GA4, ad pixels, replay) is a category in its context and loads only when granted. Choosing the tool here is how consent's banner stays deleted.
-- **ultraweb:sitemap** — the conversion-goal column is transcribed into the event list; one goal per route, one event per goal, no invention.
-- **ultraweb:brief** — upstream: it decides what counts as a conversion at all, and whether this skill runs.
-- **ultraweb:buttons** — the CTA carrying each goal is where instrumentation lands; the handler goes on the button so keyboard activation counts too.
-- **ultraweb:app-structure** — `track()` callers are `"use client"` leaves, never a layout, never an RSC render body.
-- **ultraweb:server-actions** — form goals fire from the action's success state, never on submit; validation failures are not conversions.
-- **ultraweb:payments** — the Stripe webhook is where `order-complete` / `abo-subscribe` are counted, beside the outbox row it already writes.
-- **ultraweb:database** — hosts self-hosted Umami on the already-locked Postgres when that row of the tool table wins.
-- **ultraweb:copywriting** — writes the /datenschutz analytics paragraph in the site's voice from the facts this skill supplies (tool, data, legal basis, retention).
-- **ultraweb:gate-content** — checks the heading story argues for the route's goal; this skill checks the goal actually happened. Same column, two ends.
-- **ultraweb:gate-performance** — the tag counts against the page transfer budget like any other script; a tag manager fails it.
-- **ultraweb:ship** — env audit covers the server-only stats key, and the launch check confirms the first-party proxy answers in production.
-- **ultraweb:handoff** — the event dictionary is a handoff artifact: what is measured, why, and which SITEMAP goal each event maps to.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

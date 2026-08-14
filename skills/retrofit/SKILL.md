@@ -13,7 +13,7 @@ A diagnosis a studio would charge for: every gap carries evidence (a screenshot 
 
 ## Process
 
-1. **Qualify the patient.** Read package.json and the tree. Next.js App Router → proceed. Pages Router, CRA, or another framework → say so and stop; retrofit audits, it doesn't port. Offer a fresh `ultraweb` build as the alternative.
+1. **Qualify the patient.** First: if `design/DIRECTION.md` already exists, STOP — this is an ultraweb site, and retrofit against it would overwrite real recorded decisions with reconstructed guesses. A complete record is `ultraweb:iterate`'s case; a partial one is the root skill's §Resuming ladder. Then read package.json and the tree. Next.js App Router → proceed. Pages Router, CRA, or another framework → say so and stop; retrofit audits, it doesn't port. Offer a fresh `ultraweb` build as the alternative.
 2. **Inventory.** Routes (every `app/**/page.tsx`), components, styling entry (`@theme` in app/globals.css vs `tailwind.config.js` — the config file marks Tailwind v3), and deps of record: next major, `framer-motion` vs `motion`, zod major, `middleware.ts` (pre-Next-16 signal) vs `proxy.ts`.
 3. **Static anti-slop sweep** — grep the banned list before rendering anything:
    - `lorem`, `href="#"`, `Feature 1`, `placeholder.com`

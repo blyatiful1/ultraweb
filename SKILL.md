@@ -1,6 +1,6 @@
 ---
 name: ultraweb
-description: Build a complete, first-grade Next.js website through a guided design session — a short scoping interview tailored to what the site is, three fast mockup candidates the user picks from, then the full pipeline from design system through components, copy, motion, backend, and quality gates to a shippable site, with human-in-the-loop checkpoints on a studio cadence (first-page review on the built homepage, preflight/UAT acceptance before ship; a dial from hands-off to full sign-off-at-every-milestone). Use when the user asks to build, create, or make a website, landing page, marketing site, portfolio, or web app ("build me a site for X", "create a landing page", "make a website"), or asks for a full redesign. "Just build it" / "no questions" runs the classic one-prompt autonomous mode instead. For targeted changes to an existing site use ultraweb:iterate; for judging an existing site use ultraweb:retrofit.
+description: Build a complete, first-grade Next.js website through a guided design session — a short scoping interview tailored to what the site is, three fast mockup candidates the user picks from, then the full pipeline from design system through components, copy, motion, backend, and quality gates to a shippable site, with human-in-the-loop checkpoints on a studio cadence (first-page review on the built homepage, preflight/UAT acceptance before ship; a dial from hands-off to full sign-off-at-every-milestone) and a scope dial (sketch / standard / flagship) that sizes the pipeline to the ask. Use when the user asks to build, create, or make a website, landing page, marketing site, portfolio, or web app ("build me a site for X", "create a landing page", "make a website"), or asks for a full redesign — and when a previous build was interrupted and should continue ("continue the build", "resume", "where were we": see §Resuming). "Just build it" / "no questions" runs the classic one-prompt autonomous mode instead. For targeted changes to an existing site use ultraweb:iterate; for judging an existing site use ultraweb:retrofit.
 ---
 
 # ultraweb — one guided session → first-grade website
@@ -19,7 +19,19 @@ How much the user is in the loop is a dial, not a switch — set once, from thei
 | **guided** (default) | saying nothing either way | CP2 direction approval (the mockup round) · CP4 first-page review · CP6 preflight/UAT |
 | **studio** | "walk me through it", "check in with me at every step", "I want sign-off" | all six: CP1 brief read-back · CP2 · CP3 structure sign-off · CP4 · CP5 voice review · CP6 |
 
-The cadence copies where real studios put client involvement: heavy at discovery and design approval, thin during production, back for acceptance. A checkpoint that cannot reach a human auto-passes with a logged `Auto-passed (unattended)` — human-in-the-loop upgrades quality, it never deadlocks a build.
+The cadence copies where real studios put client involvement: heavy at discovery and design approval, thin during production, back for acceptance. A checkpoint that cannot reach a human auto-passes with a logged `Auto-passed (unattended)` — human-in-the-loop upgrades quality, it never deadlocks a build. **The dial is re-settable mid-build**: "stop asking me" or "check with me more" at any point moves the level, logged as a new line in REVIEWS.md — the user never has to finish at the involvement they started with. And "unattended" is a session property, never a patience judgment: an interactive session with a slow human WAITS at a checkpoint; only a session that cannot ask (scheduled run, CI, non-interactive) auto-passes.
+
+## Scope tiers
+
+A second dial, independent of engagement: how much pipeline the ask deserves. Set once from the user's own words, recorded next to the engagement level at the top of `design/REVIEWS.md` and in `design/PROGRESS.md`. A one-page landing site must not pay a twelve-phase price.
+
+| Tier | Set by | What changes |
+|------|--------|--------------|
+| **sketch** | "landing page", "one-pager", "quick", "cheap", "rough" | Two mockup candidates, not three · Phase 4 collapses into the brief (one page, sections listed there) · Phases 7 and 10's i18n/print skipped unless the brief demands them · `gate-visual` capped at one judge round, `gate-performance` homepage-only · solo mode forced · no `references/` files loaded |
+| **standard** (default) | saying nothing either way | the full pipeline as written below |
+| **flagship** | "go all out", "best possible", "award-worthy", "money no object" | standard + eligibility for `showpiece`/`set-design` commissions + `gate-visual` ceiling raised to five rounds |
+
+Gates weaken only where a tier row says so, in writing — a sketch build still refuses slop, still passes `gate-code` and `gate-antislop` in full. When a sketch-tier site later grows ("now add a shop"), that is `ultraweb:iterate` at standard depth for the new surface, not a rebuild.
 
 **Before anything else: invoke `ultraweb:taste`.** It is the constitution — every decision in this pipeline is subordinate to it.
 
@@ -38,43 +50,63 @@ A site is first-grade when ALL of these hold — verified, not assumed:
 
 ## Artifact contract
 
-Every phase writes its decisions to files in the generated project. Later phases READ these — this is how 75 skills stay coherent. Never skip an artifact.
+Every phase writes its decisions to files. Later phases READ these — this is how 80 skills stay coherent. Never skip an artifact.
+
+**Where `design/` lives: at the project root.** Phases 0–4 run before the app exists, so they write to `./design/` in the working directory; `scaffold` step 2 then inits the app subdirectory and **immediately moves `design/` into it** (recorded in PROGRESS.md), then verifies `design/BRIEF.md` resolves from the new project root before any further step. A scaffold that orphans the artifacts is a defect — they contain the only irreplaceable output of the build: the human's answers and approvals.
 
 | File | Written by | Contains |
 |------|-----------|----------|
+| `design/PROGRESS.md` | status (rewritten by the Lead at every phase boundary and checkpoint open/close) | Current phase, what's running, whether the build is waiting on the human, next checkpoint ETA + effort, per-phase durations |
 | `design/BRIEF.md` | brief | Audience, purpose, tone, content inventory, backend needs — interview answers folded in as decisions |
+| `design/ASSETS.md` | assets | Inventory of client-supplied material mapped to consuming slots, extracted constraints, or the explicit "No client assets provided" line |
 | `design/MOCKUPS.md` | mockup (guided mode) | Candidate roster per round, user verdicts, and the Approved line that green-lights Phase 3 |
-| `design/REVIEWS.md` | checkpoint | Engagement level + one block per activated checkpoint: what was presented, verdicts near-verbatim, the Approved/Auto-passed line |
+| `design/REVIEWS.md` | checkpoint | Engagement level + scope tier + one block per activated checkpoint: what was presented, verdicts near-verbatim, the Approved/Auto-passed line |
 | `design/mockups/*.html` | mockup (guided mode) | One throwaway static preview per candidate — visual reference only, never source |
 | `design/DIRECTION.md` | direction | Archetype, signature move, references, what we will NOT do |
 | `design/SYSTEM.md` | foundation phase | Palette, type pairing, spacing rhythm, motion vocabulary + rationale |
+| `design/IDENTITY.md` | identity | The brand mark's construction: lockup, clear-space, minimum sizes, misuse list (SVGs in `public/brand/`) |
 | `design/SITEMAP.md` | sitemap + wireframe | Pages, routes, per-page section blueprints |
-| `design/QA.md` | every gate | Gate results, screenshots taken, issues found/fixed |
+| `design/SEO.md` | seo | Findability decisions that need a record: AI-crawler policy + reason, canonical strategy |
+| `design/QA.md` | every gate, appended by iterate re-gates | Gate results, screenshots taken, issues found/fixed |
+| `design/studio-log.jsonl` | the plugin's PostToolUse hook (no model calls) | Timestamped agent/tool activity feed; read by the `/studio` route |
 | `app/globals.css` | tokens | The entire design system as Tailwind v4 `@theme` tokens |
+
+## Context discipline
+
+The largest cost line in a build is re-reading its own paper trail. Three hard rules:
+
+1. **Each `design/*` artifact is read ONCE per context.** A skill's `Reads:` line declares a dependency, not an instruction to re-open the file — if it is already in this context, do not Read it again.
+2. **Re-read an artifact only after something in THIS context wrote to it.**
+3. **Never Read back a file you just wrote.** Write and Edit fail loudly; silence means the content on disk is what you sent.
+
+The same discipline governs skill loading: a skill's `references/` files (worked examples, catalogs, dossiers) are loaded only when the build's case genuinely needs them — the SKILL.md core is the decision material.
 
 ## Pipeline
 
-Run the phases in order. Each phase names the skills to invoke — invoke them, don't paraphrase from memory.
+Run the phases in order. Each phase names the skills to invoke — invoke them, don't paraphrase from memory. At every phase boundary the Lead rewrites `design/PROGRESS.md` (`ultraweb:status` owns the format) — twelve small writes that buy the user "where are we" at any moment and buy a fresh session its resume point.
 
-### Phase 1 — Understand (skills: `brief`)
-Classify the site type from the prompt, then run the **scoping interview** (guided mode): one round of up to four multiple-choice questions, generated from what THIS prompt left open — never a fixed questionnaire. An e-commerce prompt forks on catalog size, subscriptions, and checkout ownership; a restaurant on reservations and languages; a portfolio on depth of case studies. Questions cover scope, features, audience, and content — never colors, fonts, or style (Phase 2 shows those; it does not ask about them). A second round only if an answer opens a genuinely new fork; two rounds is the ceiling. Fold the answers into `design/BRIEF.md` as committed decisions; everything unasked is still decided and logged in §Assumed facts. Autonomous mode: skip the interview — decide everything, as before. Studio level: close the phase with **CP1 brief read-back** (`ultraweb:checkpoint`) — the brief summary and §Assumed facts as a correctable list; corrections land back as committed decisions.
+### Phase 0 — Preflight (no skills — two minutes that prevent a five-hour dead end)
+Before the interview, verify the room: **(1) Skills resolve** — invoke `ultraweb:taste` (the constitution, always first). If it does not resolve, STOP with an install-repair message: the specialist skills did not load and ultraweb is half-installed — reinstall via the marketplace path in README. Never work around a missing constitution. **(2) Toolchain** — node ≥ the version STACK.md's stack demands, npm, git present; target directory writable. **(3) Eyes** — Playwright MCP reachable (ToolSearch `+playwright browser`). If missing, say plainly, BEFORE any expensive work: "the visual, responsive, and accessibility gates will run **UNVERIFIED** — the site still builds and ships, QA.md records the gap" (with the MCP install pointer), and ask once whether to continue; in an unattended session, log it and continue. **(4) Report** — print a one-block capability report and record it in `design/PROGRESS.md`. A missing capability discovered in Phase 11 is a preflight bug, not bad luck.
+
+### Phase 1 — Understand (skills: `brief`; `assets` whenever the user names existing material — a logo, photos, copy docs, a brand guide, a current site)
+Classify the site type from the prompt, then run the **scoping interview** (guided mode): one round of up to four multiple-choice questions, generated from what THIS prompt left open — never a fixed questionnaire. An e-commerce prompt forks on catalog size, subscriptions, and checkout ownership; a restaurant on reservations and languages; a portfolio on depth of case studies. Questions cover scope, features, audience, and content — never colors, fonts, or style (Phase 2 shows those; it does not ask about them). Every question carries a marked default ("skip — I'll decide") so answering is never homework; a skipped question is decided and logged like an unasked one. A second round only if an answer opens a genuinely new fork; two rounds is the ceiling. Fold the answers into `design/BRIEF.md` as committed decisions; everything unasked is still decided and logged in §Assumed facts. When the user pointed at existing material, `assets` runs now and writes `design/ASSETS.md` — downstream skills read it before inventing. Autonomous mode: skip the interview — decide everything, as before. Studio level: close the phase with **CP1 brief read-back** (`ultraweb:checkpoint`) — the brief summary and §Assumed facts as a correctable list; corrections land back as committed decisions.
 
 ### Phase 2 — Direction (skills: `direction`, `mockup` in guided mode — `award-canon` consulted for references and signature-move precedent)
-Shortlist THREE deliberately contrasting archetypes for this brief. In guided mode, `mockup` renders each candidate as one fast, self-contained static HTML preview (hero + 2–3 decision-carrying sections, real OKLCH palette, real type pairing, copy sketched in the brief's voice) in `design/mockups/`, presents them side by side, and the user picks one, mixes named elements across candidates, or requests a revised round — looping until an explicit approval, every round logged in `design/MOCKUPS.md` (this round is **CP2** in the checkpoint cadence; REVIEWS.md links here rather than duplicating). Only the approved candidate becomes `design/DIRECTION.md` (a commissioned mix becomes the recorded twist). **The approval is the gate: no Phase 3+ work, no scaffold, no downstream fan-out until the Approved line exists** (the three mockup candidates themselves are the one thing that may fan out before it — they are how the approval gets earned). Mockup code is throwaway — the build re-derives everything from the artifacts and never copies mockup markup. Autonomous mode: skip the mockup round, commit to ONE archetype directly. Either way this is the highest-leverage decision of the build — spend real thought here.
+Shortlist THREE deliberately contrasting archetypes for this brief (two at sketch tier). In guided mode, `mockup` renders each candidate as one fast, self-contained static HTML preview (hero + 2–3 decision-carrying sections, real OKLCH palette, real type pairing, copy sketched in the brief's voice) in `design/mockups/`, presents them side by side — plus a single `design/mockups/index.html` contact sheet so the user compares in one tab instead of holding three in working memory — and the user picks one, mixes named elements across candidates, or requests a revised round — looping until an explicit approval, every round logged in `design/MOCKUPS.md` (this round is **CP2** in the checkpoint cadence; REVIEWS.md links here rather than duplicating). Only the approved candidate becomes `design/DIRECTION.md` (a commissioned mix becomes the recorded twist). **The approval is the gate: no Phase 3+ work, no scaffold, no downstream fan-out until the Approved line exists** (the three mockup candidates themselves are the one thing that may fan out before it — they are how the approval gets earned). Immediately after the Approved line is written, print the **session map** (`ultraweb:status` format): the remaining phases, which are silent, where the next checkpoint falls, roughly when, and how many minutes of the user's time it will want — a time-blind user should never have to guess whether to stay or go. Mockup code is throwaway — the build re-derives everything from the artifacts and never copies mockup markup. Autonomous mode: skip the mockup round, commit to ONE archetype directly. Either way this is the highest-leverage decision of the build — spend real thought here.
 
-### Phase 3 — Foundation (skills: `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `imagery`, `motion-language`, plus `theme-worlds` if the brief needs per-route/per-case-study worlds — then `tokens` LAST)
-Design the system before any component: OKLCH palette with dark mode, font pairing (never default-Inter-only), spacing rhythm, elevation and shape language, image treatment, easing/duration vocabulary. Each skill writes its `design/SYSTEM.md` section; `tokens` runs last and compiles every decision into `@theme` tokens in `app/globals.css`.
+### Phase 3 — Foundation (skills: `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `imagery`, `motion-language`, plus `theme-worlds` if the brief needs per-route/per-case-study worlds; `identity` after `typography` — then `tokens` LAST)
+Design the system before any component: OKLCH palette with dark mode, font pairing (never default-Inter-only), spacing rhythm, elevation and shape language, image treatment, easing/duration vocabulary. `identity` runs once the display face is committed: the wordmark, the monogram that feeds `icon.tsx`, and the OG template — a site with an unowned logo slot is a template, not a commission (a client-supplied mark from ASSETS.md gets formalized, never redrawn). Each skill writes its `design/SYSTEM.md` section; `tokens` runs last and compiles every decision into `@theme` tokens in `app/globals.css`.
 
 ### Phase 4 — Structure (skills: `sitemap`, `wireframe`)
 Pages, routes, and a section-by-section blueprint for each page in `design/SITEMAP.md`. Every section names which component skill builds it. Studio level: close with **CP3 structure sign-off** — the page list with one line per section; a missing or extra page caught here costs an edit, caught in Phase 6 it costs a build.
 
-### Phase 5 — Scaffold (skills: `scaffold`, `app-structure`)
-Init the Next.js app (current stable, App Router, TS strict, Tailwind v4, shadcn/ui, motion, lucide). Wire tokens into `globals.css`. Commit the RSC/client boundary plan.
+### Phase 5 — Scaffold (skills: `scaffold`, `app-structure`, `studio`)
+Init the Next.js app (current stable, App Router, TS strict, Tailwind v4, shadcn/ui, motion, lucide) — moving `design/` to the project root per the artifact-contract location rule, and re-entrantly: scaffold's step 0 detects a partially-built tree and enters at the first incomplete step instead of re-initializing. Wire tokens into `globals.css`. Commit the RSC/client boundary plan. `studio` adds the dev-only `/studio` construction-site route (skipped at sketch tier) — the user's live window into the build, at zero token cost per update.
 
 ### Phase 6 — Build (skills: contract — `component-api` (every component obeys it); per section — `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`, `overlays`; commerce — `cart`, `product-detail`; search — `command-palette`; long-form — `marginalia`; system usage — `icons`; engineering — `routing`, `data-fetching`, `media-optimization`)
 Build section by section following `design/SITEMAP.md`. Each section consults its skill for the quality bar and anti-patterns. Desktop AND mobile designed together, not mobile-as-afterthought.
 
-**Build order: the homepage first, completely, before any inner page.** It exercises the whole system — tokens, hero, navigation, footer, section rhythm — so a system-level defect surfaces on one page instead of being rolled across all of them. At guided/studio level, **CP4 first-page review** runs on the finished homepage (screenshots at 375 and 1440): the user confirms the built reality matches the mockup they approved, feedback routes through the owning skills per `ultraweb:checkpoint`, and only then do inner pages roll out inheriting the fixes. Hands-off: same build order (the rework saving is real regardless), no stop.
+**Build order: the homepage first, completely, before any inner page.** It exercises the whole system — tokens, hero, navigation, footer, section rhythm — so a system-level defect surfaces on one page instead of being rolled across all of them. At guided/studio level, **CP4 first-page review** runs on the finished homepage (screenshots at 375 and 1440, plus a `ultraweb:preview` URL when Vercel auth exists — the user reviews on their own phone, not PNGs of localhost): the user confirms the built reality matches the mockup they approved, feedback routes through the owning skills per `ultraweb:checkpoint`, and only then do inner pages roll out inheriting the fixes. Hands-off: same build order (the rework saving is real regardless), no stop.
 
 ### Phase 7 — Backend (skills as needed: `server-actions`, `api-design`, `database`, `auth`, `email`, `payments`, `content-cms`, `storage`, `analytics` whenever the brief's conversion goals need measuring, plus `consent` whenever any third-party tracking/cookies load)
 Only what `design/BRIEF.md` demands — a brochure site gets a contact form action, not a database. Whatever is built gets validation (zod), error states, and honest failure UX.
@@ -89,13 +121,25 @@ The choreography pass, applied to the finished layout. Respect `prefers-reduced-
 Metadata API, generated OG images, sitemap/robots, JSON-LD where it fits.
 
 ### Phase 11 — Gates (skills: `gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content`)
-Run ALL gates; loop fix→re-gate until green. `gate-visual` and `gate-responsive` require real screenshots (Playwright MCP). Record everything in `design/QA.md`. Do not report done with a red gate.
+Run ALL gates; loop fix→re-gate until green. `gate-visual` and `gate-responsive` require real screenshots (Playwright MCP). When Phase 0 reported no browser, their screenshot halves record **UNVERIFIED** — a third verdict, distinct from PASS and FAIL: everything code-checkable still runs in full (build, types, greps, computed contrast from tokens, link checks), QA.md states exactly what went unseen, and the build ships honest about the gap instead of dead-ending here. Record everything in `design/QA.md`. Do not report done with a red gate — and never write PASS where the truth is UNVERIFIED.
 
-### Phase 11.5 — Acceptance (skills: `checkpoint` — guided/studio)
-**CP6 preflight/UAT**, strictly AFTER every gate is green: the user reviews a working site with real content — gate summary, per-route screenshots, a what-to-click list. They are the acceptance test, never the smoke test; the client being first QA is the cardinal studio error this ordering exists to prevent. Ship waits for the Approved line (or the logged auto-pass).
+### Phase 11.5 — Acceptance (skills: `checkpoint`, `preview` — guided/studio)
+**CP6 preflight/UAT**, strictly AFTER every gate is green: the user reviews a working site with real content — gate summary, per-route screenshots, a what-to-click list, and a fresh `preview` URL so the click-list is actually clickable on their own devices. They are the acceptance test, never the smoke test; the client being first QA is the cardinal studio error this ordering exists to prevent. Ship waits for the Approved line (or the logged auto-pass).
 
 ### Phase 12 — Ship (skills: `ship`, `handoff`)
 Production build, env audit, deploy if asked, and a handoff README. `ship`'s own explicit deploy confirmation still applies on top of CP6.
+
+## Resuming an interrupted build
+
+A six-hour build will sometimes be interrupted — laptop closed, session died, context compacted. When a session starts (or is asked to "continue") in a directory containing `design/`, run this ladder BEFORE any other work:
+
+1. **Read `design/PROGRESS.md` §Now.** If present, it is authoritative: report position in three lines and resume at that phase.
+2. **If absent, reconstruct from artifact presence in pipeline order:** BRIEF.md → P1 done; MOCKUPS.md Approved line → P2 done; `@theme` block in `app/globals.css` → P3 done; SITEMAP.md part 2 → P4 done; `package.json` + dev server starts → P5 done; per-route files under `app/` → P6 partial (name which routes exist); QA.md gate rows → P11 partial. `git log --oneline` is the second ledger — phase-boundary commits confirm the reconstruction.
+3. **Check for open checkpoints.** A REVIEWS.md or MOCKUPS.md block without an `**Approved**`/`**Auto-passed**` line is an OPEN checkpoint: re-present it and say plainly "you were mid-review here" — never assume the approval happened.
+4. **Never re-run a completed phase.** Rewriting DIRECTION.md or SYSTEM.md on resume is a defect, not thoroughness — the artifacts are the memory, and the Approved lines in them are the user's, not yours to re-earn.
+5. Print the reconstruction as a three-line summary, rewrite PROGRESS.md, and continue without asking permission — unless step 3 found an open checkpoint.
+
+Partial artifacts are a resume, never an `iterate` (it requires the full record) and never a `retrofit` (it would overwrite real decisions with guesses — retrofit must refuse any directory that already contains `design/DIRECTION.md`).
 
 ## Orchestration modes
 
@@ -134,6 +178,8 @@ Prompt: *"build me a website for a Berlin specialty coffee roastery with an onli
 
 ## Failure discipline
 
+- **Commit at every phase boundary**: `git commit` with the fixed message form `ultraweb: phase 6 — homepage complete` (create-next-app's `git init` provides the repo; Phases 1–4 artifacts get committed retroactively at Phase 5). `git log --oneline` becomes a second phase ledger that survives anything, `git status` answers "what did a dying agent leave half-written", and every fix pass has a rollback point. Never push or create remotes uninvited — local commits only.
+- **The dev server has one owner: the Lead.** Started once in Phase 5, PID and port recorded in PROGRESS.md; gates and agents are given the URL, they never start their own. After any change to config, tokens, or dependencies, the Lead restarts it deliberately — a stale server makes every screenshot a lie.
 - A gate that fails twice on the same issue: stop patching symptoms, re-read the relevant skill, fix the root cause.
 - In guided mode, Phase 3+ work without an Approved line in `design/MOCKUPS.md` is a defect, not initiative — stop and get the approval. Three mockup rounds without one means the shortlist is wrong: re-shortlist, don't grind.
 - Checkpoint feedback is a consolidated round, max two per checkpoint — a third request means an upstream phase is wrong; escalate per `ultraweb:checkpoint`, never sand the same spot. And feedback routes through the owning skill (color → `color`/`tokens`, copy → `copywriting`), never inline pokes at the complaint site.

@@ -1,6 +1,6 @@
 ---
 name: gate-code
-description: Build/type/lint quality gate for the ultraweb pipeline — proves the codebase green with commands, not claims. Runs npm run build to exit 0, npx tsc --noEmit clean under strict, ESLint via the CLI directly (next lint is REMOVED in Next 16), serves every route in dev with a clean console, audits every "use client" directive for count and placement (leaves, never layouts), greps for stack relics (middleware.ts, framer-motion, priority prop, Tailwind v3 patterns), and sweeps package.json for unused dependencies, then runs a dependency-free token-contract linter that fails on undeclared @theme tokens or any foreground/surface pair below WCAG AA. Invoke in Phase 11 of the ultraweb pipeline as the FIRST gate — nothing visual gets judged on a broken build — after any multi-file code change to an ultraweb site, or when the user says "run the code gate", "does it build", "check types and lint", "is the build clean", or "check the token contract". Writes a dated pass/fail entry with command evidence to design/QA.md.
+description: Build/type/lint quality gate — the FIRST gate of Phase 11 (nothing visual gets judged on a broken build). Invoke there, after any multi-file code change to an ultraweb site, or on "run the code gate", "does it build", "check types and lint", "is the build clean", "check the token contract". Proves the codebase green with commands, not claims: clean npm run build and strict tsc --noEmit, ESLint via the CLI (next lint is removed in Next 16), every route served with a clean console, "use client" placement audit, stack-relic greps, unused-dependency sweep, and a token-contract linter failing undeclared @theme tokens or sub-AA color pairs. Writes a dated pass/fail entry with command evidence to design/QA.md.
 ---
 
 # gate-code — green by command, not claim
@@ -148,31 +148,8 @@ Issues fixed: removed unused `date-fns`; moved "use client" from app/page.tsx to
 
 ## Worked example — Tidepool, first cold pass of the code gate
 
-design/SITEMAP.md lists six routes for the "Precision Instrument" build — `/`, `/product`, `/pricing`, `/docs`, `/changelog`, `/login`. The cold pass caught two defects worth recording:
-
-| # | Check | Result | Evidence |
-|---|-------|--------|----------|
-| 2 | npx tsc --noEmit | FAIL → PASS | `app/(marketing)/changelog/page.tsx` read `searchParams.tag` without `await` — a Promise in Next 16 |
-| 5 | RSC boundary audit | FAIL → PASS | `components/hero/berth-timeline.tsx` imports `motion/react`, no `"use client"` |
-| 8 | token contract + AA | FAIL → PASS | `--muted-foreground` on `--muted` in `.dark` measured 4.19:1; `var(--surface-2)` in `components/pricing/tier-card.tsx` was undeclared |
-
-The signature-move defect (check 5): the live-updating berth timeline animates its JetBrains Mono numerals with `useSpring` from `motion/react` but shipped as a server component, so `grep -rl "motion/react" app components | xargs -r grep -L "use client"` returned it. Fix: `"use client"` added at that one leaf — `app/(marketing)/page.tsx` stayed a server component composing it. Re-check returned empty; the census held at 11 client files, 0 in layouts.
-
-The token-contract script (check 8) caught what eyeballing had missed on both counts: in `.dark`, `--muted-foreground` — the pricing fine-print color — sat at 4.19:1 on `--muted`, so its lightness went 0.62→0.68 to clear 4.5:1; and `components/pricing/tier-card.tsx` still referenced `var(--surface-2)`, a token renamed to `--surface-raised` weeks earlier, which had been rendering transparent unnoticed. Both fixes are owned by ultraweb:tokens/ultraweb:color; the script re-ran to exit 0.
-
-Rejected the lazy fix of hoisting `"use client"` onto `app/(marketing)/layout.tsx` to make the hook error vanish — that turns the whole marketing tree client and defeats the boundary plan; the directive belongs at the leaf. Check 2's fix — `await`-ing `searchParams` before reading `.tag` in `app/(marketing)/changelog/page.tsx` — re-ran `npx tsc --noEmit` to exit 0, silent, and is owned by ultraweb:routing, which takes back every unawaited `params`/`searchParams`; the check 5 boundary fix stays with ultraweb:app-structure. The dated PASS lands in design/QA.md, and ultraweb:gate-performance reads the same client-file census next for bundle weight.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:scaffold — its final smoke test is this gate's preview: same commands, Phase 5
-- ultraweb:app-structure — owns the boundary plan that check 5 audits against
-- ultraweb:gate-performance — reads the same "use client" census for bundle weight; this gate owns correctness, that one owns cost
-- ultraweb:ship — re-runs build + start against production env vars before deploy
-- stack-doctor (subagent) — receives every build/type/tooling failure with the verbatim error
-- ultraweb:routing — check 4 serves every route in the tree it owns; an unawaited `params`/`searchParams` caught by check 2 is handed back here to fix
-- ultraweb:server-actions — when tsc or the boundary audit flags a form action's `(prevState, formData)` signature or its `useActionState` wiring, the fix lands there
-- ultraweb:tokens — declares the `@theme` contract check 8 enforces; adding the token there is the only way to satisfy an undeclared-token failure
-- ultraweb:color — its design-time AA pass becomes this gate's every-build assertion; a failing pair is handed back there to re-decide the lightness step
-- ultraweb:component-api — a variant that resolves to an undeclared token or an AA-failing pair fails here at build time, not in visual review
-- ultraweb:animejs — checks 6 and 7 enforce its v3-relic ban and its DIRECTION-citation gate
-- ultraweb:set-design — checks 6 and 7 enforce its fiber-v9 idioms, its exact `three` pin and `@types/three` lock, and its DIRECTION-citation gate including the route scope
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

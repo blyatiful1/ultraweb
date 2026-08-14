@@ -130,24 +130,8 @@ Generalize the Munich Google-Fonts ruling past fonts: the exposure is the *reque
 
 ## Worked example — Kaffeewerk Ost, Berlin roastery shop + /abo (German-first, TTDSG applies directly)
 
-The Phase-7 inventory finds three third parties across the built pages: product analytics, an interactive Google Map on `/kontakt` for the Prenzlauer-Berg café, and a YouTube roast-film on `/roesterei`. Applying "When NOT" first: analytics moves to **Plausible** (cookieless, §25(2)-exempt → *no consent needed*), and the Fraunces/Work Sans pair is already self-hosted via `next/font`, so there is no font-CDN and no `fonts.googleapis.com` in source. That leaves one surviving category — `embeds` — so the banner is scoped to exactly that.
-
-The banner is a **bottom bar** in the warm palette (cream ground `oklch(0.97 0.01 85)`, roast-brown text `oklch(0.28 0.03 60)`), `--radius-lg` corners, the site's 250ms ease-out slide-up honoring `prefers-reduced-motion`. Both decisions are one shared button variant: **"Alle akzeptieren"** and **"Alle ablehnen"** at identical size and contrast — terracotta fill on both, not terracotta-vs-gray — with **"Einstellungen"** as a quieter tertiary link (it opens the one `embeds` toggle, off by default). The Map and the roast-film each render through `ConsentEmbed` — a cream placeholder reading "Karte lädt externe Inhalte von Google" with an **"Karte laden"** button — so no Google or YouTube request fires until the visitor loads it. The footer carries a persistent **"Cookie-Einstellungen"** link calling `reopen()`.
-
-Verification: fresh load with the network tab open shows only first-party requests + Plausible; clicking "Alle ablehnen" and reloading keeps every embed dark; the 6-month cookie persists the choice.
-
-Rejected: the OneTrust drop-in the client's agency proposed (generic gray, its own tracker, un-restyleable), and the tempting terracotta-primary "Akzeptieren" beside a gray "Ablehnen" link — the exact Accept-as-CTA nudge this skill and `ultraweb:gate-antislop` now treat as a banned dark pattern.
-
-Handoff: `ultraweb:footer` places the reopen link; `ultraweb:gate-antislop` runs the fairness greps above at Phase 11; `ultraweb:ship` confirms the clean first-load network tab at launch.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- **ultraweb:gate-antislop** — extend its dark-pattern list (currently purely visual) with consent-UI fairness: unequal Accept/Reject, buried reject, pre-ticked categories, ungated third parties, the Google-Fonts leak, and drop-in CMPs. This skill supplies those greps; the gate enforces them.
-- **ultraweb:footer** — hosts the persistent "Cookie-Einstellungen" reopen link as a designed footer element, not a stray line.
-- **ultraweb:i18n** — every shipped locale needs full consent copy in that market's voice ("Alle akzeptieren"/"Alle ablehnen"); a half-translated banner is its own defect.
-- **ultraweb:media-optimization** — self-hosted fonts and local/`next/video` assets keep third parties (and thus the banner) off the page; a YouTube embed that must stay routes through this skill's two-click gate.
-- **ultraweb:analytics** — its cookieless default is what usually deletes the banner outright (§25(2) exemption); a cookie-based tool it flags instead becomes the `analytics` category gated here.
-- **ultraweb:seo** — analytics and Search-Console tags are gated here; the Metadata API itself sets no cookie and needs none.
-- **ultraweb:buttons** — the Accept/Reject controls inherit the button system but MUST share one variant; equal weight is the constraint that overrides ordinary CTA hierarchy.
-- **ultraweb:app-structure** — the `ConsentProvider` is the client boundary in the root layout with `{children}` passed as a server slot, so the provider doesn't force the tree client.
-- **ultraweb:ship** — the launch gate verifies no third party fires before consent (a clean network tab on first load).
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

@@ -111,40 +111,8 @@ residual: none
 
 ## Worked example — Tidepool, dark-first port-logistics analytics
 
-design/DIRECTION.md: "Precision Instrument — calm, data-forward, dark mode first-class. Signature move: the live berth timeline; no decorative glow." The dark ground is licensed; navy-glow furniture is not.
-
-Phase-11 sweep, written to design/QA.md §gate-antislop:
-
-```md
-## gate-antislop — FAIL→PASS (2026-07-16)
-greps: 7/11 clean · check 3 (emoji) 1 hit — content/changelog/2026-06-berth-eta.mdx:3, heading "⚓ Berth ETA v2"; no DIRECTION exception → defect
-check 6 (dead copy) 1 hit — components/features.tsx:22 "AI-powered berth ETA"; AI-era filler, no meaning → defect
-check 9 (glow-orb) 1 hit — components/hero.tsx:34, absolute blur-3xl div oklch(0.68 0.12 200 / .35) behind the timeline; "Precision Instrument" is not the navy-glow archetype → defect
-check 11 (AI reflexes) 2 hits — bare <Sparkles> "AI" badge on the ETA card (components/features.tsx:24, no paired icon) + a fixed bottom-6 right-6 chat launcher (app/layout.tsx:41); design/BRIEF.md AI-gate scoped no assistant → defect
-screens: rhythm 3 distinct paddings/page · asymmetry present (timeline bleeds right on /) · icon-card rows none · shadcn restyled (teal accent, radius tightened) · corner chat-bubble present bottom-right → defect
-fixed: changelog emoji → lucide Ship, 16px, stroke matched to accent teal — routed to ultraweb:icons
-fixed: "AI-powered berth ETA" → "Berth ETA, modeled from live AIS" — routed to ultraweb:copywriting; the bare Sparkles badge deleted, the JetBrains Mono ETA numeral is the signifier
-fixed: hero glow-orb deleted; the live berth timeline (JetBrains Mono numerals) carries the hero, no crutch — routed to ultraweb:showpiece
-fixed: corner chat launcher removed — the brief scoped no assistant; berth questions route to the existing contact CTA
-re-grep: checks 3, 6, 9, 11 clean · hero + footer reshot: no corner blob, reads as an instrument, not a template
-residual: none
-```
-
-Rejected the shortcut of citing the orb in DIRECTION.md just to survive the sweep — furniture is not the signature move, and a citation minted only to pass a gate is exactly the beauty-without-a-decision this gate exists to catch. Rejected too the reflex of keeping the corner chat bubble "because every SaaS has one" — design/BRIEF.md's AI-gate scoped no assistant, and a bot minted to look current is just this decade's glow-orb. Handoff: the corrected QA.md §gate-antislop feeds ultraweb:gate-visual, which re-judges the reshot hero against the required list.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:taste — the banned list this gate mechanizes; on any ambiguity, the constitution wins.
-- ultraweb:direction — the document that justifies design-cliché exceptions, pattern by pattern.
-- ultraweb:brief — for the AI-era checks (11, 17), design/BRIEF.md's AI-gate is the document that justifies a chat/assistant widget; no AI-gate entry means the corner bubble is a defect, and even a scoped assistant is relocated out of the corner.
-- ultraweb:copywriting — owns the expanded banned-phrase list and rewrites every copy hit in voice.
-- ultraweb:feature-sections — the fix when the three-icon-cards check fails.
-- ultraweb:layout-grid — the fix for wallpaper rhythm and missing asymmetry.
-- ultraweb:gate-visual — supplies the screenshot set and takes the subjective judgments this gate refuses to make.
-- ultraweb:icons — when check 3 flags an emoji, the replacement lucide glyph, its size, and its stroke weight come from here, never an ad-hoc inline SVG.
-- ultraweb:imagery — when check 4 flags a placeholder.com src, the real photograph or generated asset that replaces it is specced here.
-- ultraweb:shape-language — when check 7 flags one radius+shadow pair across ≥6 elements, the corner-and-depth system that re-differentiates them is owned here.
-- ultraweb:social-proof — when the three-identical-cards check (12) fires on a logo wall or testimonial row rather than feature cards, the varied replacement lives here, not feature-sections.
-- ultraweb:consent — the corner-bubble screenshot check (17) flags Accept-primary/Reject-buried consent UI in passing; the fairness audit and the compliant, token-built banner it demands are specced here, not in this gate.
-- ultraweb:animejs — check 10 counts its calls toward the same 60% cap and fails an uncited second engine.
-- ultraweb:set-design — check 10 counts its world as ONE moment spanning every route, and fails an uncited renderer exactly as it fails an uncited engine.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.
