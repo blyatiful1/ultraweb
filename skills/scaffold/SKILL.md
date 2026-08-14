@@ -56,6 +56,7 @@ app/                  route files + globals.css only
 components/ui/        shadcn primitives (restyled — never shipped default)
 components/sections/  page sections (hero, features, pricing…)
 components/layout/    header.tsx, footer.tsx, providers.tsx
+components/brand/     wordmark.tsx, monogram.tsx, og-template.tsx (ultraweb:identity fills these in Phase 3)
 lib/                  utils.ts (cn), fonts.ts (next/font instances)
 ```
 

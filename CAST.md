@@ -135,7 +135,7 @@ Small-batch handmade textiles shop — throws and runners, milled in Donegal, on
 
 Outliers only — canonical values are the rows above. The four divergences found by the 2026-08-14 extraction (component-api Tidepool label, footer Ledger & Lane jurisdiction, product-detail Loop & Thread archetype/palette, assets Loop & Thread route) have since been fixed in place; the entries below stay as the audit trail.
 
-- **Kaffeewerk Ost — expected "Warm Workshop" divergence not found.** A repo-wide search (`grep -rin "workshop"`) found no skill naming the archetype "Warm Workshop" — every worked example (`SKILL.md`, `mockup`, `direction`, `cart`, `copywriting`, `identity`, `iterate`, `checkpoint`) uses **Warm Organic/Humanist**. `direction/SKILL.md:155` and `skills/studio/SKILL.md` use the plain word "workshop" in unrelated prose (a tone metaphor; the dev-only `/studio` "workshop chrome"). No correction needed; noted for the audit trail.
+- **Kaffeewerk Ost — expected "Warm Workshop" divergence not found.** A repo-wide search (`grep -rin "workshop"`) found no skill naming the archetype "Warm Workshop" — every worked example (`SKILL.md`, `mockup`, `direction`, `cart`, `copywriting`, `identity`, `iterate`, `checkpoint`) uses **Warm Organic/Humanist**. `direction/SKILL.md:155` and `skills/studio/SKILL.md` use the plain word "workshop" only in unrelated prose. Noted for the audit trail; no correction needed.
 
 - **Tidepool — archetype label, minor.** `skills/component-api/SKILL.md:48` titles its example "**(Neo-grotesque Minimal)**" alone, dropping the "Precision Instrument" name every other citation carries (`command-palette/SKILL.md:110`: "Precision Instrument — Neo-grotesque Minimal, dark-first"). Canonical name: **Precision Instrument**.
 

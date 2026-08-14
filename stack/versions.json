@@ -39,6 +39,10 @@
     "@types/three": "locked-to:three",
     "@next/mdx": "locked-to:next"
   },
+  "majorPins": {
+    "$comment": "CLIs invoked via npx at a pinned MAJOR (never floating). ship and preview both read this entry.",
+    "vercel": "56"
+  },
   "gated": [
     "animejs",
     "three",
