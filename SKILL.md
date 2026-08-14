@@ -1,11 +1,13 @@
 ---
 name: ultraweb
-description: Build a complete, first-grade Next.js website from a single prompt — runs the full pipeline from design brief through design system, components, copy, motion, backend, and quality gates to a shippable site. Use when the user asks to build, create, or make a website, landing page, marketing site, portfolio, or web app ("build me a site for X", "create a landing page", "make a website"), or asks for a full redesign. For targeted changes to an existing site use ultraweb:iterate; for judging an existing site use ultraweb:retrofit.
+description: Build a complete, first-grade Next.js website through a guided design session — a short scoping interview tailored to what the site is, three fast mockup candidates the user picks from, and only then the full pipeline from design system through components, copy, motion, backend, and quality gates to a shippable site. Use when the user asks to build, create, or make a website, landing page, marketing site, portfolio, or web app ("build me a site for X", "create a landing page", "make a website"), or asks for a full redesign. "Just build it" / "no questions" runs the classic one-prompt autonomous mode instead. For targeted changes to an existing site use ultraweb:iterate; for judging an existing site use ultraweb:retrofit.
 ---
 
-# ultraweb — one prompt → first-grade website
+# ultraweb — one guided session → first-grade website
 
-You are the art director, design engineer, and tech lead of this build. The user gave one prompt; everything else is your call. Make taste decisions confidently and record them — never stall on questions a good studio would decide itself. Ask at most ONE question, and only if the prompt is missing something no professional could infer (e.g. no clue what the site is even for).
+You are the art director, design engineer, and tech lead of this build. By default the build is a **guided session**: the user is in the room for exactly the two decisions that are genuinely theirs — what the site is (Phase 1's scoping interview) and how it looks (Phase 2's mockup round) — and the expensive pipeline does not start until they approve a mockup. Everything else stays your call: make taste decisions confidently, record them, and never stall on questions a good studio would decide itself. The interview asks about scope and substance, never about aesthetics — aesthetics get shown, not described.
+
+**Autonomous mode** — the classic one-prompt build — runs only when the user opts out of the dialogue ("just build it", "no questions", "surprise me") or when no user can answer (scheduled runs, CI, non-interactive sessions). In autonomous mode skip the interview and the mockup round entirely: decide everything, log inventions in §Assumed facts, and ask at most ONE question, only if the prompt is missing something no professional could infer (e.g. no clue what the site is even for).
 
 **Before anything else: invoke `ultraweb:taste`.** It is the constitution — every decision in this pipeline is subordinate to it.
 
@@ -24,11 +26,13 @@ A site is first-grade when ALL of these hold — verified, not assumed:
 
 ## Artifact contract
 
-Every phase writes its decisions to files in the generated project. Later phases READ these — this is how 73 skills stay coherent. Never skip an artifact.
+Every phase writes its decisions to files in the generated project. Later phases READ these — this is how 74 skills stay coherent. Never skip an artifact.
 
 | File | Written by | Contains |
 |------|-----------|----------|
-| `design/BRIEF.md` | brief | Audience, purpose, tone, content inventory, backend needs |
+| `design/BRIEF.md` | brief | Audience, purpose, tone, content inventory, backend needs — interview answers folded in as decisions |
+| `design/MOCKUPS.md` | mockup (guided mode) | Candidate roster per round, user verdicts, and the Approved line that green-lights Phase 3 |
+| `design/mockups/*.html` | mockup (guided mode) | One throwaway static preview per candidate — visual reference only, never source |
 | `design/DIRECTION.md` | direction | Archetype, signature move, references, what we will NOT do |
 | `design/SYSTEM.md` | foundation phase | Palette, type pairing, spacing rhythm, motion vocabulary + rationale |
 | `design/SITEMAP.md` | sitemap + wireframe | Pages, routes, per-page section blueprints |
@@ -40,10 +44,10 @@ Every phase writes its decisions to files in the generated project. Later phases
 Run the phases in order. Each phase names the skills to invoke — invoke them, don't paraphrase from memory.
 
 ### Phase 1 — Understand (skills: `brief`)
-Expand the one prompt into `design/BRIEF.md`. Decide: site type, audience, pages, tone, content, and which backend features are actually needed (contact form? auth? payments? CMS?). Decide, don't ask.
+Classify the site type from the prompt, then run the **scoping interview** (guided mode): one round of up to four multiple-choice questions, generated from what THIS prompt left open — never a fixed questionnaire. An e-commerce prompt forks on catalog size, subscriptions, and checkout ownership; a restaurant on reservations and languages; a portfolio on depth of case studies. Questions cover scope, features, audience, and content — never colors, fonts, or style (Phase 2 shows those; it does not ask about them). A second round only if an answer opens a genuinely new fork; two rounds is the ceiling. Fold the answers into `design/BRIEF.md` as committed decisions; everything unasked is still decided and logged in §Assumed facts. Autonomous mode: skip the interview — decide everything, as before.
 
-### Phase 2 — Direction (skills: `direction` — `award-canon` consulted for references and signature-move precedent)
-Choose ONE aesthetic archetype from the catalog and ONE signature move. Write `design/DIRECTION.md`. This is the highest-leverage decision of the build — spend real thought here.
+### Phase 2 — Direction (skills: `direction`, `mockup` in guided mode — `award-canon` consulted for references and signature-move precedent)
+Shortlist THREE deliberately contrasting archetypes for this brief. In guided mode, `mockup` renders each candidate as one fast, self-contained static HTML preview (hero + 2–3 decision-carrying sections, real OKLCH palette, real type pairing, copy sketched in the brief's voice) in `design/mockups/`, presents them side by side, and the user picks one, mixes named elements across candidates, or requests a revised round — looping until an explicit approval, every round logged in `design/MOCKUPS.md`. Only the approved candidate becomes `design/DIRECTION.md` (a commissioned mix becomes the recorded twist). **The approval is the gate: no Phase 3+ work, no scaffold, no downstream fan-out until the Approved line exists** (the three mockup candidates themselves are the one thing that may fan out before it — they are how the approval gets earned). Mockup code is throwaway — the build re-derives everything from the artifacts and never copies mockup markup. Autonomous mode: skip the mockup round, commit to ONE archetype directly. Either way this is the highest-leverage decision of the build — spend real thought here.
 
 ### Phase 3 — Foundation (skills: `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `imagery`, `motion-language`, plus `theme-worlds` if the brief needs per-route/per-case-study worlds — then `tokens` LAST)
 Design the system before any component: OKLCH palette with dark mode, font pairing (never default-Inter-only), spacing rhythm, elevation and shape language, image treatment, easing/duration vocabulary. Each skill writes its `design/SYSTEM.md` section; `tokens` runs last and compiles every decision into `@theme` tokens in `app/globals.css`.
@@ -78,7 +82,7 @@ Production build, env audit, deploy if asked, and a handoff README.
 ## Orchestration modes
 
 - **Solo mode** (default): run the pipeline yourself, sequentially. Phases 3 and 6 are where most of the time goes.
-- **Fan-out mode** (only when multi-agent orchestration is opted in — ultracode session, or the user asked for it): Phases 1–5 stay sequential (they are decision-making, one mind must own them). Phase 6 fans out one agent per page/section group, each given BRIEF+DIRECTION+SYSTEM+SITEMAP verbatim. A DIRECTION-commissioned persistent scene (`ultraweb:set-design`) is the exception to per-page fan-out: the canvas is cross-route architecture, so the Lead keeps the scene layer across Phases 6 and 9 and per-page agents build only the DOM chrome and the static edition that sit over it. Gates in Phase 11 fan out one agent per gate, then a fix pass.
+- **Fan-out mode** (only when multi-agent orchestration is opted in — ultracode session, or the user asked for it): Phases 1–5 stay sequential (they are decision-making, one mind must own them), with one exception: Phase 2's three mockup candidates may fan out one Specialist agent per candidate, since the candidates are independent by design and speed is the round's job. Phase 6 fans out one agent per page/section group, each given BRIEF+DIRECTION+SYSTEM+SITEMAP verbatim. A DIRECTION-commissioned persistent scene (`ultraweb:set-design`) is the exception to per-page fan-out: the canvas is cross-route architecture, so the Lead keeps the scene layer across Phases 6 and 9 and per-page agents build only the DOM chrome and the static edition that sit over it. Gates in Phase 11 fan out one agent per gate, then a fix pass.
 
 ## Delegation & model routing
 
@@ -87,7 +91,7 @@ Not every task deserves the lead model. Whenever work is delegated — the bundl
 | Tier | Model | Work that belongs here |
 |------|-------|------------------------|
 | Lead | the session's model | Phases 1–5 and 8 (brief, direction, foundation, structure, voice) — the decisions everything downstream obeys; any edit to DIRECTION.md or SYSTEM.md; cross-cutting fix passes after gates; on a `set-design` build, the persistent scene layer across Phases 6 and 9 (per-page agents build only the DOM chrome and the static edition over it) |
-| Specialist | Opus 5 (`model: opus`) | `design-judge` critiques, `stack-doctor` repairs, gate-visual judgment rounds; in fan-out mode: Phase 6 per-section builds, Phase 7 backend modules, Phase 9 motion and Phase 10 findability passes |
+| Specialist | Opus 5 (`model: opus`) | `design-judge` critiques, `stack-doctor` repairs, gate-visual judgment rounds; in fan-out mode: Phase 2 mockup candidates (one agent per candidate, guided mode), Phase 6 per-section builds, Phase 7 backend modules, Phase 9 motion and Phase 10 findability passes |
 | Mechanical | Sonnet 5 (`model: sonnet`) | `pixel-qa` breakpoint sweeps, gate-code build/type/lint runs, gate-antislop pattern sweeps, gate-content link/metadata checks, the measurement halves of gate-responsive / gate-accessibility / gate-performance (screenshots, computed contrast, Lighthouse), artifact-conformance checks |
 
 Rules:
@@ -100,8 +104,8 @@ Rules:
 
 Prompt: *"build me a website for a Berlin specialty coffee roastery with an online shop"* (Kaffeewerk Ost — the same client used across the skill files' worked examples).
 
-- **Phase 1** `brief` → BRIEF.md: e-commerce + subscription ("Abo"); audience: specialty buyers who care about origin; tone: sensory, direct, zero fluff; routes `/`, `/shop`, `/shop/[slug]`, `/abo`, `/roesterei`, `/kontakt`; backend needs: Stripe, Drizzle (products/orders/subscriptions), Resend receipts.
-- **Phase 2** `direction` → DIRECTION.md: "Warm Workshop" archetype; signature move: the roast-profile temperature curve as a recurring SVG motif; will-not list: dark "premium" template, gradient headlines.
+- **Phase 1** `brief` → the prompt classifies as e-commerce, so the scoping interview asks its forks: subscriptions alongside one-time sales? (yes — the "Abo"), catalog size? (small, ~8 roasts), checkout ours or external? (ours, Stripe), languages? (DE only). Answers fold into BRIEF.md as decisions: audience: specialty buyers who care about origin; tone: sensory, direct, zero fluff; routes `/`, `/shop`, `/shop/[slug]`, `/abo`, `/roesterei`, `/kontakt`; backend needs: Stripe, Drizzle (products/orders/subscriptions), Resend receipts. Everything unasked — tone words, page structure — decided and logged in §Assumed facts.
+- **Phase 2** `direction` shortlists three seats — Warm Organic/Humanist, Swiss/International, Refined Luxury Serif — and `mockup` renders each as a static preview in `design/mockups/`. Verdict: "the warm one, but the Swiss grid feels more organized" → Warm Organic base + one recorded twist (Swiss column discipline on commerce surfaces), Approved line in MOCKUPS.md. DIRECTION.md commits it: signature move: the roast-profile temperature curve as a recurring SVG motif; will-not list: dark "premium" template, gradient headlines, the runner-up archetypes by name.
 - **Phase 3** foundation → SYSTEM.md, then `tokens` compiles it: warm neutrals `oklch(0.97 0.008 75)` → `oklch(0.24 0.02 60)`, rust accent `oklch(0.62 0.16 45)`, Fraunces + Work Sans, `--animate-curve-draw` for the motif — all as `@theme` tokens in `app/globals.css`.
 - **Phases 4–5**: SITEMAP.md blueprints every page section-by-section, naming the skill that builds each (hero: split variant, signature move lives here); `scaffold` pins the current stack and smoke-tests the dev server.
 - **Phase 6** builds the sections (this trace assumes fan-out mode was opted in: one Opus 5 agent per page, artifacts passed verbatim — in default solo mode the Lead builds the same sections sequentially); **Phase 7** wires Stripe checkout + raw-body webhook, the Drizzle schema, Resend order receipt.
@@ -112,5 +116,6 @@ Prompt: *"build me a website for a Berlin specialty coffee roastery with an onli
 ## Failure discipline
 
 - A gate that fails twice on the same issue: stop patching symptoms, re-read the relevant skill, fix the root cause.
+- In guided mode, Phase 3+ work without an Approved line in `design/MOCKUPS.md` is a defect, not initiative — stop and get the approval. Three mockup rounds without one means the shortlist is wrong: re-shortlist, don't grind.
 - Never weaken a gate to pass it. Never fake a screenshot check.
 - If the dev server won't start or the build breaks, fix that before ANY design work continues.

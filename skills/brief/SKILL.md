@@ -1,9 +1,9 @@
 ---
 name: brief
-description: Expand a single user prompt into design/BRIEF.md — the complete creative brief; site type and energy budget, a named audience persona, conversion goals, tone words with a tension pair, page list, per-page content inventory, and backend needs mapped to Tier-6 skills with an explicit rejected list. Decides everything a professional studio would decide itself and logs inventions as assumed facts — never interviews the user. Invoke as Phase 1 of the ultraweb pipeline right after taste, whenever a build starts from a raw prompt ("build me a site for X", "create a landing page for Y", "make a website for my business"), or when any downstream skill finds design/BRIEF.md missing, stale, or incomplete.
+description: Expand a user prompt into design/BRIEF.md — the complete creative brief; site type and energy budget, a named audience persona, conversion goals, tone words with a tension pair, page list, per-page content inventory, and backend needs mapped to Tier-6 skills with an explicit rejected list. In guided mode (the default) it runs a short scoping interview whose questions are generated from what THIS prompt left open — site-type-specific forks about scope, features, and content, never aesthetics; in autonomous mode it decides everything a professional studio would decide itself. Either way it logs inventions as assumed facts and the finished file contains zero open questions. Invoke as Phase 1 of the ultraweb pipeline right after taste, whenever a build starts from a raw prompt ("build me a site for X", "create a landing page for Y", "make a website for my business"), or when any downstream skill finds design/BRIEF.md missing, stale, or incomplete.
 ---
 
-# brief — one prompt, every decision
+# brief — one conversation, every decision
 
 **Stage:** Phase 1 — Understand - **Reads:** the user's prompt (invoke `ultraweb:taste` first) - **Writes:** design/BRIEF.md
 
@@ -20,17 +20,32 @@ A first-grade brief is decisive, specific, and complete:
 
 1. Read the prompt twice. Extract every noun, constraint, and stated feature — nothing the user wrote may be dropped, softened, or contradicted.
 2. Classify the site type — one of: SaaS/product, portfolio/agency, e-commerce, editorial/content, local business, event, web app, docs. Record the energy budget `taste` assigns it (SaaS: clarity + one wow; portfolio: spend boldly; e-commerce: imagery leads; editorial: type is 80% of the design; local business: warmth beats cleverness).
-3. Name the audience as a person, not a demographic: "a 38-year-old head of ops comparing rostering tools on her phone between meetings" — never "businesses of all sizes". Add what she distrusts; `copywriting` and `social-proof` build against it.
-4. Fix ONE primary conversion (book, buy, sign up, contact, subscribe) and at most one secondary. A page that serves neither does not exist.
-5. Choose tone: 3 specific adjectives + 1 tension pair ("warm but exact", "playful but competent"). Reject any adjective that fits every site — "modern", "clean", "professional" are bans, not tone words. Write one sample sentence in the voice.
-6. List pages — the fewest that serve the conversion; 1–5 covers most briefs. Do not invent About/Blog/Careers pages nobody asked for; do not collapse pages the prompt explicitly named.
-7. Build the content inventory per page: the facts, claims, numbers, names, and proof points `copywriting` will need — opening hours, price points, team names, feature specifics, testimonial sources, stat claims. Where the prompt is silent, invent: plausible, specific, internally consistent. Log every invention in §Assumed facts.
-8. Run the backend decision framework below. Record chosen Tier-6 skills AND rejected ones, each with a one-line reason.
-9. Write design/BRIEF.md in the format below. Grep it for `?` — a question mark in a brief is a defect.
+3. **Guided mode:** run the scoping interview (next section) — the site type from step 2 picks which forks are worth asking. Fold every answer into the brief as a committed decision. **Autonomous mode:** skip; decide everything per "Decide, never interview" below.
+4. Name the audience as a person, not a demographic: "a 38-year-old head of ops comparing rostering tools on her phone between meetings" — never "businesses of all sizes". Add what she distrusts; `copywriting` and `social-proof` build against it.
+5. Fix ONE primary conversion (book, buy, sign up, contact, subscribe) and at most one secondary. A page that serves neither does not exist.
+6. Choose tone: 3 specific adjectives + 1 tension pair ("warm but exact", "playful but competent"). Reject any adjective that fits every site — "modern", "clean", "professional" are bans, not tone words. Write one sample sentence in the voice.
+7. List pages — the fewest that serve the conversion; 1–5 covers most briefs. Do not invent About/Blog/Careers pages nobody asked for; do not collapse pages the prompt explicitly named.
+8. Build the content inventory per page: the facts, claims, numbers, names, and proof points `copywriting` will need — opening hours, price points, team names, feature specifics, testimonial sources, stat claims. Where the prompt is silent, invent: plausible, specific, internally consistent. Log every invention in §Assumed facts.
+9. Run the backend decision framework below. Record chosen Tier-6 skills AND rejected ones, each with a one-line reason.
+10. Write design/BRIEF.md in the format below. Grep it for `?` — a question mark in the FILE is a defect in either mode; the interview happens in conversation, and its answers land as decisions.
 
-## Decide, never interview
+## The scoping interview — guided mode
 
-The user's prompt WAS the interview. Default question count: zero. The pipeline's single permitted question (root SKILL.md) is reserved for exactly one case: no professional could infer what the site is even for. Everything else — name, pricing, tone, imagery, page structure, tech needs — you decide the way a studio would, then record it in §Assumed facts so the user can correct it after seeing the build. A wrong specific assumption costs one `iterate` pass; an interview costs the premise of the harness. Specific-and-wrong beats vague-and-safe every time.
+The interview exists because two kinds of wrong assumptions are expensive: scope (a page or feature the user didn't want, or wanted and didn't get) and substance (selling the wrong thing to the wrong person). Those forks get asked; everything else still gets decided. Rules:
+
+- **Generated, never templated.** Questions come from what THIS prompt left open, filtered through the site type. A prompt that already says "shop + subscriptions, German only" has answered those forks — asking again is noise.
+- **Multiple-choice, concrete options.** Ask via the structured question tool (AskUserQuestion) — each question 2–4 real options a professional would shortlist, the recommended one first; the user can always free-type. Never open-ended "tell me about your business" essays.
+- **Ceiling: one round of up to four questions.** A second round only if an answer opens a genuinely new fork (chose subscriptions → one follow-up on billing rhythm is legitimate). Two rounds is the hard stop.
+- **Only forks that change the build.** If every option leads to the same site, the question is theater — cut it.
+- **Never aesthetics.** Colors, fonts, style, "vibe" — banned. Phase 2's mockup round shows three real candidates; the user points instead of describing. An interview question about visuals steals that phase's job and does it worse.
+
+Site-type fork banks (starting points, not scripts): **e-commerce** — catalog size, one-time vs subscription, own checkout vs external, shipping scope; **SaaS/product** — self-serve vs sales-led, public pricing, docs/changelog; **local business** — booking/reservations vs walk-in, languages, opening-hours source; **portfolio/agency** — index vs deep case studies, public vs gated/password-protected work, hireability CTA; **editorial** — cadence, authorship, newsletter capture; **event** — single date vs series, own registration vs ticket platform; **web app** — accounts from day one, what's saved per user; **docs** — versioning, search depth.
+
+Answers become committed decisions in the brief, attributed plainly ("subscriptions: yes — user, interview R1"). Everything unasked follows the autonomous doctrine below.
+
+## Decide, never interview — autonomous mode (and everything unasked)
+
+In autonomous mode the user's prompt WAS the interview: default question count zero, and the pipeline's single permitted question (root SKILL.md) is reserved for exactly one case — no professional could infer what the site is even for. And in BOTH modes, everything the interview didn't cover — name, pricing, tone, imagery, page structure, tech needs — you decide the way a studio would, then record it in §Assumed facts so the user can correct it after seeing the build. A wrong specific assumption costs one `iterate` pass; an exhaustive interview costs the premise of the harness. Specific-and-wrong beats vague-and-safe every time.
 
 ## Backend decision framework
 
@@ -71,7 +86,9 @@ AI features are the one class that defaults to **rejected**: an assistant, chatb
 
 Grep a finished BRIEF.md for these:
 
-- `TBD`, `TODO`, `?`, `to be decided`, `ask the user`, `depending on` — the brief interviews nobody, including future-you
+- `TBD`, `TODO`, `?`, `to be decided`, `ask the user`, `depending on` — questions live in the interview, never in the file; the finished brief defers to nobody, including future-you
+- An interview question about colors, fonts, or style — that fork belongs to the mockup round, which shows instead of asking
+- Re-asking something the prompt already answered, or a question whose every option builds the same site
 - `modern`, `clean`, `professional`, `sleek` as tone words — they describe nothing
 - `various`, `etc.`, `and more` in a content inventory — the inventory exists so `copywriting` never improvises
 - A `database` for a contact form; `auth` "for later"; a CMS for a 3-post launch blog; an AI chat/search widget with no accepted-variant reason logged — backend maximalism
@@ -82,6 +99,8 @@ Grep a finished BRIEF.md for these:
 ## Worked example — Framewalk, Steam-launch site for "Hollow Cartographer"
 
 Prompt read: "site for my indie game Hollow Cartographer, launching on Steam — needs a devlog and a way for people to hear about launch."
+
+Guided-mode interview (one round, three questions — the prompt already fixed the devlog and launch-news forks): press kit? (yes — streamers are the launch channel); devlog imported or fresh? (fresh, MDX); wishlist CTA straight to Steam or an email gate first? (straight to Steam — never gate the primary conversion). Each answer lands below as a decision, attributed "user, interview R1".
 
 - **Site type & energy budget:** product/marketing (one game), *clarity first + one wow* — the wow is the hero, not the chrome.
 - **Audience:** "a 29-year-old atmospheric-exploration fan clearing her Steam discovery queue at 11pm on a laptop — distrusts indie trailers that over-promise and ship vaporware." `copywriting` and `social-proof` build against that distrust with a real devlog cadence, not adjectives.
@@ -98,6 +117,7 @@ Handoff: lands in `design/BRIEF.md`; `ultraweb:direction` reads §Site type + th
 
 - ultraweb:taste — invoke first; its site-type → energy-budget heuristic drives step 2.
 - ultraweb:direction — consumes §Site type and the tone tension to shortlist archetypes.
+- ultraweb:mockup — guided mode; reads §Site type to pick each candidate's decision-carrying sections and §Tone for its sketch copy.
 - ultraweb:sitemap — expands §Pages into routes and nav structure.
 - ultraweb:copywriting — writes exclusively from §Content inventory, in §Tone's voice.
 - ultraweb:auth, ultraweb:database, ultraweb:payments, ultraweb:email, ultraweb:content-cms, ultraweb:storage, ultraweb:api-design — enter Phase 7 only as §Backend: needs names them.
