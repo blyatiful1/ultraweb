@@ -1,6 +1,6 @@
 # ultraweb skill roster
 
-The complete map of the harness. 74 skills: 1 orchestrator (root `SKILL.md`) + 73 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
+The complete map of the harness. 74 skills: 1 orchestrator (root `SKILL.md`) + 73 specialist skills in `skills/<name>/SKILL.md`. Nearly every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill (the core references — `taste`, `award-canon` — supply judgment instead of consuming artifacts). `taste` is the constitution; every skill defers to it.
 
 Format: **name** — scope. *(reads → writes)*
 

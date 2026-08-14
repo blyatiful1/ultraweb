@@ -16,7 +16,7 @@ Somewhere in a nicer timeline there's a small agency that does this properly. An
 
 Answer a short round of questions about scope (yours will be about subscriptions and checkout — someone else's would be about reservations or case studies), pick one of three mockups, say yes. *Then* go make coffee yourself. It'll be a while.
 
-Prefer the classic fire-and-forget? Say **"just build it, no questions"** and the studio decides everything itself, logging each assumption so you can correct it afterwards.
+Prefer the classic fire-and-forget? Say **"just build it, no questions"** and the studio decides everything itself, logging each assumption so you can correct it afterward.
 
 ---
 

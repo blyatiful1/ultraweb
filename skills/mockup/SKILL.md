@@ -54,7 +54,7 @@ A first-grade mockup round is fast, divergent, and honest:
 - Lorem ipsum, gray boxes, or `href="#"` in a mockup — sketch-grade copy is still real copy
 - Polishing a candidate past sketch grade before approval — spending the build's budget on a maybe
 - Shipping mockup markup into the app "since the user liked it" — the build derives from artifacts, never from sketches
-- Starting scaffold, foundation, or any fan-out before the Approved line exists in MOCKUPS.md
+- Starting scaffold, foundation, or any Phase 3+ fan-out before the Approved line exists in MOCKUPS.md (the candidate renders themselves may fan out — that's the round's own work)
 - Asking the user open-ended style questions alongside the mockups — the files answer, the user points
 
 ## Worked example — Kaffeewerk Ost, Berlin roastery shop + subscriptions
