@@ -8,8 +8,8 @@
     {
       "name": "ultraweb",
       "source": "./",
-      "description": "One guided session → first-grade Next.js website: dynamic scoping questions, three fast mockups, your approval, then the full build. 74 interlocking skills + 3 model-routed subagents: taste constitution, award-canon study library (25 patterns from Awwwards SOTY-tier winners), design-system-first pipeline, real quality gates, current-stack engineering.",
-      "version": "1.5.0",
+      "description": "One guided session → first-grade Next.js website: dynamic scoping questions, three fast mockups, your approval, then the full build with sign-off checkpoints on a real-studio cadence. 75 interlocking skills + 3 model-routed subagents: taste constitution, award-canon study library (25 patterns from Awwwards SOTY-tier winners), design-system-first pipeline, real quality gates, current-stack engineering.",
+      "version": "1.6.0",
       "author": {
         "name": "Iwan Braun"
       },
