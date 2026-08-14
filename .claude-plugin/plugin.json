@@ -1,8 +1,8 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "ultraweb",
-  "version": "1.6.0",
-  "description": "Guided webdesign harness for Next.js: a dynamic scoping interview, a three-candidate mockup round, and human-in-the-loop checkpoints on a real-studio cadence — first-page review on the built homepage, preflight/UAT acceptance before ship, a dial from hands-off to full sign-off (classic one-prompt autonomous mode on request) — 75 interlocking skills with real-world worked examples, model-routed subagents (Opus 5 / Sonnet 5), design taste, an award-canon study library distilled from Awwwards-winning sites, design systems, components, motion — including a DIRECTION-gated anime.js SVG-choreography engine and a DIRECTION-gated site-scale immersive-3D build — Next.js engineering, backend, and quality gates",
+  "version": "1.7.0",
+  "description": "Guided webdesign harness for Next.js: a dynamic scoping interview, a three-candidate mockup round (side-by-side or pairwise tournament), and human-in-the-loop checkpoints on a real-studio cadence — first-page review on the built homepage, preflight/UAT acceptance before ship, preview URLs so you review on your own phone, a dial from hands-off to full sign-off plus a scope dial from sketch to flagship (classic one-prompt autonomous mode on request) — 80 interlocking skills with real-world worked examples, model-routed subagents (Opus 5 / Sonnet 5), design taste enforced at write time by hooks, an award-canon study library distilled from Awwwards-winning sites, client-asset intake, brand-mark identity, design systems, components, motion — including a DIRECTION-gated anime.js SVG-choreography engine and a DIRECTION-gated site-scale immersive-3D build — Next.js engineering, backend, quality gates, a live in-build /studio dashboard, progress + resume across interruptions, and a cross-build taste fingerprint",
   "author": {
     "name": "Iwan Braun",
     "email": "iwan.braun2004@gmail.com"
@@ -28,5 +28,6 @@
   ],
   "skills": [
     "./"
-  ]
+  ],
+  "hooks": "./hooks/hooks.json"
 }

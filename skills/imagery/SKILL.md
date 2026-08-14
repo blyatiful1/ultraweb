@@ -105,7 +105,7 @@ All three are CSS backgrounds: zero network requests (data URIs), zero layout co
 - Raster photos: `placeholder="blur"` with a blurDataURL; `fill` always pairs with `sizes`; the LCP image gets `preload` — `priority` is deprecated in Next 16.
 - Generated SVGs: plain `<img>` or CSS background — next/image adds nothing for SVG. Decorative pieces get `alt=""` (or live as backgrounds); content images get real alt text describing content, never "image".
 - Every SVG this skill emits — generated art, pattern tiles, inline filters — ships through ultraweb:media-optimization's SVGO pass first; if the piece is animated, that pass keeps its IDs and viewBox.
-- Raster logo, no vector: ask the client for the real SVG first, always — it exists more often than they think. Only when it genuinely doesn't, trace the mark with `vtracer` and hand-clean the paths; never trace fine type or a wordmark, reset those in the site's own face.
+- Raster logo, no vector: ask the client for the real SVG first, always — it exists more often than they think (ultraweb:assets records what came back in design/ASSETS.md). Only when it genuinely doesn't, trace the mark with `vtracer` and hand-clean the paths; never trace fine type or a wordmark — ultraweb:identity resets those in the site's own face and owns the resulting files in public/brand/.
 - Treatment layers (scrim, grain, tint) are CSS on a wrapper, never baked into exported assets — dark mode must be able to re-decide them.
 
 ## Dark mode
@@ -136,33 +136,8 @@ Visual — caught by screenshots:
 
 ## Worked example — Casa Verde, Lisbon farm-to-table restaurant
 
-design/DIRECTION.md: "Sunlit Rustic — full-bleed photography carries the emotion, chrome recedes." SYSTEM.md §color hands over the terracotta accent `oklch(0.66 0.13 45)` over a warm cream base `oklch(0.97 0.01 85)`.
-
-Photography leads, so the treatment must warm the food, not restyle it. One named treatment — a flat terracotta wash at 0.12 alpha plus subliminal grain — lives once in app/globals.css:
-
-```css
-.photo-sunlit { position: relative; overflow: hidden; }
-.photo-sunlit::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  background: oklch(0.66 0.13 45 / 0.12); mix-blend-mode: multiply;
-}
-```
-
-Grain rides on top at opacity 0.05 — felt, not seen. Rejected: true duotone — it strips the real color out of the tomatoes and herbs and kills the appetite-appeal that full-bleed food photography exists for; duotone suits a mood piece, not a menu.
-
-The class plus the generated `placeholder-harvest-01.svg` slots (olive-on-cream geometry until the shoot lands) record into SYSTEM.md §imagery. ultraweb:hero pulls `.photo-sunlit` onto the full-bleed reservation hero, ultraweb:cards applies the lighter `.img-tint` to the day's-harvest strip thumbnails, and ultraweb:handoff republishes the placeholder-replacement list so the kitchen can swap in real photos.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:color — every treatment and mesh derives from its OKLCH palette
-- ultraweb:media-optimization — owns the delivery pipeline (sizes, blur, LCP preload) and the SVGO pass for what this skill creates
-- ultraweb:hero — full-bleed media variants consume the scrim + treatment classes
-- ultraweb:shape-language — geometry, masks, and clip-paths that shape image containers
-- ultraweb:gate-antislop — sweeps for the placeholder and cliché strings above
-- ultraweb:handoff — republishes the generated-placeholder replacement list
-- ultraweb:cards — card thumbnails and hover states apply the `.img-tint` treatment authored here
-- ultraweb:feature-sections — media-panel and textured backgrounds in feature blocks pull this skill's mesh + treatment classes
-- ultraweb:social-proof — testimonial and review-with-photo images pass through this skill's treatment before they ship
-- ultraweb:showpiece — hands off when a background must become an animated shader/canvas instead of CSS mesh or feTurbulence noise
-- ultraweb:set-design — authors the per-route poster frame that serves the static tier, the reduced-motion tier and the no-JS tier, with that route's `opengraph-image` derived from the same authored frame as a separate JPEG encode; on a persistent-scene build the poster is a deliverable on every route, not one fallback
-- ultraweb:award-canon — Content-Derived Color (palette sampled from the hero content) and Invert the Genre Palette are the art-direction stances this skill feeds into SYSTEM.md; palette math stays with `color`
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

@@ -11,7 +11,7 @@ A change request against an existing ultraweb site is NOT a rebuild and NOT a fr
 
 ## Process
 
-1. **Load the record.** Read `design/BRIEF.md`, `design/DIRECTION.md`, `design/SYSTEM.md`, `design/SITEMAP.md`, `design/QA.md`. If they don't exist, this isn't an ultraweb site — run `ultraweb:retrofit` first.
+1. **Load the record.** Read `design/BRIEF.md`, `design/DIRECTION.md`, `design/SYSTEM.md`, `design/SITEMAP.md`, `design/QA.md`. If none exist, this isn't an ultraweb site — run `ultraweb:retrofit` first. If SOME exist but the set is partial (a DIRECTION with no QA, artifacts but half-built routes), this is an **interrupted build, not an iteration** — hand to the root skill's §Resuming ladder; classifying a resume as a change request rebuilds paid-for work.
 2. **Classify the request** into the shallowest layer that truly satisfies it:
    - **Content** — copy, images, data. Touch content only. Consult `copywriting`/`imagery`. Re-gate: `gate-content`.
    - **Component** — one section looks wrong / needs variants. Consult that section's skill (`hero`, `pricing`, …). Re-gate: `gate-visual` on affected pages + `gate-code`.
@@ -34,7 +34,7 @@ A change request against an existing ultraweb site is NOT a rebuild and NOT a fr
 
 ## Worked example — Kaffeewerk Ost, "make the hero bolder"
 
-The roastery's design/DIRECTION.md reads: *Warm Workshop — signature move: the roast-profile curve motif; type: Fraunces display.* The request sounds Component-sized, but the classification check catches it: hero scale lives in the global `--text-display` token, so "bolder" amends design/SYSTEM.md §type — that is **System** scope (patching the size inside hero.tsx instead would fork the system, the exact anti-pattern the rules below ban). The amendment follows `ultraweb:hero` scale rules: `--text-display` moves from `clamp(2.75rem, 1.5rem + 5.5vw, 6rem)` to `clamp(3rem, 1.5rem + 6.5vw, 7.5rem)` and display tracking tightens to -0.035em — token-only, so every display headline follows and no component markup changes. Rejected: pushing the accent color into the headline — "bolder" earns scale, not decoration (taste: the fix is hierarchy or asymmetry, never another effect). Re-gate per the System row: `gate-visual` + `gate-accessibility` + `gate-antislop` sweep; System scope is bigger than Page, so the after-shots go through `design-judge` (Opus 5), and `design/QA.md` gets the delta entry.
+The roastery's design/DIRECTION.md reads: *Warm Organic/Humanist — signature move: the roast-profile curve motif; type: Fraunces display.* The request sounds Component-sized, but the classification check catches it: hero scale lives in the global `--text-display` token, so "bolder" amends design/SYSTEM.md §type — that is **System** scope (patching the size inside hero.tsx instead would fork the system, the exact anti-pattern the rules below ban). The amendment follows `ultraweb:hero` scale rules: `--text-display` moves from `clamp(2.75rem, 1.5rem + 5.5vw, 6rem)` to `clamp(3rem, 1.5rem + 6.5vw, 7.5rem)` and display tracking tightens to -0.035em — token-only, so every display headline follows and no component markup changes. Rejected: pushing the accent color into the headline — "bolder" earns scale, not decoration (taste: the fix is hierarchy or asymmetry, never another effect). Re-gate per the System row: `gate-visual` + `gate-accessibility` + `gate-antislop` sweep; System scope is bigger than Page, so the after-shots go through `design-judge` (Opus 5), and `design/QA.md` gets the delta entry.
 
 ## Composes with
 

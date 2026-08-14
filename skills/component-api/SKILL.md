@@ -45,7 +45,7 @@ Eight rules. A component may use only the axes it needs, but the ones it uses ob
 - Re-implementing a Radix stateful primitive's controlled/uncontrolled logic by hand instead of restyling it.
 - Per-call-site `className` soup faking a variant that should live in the shared `cva()` map — the single loudest "assembled, not authored" tell.
 
-## Worked example — Tidepool, port-logistics SaaS (Neo-grotesque Minimal)
+## Worked example — Tidepool, port-logistics SaaS (Precision Instrument — Neo-grotesque Minimal)
 
 design/SYSTEM.md hands down `--primary` (signal teal), the `sm/md/lg/xl` size scale, `--radius-md`, and status tokens for `tone`. A Button and a Card, built by two different Phase-6 skills, must configure identically. They do:
 

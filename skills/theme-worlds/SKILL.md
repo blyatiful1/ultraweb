@@ -74,23 +74,8 @@ Inherited custom properties resolve to the nearest ancestor that sets them, so *
 
 ## Worked example — Studio Norra, Oslo agency portfolio
 
-DIRECTION.md commits Editorial Brutalist; the base palette is warm paper + a single signal-red accent `oklch(0.6 0.21 25)`; the signature move is cursor-proximity case-study reveals on `/work`. The brief's tension — one studio voice that still lets each client's work read as *itself* — is exactly a scoping problem, not a switch.
-
-Each case study is lit by its own accent world. For every `/work/[slug]`, color extracts 2–3 OKLCH values from the case's hero (Content-Derived Color), re-decides the accent for dark, verifies both pairs, and hands tokens a `--world-<slug>` set; the `<article>` carries `data-world={slug}`. What stays constant across every world is the studio's hand: Archivo Expanded at the same fluid scale, the exposed 12-column grid, the near-zero brutalist radius, the settle-on-a-spring motion. Only the accent shifts — so `bg-primary` CTAs, focus rings, and link hovers take the featured client's color while the system reads as one authorship.
-
-On the long `/studio` page, three acts — Practice / Process / People — each carry a static `data-mode` re-pointing the accent as you scroll (the Scroll-as-Journey per-room shift in palette form), while surfaces stay put because dark mode owns those. The act shift is pure scrolling between statically-themed sections; no listener, no JS.
-
-Rejected: giving each world its own neutrals and type — that is eight micro-sites, not one studio with eight clients (the re-skin anti-pattern). Rejected: a `ThemeProvider` re-rendering on route change to swap the palette — the accent is a server-rendered `data-world` attribute with zero client state. Rejected: a client's neon brand accent that failed 4.5:1 on the paper ground — color lowered its L before it shipped; a world that can't clear AA is not a world.
-
-Handoff: ultraweb:color defines and AA-verifies each `--world-*` pair in both modes → ultraweb:tokens lands them in globals.css beside the base palette → the `data-world`/`data-mode` attributes sit on the `<article>`/`<section>` server components (ultraweb:app-structure — no client boundary) → ultraweb:scroll-motion drives the cursor-proximity reveal and the `/studio` act shift these worlds ride on.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:color — defines and AA-verifies every `--world-*` accent pair in both modes; theme-worlds owns the scoping mechanism, color owns the values and the contrast proof.
-- ultraweb:tokens — lands the world tokens in globals.css and supplies the `@theme inline` bridge that makes re-declaring `--primary` on a subtree cascade to every utility; worlds work *because* tokens used `inline`.
-- ultraweb:depth — shadows use `--shadow-color` (a neutral), so an accent-only world leaves elevation untouched by construction; a world re-tinting shadows would collide with the mode axis.
-- ultraweb:app-structure — worlds are static server-rendered `data-world`/`data-mode` attributes (route layout, section, or article), never a provider; the "no new context in the root layout" rule applied to theming.
-- ultraweb:scroll-motion — the Scroll-as-Journey per-act `data-mode` shift rides on this skill's mechanism; the shift is scrolling between statically-themed sections, not a scroll listener re-theming.
-- ultraweb:award-canon — Content-Derived Color (derive the world from the content) and Scroll-as-Journey (per-room `data-mode`) are the principles this skill executes at the cheapest rung — steal the scoped-palette principle, never the ThemeProvider surface.
-- ultraweb:cards — the case-study/project card is the usual `data-world` carrier in a portfolio grid; each card lights its own accent while its structure stays the site-wide card.
-- ultraweb:set-design — the world axis re-points the DOM accent and the scene re-points its material palette from the same `lib/tokens.ts` values; neither invents one, and a hex literal in a uniform or a material constructor is this skill's "every value stays a token" rule broken in GLSL.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

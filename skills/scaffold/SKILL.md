@@ -1,6 +1,6 @@
 ---
 name: scaffold
-description: Initialize the ultraweb Next.js project end to end — verify live package versions via npm view FIRST, run npx create-next-app@latest --yes (no --turbopack flag, Turbopack is the Next 16 default), lay the Tailwind v4.3 token skeleton into app/globals.css, run npx shadcn@latest init, install motion/lucide-react/zod/next-themes, verify strict tsconfig, create the folder conventions, strip boilerplate, and prove the result with a dev-server smoke test plus a clean npm run build. Invoke in Phase 5 of the ultraweb pipeline once design/SITEMAP.md exists, whenever a build starts from an empty directory ("set up the project", "scaffold the app", "init the Next.js project"), or when a broken tree must be restarted fresh.
+description: Initialize the ultraweb Next.js project end to end — verify live package versions via npm view FIRST, run npx create-next-app@latest --yes (no --turbopack flag, Turbopack is the Next 16 default), move design/ into the project root, lay the Tailwind v4.3 token skeleton into app/globals.css, run npx shadcn@latest init, install motion/lucide-react/zod/next-themes, verify strict tsconfig, create the folder conventions, strip boilerplate, and prove the result with a dev-server smoke test plus a clean npm run build. Re-entrant: on a partially-built tree (package.json already present) it detects completed steps and resumes at the first incomplete one instead of re-initializing. Invoke in Phase 5 of the ultraweb pipeline once design/SITEMAP.md exists, whenever a build starts from an empty directory ("set up the project", "scaffold the app", "init the Next.js project"), or when an interrupted Phase 5 must be finished.
 ---
 
 # scaffold — verified init, provable green
@@ -13,8 +13,10 @@ Current stable versions verified against the live registry THIS session — neve
 
 ## Process
 
-1. **Verify versions FIRST** — before touching anything: `npm view next version && npm view tailwindcss version && npm view shadcn version && npm view motion version && npm view lucide-react version && npm view zod version && npm view next-themes version`. Compare against the Versions section of the plugin's STACK.md — the only file that carries pinned numbers. Reality wins on drift: proceed with latest, record the delta in design/QA.md, flag STACK.md for update. On a MAJOR jump past STACK.md (next 17, tailwind 5): stop and check migration docs before continuing.
-2. **Init:** `npx create-next-app@latest <kebab-name> --yes` — name from BRIEF.md. Yields TS, Tailwind v4, App Router, ESLint, `@/*` alias, AGENTS.md, and Turbopack for dev AND build. There is **no `--turbopack` flag** in Next 16 — passing one is an error. `next.config.ts` is fully supported.
+0. **Resume check — before any command.** If `package.json` exists in the target directory, this is a resumed scaffold: do NOT run create-next-app again. Determine the completed steps empirically — `package.json` deps vs the closed base install (step 6); `components.json` presence and `grep -c ':root' app/globals.css` for shadcn-init/reconciliation state (three `:root` blocks means a resumed init duplicated step 4's skeleton — reconcile down to one exactly as step 5 prescribes); the step-7 folder tree; whether create-next-app demo markup survives in `app/page.tsx` — and enter at the first incomplete step. Phase 5 is a chain of network operations, which is exactly where interruptions cluster; a half-scaffolded tree costs one resumed step, never a wipe. Append a step ledger to `design/PROGRESS.md` as you go (`scaffold: init OK · design-move OK · shadcn OK · deps OK · folders OK · strip PENDING · smoke PENDING`) so the next session's step 0 reads instead of probing.
+
+1. **Verify versions FIRST** — before touching anything: run the plugin's `node scripts/verify-stack.mjs`, which checks every pin in `stack/versions.json` (the one file that carries numbers) against the live registry; if the script isn't reachable, fall back to `npm view <pkg> version` for the base seven (next, tailwindcss, shadcn, motion, lucide-react, zod, next-themes) against the manifest. Reality wins on drift: proceed with latest, record the delta in design/QA.md, fold the manifest via `--write` when working in the plugin repo. On a MAJOR jump past the manifest (next 17, tailwind 5): stop and check migration docs before continuing.
+2. **Init:** `npx create-next-app@latest <kebab-name> --yes` — name from BRIEF.md. Yields TS, Tailwind v4, App Router, ESLint, `@/*` alias, AGENTS.md, and Turbopack for dev AND build. There is **no `--turbopack` flag** in Next 16 — passing one is an error. `next.config.ts` is fully supported. **Then immediately move the design record in:** `mv design <kebab-name>/design` — Phases 0–4 wrote it to the working directory, and every downstream skill resolves `design/*` from the project root. Verify `design/BRIEF.md` resolves from inside the project before continuing; a scaffold that orphans the artifacts orphans the human's answers and approvals. Then commit the record on create-next-app's fresh repo: `git add design && git commit -m "ultraweb: phases 0–4 — design record"` — the first of the pipeline's phase-boundary commits.
 3. **tsconfig:** confirm `"strict": true` in tsconfig.json (create-next-app sets it). Never loosen it, ever.
 4. **globals.css token skeleton** — Tailwind 4.3 is CSS-first; no `tailwind.config.js` exists or ever will:
 
@@ -54,11 +56,12 @@ app/                  route files + globals.css only
 components/ui/        shadcn primitives (restyled — never shipped default)
 components/sections/  page sections (hero, features, pricing…)
 components/layout/    header.tsx, footer.tsx, providers.tsx
+components/brand/     wordmark.tsx, monogram.tsx, og-template.tsx (ultraweb:identity fills these in Phase 3)
 lib/                  utils.ts (cn), fonts.ts (next/font instances)
 ```
 
 8. **Strip boilerplate:** reduce app/page.tsx to a minimal shell, delete the demo SVGs. No create-next-app demo markup survives into Phase 6.
-9. **Smoke test — LAST ACTION, non-negotiable:** start `npm run dev` in the background → HTTP 200 on localhost:3000 → zero errors in terminal output → kill it. Then `npm run build` — exit 0, zero type errors. Both green before reporting the phase done; paste the decisive output lines into design/QA.md.
+9. **Smoke test — LAST ACTION, non-negotiable:** start `npm run dev` in the background → HTTP 200 on localhost:3000 → zero errors in terminal output → kill it. Then `npm run build` — exit 0, zero type errors. Both green before reporting the phase done; paste the decisive output lines into design/QA.md. When the pipeline rolls on into Phase 6, the Lead starts the dev server ONCE and records its PID and port in design/PROGRESS.md — from here on the server has one owner (root skill §Failure discipline): agents get the URL, never their own server.
 
 Any step fails: hand the verbatim error to the `stack-doctor` subagent. Repair forward on current versions — never downgrade the stack to match a tutorial.
 
@@ -67,6 +70,7 @@ Any step fails: hand the verbatim error to the `stack-doctor` subagent. Repair f
 - Patch/minor drift from STACK.md: proceed on latest, one-line note in design/QA.md ("next 16.2.12 vs STACK 16.2.10").
 - New MAJOR in any of the seven packages: read the official migration guide before running init — never guess flags on a new major.
 - Registry unreachable (proxy, offline): stop and report — never scaffold on assumed versions.
+- Registry failure MID-install: record the completed steps in the PROGRESS.md ledger, report which step died with the verbatim error, and resume at that step when the registry returns — step 0 exists so this costs one command, not a re-init.
 
 ## Anti-patterns
 
@@ -84,27 +88,8 @@ Any step fails: hand the verbatim error to the `stack-doctor` subagent. Repair f
 
 ## Worked example — Aldermoor Trust, community foundation project init
 
-design/SITEMAP.md lists five routes — `/`, `/grants`, `/stories/[slug]`, `/volunteer`, `/donate`; design/BRIEF.md names the client "Aldermoor Trust".
-
-`npm view` first: next 16.2.10, tailwindcss 4.3.2, shadcn 4.13.0 — all match STACK.md, no MAJOR jump, so proceed. Init: `npx create-next-app@latest aldermoor-trust --yes` (no `--turbopack` — Turbopack is the Next 16 default). Lay the "Open Civic" warm-paper base into app/globals.css with real values, so the smoke test renders on-brand from line one:
-
-```css
-:root {
-  --background: oklch(0.97 0.008 85);
-  --foreground: oklch(0.24 0.02 85);
-}
-```
-
-Then `npm i motion lucide-react zod next-themes` — the base four only.
-
-Rejected: eagerly `npm i content-collections` now because the stories are MDX. It lost — scaffold installs only what Phase 5 needs; the content tier owns that dependency, and pulling it in here breaks the install discipline the smoke-test build is there to prove.
-
-Handoff: the running tree, the globals.css skeleton, and the first design/QA.md entry (version deltas plus the dev-server 200 and exit-0 build) go to ultraweb:tokens, which replaces the placeholder `:root` with the real Open Civic system — AAA-checked deep-green accent `oklch(0.45 0.1 155)` on warm paper.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:tokens — fills the `@theme`/`:root` skeleton with the real system from SYSTEM.md
-- ultraweb:app-structure — commits the RSC/client boundary plan on this tree, immediately after
-- ultraweb:routing — adds segments, loading/error/not-found files onto the scaffolded app/
-- ultraweb:gate-code — re-runs build/type/lint at Phase 11; the step-9 smoke test is its preview
-- stack-doctor (subagent) — receives every init/install/build failure with the verbatim error
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

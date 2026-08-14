@@ -93,48 +93,8 @@ fixed: /pricing description 96ch → rewritten by copywriting · residual: 1 unv
 
 ## Worked example — Ledger & Lane, first-run gate on /insights and /practice
 
-SITEMAP.md goals read here: `/insights/[slug]` → earn trust, route to /contact; `/practice/[area]`
-→ "book a consultation." First run against `npm start`, logged to design/QA.md §gate-content:
-
-```text
-metadata  /insights/[slug] <title> rendered "[object Promise] | Ledger & Lane" —
-          generateMetadata read `params` without `await` (Next 16: params is a Promise)
-unique    /practice/estate and /practice/probate shipped one description string, verbatim
-headings  /practice/litigation H1→H2 = "Litigation / Our Approach / Team / FAQ" —
-          a table of contents, not offer→proof→ask for "book a consultation"
-micro     /contact consultation form shipped a bare "Submit"; the "Cancel appointment?"
-          dialog offered [Yes]/[No] and named no consequence
-price     N/A — Ledger & Lane sells no discounted goods; item 6 logged N/A (the brief-gate holding)
-voice     /insights/data-breach-duties drifted into corporate-generic ("leverage our
-          expertise") against the firm's declared "measured, plainspoken authority"
-links     footer bar-association disclosure used href="#" — 0 of 3 disclosures resolved
-```
-
-Fixes by owner: `await params` in the [slug] generateMetadata (ultraweb:seo); two practice
-descriptions rewritten from each area's own content and the litigation headings recut to
-offer→proof→ask (ultraweb:copywriting); disclosures pointed at real state-bar URLs (ultraweb:footer);
-"Submit" → "Request this consultation" and the cancel dialog recut to "Cancel this appointment?
-We'll release the slot." + [Keep it] / [Cancel appointment] (ultraweb:copywriting, standard from
-ultraweb:ui-states); the drifting insights article rewritten to the firm's register (ultraweb:copywriting).
-Re-run PASS: 6/6 titles unique (max 57ch), descriptions 142–159ch, 1 H1/page, 24 internal 200 ·
-0 bare labels, cancel dialog names its consequence · voice within one tone-point across 7 sections ·
-item 6 N/A (no discounted goods in the brief).
-
-Rejected: a static `metadata` export on [slug] to dodge the await bug — it stamps one article's
-title onto every slug, and the gate samples 3 real slugs and re-fails it. Handoff: QA.md flips to
-PASS; ultraweb:gate-accessibility takes the heading LEVELS this gate deliberately left it.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:copywriting — wrote every string; all copy fixes route back through its voice spec and length limits.
-- ultraweb:seo — wired the metadata this gate audits; owns metadataBase, canonical, the OG fetch and dimension checks this gate defers to, and every template fix.
-- ultraweb:sitemap — the route list defining crawl coverage and each page's conversion goal.
-- ultraweb:wireframe — the section order the heading story should mirror.
-- ultraweb:gate-accessibility — owns heading levels and landmarks; this gate owns the narrative.
-- ultraweb:gate-antislop — overlapping dead-copy greps; antislop sweeps clichés broadly, this gate ties copy to completeness, and item 3's microcopy sweep is the same widen-the-banned-gate mechanism applied to controls.
-- ultraweb:ui-states — defines the authoring standard for confirm/error/empty strings; item 3's microcopy sweep is the mechanical re-check that the standard actually shipped.
-- ultraweb:buttons — owns the label component and its states; a bare-generic label flagged in item 3 is relabelled to verb+object here.
-- ultraweb:pricing — owns the line-through discount UI and unit price (Grundpreis); item 6's 30-day-lowest disclosure is the completeness check that closes that seam for DACH/EU discounts.
-- ultraweb:footer — owns the disclosure and utility links this gate crawls for 200s and anchor resolution; broken ones route back here.
-- ultraweb:content-cms — owns the MDX article pipeline; a sampled /insights/[slug] with a missing or duplicate frontmatter title, or a dead in-body link, is fixed here.
-- ultraweb:i18n — on localized builds, supplies the per-locale route list and hreflang pairs this gate dedupes titles across before calling metadata complete.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

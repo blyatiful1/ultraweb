@@ -178,38 +178,8 @@ Lenis smooths *native* scroll (it doesn't transform a fake container), so scroll
 
 ## Worked example — Studio Norra, /work index case-study reveals
 
-SYSTEM.md §motion caps section reveals at 550ms; DIRECTION.md ("Editorial Brutalist — springs, not ease-out defaults") calls for a spring on anything physical. SITEMAP.md marks `/work` as the one page that earns motion — `/studio` prose and the `/contact` form stay static.
-
-Decision: the eight case-study rows on `/work` are one stagger group, 60ms apart, 20px rise + fade, settling on a spring so rows land rather than snap. That spring settle is exactly why these reveals stay on Motion rather than a CSS `animation-timeline` — a linear scroll-driven timeline can't spring; the default engine yields to the escalation only where the direction demands physics. The oversized Archivo Expanded row headings are the reveal unit; the exposed grid rules under them do not animate — the brutalist grid must read as fixed and honest. Signal red `oklch(0.6 0.21 25)` stays out of the entrance entirely (interaction states only). The above-fold `/work` masthead animates on load via hero, not on scroll.
-
-```tsx
-const reduced = useReducedMotion(); // motion/react
-const row = reduced
-  ? { hidden: { opacity: 0 }, show: { opacity: 1 } }
-  : { hidden: { opacity: 0, y: 20 },
-      show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 30 } } };
-
-<m.ul initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}
-  variants={{ show: { transition: { staggerChildren: 0.06 } } }}>
-  {cases.map((c) => (
-    <m.li key={c.slug} variants={row} />
-  ))}
-</m.ul>
-```
-
-Rejected: a fixed reading-progress bar across the index — an eight-item portfolio isn't long-form, so the bar reads as decoration the direction bans. Reduced motion collapses the rows to opacity-only.
-
-Handoff: the Reveal + stagger land in `app/work/page.tsx`; the cursor-proximity image reveals and the shared-element case-study transition are pointer/route work, not scroll — this skill hands those off, and ultraweb:gate-performance then verifies the entrance layer adds zero CLS on `/work`.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:motion-language — duration/easing/stagger vocabulary and the "what never animates" list come from there.
-- ultraweb:physics — the One-Physics escalation: reach past CSS timelines to Motion's `useScroll`/springs only for velocity, spring settle, or cross-element choreography.
-- ultraweb:animejs — rung 3 of the ladder: a DIRECTION-commissioned scrubbed multi-path SVG timeline is the only scroll moment that leaves this skill's two engines; it owns the install gate and the `sync: true` scrub contract.
-- ultraweb:feature-sections — owns the sticky-scroll showcase layout this skill animates.
-- ultraweb:hero — hero entrances run on load; this skill takes over below the fold.
-- ultraweb:showpiece — a scroll-linked moment that needs canvas/WebGL graduates there.
-- ultraweb:set-design — a scroll-linked move that needs a camera inside a canvas persisting across routes graduates there; it reads `scrollYProgress` from this skill's native, un-hijacked scroll and never installs a second scroller.
-- ultraweb:gate-performance — verifies zero CLS and no long tasks, and flags any scroll listener a native `animation-timeline` could replace.
-- ultraweb:gate-accessibility — verifies the reduced-motion collapse and, when smooth-scroll is on, that Tab keeps focus following scroll and in-page anchors still land.
-- ultraweb:award-canon — Scroll-as-Journey, Scroll-as-Camera, and Fake-Depth Before Real Depth are the patterns this skill executes; their scroll-jack discipline is its guardrail.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

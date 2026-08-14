@@ -1,6 +1,6 @@
 ---
 name: mockup
-description: Render the direction shortlist as three fast, throwaway, self-contained static HTML previews — one per candidate archetype, each a hero plus 2–3 decision-carrying sections with a real OKLCH palette, real type pairing, and copy sketched in the brief's voice — then run the pick/mix/revise loop with the user until one candidate is explicitly approved, logging every round in design/MOCKUPS.md. Invoke as Phase 2 of the ultraweb pipeline in guided mode, after brief and the direction shortlist exist, whenever the user should see directions before the build commits to one ("show me some options", "let me pick a style", "mock it up first"). Never invoked in autonomous mode; never a substitute for the real build.
+description: Render the direction shortlist as three fast, throwaway, self-contained static HTML previews — one per candidate archetype, each a hero plus 2–3 decision-carrying sections with a real OKLCH palette, real type pairing, and copy sketched in the brief's voice — plus a one-tab contact sheet, then run the pick/mix/revise loop (or pairwise tournament mode: "one at a time", "A or B") with the user until one candidate is explicitly approved, logging every round in design/MOCKUPS.md and feeding the cross-build taste fingerprint. Invoke as Phase 2 of the ultraweb pipeline in guided mode, after brief and the direction shortlist exist, whenever the user should see directions before the build commits to one ("show me some options", "let me pick a style", "mock it up first"). Never invoked in autonomous mode; never a substitute for the real build.
 ---
 
 # mockup — three sketches, one approval
@@ -27,10 +27,20 @@ A first-grade mockup round is fast, divergent, and honest:
    - Copy sketched in the brief's tone — headline, one section of body, real CTAs. No lorem, no "Feature 1/2/3". Sketch-grade is fine; placeholder-grade is not.
    - One honest small-screen pass: fluid widths and readable text at 375px. No breakpoint engineering beyond that.
    - The `taste` banned list applies in full — a mockup that wins with a banned move poisons the build that follows it.
-3. Present all three files to the user side by side, then ask ONE structured question: pick A/B/C, mix named elements across candidates, or request a revised round. Never ask them to describe what they want in prose first — the mockups exist so they can point.
-4. Log the round in design/MOCKUPS.md (format below): every candidate's one-line identity, the user's verdict close to verbatim.
-5. On "mix": the base candidate keeps its archetype; borrowed elements become ONE recorded twist ("A, with B's type pairing") — never a 50/50 hybrid, per `direction`'s hedging ban. On "revise": generate the new round from the user's stated objection, retiring the weakest candidate; three rounds without an approval means the shortlist is wrong — return to `direction` and re-shortlist.
-6. Stop only at an explicit approval. Write it in design/MOCKUPS.md as the final line. That line is the pipeline's green light: `direction` turns the winner into DIRECTION.md, and no Phase 3+ work may start before it exists.
+3. Write `design/mockups/index.html` — the contact sheet: all candidates in one scrollable page (each embedded via `<iframe>` at a phone-ish and a desktop-ish width, labeled A/B/C with its one-line identity). Comparing three designs must not require juggling three tabs in working memory; one tab, scroll, point.
+4. Present the contact sheet (plus the individual files for full-size viewing), then ask ONE structured question: pick A/B/C, mix named elements across candidates, or request a revised round. Never ask them to describe what they want in prose first — the mockups exist so they can point.
+   **Tournament mode** — offered when the user says comparing three at once is hard ("one at a time", "just show me two"), or asks for it: pairwise duels instead of a 3-up menu. A vs B, winner vs C — two questions, each a binary with a "what tipped it" follow-up in the same breath. Same candidates, same approval bar, two more minutes; the per-duel verdicts are cleaner preference signal than a 3-way pick and land in the fingerprint (below) as one line each.
+5. Log the round in design/MOCKUPS.md (format below): every candidate's one-line identity, the user's verdict close to verbatim.
+6. On "mix": the base candidate keeps its archetype; borrowed elements become ONE recorded twist ("A, with B's type pairing") — never a 50/50 hybrid, per `direction`'s hedging ban. On "revise": generate the new round from the user's stated objection, retiring the weakest candidate; three rounds without an approval means the shortlist is wrong — return to `direction` and re-shortlist.
+7. Stop only at an explicit approval. Write it in design/MOCKUPS.md as the final line. That line is the pipeline's green light: `direction` turns the winner into DIRECTION.md, and no Phase 3+ work may start before it exists. Then feed the fingerprint (below).
+
+## Fingerprint — what this round teaches the next build
+
+The pick is the richest taste signal the harness ever receives, and throwing it away at project boundary wastes it. After the Approved line, when the user's setup has (or accepts) `~/.claude/ultraweb/`, append to `~/.claude/ultraweb/taste.md`: one line per round — winner's archetype, the named differentiator ("picked warmth over grid discipline"), the losers and any stated objection — and, in tournament mode, one line per duel to `~/.claude/ultraweb/duels.jsonl`. Three hard constraints keep this from becoming a rut:
+
+- **Tiebreaker, never trump.** The profile may only break ties between candidates the BRIEF already ranks equal. A user who loves Swiss grids still gets a warm organic shortlist for a roastery — BRIEF.md and `taste` outrank the profile, always.
+- **The heretic seat.** When a profile exists, one shortlist seat is always an explicit anti-profile candidate, labeled in MOCKUPS.md ("C — the heretic seat"), so the profile is disconfirmable every single round. The day the heretic wins, the profile was a rut.
+- **Decay.** Only the last 10 builds count; older entries are pruned on write. Taste drifts, and a two-year-old preference is data about a stranger.
 
 ## MOCKUPS.md format
 
@@ -73,7 +83,7 @@ Rejected alternative: rendering the candidates as AI-generated concept images �
 
 - ultraweb:taste — the banned list applies to mockups at full strength; a candidate may not win with a move the build could never keep.
 - ultraweb:brief — upstream; site type picks the decision-carrying sections, tone writes the sketch copy.
-- ultraweb:direction — bidirectional: it hands over the 3-candidate shortlist, and consumes the Approved line to write DIRECTION.md (mixes become the recorded twist).
+- ultraweb:direction — bidirectional: it hands over the 3-candidate shortlist (reading the fingerprint as tiebreaker and seating the heretic), and consumes the Approved line to write DIRECTION.md (mixes become the recorded twist).
 - ultraweb:checkpoint — this round IS checkpoint CP2; MOCKUPS.md's Approved line doubles as the CP2 ledger entry, and the two-consolidated-rounds discipline is shared.
 - ultraweb:award-canon — a candidate's signature-move idea cites its pattern precedent, same as the real direction will.
 - ultraweb:iterate — post-build style regrets route through it; the mockup round is never re-run against a built site.

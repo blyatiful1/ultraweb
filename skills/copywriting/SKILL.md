@@ -90,7 +90,7 @@ No emoji in production copy (✨🚀🎉 — taste ban). Max 1 exclamation point
 
 ## Worked example — Kaffeewerk Ost, roastery shop voice + hero copy
 
-- Input read — BRIEF.md tone words: "sensory, direct, unhurried"; DIRECTION.md archetype: "Warm Workshop — craft, tactile, no marketing fluff."
+- Input read — BRIEF.md tone words: "sensory, direct, unhurried"; DIRECTION.md archetype: "Warm Organic/Humanist — craft, tactile, no marketing fluff."
 - Voice Matrix from those tone words: Formal↔Casual **4**, Serious↔Playful **2**, Plain↔Expressive **3**, Reserved↔Bold **3** — the casual-4 score sets the de-DE register to **Du**, logged in BRIEF.md ("a Berlin roaster talks to regulars, not account holders").
 - §Voice appended to DIRECTION.md: person "wir/du" (informal German); sentence ceiling 16 words; jargon IN: washed, natural, Röstprofil — OUT: "premium", "artisanal"; humor dry, never wacky.
 - Calibration hero H1 (Specific-number formula, 6 words): "Röstung No. 14. Frisch aus Berlin."

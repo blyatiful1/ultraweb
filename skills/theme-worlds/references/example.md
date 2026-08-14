@@ -1,0 +1,11 @@
+## Worked example — Studio Norra, Oslo agency portfolio
+
+DIRECTION.md commits Editorial Brutalist; the base palette is warm paper + a single signal-red accent `oklch(0.6 0.21 25)`; the signature move is cursor-proximity case-study reveals on `/work`. The brief's tension — one studio voice that still lets each client's work read as *itself* — is exactly a scoping problem, not a switch.
+
+Each case study is lit by its own accent world. For every `/work/[slug]`, color extracts 2–3 OKLCH values from the case's hero (Content-Derived Color), re-decides the accent for dark, verifies both pairs, and hands tokens a `--world-<slug>` set; the `<article>` carries `data-world={slug}`. What stays constant across every world is the studio's hand: Archivo Expanded at the same fluid scale, the exposed 12-column grid, the near-zero brutalist radius, the settle-on-a-spring motion. Only the accent shifts — so `bg-primary` CTAs, focus rings, and link hovers take the featured client's color while the system reads as one authorship.
+
+On the long `/studio` page, three acts — Practice / Process / People — each carry a static `data-mode` re-pointing the accent as you scroll (the Scroll-as-Journey per-room shift in palette form), while surfaces stay put because dark mode owns those. The act shift is pure scrolling between statically-themed sections; no listener, no JS.
+
+Rejected: giving each world its own neutrals and type — that is eight micro-sites, not one studio with eight clients (the re-skin anti-pattern). Rejected: a `ThemeProvider` re-rendering on route change to swap the palette — the accent is a server-rendered `data-world` attribute with zero client state. Rejected: a client's neon brand accent that failed 4.5:1 on the paper ground — color lowered its L before it shipped; a world that can't clear AA is not a world.
+
+Handoff: ultraweb:color defines and AA-verifies each `--world-*` pair in both modes → ultraweb:tokens lands them in globals.css beside the base palette → the `data-world`/`data-mode` attributes sit on the `<article>`/`<section>` server components (ultraweb:app-structure — no client boundary) → ultraweb:scroll-motion drives the cursor-proximity reveal and the `/studio` act shift these worlds ride on.

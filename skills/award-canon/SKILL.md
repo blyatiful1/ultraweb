@@ -1,13 +1,13 @@
 ---
 name: award-canon
-description: The study library of the Awwwards record — 25 named patterns distilled from 32 Site-of-the-Year/SOTD-tier dossiers (2017–2026), the invariants that held across every year, the jury scoring model, and the dated-fashions list, with the per-site study bank in CANON.md. A reference cited by principle and always subordinate to taste and the gates — never a mandate. Invoke whenever a build needs award-grade references or signature-move ideas ("which award winners", "reference sites", "how would an Awwwards winner do this", "what do juries reward", "signature-move ideas"), or when any skill cites "the canon" or a named pattern.
+description: The study library of the Awwwards record — 25 named patterns distilled from 32 Site-of-the-Year/SOTD-tier dossiers (2017–2026), the invariants that held across every year, the jury scoring model, and the dated-fashions list, with the per-site study bank and the archetype map in references/ (loaded on demand, never wholesale). A reference cited by principle and always subordinate to taste and the gates — never a mandate. Invoke whenever a build needs award-grade references or signature-move ideas ("which award winners", "reference sites", "how would an Awwwards winner do this", "what do juries reward", "signature-move ideas"), or when any skill cites "the canon" or a named pattern.
 ---
 
 # award-canon — the award record, distilled to principle
 
 The study library of what the Awwwards record proves. `taste` is what good means for us; this is the evidence. Winners are studied for their principle and never copied on the surface — **steal the principle, never the surface.** Every pattern is a way to express `taste`'s constants; none overrides them.
 
-**Stage:** consulted by `direction` in Phase 2 (references + signature-move precedent), cited by name from the motion/component skills, scored against by `design-judge` in Phase 11 - **Reads:** `CANON.md` (the per-site bank), design/DIRECTION.md when a citation is resolved - **Writes:** nothing — a reference library like `taste`; its pattern names are cited into DIRECTION.md and the skills.
+**Stage:** consulted by `direction` in Phase 2 (references + signature-move precedent), cited by name from the motion/component skills, scored against by `design-judge` in Phase 11 - **Reads:** `references/ARCHETYPE-MAP.md` (the default Phase-2 load), `references/CANON.md` (per-site dossiers — only when a site is cited by name), `references/INVARIANTS.md` (what design-judge scores against), design/DIRECTION.md when a citation is resolved - **Writes:** nothing — a reference library like `taste`; its pattern names are cited into DIRECTION.md and the skills.
 
 ## Standard
 
@@ -15,11 +15,11 @@ The prime directive: **transfer the principle, never the surface.** The surface 
 
 ## How to read the canon
 
-- **Winners** cite the site + the *actual verified* award + year. Many are Category / SOTD / Users'-Choice / Developer wins, not grand prizes — the principle transfers regardless of the trophy. Cite the tier the dossier verifies; never inflate to "Site of the Year," and never retrofit a sub-score (e.g. an accessibility number) onto a site whose dossier doesn't publish one. Per-site scores, live status, and hedges live in `CANON.md`.
-- **Stack** names the cheapest correct tool first: CSS/tokens → Motion for React → CSS scroll-driven → (side branch, not a cheaper rung) a DIRECTION-commissioned anime.js SVG timeline for inherently vector moments (`ultraweb:animejs`) → WebGL/R3F behind `showpiece`'s gate. Only the SVG-timeline and 3D/shader/GPU-particle layers have no React-native equivalent. GSAP is deliberately not a rung here: it duplicates that SVG territory at far greater weight, and its effects are the most-copied on the web — argued once and rejected in `STACK.md`, cited everywhere else. Where a dossier records GSAP, `CANON.md` is reporting what that site shipped — history, not our ladder. **Native CSS scroll-driven animation (`animation-timeline: view()/scroll()`) is progressive enhancement, not a default** — cross-browser support landed late (Safari, late 2025) — so every use must be designed so the no-support state is *already* the correct static layout.
+- **Winners** cite the site + the *actual verified* award + year. Many are Category / SOTD / Users'-Choice / Developer wins, not grand prizes — the principle transfers regardless of the trophy. Cite the tier the dossier verifies; never inflate to "Site of the Year," and never retrofit a sub-score (e.g. an accessibility number) onto a site whose dossier doesn't publish one. Per-site scores, live status, and hedges live in `references/CANON.md`.
+- **Stack** names the cheapest correct tool first: CSS/tokens → Motion for React → CSS scroll-driven → (side branch, not a cheaper rung) a DIRECTION-commissioned anime.js SVG timeline for inherently vector moments (`ultraweb:animejs`) → WebGL/R3F behind `showpiece`'s gate. Only the SVG-timeline and 3D/shader/GPU-particle layers have no React-native equivalent. GSAP is deliberately not a rung here: it duplicates that SVG territory at far greater weight, and its effects are the most-copied on the web — argued once and rejected in `STACK.md`, cited everywhere else. Where a dossier records GSAP, `references/CANON.md` is reporting what that site shipped — history, not our ladder. **Native CSS scroll-driven animation (`animation-timeline: view()/scroll()`) is progressive enhancement, not a default** — cross-browser support landed late (Safari, late 2025) — so every use must be designed so the no-support state is *already* the correct static layout.
 - **Discipline** is load-bearing — it is the guardrail that keeps the pattern inside the constitution.
 - **Beyond Awwwards.** This bank is Awwwards-shaped, so it inherits Awwwards taste. Two technique-indexed complements keep the diet honest: **Hoverstat.es** (experimental layout and interaction, indexed by what was built rather than who won) and **Godly** (indexed by component — heroes, navs, footers, pricing). Search them for a *mechanic* against a named problem; every rule above still applies — principle not surface, and the gates outrank both.
-- **Reconstructed cohort.** Several pre-2021 winners are dead or replaced (Pioneer, Prometheus, Star Atlas, Umami, MA, Active Theory v4, the Cool Club, Simply Chocolate, Frans Hals, Orano, New Mobile Workforce). Their mechanics are *reconstructed from case studies, not live inspection* — teach specifics as reported, not verified. `CANON.md` flags each.
+- **Reconstructed cohort.** Several pre-2021 winners are dead or replaced (Pioneer, Prometheus, Star Atlas, Umami, MA, Active Theory v4, the Cool Club, Simply Chocolate, Frans Hals, Orano, New Mobile Workforce). Their mechanics are *reconstructed from case studies, not live inspection* — teach specifics as reported, not verified. `references/CANON.md` flags each.
 
 ## The canon — 25 patterns
 
@@ -68,29 +68,9 @@ The prime directive: **transfer the principle, never the surface.** The surface 
 
 Audio is a first-class layer in many winners (New Mobile Workforce's synced transition whooshes, Igloo's ambient score, Messenger's per-zone spatial soundscapes). ultraweb **omits sound by default** — autoplay audio is an accessibility, bandwidth, and open-office/public-context hazard. If a brief genuinely demands it: **opt-in only** (a user gesture enables it), **muted by default** with a persistent visible mute control, and it **never gates progress, content, or a transition** — it enhances a site already complete and navigable in silence.
 
-## The invariants — held across ALL years (2017–2026)
+## The invariants and the jury model
 
-Timeless; the 25 patterns are ways to express them. `design-judge` scores against them.
-
-1. **ONE committed signature move, executed to an extreme** — never five effects; two moves usually *lower* the score. The load-bearing constant, and the core of `taste`.
-2. **Typographic conviction** — scale contrast, a real face POV, editorial hierarchy; type foundries won SOTY. The cheapest, most era-durable Design signal (judged in seconds).
-3. **Restraint / a tiny palette** — a 2–3 color contract is near-universal (or one authored source for a fuller palette); low density, high moment.
-4. **Motion with a director, not a library** — meaning, pacing, one easing physics; decorative motion is noise.
-5. **Immersive tech in service of a narrative/product** — never tech-for-tech's-sake; the site *performs* the subject.
-6. **Craft-level polish + performance discipline** — lean/fast/accessible is the *stronger* position: it wins the Design tier AND the Developer Award.
-7. **Whole-site coherence** — one material/motif/post-stack/grid unifies everything; 404/contact/archive match the homepage.
-8. **The concept is decided before the pixels** — the highest-leverage, zero-cost move is a creative/content decision made first.
-
-## The jury model — and what costs points
-
-| Criterion | Weight | Covers |
-|---|---|---|
-| **Design** | **40%** | hierarchy, typography, color, spacing, micro-detail, hover states, curves, rhythm |
-| **Usability** | **30%** | nav clarity, responsive/mobile, load speed, no CLS, keyboard, Core Web Vitals |
-| **Creativity** | **20%** | original concept, custom interaction, unconventional nav — *serving* content |
-| **Content** | **10%** | quality/relevance of copy, media, information |
-
-Design + Usability = **70%**; Creativity (where the signature move lives) is 20%. **Never trade a Usability point for a Creativity point.** Aim ~8.0 (SOTD contention), floor 6.5 (Honorable Mention); the 6.5→8.0 delta is one signature move executed *without dropping any Design/Usability points*. Jury: ≥18 jurors, the 3 furthest from the mean auto-dropped — **design for the median juror, not a champion.** Accessibility is the recurring weak axis in the corpus (Pioneer 6.67 is the sourced low-water mark) — the exact gap ultraweb's WCAG 2.2 AA + reduced-motion closes for free on the Design axis.
+Moved to `references/INVARIANTS.md` — `design-judge` and `gate-visual` read that file directly and score against it verbatim; it is the anti-drift copy of record.
 
 ## Dated fashions — borrow the mechanic, never the skin
 
@@ -104,7 +84,7 @@ Design + Usability = **70%**; Creativity (where the signature move lives) is 20%
 
 ## Using the canon in the pipeline
 
-- **`direction` (Phase 2)** consults the per-archetype reference map in `CANON.md` for the committed archetype: it names the reference winners (as *qualities to chase, never URLs*) and picks the canon pattern(s) whose *principle* the ONE signature move will borrow. Citations land in DIRECTION.md's References line by pattern name.
+- **`direction` (Phase 2)** reads `references/ARCHETYPE-MAP.md` — and ONLY that file, ~3KB — for the committed archetype: it names the reference winners (as *qualities to chase, never URLs*) and picks the canon pattern(s) whose *principle* the ONE signature move will borrow. Citations land in DIRECTION.md's References line by pattern name.
 - **motion & component skills** cite patterns by name instead of re-deriving them — `hero` → Type as the Image / The Persistent Hero Object; `typography` → Type as Evidence; `color` → Content-Derived Color / Invert the Genre Palette; `imagery` → One Material World; `scroll-motion` → Scroll-as-Journey / Scroll-as-Camera / Fake-Depth; `motion-language` → One Physics / Semantic Motion Only; `physics` → The Prove-It Gesture / The Cursor as Narrator; `page-transitions` → The Masked Cut / The Loader is the Overture; `showpiece` → Weight as a Feature / Progressive Spectacle Tiers; `set-design` → Scroll-as-Camera / The Persistent Hero Object / One Material World / The Loader is the Overture / Weight as a Feature / Progressive Spectacle Tiers; `data-display`/`social-proof` → Framed Data; `wireframe`/`navigation` → The Metaphor Engine / Scroll-as-Journey / Archive-as-Toy.
 - **`design-judge` (Phase 11)** scores Distinctiveness against the invariants — ONE signature move executed to an extreme (not five), principle not copied surface — and reads the 70/20 weighting as the reason a janky wow move is a net loss.
 
@@ -119,14 +99,14 @@ Design + Usability = **70%**; Creativity (where the signature move lives) is 20%
 
 ## Worked example — Studio Norra, Oslo agency portfolio
 
-Studio Norra's brief tension — raw editorial authority that still has to *sell* the studio's craft — shortlists Editorial Brutalist and Art-House Immersive. `direction` reads `CANON.md`'s per-archetype map: Brutalist → Type as the Image + The Prove-It Gesture; Art-House → The Persistent Hero Object + The Cursor as Narrator + Scroll-as-Camera. The signature move — cursor-proximity case-study image reveals on `/work` — borrows the *principle* of The Cursor as Narrator (the pointer communicates and acts on the scene) crossed with The Prove-It Gesture (the reveal rewards deliberate movement), executed at the cheapest rung (`clip-path` + a `useSpring` follower, 0kb WebGL) — exactly as Star Atlas's biggest lever was a *decision*, not a shader.
+Studio Norra's brief tension — raw editorial authority that still has to *sell* the studio's craft — shortlists Editorial Brutalist and Art-House Immersive. `direction` reads `references/ARCHETYPE-MAP.md`: Brutalist → Type as the Image + The Prove-It Gesture; Art-House → The Persistent Hero Object + The Cursor as Narrator + Scroll-as-Camera. The signature move — cursor-proximity case-study image reveals on `/work` — borrows the *principle* of The Cursor as Narrator (the pointer communicates and acts on the scene) crossed with The Prove-It Gesture (the reveal rewards deliberate movement), executed at the cheapest rung (`clip-path` + a `useSpring` follower, 0kb WebGL) — exactly as Star Atlas's biggest lever was a *decision*, not a shader.
 
 What the canon explicitly kept OUT: Igloo's frozen-material world and its SDF-text (surface, not principle — and it breaks a11y); a Scroll-as-Camera dolly (the #1 scroll-jack hazard, and Studio Norra's content is an index, not a scene). DIRECTION.md's References line cites "The Cursor as Narrator (principle), The Prove-It Gesture (principle)"; `physics` owns the spring; `design-judge` scores Distinctiveness against invariant 1.
 
 ## Composes with
 
 - ultraweb:taste — the constitution; the canon expresses its constants and never overrides its banned list or the gates. `taste` is what good means for us; `award-canon` is what the award record proves.
-- ultraweb:direction — primary consumer: `CANON.md`'s per-archetype map supplies references + signature-move ideas in Phase 2, cited into DIRECTION.md by pattern name.
+- ultraweb:direction — primary consumer: `references/ARCHETYPE-MAP.md` supplies references + signature-move ideas in Phase 2, cited into DIRECTION.md by pattern name.
 - ultraweb:typography, ultraweb:color, ultraweb:imagery — cite the type/color/material patterns by name in the foundation phase.
 - ultraweb:hero, ultraweb:scroll-motion, ultraweb:motion-language, ultraweb:physics, ultraweb:page-transitions, ultraweb:showpiece, ultraweb:set-design — cite the motion/interaction/3D patterns; `showpiece` owns the WebGL gate the tier patterns operationalize for one set piece, and `set-design` owns it at site scale, where every tier must hold on every route.
 - ultraweb:data-display, ultraweb:social-proof — cite Framed Data for stat rows, KPI tiles, and credibility figures.

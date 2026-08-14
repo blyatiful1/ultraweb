@@ -1,0 +1,63 @@
+{
+  "$comment": "Machine-readable stack manifest — the single authority for pinned versions. STACK.md carries the API facts and cites this file; skills never restate version numbers. Refresh with: node scripts/verify-stack.mjs [--write]. 'verified' older than 30 days means: re-verify before Phase 5.",
+  "verified": "2026-07-16",
+  "packages": {
+    "next": "16.2.10",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "tailwindcss": "4.3.2",
+    "shadcn": "4.13.0",
+    "lucide-react": "1.24.0",
+    "next-themes": "0.4.6",
+    "motion": "12.42.2",
+    "zod": "4.4.3",
+    "drizzle-orm": "0.45.2",
+    "drizzle-kit": "0.31.10",
+    "@neondatabase/serverless": "1.1.0",
+    "better-auth": "1.6.23",
+    "resend": "6.17.2",
+    "react-email": "6.9.0",
+    "@react-email/components": "1.0.12",
+    "stripe": "22.3.2",
+    "@next/mdx": "16.2.10",
+    "content-collections": "0.15.2",
+    "velite": "0.4.0",
+    "shiki": "4.3.1",
+    "@shikijs/transformers": "4.3.1",
+    "@shikijs/rehype": "4.3.1",
+    "animejs": "4.5.0",
+    "three": "0.185.1",
+    "@types/three": "0.185.1",
+    "@react-three/fiber": "9.6.1",
+    "@react-three/drei": "10.7.7",
+    "@react-three/postprocessing": "3.0.4",
+    "postprocessing": "6.39.4",
+    "@gltf-transform/cli": "4.4.2"
+  },
+  "pins": {
+    "three": "exact",
+    "@types/three": "locked-to:three",
+    "@next/mdx": "locked-to:next"
+  },
+  "majorPins": {
+    "$comment": "CLIs invoked via npx at a pinned MAJOR (never floating). ship and preview both read this entry.",
+    "vercel": "56"
+  },
+  "gated": [
+    "animejs",
+    "three",
+    "@types/three",
+    "@react-three/fiber",
+    "@react-three/drei",
+    "@react-three/postprocessing",
+    "postprocessing",
+    "@gltf-transform/cli"
+  ],
+  "observedDrift": {
+    "$comment": "Seen live on a later date but not re-verified as a set — fold in only via verify-stack.mjs.",
+    "observedAt": "2026-07-29",
+    "next": "16.2.12",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  }
+}

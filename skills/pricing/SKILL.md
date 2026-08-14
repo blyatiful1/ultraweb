@@ -113,32 +113,8 @@ Variant 5's grammar — a delivery rhythm, not a billing period:
 
 ## Worked example — Tidepool, pricing page for a port-logistics SaaS
 
-design/BRIEF.md: "Three tiers — Starter $0, Growth $490/mo, Fleet custom. Feature Growth; dark mode is the primary surface." Direction is Precision Instrument: calm, data-forward.
-
-Three-tier cards, Growth in the center slot. The tier data is one typed constant — the single source pricing.tsx renders and ultraweb:payments later mirrors:
-
-```ts
-const tiers = [
-  { name: "Starter", price: 0,    cta: "Start free",        featured: false },
-  { name: "Growth",  price: 490,  cta: "Start 14-day trial", featured: true  },
-  { name: "Fleet",   price: null, cta: "Contact sales",     featured: false },
-] as const;
-```
-
-Price is set in JetBrains Mono with `tabular-nums` — amount 3.5rem, the `$` at ~45% top-aligned, "/mo" ~1rem muted. Featured emphasis stays inside the two-device budget: an accent-teal `oklch(0.68 0.12 200)` border plus the section's only primary CTA (filled teal); Starter and Fleet get ghost buttons and no hover growth. That teal border is re-checked against the dark surface `oklch(0.18 0.015 250)` — dark mode is decided here, not inverted.
-
-Rejected: giving Fleet a "$Custom" price to hold three symmetric cards. Custom typeset as a price is a dark pattern — Fleet's card leads "Let's scope your fleet" over a Contact sales CTA, with no Stripe price behind it. No billing toggle either: BRIEF lists monthly only, and a segmented control mapping to one real period is theater.
-
-Handoff: the tier constant lands in components/sections/pricing.tsx; ultraweb:payments reads it to create the single Stripe recurring price ($490/mo Growth) — Starter and Fleet carry no Stripe price, so page and checkout cannot drift.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:buttons — one primary CTA per view; per-tier button hierarchy
-- ultraweb:data-display — the comparison matrix inherits its table, alignment, and `tabular-nums` rules; the Grundpreis unit-price line follows its one-precision-per-column rule
-- ultraweb:copywriting — tier names, feature phrasing, and discount wording in the brief's voice
-- ultraweb:payments — Stripe products/prices mirror the tier constant 1:1; each Abo cadence maps to one recurring Price by interval; drift between page and checkout is a trust breach
-- ultraweb:gate-content — verifies the DACH price/legal copy (MwSt, Grundpreis, shipping link) and the EU Omnibus 30-day price-history behind any Streichpreis
-- ultraweb:cart / ultraweb:product-detail — reserve the DACH price slot (gross, Grundpreis, "inkl. MwSt.") and defer the string authoring here
-- ultraweb:ui-states — loading and error design for Stripe-fetched prices and checkout-session CTAs
-- ultraweb:faq — pricing objections (refunds, cancellation, limits) belong in an FAQ directly below the tiers
-- ultraweb:micro-interactions — toggle crossfade and card hover timing
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

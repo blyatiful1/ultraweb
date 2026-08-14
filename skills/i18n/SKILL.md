@@ -147,32 +147,8 @@ Each locale is WRITTEN by `ultraweb:copywriting` in that market's voice — neve
 
 ## Worked example — Casa Verde, EN/PT restaurant menu + reservations
 
-design/BRIEF.md: "Lisbon locals and visiting tourists — Portuguese first, English for visitors." Two markets, marketing-scale menu copy → the segment pattern below, zero libraries.
-
-`lib/i18n.ts`: `locales = ["pt", "en"] as const`, `defaultLocale = "pt"` — the restaurant is physically in Lisbon, so Portuguese is the crawlable default and the `x-default` target. Dictionaries carry the voice, not just labels:
-
-```ts
-// dictionaries/pt.ts — a missing or extra key fails tsc against en
-import type en from "./en";
-export default {
-  nav: { menu: "Ementa", story: "A Casa", reserve: "Reservar" },
-  harvest: { label: "Colheita de hoje" },
-} satisfies typeof en;
-```
-
-The reservation confirmation date runs through `new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(booking.date)` — "21 de julho de 2026" for `pt`, "July 21, 2026" for `en` — before the zod-validated server action hands the booking to Resend.
-
-Rejected: IP-geolocation auto-redirect. A Berlin tourist's phone geolocates to Portugal, but region is not a language decision — their `accept-language` says `de`, which the site doesn't ship, so the unmatched language falls to the `pt` default and they reach English through the visible switcher. Accept-Language in `proxy.ts` plus that switcher wins, never the phone's location.
-
-Handoff: the `dictionaries/pt.ts` + `dictionaries/en.ts` pair is written natively per market by `ultraweb:copywriting`; `ultraweb:gate-responsive` then screenshots the Portuguese locale (the longer of the two here) at 375px so "Colheita de hoje" and the harvest strip don't overflow.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- **ultraweb:copywriting** — writes every dictionary natively per locale, and the Leichte-Sprache register where a civic `de` brief calls for it.
-- **ultraweb:typography** — German headlines re-check against its clamp scale; the language runs 15–35% longer than the English it was tuned on.
-- **ultraweb:gate-accessibility** — the Leichte-Sprache register answers the cognitive-accessibility gap beside the WCAG floor it enforces.
-- **ultraweb:seo** — owns `metadataBase`; this skill adds hreflang alternates and per-locale metadata.
-- **ultraweb:routing** — the `[locale]` segment reshapes the whole route tree; coordinate loading/error files per segment.
-- **ultraweb:navigation** — houses the locale switcher as a designed moment.
-- **ultraweb:gate-responsive** — must run on the longest locale to catch overflow.
-- **ultraweb:gate-content** — the completeness check runs per locale, not once.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

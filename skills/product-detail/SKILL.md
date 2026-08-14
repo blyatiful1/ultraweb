@@ -114,27 +114,8 @@ On mobile the buy-box can't be a sticky side column. Ship a **sticky bottom acti
 
 ## Worked example — Loop & Thread, the Aran Lambswool Throw
 
-design/DIRECTION.md: "Warm Editorial — the material is the hero; honest daylight photography, generous type." SYSTEM.md hands over a madder accent `oklch(0.62 0.13 40)` on a warm-paper base `oklch(0.97 0.01 85)`.
-
-The throw ships in six colourways — Oat, Loden, Rust, Slate, Heather, Char. The gallery is locked to **4/5**; the six 40px swatches are real fabric crops at that same ratio. Tapping **Loden** crossfades the 4/5 hero Oat → Loden in one micro-duration token, moves the ring, and writes `/products/aran-throw?variant=loden` with `scroll: false` — no reload. Five colourways hold at **€149**; the herringbone **Heather** weave carries an upcharge, so selecting it re-renders **€169** with a **"+€20"** delta in `tabular-nums`, announced via the `aria-live` price region. The thumbnail rail swaps folded / draped / detail-weave angles for the *active* colourway; a click-to-zoom lightbox shows the 2x weave detail textile buyers actually inspect.
-
-Buy-box: `<h1>` "Aran Lambswool Throw" → **€149** with a reserved Grundpreis slot ("€99,33 / kg", "inkl. MwSt." — filled by `pricing`) → one value line → colourway swatches + size (Single 130×180 / Large 150×200, Large +€40, sold-out sizes disabled) → quantity → the one filled CTA **"In den Warenkorb"** → free-returns microcopy → a 4.8★ (212) rating anchor-linking to the reviews. Spec is a `data-display` Definition panel (100% lambswool · herringbone/plain weave · 1.5 kg · cool wash · woven in Donegal). On mobile a sticky bottom bar — "€149 · Loden · In den Warenkorb", safe-area padded — appears once the inline CTA scrolls away. One optional rider is used: a "Materialpass" DPP panel (fibre composition, 0% recycled, care, repair, origin, QR) flagged ESPR-driven and honestly stubbed.
-
-Rejected: a real-time WebGL fabric configurator — six pre-shot colourway photos crossfaded give the same material confidence at a fraction of the weight (the whole principle). Also rejected: the guided-selling quiz — a single throw doesn't need one (it belongs on the yarn catalogue, not here), and hiding the two sold-out sizes — they stay visible-but-disabled so the range reads honestly.
-
-Handoff: `ultraweb:cart` owns the add-to-cart mutation + drawer; `ultraweb:media-optimization` sizes the six colourway heroes + the 2x zoom asset; `ultraweb:social-proof` fills the review content and customer photos; `ultraweb:pricing`/`ultraweb:gate-content` own the Grundpreis/MwSt legal strings; `ultraweb:overlays` owns the zoom dialog.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:cart — owns the add-to-cart mutation, optimistic count, and drawer; the PDP owns the selected-variant state and the button that triggers it.
-- ultraweb:pricing — the price display legal layer (Grundpreis, VAT-inclusive, shipping link); the buy-box reserves the slot, pricing authors the strings.
-- ultraweb:gate-content — verifies the DACH price/legal copy and every string on the page; the PDP defers its Grundpreis/MwSt line to it.
-- ultraweb:imagery — the per-variant photo treatment and honest placeholders for any variant shot not yet delivered.
-- ultraweb:media-optimization — sizes the variant heroes, thumbnails, and the 2x zoom asset, and owns the LCP blur/preload pipeline.
-- ultraweb:cards — the related-products / "complete the look" grid below the fold is a card composition, not a PDP concern.
-- ultraweb:data-display — the spec sheet (Definition variant) and the price/delta alignment and `tabular-nums` rules.
-- ultraweb:social-proof — owns the rating, reviews, and trust content; the PDP owns where they sit relative to the CTA.
-- ultraweb:payments — the trust/returns badges near the CTA and the checkout the cart hands off to.
-- ultraweb:overlays — the focus-trapped zoom lightbox dialog and its reduced-motion path.
-- ultraweb:buttons — the CTA variant, size, and states; one primary, everything else ghost or icon.
-- ultraweb:showpiece — the escape hatch when DIRECTION.md genuinely demands a rotatable 3D/WebGL configurator; this skill owns the crossfade fallback that covers the other 95% of products.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.
