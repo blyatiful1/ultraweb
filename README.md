@@ -1,20 +1,22 @@
 # ultraweb
 
-[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](https://code.claude.com/docs/en/plugins) [![Version](https://img.shields.io/badge/version-1.4.1-4C71F0)](.claude-plugin/plugin.json) [![Skills](https://img.shields.io/badge/skills-73-2EA44F)](ROSTER.md) [![Showcase](https://img.shields.io/badge/showcase-live-2EA44F)](https://ultraweb-site.vercel.app)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](https://code.claude.com/docs/en/plugins) [![Version](https://img.shields.io/badge/version-1.5.0-4C71F0)](.claude-plugin/plugin.json) [![Skills](https://img.shields.io/badge/skills-74-2EA44F)](ROSTER.md) [![Showcase](https://img.shields.io/badge/showcase-live-2EA44F)](https://ultraweb-site.vercel.app)
 
-*A Claude Code plugin for AI web design: one prompt in, a production-grade Next.js 16 + Tailwind CSS v4 website out — design system, copywriting, motion, backend, SEO, and seven screenshot-verified quality gates.*
+*A Claude Code plugin for AI web design: a guided design session — a few sharp scoping questions, three fast mockups, your approval — then a production-grade Next.js 16 + Tailwind CSS v4 website out: design system, copywriting, motion, backend, SEO, and seven screenshot-verified quality gates.*
 
-## You hire a design studio. It fits in one prompt.
+## You hire a design studio. It fits in one session.
 
-Somewhere in a nicer timeline there's a small agency that does this properly. An art director who refuses the purple gradient. A design engineer who ships tokens before components. A critic who screenshots your site at 375px and tells you the truth about it. They cost forty thousand euros and they're booked until spring.
+Somewhere in a nicer timeline there's a small agency that does this properly. An art director who refuses the purple gradient. A design engineer who ships tokens before components. A critic who screenshots your site at 375px and tells you the truth about it. And before any of them lift a pen, someone sits you down, asks the four questions that actually matter for *your* site, and shows you three sketches to point at. They cost forty thousand euros and they're booked until spring.
 
-**ultraweb is that studio, as a Claude Code plugin.** 73 skills and 3 subagents that argue with each other on your behalf until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it.
+**ultraweb is that studio, as a Claude Code plugin.** 74 skills and 3 subagents that argue with each other on your behalf until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it.
 
 ```text
 /ultraweb build me a website for a Berlin specialty coffee roastery with an online shop
 ```
 
-Then go make coffee yourself. It'll be a while.
+Answer a short round of questions about scope (yours will be about subscriptions and checkout — someone else's would be about reservations or case studies), pick one of three mockups, say yes. *Then* go make coffee yourself. It'll be a while.
+
+Prefer the classic fire-and-forget? Say **"just build it, no questions"** and the studio decides everything itself, logging each assumption so you can correct it afterwards.
 
 ---
 
@@ -22,7 +24,7 @@ Then go make coffee yourself. It'll be a while.
 
 **[ultraweb-site.vercel.app](https://ultraweb-site.vercel.app)** — built by this pipeline, from one prompt, with no human touch-ups.
 
-The whole paper trail is public at [blyatiful1/ultraweb-site](https://github.com/blyatiful1/ultraweb-site): every decision the studio made on the way (brief → direction → system → sitemap → QA), the 58/72 skill-coverage ledger from that build (the harness has since grown to 73), and each gate's receipts. The homepage renders its own report card. If the site were bad, you'd be able to prove it from the repo.
+The whole paper trail is public at [blyatiful1/ultraweb-site](https://github.com/blyatiful1/ultraweb-site): every decision the studio made on the way (brief → direction → system → sitemap → QA), the 58/72 skill-coverage ledger from that build (the harness has since grown to 74, and that run predates the guided session — it was a classic autonomous build), and each gate's receipts. The homepage renders its own report card. If the site were bad, you'd be able to prove it from the repo.
 
 ### The build, measured
 
@@ -74,9 +76,15 @@ Loads itself next session as `ultraweb@skills-dir`. Update with `git pull`, unin
 
 ## Using it
 
-One sentence about what you want. That's the entire interface.
+One sentence about what you want — then a short conversation instead of a leap of faith.
 
-The pipeline takes it from there: understand the brief → commit to an aesthetic direction → build the design system → plan the pages → scaffold → build → wire the backend → write the copy → choreograph the motion → make it findable → run the gates → ship. Every phase leaves a written record in `design/*.md` inside your project, which is how 73 skills manage to agree with each other three hours later.
+**First, the interview.** The pipeline reads your sentence, works out what kind of site it is, and asks up to four multiple-choice questions about the forks it can't safely guess — scope, features, audience, content. The questions are generated from *your* prompt, not a fixed form: a shop gets asked about subscriptions, a restaurant about reservations, a portfolio about case-study depth. Never about colors or fonts — you shouldn't have to describe taste in words.
+
+**Then, the mockups.** Three deliberately different directions, each rendered fast as a self-contained static HTML preview — real palette, real type pairing, your copy sketched in, no build step. You pick one, mix elements ("the warm one, but with B's grid"), or send the round back. Nothing expensive happens until you say yes; your approval is written into `design/MOCKUPS.md` and is literally the gate the build waits behind.
+
+**Then, the build.** From your approved direction, the pipeline runs as before: design system → pages → scaffold → build → backend → copy → motion → findability → gates → ship. Every phase leaves a written record in `design/*.md` inside your project, which is how 74 skills manage to agree with each other three hours later. The mockup files stay behind as reference — the site is re-derived from the decisions, never copy-pasted from a sketch.
+
+**Autonomous mode** — the original one-prompt behavior — is still there: say "just build it" / "no questions", and it decides everything itself (also the automatic fallback when nobody's around to answer, e.g. scheduled runs).
 
 **Already have an ultraweb site?** Just say what's wrong — *"the hero's too timid"* — and `ultraweb:iterate` scopes the change and re-runs only the gates you actually disturbed.
 
@@ -93,7 +101,7 @@ The showcase table above is the receipt: 4,753 API calls, 2.78 million tokens ge
 
 Model routing keeps it as honest as it can — mechanical sweeps drop to Sonnet 5, judgment stays up on Opus 5 — but cheaper per call is not the same as cheap. It is still, plainly, an order of magnitude beyond an ordinary Claude Code task. Plan for it.
 
-**How to spend less:** build once, then talk to it. Full runs are for new sites and total redesigns. Everything after that is `iterate`, which touches only what your change touched.
+**How to spend less:** build once, then talk to it. Full runs are for new sites and total redesigns. Everything after that is `iterate`, which touches only what your change touched. The interview and mockup round are the cheap part by design — a handful of questions and three static HTML sketches — and they exist precisely so the expensive part runs once, at a direction you already approved, instead of twice because the first guess was wrong.
 
 ## Why the output isn't slop
 
@@ -114,7 +122,7 @@ And underneath all of it: nearly every skill ends with a real decision traced en
 | Department | Who's in it |
 |------|--------|
 | **Direction** | `ultraweb` (the pipeline itself), `taste`, `iterate`, `award-canon` |
-| **Discovery** | `brief`, `direction` (12 archetypes), `sitemap`, `wireframe`, `copywriting` |
+| **Discovery** | `brief` (with the guided scoping interview), `direction` (12 archetypes), `mockup` (the pick/mix/revise round), `sitemap`, `wireframe`, `copywriting` |
 | **Design system** | `tokens`, `color`, `typography`, `layout-grid`, `depth`, `shape-language`, `icons`, `imagery`, `motion-language`, `theme-worlds` |
 | **Components** | `component-api`, `hero`, `navigation`, `footer`, `feature-sections`, `cards`, `buttons`, `forms`, `data-display`, `pricing`, `social-proof`, `faq`, `ui-states`, `overlays`, `cart`, `product-detail`, `command-palette`, `marginalia` |
 | **Motion** | `micro-interactions`, `scroll-motion`, `page-transitions`, `physics`, `showpiece`, `set-design`, `animejs`, `hidden-craft` |
@@ -131,7 +139,7 @@ Three specialists work outside the main line, each pinned to its own model tier:
 
 The same policy governs all fan-out work: judgment stays on the lead model, specialist builds and critiques on Opus 5, mechanical sweeps on Sonnet 5.
 
-Want the full scope of all 73? → [ROSTER.md](ROSTER.md). Want the per-site award study bank? → [skills/award-canon/CANON.md](skills/award-canon/CANON.md).
+Want the full scope of all 74? → [ROSTER.md](ROSTER.md). Want the per-site award study bank? → [skills/award-canon/CANON.md](skills/award-canon/CANON.md).
 
 ## What you need
 

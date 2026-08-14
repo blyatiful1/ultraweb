@@ -1,6 +1,6 @@
 # ultraweb skill roster
 
-The complete map of the harness. 73 skills: 1 orchestrator (root `SKILL.md`) + 72 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
+The complete map of the harness. 74 skills: 1 orchestrator (root `SKILL.md`) + 73 specialist skills in `skills/<name>/SKILL.md`. Every skill reads `design/*` artifacts produced upstream and serves the pipeline defined in the root skill. `taste` is the constitution; every skill defers to it.
 
 Format: **name** — scope. *(reads → writes)*
 
@@ -12,8 +12,9 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **award-canon** — the study library: 25 named patterns + per-site bank distilled from Awwwards Site-of-the-Year/SOTD-tier winners 2017-2026; direction consults it for references, design-judge scores against its invariants. *(— → judgment + reference)*
 
 ## Tier 1 — Discovery
-- **brief** — expand one prompt into a full creative brief: site type, audience, goals, tone words, page list, content inventory, backend needs. Decides, never interviews. *(user prompt → design/BRIEF.md)*
-- **direction** — choose ONE aesthetic archetype from a catalog of 12 named directions (each with type/color/motion stance, when-to-use, signature-move ideas) + ONE signature move + an explicit "we will not" list. *(BRIEF.md → design/DIRECTION.md)*
+- **brief** — expand one prompt into a full creative brief: site type, audience, goals, tone words, page list, content inventory, backend needs. Guided mode runs a short scoping interview generated from the prompt's open forks (scope and substance only, never aesthetics); autonomous mode decides everything, interviewing nobody. *(user prompt + interview answers → design/BRIEF.md)*
+- **direction** — choose ONE aesthetic archetype from a catalog of 12 named directions (each with type/color/motion stance, when-to-use, signature-move ideas) + ONE signature move + an explicit "we will not" list. Guided mode commits whatever the mockup round's Approved line names. *(BRIEF.md + MOCKUPS.md → design/DIRECTION.md)*
+- **mockup** — guided mode's Phase 2 round: renders the three shortlisted archetypes as fast, throwaway, self-contained static HTML previews (hero + 2–3 decision-carrying sections, real OKLCH palette and type, sketched copy), runs the pick/mix/revise loop, and logs each round plus the Approved line that green-lights the build. The build never copies mockup markup. *(BRIEF.md + shortlist → design/mockups/*.html + design/MOCKUPS.md)*
 - **sitemap** — information architecture: pages, routes, nav structure, per-page purpose and conversion goal. *(BRIEF.md → design/SITEMAP.md part 1)*
 - **wireframe** — section-by-section blueprint per page: section order, which component skill builds each, content density, where the signature move lives. *(BRIEF+DIRECTION+SITEMAP → design/SITEMAP.md part 2)*
 - **copywriting** — voice definition and every string on the site: headlines that earn their size, microcopy, CTAs, error/empty text. Bans dead startup copy. *(BRIEF+DIRECTION → copy in code)*
