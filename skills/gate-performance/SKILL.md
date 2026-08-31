@@ -9,11 +9,11 @@ description: Core Web Vitals quality gate for ultraweb builds — runs Lighthous
 
 ## Standard
 
-Lighthouse performance ≥90 on every route under default mobile emulation — the score of record — measured against a production server. LCP element deliberately optimized and under 2.5s; CLS measured 0.00; first-load JS ≤140 kB per marketing route. taste's ruling applies here verbatim: a fast plain site beats a janky impressive one, always. Numbers come from tools this session, never from reading code and estimating.
+Lighthouse performance ≥90 on every route under default mobile emulation — the score of record — measured against a production server. LCP element deliberately optimized and under 2.5s; CLS measured 0.00; first-load client JS ≤140 kB compressed per marketing route, measured from the network log — Next 16's build output prints no size numbers to lean on. taste's ruling applies here verbatim: a fast plain site beats a janky impressive one, always. Numbers come from tools this session, never from reading code and estimating.
 
 ## Checklist
 
-1. **Build & budget** — production build clean; First Load JS from the build table ≤140 kB per marketing route, ≤170 kB for app-like routes. **The 140 kB bar is not raised for 3D.** On a build carrying a DIRECTION-commissioned persistent scene (`ultraweb:set-design`) it is met by the DOM shell, and the GL chunk is excluded from that figure only if it genuinely is: prove in the network waterfall that its request starts after the LCP entry, then price it on its own line against the byte budget DIRECTION.md wrote before the first shader. A renderer inside First Load JS is a mounting defect, not a budget negotiation.
+1. **Build & budget** — production build clean. Next 16 REMOVED the `size` and `First Load JS` columns from the `next build` route table — there is no number there to read, so the budget is **measured**: the compressed JS a hard reload of each route transfers before the `load` event, summed from the network log against `npm start`. ≤140 kB per marketing route, ≤170 kB for app-like routes. **The 140 kB bar is not raised for 3D.** On a build carrying a DIRECTION-commissioned persistent scene (`ultraweb:set-design`) it is met by the DOM shell, and the GL chunk is excluded from that figure only if it genuinely is: prove in the network waterfall that its request starts after the LCP entry, then price it on its own line against the byte budget DIRECTION.md wrote before the first shader. A renderer inside First Load JS is a mounting defect, not a budget negotiation.
 2. **Lighthouse** — performance ≥90 per SITEMAP.md route, mobile emulation; a desktop pass as confirmation.
 3. **LCP element** — identified from the report, then optimized: image LCP → next/image with `preload` + correct `sizes` (the `priority` prop is deprecated in Next 16 — its presence is a defect), never `loading="lazy"`, never inside a lazy-mounted client boundary; text LCP → loaded via next/font with no invisible-text period.
 4. **Zero CLS** — every image has intrinsic width/height or `fill` paired with `sizes`; video/iframe boxed by `aspect-ratio` or dimensions; async content loads into space reserved by skeletons (ui-states), never pushing the page.
@@ -23,7 +23,9 @@ Lighthouse performance ≥90 on every route under default mobile emulation — t
 
 ## How to verify
 
-**1.** `npm run build` (Turbopack is the default bundler for dev AND build — there is no `--turbopack` flag) → read the route table, record First Load JS per route against budget. Then `npm start` and gate against it. Auditing `next dev` produces meaningless scores — never do it.
+**1.** `npm run build` (Turbopack is the default bundler for dev AND build — there is no `--turbopack` flag) → exit 0. Do NOT grep the route table for sizes: Next 16 removed the `size` and `First Load JS` columns (upgrade guide; CLI changelog v16.0.0) — the table now prints only render-mode symbols (`○` static, `◐` partial prerender, `●` SSG, `ƒ` dynamic) plus Revalidate/Expire on cached routes. Then `npm start` and gate against it. Auditing `next dev` produces meaningless scores — never do it.
+
+**First-load JS, measured.** Hard-reload each route, `browser_network_requests`, sum the compressed transfer of every script fetched before the `load` event → the per-route figure of record against the 140/170 kB budget. When a route is over, attribute before cutting: `npx next experimental-analyze` (Next 16.1+, the Turbopack Bundle Analyzer) filters bundles per route, splits client from server, and shows the full import chain that pulled each module in; `--output` writes static analysis to `.next/diagnostics/analyze` for before/after diffs. `@next/bundle-analyzer` is a webpack plugin and Turbopack does not run webpack plugins — on a default Next 16 build it silently does nothing; it works only under a deliberate `next build --webpack`.
 
 **2.** Per route: `npx lighthouse http://localhost:3000/pricing --only-categories=performance --output=json,html --output-path=design/lh-pricing --chrome-flags="--headless=new" --quiet`. No preset flag = mobile emulation = score of record; run `--preset=desktop` once as confirmation. A score within 2 points of the threshold gets the median of 3 runs, not one lucky pass.
 
@@ -37,7 +39,7 @@ Lighthouse performance ≥90 on every route under default mobile emulation — t
 
 - the dependency exists only with a design/DIRECTION.md line commissioning the SVG moment BY NAME — no citation, no dependency (gate-code's check 7 owns the package.json half)
 - `rg -n 'import \* as .* from "animejs"'` → zero hits; named imports from the barrel only, or the tree-shake is defeated
-- record the measured gzip contribution in QA.md off the build's chunk table — module costs are per STACK.md, but this site's actual number is not
+- record the measured gzip contribution in QA.md off the network log or `next experimental-analyze` — module costs are per STACK.md, but this site's actual number is not
 - in those files only, `rg -n 'onScroll\('` — every hit belongs to the commissioned moment; an anime scroll observer on any other surface is a second moment nobody commissioned (item 5 sweeps scroll listeners generally, by API name, across the whole tree)
 
 **Renderer half** (only when a scene shipped). three.js is not an animation engine, but it is gated on the same construction and it is the largest single dependency this harness ever installs. Detect it by import specifier, never by `<Canvas` or `useFrame(`, which appear in comments, prose and dead code: `rg -n 'from "three"|from "@react-three/' app components`.
@@ -46,7 +48,7 @@ Lighthouse performance ≥90 on every route under default mobile emulation — t
 - `rg -n 'import \* as .* from "@react-three/drei"|import \* as .* from "three"'` → zero hits; the barrels are multiples of the named-import cost (per STACK.md)
 - `rg -n 'gstatic.com/draco|cdn.jsdelivr.net/gh/pmndrs|raw.githack.com'` → zero hits; drei's three default CDNs must be self-hosted
 - `rg -n 'frameloop="always"' app components` → every hit carries its written justification in design/SYSTEM.md §scene naming the DIRECTION-commissioned living idle and its pause on `document.hidden`; `demand` is the default posture and an unjustified always-loop is a battery defect, not a preference
-- `rg -n 'addEventListener\("wheel"' app components` → no hit paired with `passive: false`/`preventDefault`; and record the GL chunk's measured gzip from the build's chunk table against the DIRECTION.md budget, confirming from the waterfall that it loads after LCP. Module costs are per STACK.md; this site's actual number is not.
+- `rg -n 'addEventListener\("wheel"' app components` → no hit paired with `passive: false`/`preventDefault`; and record the GL chunk's measured gzip from the network log (or `next experimental-analyze --output`) against the DIRECTION.md budget, confirming from the waterfall that it loads after LCP. Module costs are per STACK.md; this site's actual number is not.
 
 **6.** Hard-reload each route, then `browser_network_requests`:
 
@@ -74,7 +76,7 @@ Every SITEMAP.md route: perf ≥90 mobile, LCP element verified optimized, CLS 0
 
 ```md
 ## gate-performance — PASS (2026-07-16)
-build: clean · first-load JS: / 128kB · /pricing 131kB · /about 122kB (budget 140)
+build: clean · first-load JS (wire, network log): / 128kB · /pricing 131kB · /about 122kB (budget 140)
 lighthouse mobile: / 96 · /pricing 94 · /about 97 — reports in design/lh-*
 LCP: hero next/image, preload+sizes ok, 1.9s · CLS: 0.00 all routes
 bundle: 9 client files (plan: 9) · single LazyMotion, m.-only ok · lucide named imports ok
@@ -90,6 +92,8 @@ On a build that shipped a commissioned scene the renderer row carries numbers in
 ## Anti-patterns
 
 - Auditing the dev server, or trusting one run at 90 exactly — take the median of 3 near the threshold
+- Reading First Load JS from the `next build` table — those columns were removed in Next 16; the budget is measured from the network log and attributed with `next experimental-analyze`
+- `@next/bundle-analyzer` wired into a Turbopack build — a webpack plugin that silently does nothing there
 - `priority` on next/image (deprecated in Next 16 → `preload`), and its cousin: `preload` sprayed on every image
 - Fixing CLS with `min-height` guesses instead of real intrinsic dimensions
 - `"use client"` at the top of a layout or page "to be safe" — the whole subtree ships to the client

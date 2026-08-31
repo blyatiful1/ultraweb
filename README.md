@@ -95,7 +95,7 @@ One sentence about what you want — then a short conversation instead of a leap
 
 **Already have an ultraweb site?** Just say what's wrong — *"the hero's too timid"* — and `ultraweb:iterate` scopes the change and re-runs only the gates you actually disturbed.
 
-**Have some other site?** `ultraweb:retrofit` is also the zero-risk first taste: point it at any Next.js site and it hands back a scored, unflattering gap report — no build, no big bill, and every gap names the skill that would fix it.
+**Have some other site?** `ultraweb:retrofit` is the low-cost first taste: point it at any Next.js site and it hands back a scored, unflattering gap report — no redesign, no big bill, and every gap names the skill that would fix it. Honest label: it's an audit that writes — it adds `design/RETROFIT.md`, reconstructed `design/BRIEF.md`/`DIRECTION.md` and screenshots to your repo, and if the site won't boot it applies the minimal fix that gets pixels on screen. Nothing else changes until you approve a phase.
 
 **Built a few sites?** The studio remembers. Mockup verdicts and review feedback accrue into a **taste fingerprint** (`~/.claude/ultraweb/taste.md`) that breaks ties in your favor on the next build — with a mandatory "heretic seat" in every mockup round arguing against your profile, so it stays a preference, never a rut. Last 10 builds only; taste drifts.
 

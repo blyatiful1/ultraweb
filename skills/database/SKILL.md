@@ -15,7 +15,7 @@ The schema reads like the brief: every table a noun from BRIEF.md, every column 
 
 1. Extract the nouns. "A course platform with instructors and reviews" → `users`, `courses`, `enrollments`, `reviews`. Zero persistent nouns → stop; a brochure site gets no database.
 2. Install: `npm i drizzle-orm @neondatabase/serverless` and `npm i -D drizzle-kit`. **Pin deliberately:** npm `latest` is drizzle-orm 0.45.x while the official docs install `@rc` (1.0.0-rc). Choose 0.45.x for the stable line or the rc to match current docs — record the choice and reason in BRIEF.md's backend section, and pin drizzle-orm and drizzle-kit from the same line, never mixed.
-3. Wire client and config (exact shapes below). `DATABASE_URL` from the Neon dashboard connection string into `.env`.
+3. Wire client and config (exact shapes below). `DATABASE_URL` from the Neon dashboard connection string into `.env` — exactly that file, and gitignored; the env-loading rules below explain why `.env.local` silently breaks drizzle-kit.
 4. Write `db/schema.ts`: one `pgTable` per noun, relations, an index on every column you filter or join by.
 5. Iterate with `npx drizzle-kit push` (schema straight to DB, no files) ONLY while the data is disposable. The moment data matters — and always before first deploy — switch to `npx drizzle-kit generate` (emits SQL) + `npx drizzle-kit migrate` (applies it), and commit `drizzle/`.
 6. Write and run `db/seed.ts`. Verify with a real query (`db.query.<table>.findMany()`) before building UI on top.
@@ -44,6 +44,13 @@ export default defineConfig({
 ```
 
 Commands are `drizzle-kit generate` / `migrate` / `push` — the old `generate:pg` variants are dead. The neon-http driver is stateless one-shot HTTP: ideal for serverless/RSC reads and single-statement writes; for interactive multi-statement transactions verify the websocket driver against current docs first.
+
+**Env loading for drizzle-kit — the one real trap in this wiring.** drizzle-kit bundles dotenv and auto-loads `.env` from the project root before evaluating `drizzle.config.ts`, on both the stable and the rc line — so the config above needs no `dotenv` dependency and no `import "dotenv/config"` (the official Drizzle+Neon guide carries that import; for the config file it is belt-and-braces, load-bearing only for standalone scripts run under bare `tsx`). What IS load-bearing: drizzle-kit reads **`.env` and nothing else** — not `.env.local`, no NODE_ENV variants, and no `--env-file` flag (never shipped despite upstream discussion). Next.js loads `.env.local` for app code, so a project keeping secrets there — the create-next-app convention — has exactly one blind tool: drizzle-kit sees `DATABASE_URL` as undefined and every kit command fails while the app itself runs fine. Pick one and record it:
+
+- `DATABASE_URL` in `.env` (gitignored) and the auto-load does the rest — the wiring above as-is; or
+- secrets stay in `.env.local`, and the kit runs through Node's built-in loader, zero dependencies: `"db:generate": "node --env-file=.env.local ./node_modules/drizzle-kit/bin.cjs generate"`.
+
+Already-set process env always wins over the auto-loaded file, so CI- and host-provided variables are respected either way.
 
 ## Schema rules
 
@@ -108,6 +115,7 @@ Seed data is what `gate-visual` screenshots. Write it in the brief's voice: real
 - `drizzle(sql)` positional wiring from pre-2025 tutorials — the locked form is `drizzle({ client: neon(url) })`
 - `generate:pg`, `push:pg` — dead drizzle-kit commands
 - `defineConfig` without `dialect: "postgresql"` — hard error
+- `DATABASE_URL` only in `.env.local` — drizzle-kit reads `.env` and nothing else; the config evaluates with undefined and every kit command dies while `next dev` runs fine
 - `drizzle-kit push` against a database whose data you keep
 - `fetch("/api/` inside an RSC that owns the db — self-HTTP round trip
 - `real(`, `doublePrecision(` for money

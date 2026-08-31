@@ -13,7 +13,7 @@ Taste's rule verbatim, at site scale: 3D, shaders, canvas only when the directio
 
 - **The scene is authored, not coded.** The camera path, framing, FOV keys and easing live in a DCC clip inside the asset; the runtime maps input onto its playhead. A hand-splined `CatmullRomCurve3` + `lookAt` is a week of JS reproducing what an animator keys in an hour, and it reads as code, not choreography. No authored asset and none commissionable → the gate fails.
 - **Native scroll stays authoritative — this is the whole design.** No `preventDefault` on `wheel`, no `ScrollControls`, no virtual scroller. The page is genuinely tall, the scrollbar is real, and Space/PageDown/Home/End, find-in-page, `#anchor` links and deep links work because we never took them away. `scroll-motion` names this the #1 hazard; WCAG 2.2 AA 2.1.1 makes it an obligation, not a preference.
-- **The canvas is `aria-hidden` only because it is the SECOND path to everything.** Every affordance in the world has a DOM twin rendered from the same registry. The moment one thing is reachable only in 3D, it gets a twin or it is cut. This is `showpiece`'s narrative contract at site scale, and Germany's BFSG (in force 2025-06-28) makes it a legal floor for DACH builds.
+- **The canvas is `aria-hidden` only because it is the SECOND path to everything.** Every affordance in the world has a DOM twin rendered from the same registry. The moment one thing is reachable only in 3D, it gets a twin or it is cut. This is `showpiece`'s narrative contract at site scale, and Germany's BFSG (in force 2025-06-28) makes it a legal floor for in-scope DACH builds — gate-accessibility owns the scoping.
 - **The static edition is a per-route deliverable, built first.** Every route in the scope ships server-rendered content, a designed poster, and 2–4 sentences of real copy carrying that stretch of the world's argument. Build it before the first shader; the site must be shippable at that moment.
 - **The byte budget is written before the first shader.** `<Canvas>` ships all of three.js — a 241 kB gzip floor, ~355 kB for a full site-scale kit (per STACK.md), roughly 1.9× the entire rest of the app. That number goes in DIRECTION.md *before* the build and is re-measured in QA.md. `award-canon`'s **Weight as a Feature**, at the largest number this harness ever spends.
 - **The GL chunk is never first-load.** `next/dynamic({ssr:false})` inside a client leaf, requested after the LCP entry. First-load JS stays ≤140 kB per route; the GL chunk is measured separately against its own written budget. The LCP element is server-rendered text or image on every route, always.
@@ -130,7 +130,7 @@ The craft underneath all ten is one discipline: nothing is allocated per frame a
 - **One registry, two renderings.** The `stations` array renders the DOM `<nav aria-label="Primary">` with real `<a href>` and `aria-current="page"` **and** resolves the scene's hotspots. Two code paths that cannot disagree, because there is one source.
 - **`aria-hidden="true"` on the canvas wrapper is a claim you must earn.** It says *everything in here is decorative, because everything in here also exists out there*. Audit it by listing every affordance in the world and pointing at its DOM twin. No twin → build one or cut the affordance.
 - **Every route is a real route.** Server-rendered `<main>`, `<h1>`, real content, a distinct `<title>` and description, canonical, OG image, `sitemap.ts`, `robots.ts`, a `<noscript>`. Byte-identical empty shells across routes are a `taste` "Real content" failure and an SEO failure at once — and it is free to avoid, because the DOM layer was going to be server-rendered anyway.
-- **The per-route narrative carries the argument in words.** `showpiece`'s text-track rule at site scale: 2–4 sentences of real copy per route, authored by `ultraweb:copywriting` in Phase 8, stating what *that* stretch of the world claims — never "an interactive 3D scene". `sr-only` by default, visible under `prefers-reduced-motion`. Germany's BFSG (in force 2025-06-28) makes this statutory for DACH commercial builds.
+- **The per-route narrative carries the argument in words.** `showpiece`'s text-track rule at site scale: 2–4 sentences of real copy per route, authored by `ultraweb:copywriting` in Phase 8, stating what *that* stretch of the world claims — never "an interactive 3D scene". `sr-only` by default, visible under `prefers-reduced-motion`. Germany's BFSG (in force 2025-06-28) makes this statutory for in-scope DACH commercial builds (gate-accessibility owns the scoping).
 - **Keyboard costs nothing because we never took it.** Native scroll means Space/PageDown/Home/End, Tab, in-page anchors and find-in-page all work without a single `keydown` handler. Ours is a non-event, and that is the point.
 - **Reduced motion is a tier, not a slowdown.** Under `reduce` the canvas **does not mount at all** — not paused, not slowed: not constructed. Each route renders its baked poster and its narrative. The failure mode to hunt for is worse than a still frame: a scene that fails to mount under `reduce` leaves an *empty page*, so the poster is load-bearing markup, not a fallback attribute.
 
@@ -142,12 +142,12 @@ One authored frame closes the section: **each route's poster is a single build-t
 
 | Line | House rule |
 |---|---|
-| First-load JS per route (build table) | **≤140 kB — unchanged, and the GL chunk is NOT in it** |
+| First-load JS per route (compressed wire, network log) | **≤140 kB — unchanged, and the GL chunk is NOT in it** |
 | GL chunk, measured gzip, requested after LCP | **written in DIRECTION.md; house ceiling 400 kB** — STACK.md's measured full-kit reference sits under it |
 | Authored model after `gltf-transform optimize` | **written in DIRECTION.md; house ceiling 1.5 MB** |
 | Total transfer per route | **written in DIRECTION.md; house ceiling <3 MB** (`award-canon` Pattern 23: LCP <1.5s, CLS <0.05, INP <100ms, 60fps) |
 
-The carve-out is honest, not a loophole: the GL chunk is genuinely absent from the first-load graph because it is `next/dynamic({ssr:false})` behind an idle callback fired after the LCP entry, and `gate-performance` verifies that **in the network waterfall** rather than taking the build table's word for it. A renderer inside first-load JS is a mounting defect, not a budget negotiation.
+The carve-out is honest, not a loophole: the GL chunk is genuinely absent from the first-load graph because it is `next/dynamic({ssr:false})` behind an idle callback fired after the LCP entry, and `gate-performance` verifies that **in the network waterfall** — Next 16's build output prints no per-route sizes, so the waterfall is the only witness. A renderer inside first-load JS is a mounting defect, not a budget negotiation.
 
 The pipeline is dev-only and leaves zero runtime footprint:
 
@@ -189,7 +189,7 @@ Record all eight in design/SYSTEM.md §scene (decisions + measured deltas) and d
 1. Steady 60fps over ≥5s of scroll plus one navigation, on **every route in the scope**; zero long tasks >50ms.
 2. 4× CPU throttle: the adaptive ladder demonstrably steps down and the site holds ≥30fps, or falls to the static edition. Record which rung it settled on.
 3. LCP element is server-rendered text or image on every route, and the GL chunk's request begins **after** the LCP entry in the network waterfall.
-4. First-load JS ≤140 kB per route from the build table with the GL chunk excluded; the GL chunk's measured gzip recorded against its DIRECTION.md budget; total transfer per route under budget and under 3 MB.
+4. First-load JS ≤140 kB per route measured from the network log with the GL chunk excluded; the GL chunk's measured gzip recorded against its DIRECTION.md budget; total transfer per route under budget and under 3 MB.
 5. `prefers-reduced-motion: reduce` emulated on every route: **no canvas element in the DOM at all**, the poster renders, and the route's narrative reads as a complete argument on its own.
 6. JS off: every route serves its content, nav and metadata. `/robots.txt` and `/sitemap.xml` return 200. Every route has a distinct `<title>`, description, canonical and OG image.
 7. Keyboard-only pass on every route: Tab reaches every station, Space/PageDown/Home/End scroll, in-page anchors land, find-in-page finds body copy. Zero `preventDefault` on `wheel` anywhere in the build.

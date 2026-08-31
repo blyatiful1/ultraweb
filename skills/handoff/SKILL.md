@@ -71,6 +71,8 @@ the affected gates and logs results to design/QA.md.
 - One accent color. Wanting a second is a DIRECTION.md conversation, not a CSS edit.
 - Dark mode is re-decided per surface — check both themes after any color change.
 - prefers-reduced-motion paths must keep working; test with motion disabled.
+- <demo builds only: list every UNVERIFIED-PROOF sample quote and its file — each
+  must be replaced with real proof before production; ship blocks on the tag>
 ```
 
 ## Error monitoring — optional, and configured defensively

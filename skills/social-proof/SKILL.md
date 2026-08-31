@@ -15,7 +15,16 @@ The bar: a visitor who has been burned by fake reviews believes this section. Fa
 - Quotes are specific: a task, a number, a before/after. A quote that could sit on any competitor's site is filler.
 - Logos are monochrome at one visual weight, normalized to consistent optical height — never a rainbow of mismatched bounding boxes.
 - Stats are believable: max 4 per band; precise numbers ("2,340 teams") beat round bragging ("1M+ users") unless the round number is the actual fact. The award record is blunt (`award-canon`): a real number with a cited source out-persuades a decorated one — a framed or animated stat still needs its timeframe/source caption, or the frame is lipstick on fiction.
-- Zero invented endorsements from real companies. If BRIEF.md supplies no proof, write plausible fictional attribution styled for this brand, mark it `// ponytail: placeholder proof — replace before launch`, and list it in handoff. Never name real brands the client hasn't earned.
+- Zero fabricated proof, period — not just from real companies. A testimonial no real person gave, a review count nobody counted, a star rating with no source is deception rendered in the site's own voice; a code comment doesn't make it honest, and "plausible" makes it worse. If BRIEF.md supplies no proof, don't manufacture it — walk the no-proof ladder below. The one sanctioned exception: a build design/BRIEF.md explicitly marks **demo/staging** may carry sample quotes, and each must be BOTH visibly labeled in the rendered UI ("Sample quote" / "Beispielstimme") AND tagged `UNVERIFIED-PROOF` in the source — gate-antislop and gate-content grep for that tag, and ship blocks production on any hit. Never name real brands the client hasn't earned.
+
+## No proof yet — the honest ladder
+
+A young product has no testimonials; it still has truths. In order of strength:
+
+1. **Cut the section** — tell sitemap the proof section is deferred; an absent testimonial wall beats a fictional one, and the page's argument tightens without it.
+2. **A founder's note** — signed with the founder's real name and face, stating why the product exists. It reads as conviction, not evidence, and that honesty is the credibility.
+3. **Verifiable product facts** — "Every order ships from our Leipzig workshop within 48h", a public changelog, an uptime page. Facts a visitor could check out-persuade praise they can't.
+4. **Guarantees and transparency** — a real refund policy, published pricing, a "how it's made" section. Skin in the game is proof of confidence.
 
 ## Process
 
@@ -103,5 +112,5 @@ Photos pull from blob-storage originals through `ultraweb:imagery` (warm treatme
 - ultraweb:data-display — stat-band numerals: tabular-nums, alignment, scale
 - ultraweb:cards — testimonial-wall card anatomy and non-uniform group layout
 - ultraweb:micro-interactions — hover/press timing on clickable teasers
-- ultraweb:gate-antislop — sweeps the greppable fake-proof strings above
+- ultraweb:gate-antislop — sweeps the greppable fake-proof strings above and the `UNVERIFIED-PROOF` demo tag
 - ultraweb:award-canon — Framed Data (a hero stat inside a thematic frame) and its credibility rule (sourced real numbers over decorated ones) shape the stat band here

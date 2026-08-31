@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 // lint-skills.mjs — enforces the corpus invariants that used to live in the author's memory.
-// Usage: node scripts/lint-skills.mjs   (exit 1 on any FAIL; WARNs never fail the run)
+// Usage: node scripts/lint-skills.mjs [corpus-root]   (exit 1 on any FAIL; WARNs never fail the run)
+// The optional corpus-root argument exists for the self-test (tests/lint-skills.test.mjs),
+// which runs this linter against deliberately broken copies to prove it still catches breakage.
 // Dependency-free, no network.
 
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 
-const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const read = p => readFileSync(join(root, p), 'utf8');
+const root = process.argv[2] ? resolve(process.argv[2]) : join(dirname(fileURLToPath(import.meta.url)), '..');
+// Normalize CRLF so a Windows checkout (core.autocrlf) lints identically to CI.
+const read = p => readFileSync(join(root, p), 'utf8').replace(/\r\n/g, '\n');
 
 let fails = 0, warns = 0;
 const fail = m => { fails++; console.log(`FAIL  ${m}`); };

@@ -9,7 +9,7 @@ description: Entry point for existing Next.js sites that ultraweb did not build 
 
 ## Standard
 
-A diagnosis a studio would charge for: every gap carries evidence (a screenshot path or a file:line grep hit), a score against the taste rubric, the ONE ultraweb skill that fixes it, and a phase. Scores come from looking at rendered pages — never from reading code alone. Retrofit changes nothing except what is required to boot the app; treatment happens afterward, through ultraweb:iterate, one approved phase at a time.
+A diagnosis a studio would charge for: every gap carries evidence (a screenshot path or a file:line grep hit), a score against the taste rubric, the ONE ultraweb skill that fixes it, and a phase. Scores come from looking at rendered pages — never from reading code alone. Retrofit is a **mutating audit** and says so up front: it writes the design record into the repo (design/RETROFIT.md, screenshots, a reconstructed BRIEF.md + DIRECTION.md) and touches app code only where required to boot the site — each boot fix named in RETROFIT.md so the owner can see exactly what the audit changed. All treatment happens afterward, through ultraweb:iterate, one approved phase at a time.
 
 ## Process
 

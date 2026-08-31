@@ -18,7 +18,7 @@ Seventeen checks, each pass/fail in QA.md. Items 1–11 are the grep rows, 12–
 1. **Slop gradient combos** — no purple/violet/fuchsia/pink/indigo gradient combos; raw CSS gradient stops judged.
 2. **Gradient headline text** — every `bg-clip-text` hit has a DIRECTION.md citation.
 3. **Emoji in code/copy** — zero emoji; icons come from the icons skill.
-4. **Lorem/placeholders** — no lorem ipsum, placeholder domains, "Feature 1/2/3", TODO/TBD/FIXME.
+4. **Lorem/placeholders/fabricated proof** — no lorem ipsum, placeholder domains, "Feature 1/2/3", TODO/TBD/FIXME; no fake-proof tells (`★★★★★`, "Happy Customer", "John D."-style anonymous attribution); no `UNVERIFIED-PROOF` demo tag unless design/BRIEF.md marks the build demo/staging.
 5. **Dead links** — no bare `href="#"`.
 6. **Dead startup copy** — none of the banned phrases, including "AI-powered"/"powered by AI" and copywriting's expanded list.
 7. **Uniform depth** — no radius+shadow pair repeated on ≥6 elements across different sections.
@@ -46,8 +46,11 @@ Run every command, every time, against app/, components/, emails/, and content/.
    `rg -n "bg-clip-text" -g "*.tsx"`
 3. **Emoji in code/copy** — icons come from the icons skill, never emoji:
    `rg -n "[\x{1F300}-\x{1FAFF}\x{2600}-\x{27BF}\x{FE0F}]" -g "*.tsx" -g "*.ts" -g "*.mdx" -g "*.md"`
-4. **Lorem/placeholders** —
+4. **Lorem/placeholders/fabricated proof** —
    `rg -ni "lorem|ipsum|placeholder\.com|placehold\.it|Feature [123]\b|TODO|TBD|FIXME" -g "*.tsx" -g "*.ts" -g "*.mdx" -g "*.md"`
+   Fake-proof tells (social-proof's banned strings) and its demo-only tag:
+   `rg -n "★★★★★|Happy Customer|John D\.|UNVERIFIED-PROOF" -g "*.tsx" -g "*.ts" -g "*.mdx"` and `rg -ni "highly recommend|game.changer|best decision" -g "*.tsx" -g "*.mdx"`
+   `UNVERIFIED-PROOF` passes ONLY when design/BRIEF.md explicitly marks the build demo/staging AND the quote is visibly labeled in the rendered UI; on a production build every hit is a defect, and ship re-checks it as a launch blocker. A testimonial attribution that appears in no BRIEF.md proof inventory is fabricated proof even without the tag — escalate it to gate-content's trace check, never wave it through as copy.
 5. **Dead links** — skip-link `href="#main"` does not match the bare pattern:
    `rg -n 'href="#"' -g "*.tsx"`
 6. **Dead startup copy** — the banned phrases, the AI-era filler "AI-powered / powered by AI / AI-driven", then every phrase from ultraweb:copywriting's expanded list:

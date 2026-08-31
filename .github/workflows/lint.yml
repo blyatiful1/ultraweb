@@ -1,4 +1,4 @@
-name: corpus-lint
+name: corpus-ci
 on:
   push:
     branches: ['**']
@@ -14,3 +14,17 @@ jobs:
           node-version: 22
       - name: Lint the skill corpus invariants
         run: node scripts/lint-skills.mjs
+
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Linter self-test + manifest/hook-wiring tests
+        run: node --test tests/lint-skills.test.mjs tests/manifests.test.mjs
+      - name: Hook fixture tests (antislop blocking behavior, studio-log JSONL)
+        run: bash tests/hook-antislop.test.sh
+      - name: Shellcheck the hooks (error severity)
+        run: shellcheck --severity=error hooks/*.sh

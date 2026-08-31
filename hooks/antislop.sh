@@ -45,6 +45,7 @@ check '>Feature [0-9]<|"Feature [0-9]"' 'stock "Feature N" copy (taste banned li
 check 'placeholder\.com|via\.placeholder' 'placeholder.com image (taste banned list)'
 check 'Elevate your|Unlock the power|Empower your|Seamlessly [a-z]' 'dead startup copy (taste banned list)'
 check '✨|🚀|🎉' 'emoji in production copy (taste banned list)'
+check '★★★★★|Happy Customer|John D\.' 'fabricated-proof tell — real attribution or no testimonial (social-proof)'
 
 if [ -n "$violations" ]; then
   printf 'ultraweb antislop hook — this write violates the taste constitution:\n%b  Fix it now, at the source: consult ultraweb:taste (and ultraweb:copywriting for copy). Do not re-write the same content with a workaround.\n' "$violations" >&2

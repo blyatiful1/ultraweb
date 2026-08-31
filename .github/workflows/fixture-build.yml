@@ -1,0 +1,42 @@
+# fixture-build — proves the scaffold recipe against the LIVE ecosystem.
+# skills/scaffold locks a command sequence; this workflow runs that exact
+# sequence weekly (and whenever the stack manifest changes) so version drift
+# that would break a real build turns a badge red here first, not in a
+# client session. The drift report is informational; the build is the gate.
+name: fixture-build
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'
+  push:
+    paths:
+      - 'stack/versions.json'
+      - '.github/workflows/fixture-build.yml'
+
+jobs:
+  scaffold-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Stack drift report (informational)
+        run: node scripts/verify-stack.mjs
+        continue-on-error: true
+      - name: Scaffold (skills/scaffold step 2 — no --turbopack flag, Turbopack is the Next 16 default)
+        run: npx --yes create-next-app@latest fixture --yes
+      - name: Base install (the closed set from scaffold step 6)
+        run: npm i motion lucide-react zod next-themes
+        working-directory: fixture
+      - name: shadcn init (scaffold step 5)
+        run: npx --yes shadcn@latest init -d -y
+        working-directory: fixture
+        timeout-minutes: 5
+      - name: Production build (scaffold step 9)
+        run: npm run build
+        working-directory: fixture
+      - name: Strict types
+        run: npx tsc --noEmit
+        working-directory: fixture
