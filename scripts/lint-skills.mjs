@@ -81,11 +81,11 @@ for (const d of skillDirs) {
   }
 }
 
-// ---- 7. No bare package-version literals creeping into skills (versions live in stack/versions.json)
-for (const d of skillDirs) {
-  const src = read(`skills/${d}/SKILL.md`);
-  for (const m of src.matchAll(/\b(next|tailwindcss|shadcn|motion|zod|stripe|drizzle-orm|better-auth|resend|animejs|three)[@ ]v?(\d+\.\d+\.\d+)/g)) {
-    warn(`skills/${d}: bare version "${m[0]}" — numbers belong in stack/versions.json`);
+// ---- 7. No bare package-version literals creeping into prose (versions live in stack/versions.json)
+const versionProseFiles = [...skillDirs.map(d => `skills/${d}/SKILL.md`), 'STACK.md', 'README.md'].filter(p => existsSync(join(root, p)));
+for (const p of versionProseFiles) {
+  for (const m of read(p).matchAll(/\b(next|tailwindcss|tailwind|shadcn|motion|zod|stripe|drizzle-orm|drizzle-kit|better-auth|resend|animejs|three|content-collections)[@ ]v?(\d+\.\d+\.\d+)/gi)) {
+    warn(`${p}: bare version "${m[0]}" — numbers belong in stack/versions.json`);
   }
 }
 

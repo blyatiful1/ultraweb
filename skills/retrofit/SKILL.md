@@ -27,7 +27,7 @@ A diagnosis a studio would charge for: every gap carries evidence (a screenshot 
 6. **Score.** Send screenshots (plus any existing direction statement) to design-judge with the rubric below. The judge returns per-axis scores and ranked defects.
 7. **Map every gap to one skill** (table below). A gap without a named fixing skill isn't finished — "improve the design" ships nothing.
 8. **Phase the plan** into design/RETROFIT.md: A quick wins → B system fixes → C direction change (only when triggered).
-9. **Bootstrap the artifacts iterate needs.** Reverse-engineer design/BRIEF.md from the evident site (audience, purpose, pages, backend surface). Write design/DIRECTION.md as the TARGET direction — the existing aesthetic sharpened, or, when Phase C triggers, a fresh pick via ultraweb:direction.
+9. **Bootstrap the artifacts iterate needs.** Reverse-engineer design/BRIEF.md from the evident site (audience, purpose, pages, backend surface) — including the machine-read fields every consumer expects: `Deployment mode: production` (an existing live site is production; never guess demo) and, when the site serves a named market, §Compliance facts reconstructed from the Impressum and shop surface (flag each entry `counsel-needed` — reconstructed facts are assumptions, not knowledge). Write design/DIRECTION.md as the TARGET direction — the existing aesthetic sharpened, or, when Phase C triggers, a fresh pick via ultraweb:direction.
 10. **Hand off.** Present RETROFIT.md. Each approved phase executes via `ultraweb:iterate` with this file as the change request. Phase C is the burn-it-down case: get explicit user confirmation of scope before starting it.
 
 ## Scoring rubric

@@ -37,7 +37,9 @@ Seventeen checks, each pass/fail in QA.md. Items 1–11 are the grep rows, 12–
 
 ### Grep sweep (checklist 1–11)
 
-Run every command, every time, against app/, components/, emails/, and content/. Config/data modules are in scope for the copy greps — nav labels, feature arrays, email subjects, and metadata constants live in plain `.ts` files. Each hit gets: a fix, or a DIRECTION.md citation recorded in QA.md.
+With the ultraweb plugin available, `node <plugin>/scripts/site-check.mjs .` runs the deterministic absolutes (slop strings, dead links, fake-proof tells, UNVERIFIED-PROOF) as a mutation-tested pre-pass; the rows below remain the authority and cover what it doesn't.
+
+Run every command, every time, over the production input set: the repo root (`rg` is gitignore-aware, so `node_modules`/`.next` drop out) minus `design/` and any test/fixture trees — `rg <pattern> . -g '!design/**'`. A directory list is how slop hides: copy lives in `src/`, `lib/` config modules, and data files (nav labels, feature arrays, email subjects, JSON content) as happily as in app/. Each hit gets: a fix, or a DIRECTION.md citation recorded in QA.md.
 
 1. **Slop gradient combos** — a `from-` hit paired with `to-(blue|indigo|violet|purple|cyan)-` on the same element is the cliché:
    `rg -n "from-(purple|violet|fuchsia|pink|indigo)-\d+" -g "*.tsx"`
@@ -49,7 +51,7 @@ Run every command, every time, against app/, components/, emails/, and content/.
 4. **Lorem/placeholders/fabricated proof** —
    `rg -ni "lorem|ipsum|placeholder\.com|placehold\.it|Feature [123]\b|TODO|TBD|FIXME" -g "*.tsx" -g "*.ts" -g "*.mdx" -g "*.md"`
    Fake-proof tells (social-proof's banned strings) and its demo-only tag:
-   `rg -n "★★★★★|Happy Customer|John D\.|UNVERIFIED-PROOF" -g "*.tsx" -g "*.ts" -g "*.mdx"` and `rg -ni "highly recommend|game.changer|best decision" -g "*.tsx" -g "*.mdx"`
+   `rg -n "★★★★★|Happy Customer|John D\.|UNVERIFIED-PROOF" . -g '!design/**'` and `rg -ni "highly recommend|game.changer|best decision" . -g '!design/**'` — root-wide like every row here; fake proof hides in `data/*.json` and `content/*.md` as happily as in TSX
    `UNVERIFIED-PROOF` passes ONLY when design/BRIEF.md explicitly marks the build demo/staging AND the quote is visibly labeled in the rendered UI; on a production build every hit is a defect, and ship re-checks it as a launch blocker. A testimonial attribution that appears in no BRIEF.md proof inventory is fabricated proof even without the tag — escalate it to gate-content's trace check, never wave it through as copy.
 5. **Dead links** — skip-link `href="#main"` does not match the bare pattern:
    `rg -n 'href="#"' -g "*.tsx"`

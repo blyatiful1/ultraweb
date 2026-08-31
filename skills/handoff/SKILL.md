@@ -33,7 +33,7 @@ The README lets two people succeed without the original author: the owner change
 ## Stack
 Next.js <16.x.y> (App Router, Turbopack) · Tailwind CSS <4.x> (CSS-first — all
 tokens in app/globals.css; there is no tailwind.config.js) · shadcn/ui (restyled
-primitives) · motion <12.x> (import from "motion/react") · lucide-react · zod v4
+primitives) · motion <13.x> (import from "motion/react") · lucide-react · zod v4
 <+ animejs <4.x> ONLY if installed — with the DIRECTION moment it drives named on
   the same line; cut that moment and this package goes with it>
 <+ backend pieces actually built>
@@ -102,8 +102,9 @@ not the renderer.
 
 Token guide, verified against this repo's app/globals.css: the deep-green accent is
 `--accent: oklch(0.45 0.1 155)` in BOTH `:root` and `.dark`; swap Source Serif 4 in lib/fonts.ts and
-the `--font-serif` token name stays. The Stack line reads package.json's pinned reality — Next.js
-16.2.10, Tailwind 4.3.2, content-collections 0.15.2 — never "latest". The README also republishes
+the `--font-serif` token name stays. The Stack line reads package.json's pinned reality — the exact
+Next.js, Tailwind, and `@content-collections/core` + `@content-collections/next` numbers from THIS
+repo's lockfile — never "latest", never digits quoted from memory. The README also republishes
 SYSTEM.md §imagery's placeholder list so volunteers know `placeholder-orchard.svg` still needs a real photo.
 
 Rejected: pointing the story row at app/stories/[slug]/page.tsx — it lost because a volunteer edits

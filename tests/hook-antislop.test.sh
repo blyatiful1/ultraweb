@@ -49,6 +49,29 @@ expect "design/ record is exempt (exit 0)" "$site/design/notes.tsx" 0
 printf 'lorem ipsum\n' > "$site/components/notes.txt"
 expect "non-source extension is exempt (exit 0)" "$site/components/notes.txt" 0
 
+# UNVERIFIED-PROOF: blocked on a production build, allowed once BRIEF declares demo mode.
+printf '<figure data-proof="UNVERIFIED-PROOF"><blockquote>Sample quote</blockquote></figure>\n' > "$site/components/demo-proof.tsx"
+expect "UNVERIFIED-PROOF blocks on production BRIEF (exit 2)" "$site/components/demo-proof.tsx" 2
+printf 'brief\nDeployment mode: demo\n' > "$site/design/BRIEF.md"
+expect "UNVERIFIED-PROOF passes on demo BRIEF (exit 0)" "$site/components/demo-proof.tsx" 0
+printf 'brief\nDeployment mode: demo-bogus\n' > "$site/design/BRIEF.md"
+expect "invalid mode value fails closed (exit 2)" "$site/components/demo-proof.tsx" 2
+printf 'brief\nDeployment mode: production\nDeployment mode: demo\n' > "$site/design/BRIEF.md"
+expect "duplicated mode lines fail closed (exit 2)" "$site/components/demo-proof.tsx" 2
+printf 'brief\n' > "$site/design/BRIEF.md"   # restore production mode
+
+# Data files are in scope — fake proof hides in JSON as easily as in TSX.
+printf '{"quote":"lorem ipsum dolor"}\n' > "$site/components/reviews.json"
+expect "banned string in .json blocks (exit 2)" "$site/components/reviews.json" 2
+
+# Windows-form path must not make the guard stand down (Git Bash / cygpath hosts only).
+if command -v cygpath >/dev/null 2>&1; then
+  winpath="$(cygpath -w "$site/components/bad-gradient.tsx")"
+  expect "Windows-form path still blocks (exit 2)" "$winpath" 2
+else
+  echo "skip  Windows-form path case (no cygpath on this host — POSIX CI covers the rest)"
+fi
+
 # A payload without file_path must not crash the hook chain.
 printf '{}' | bash "$root/hooks/antislop.sh" >/dev/null 2>&1
 got=$?

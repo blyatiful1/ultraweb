@@ -45,10 +45,17 @@ export default defineConfig({
 
 Commands are `drizzle-kit generate` / `migrate` / `push` — the old `generate:pg` variants are dead. The neon-http driver is stateless one-shot HTTP: ideal for serverless/RSC reads and single-statement writes; for interactive multi-statement transactions verify the websocket driver against current docs first.
 
-**Env loading for drizzle-kit — the one real trap in this wiring.** drizzle-kit bundles dotenv and auto-loads `.env` from the project root before evaluating `drizzle.config.ts`, on both the stable and the rc line — so the config above needs no `dotenv` dependency and no `import "dotenv/config"` (the official Drizzle+Neon guide carries that import; for the config file it is belt-and-braces, load-bearing only for standalone scripts run under bare `tsx`). What IS load-bearing: drizzle-kit reads **`.env` and nothing else** — not `.env.local`, no NODE_ENV variants, and no `--env-file` flag (never shipped despite upstream discussion). Next.js loads `.env.local` for app code, so a project keeping secrets there — the create-next-app convention — has exactly one blind tool: drizzle-kit sees `DATABASE_URL` as undefined and every kit command fails while the app itself runs fine. Pick one and record it:
+**Env loading for drizzle-kit — the one real trap in this wiring.** drizzle-kit bundles dotenv and auto-loads `.env` from the project root before evaluating `drizzle.config.ts` — verified empirically on both this stack's pinned lines — so the config above needs no `dotenv` dependency and no `import "dotenv/config"` (the official Drizzle+Neon guide carries an explicit `config({ path: '.env' })` from the `dotenv` package; for the config file it is belt-and-braces, load-bearing only for standalone scripts run under bare `tsx`). What IS load-bearing on the verified pins: drizzle-kit reads **`.env` and nothing else** — not `.env.local`, no NODE_ENV variants, no `--env-file` flag (discussed upstream, never shipped; re-check on a future major). Next.js loads `.env.local` for app code, so a project keeping secrets there — the create-next-app convention — has exactly one blind tool: drizzle-kit sees `DATABASE_URL` as undefined and every kit command fails while the app itself runs fine. Pick one and record it:
 
-- `DATABASE_URL` in `.env` (gitignored) and the auto-load does the rest — the wiring above as-is; or
-- secrets stay in `.env.local`, and the kit runs through Node's built-in loader, zero dependencies: `"db:generate": "node --env-file=.env.local ./node_modules/drizzle-kit/bin.cjs generate"`.
+- `DATABASE_URL` in `.env` (gitignored) and the auto-load does the rest — the wiring above as-is, and the default; or
+- secrets stay in `.env.local`: load them with Next's own loader at the top of `drizzle.config.ts` — install it DECLARED, `npm i -D @next/env` (it resolves transitively from `next` today, but an undeclared import breaks under pnpm/Yarn PnP and Next layout changes; Next's own docs say install it for ORM/test config outside the Next runtime):
+
+  ```ts
+  import { loadEnvConfig } from "@next/env";
+  loadEnvConfig(process.cwd(), process.env.NODE_ENV !== "production"); // dev=true → .env.development/.env.local semantics
+  ```
+
+  Full `.env.local`/NODE_ENV semantics, no coupling to drizzle-kit's private file layout. One caveat: don't keep the SAME key in both `.env` and `.env.local` — drizzle-kit's earlier bundled load already populated it, `@next/env` won't overwrite, and the two tools silently disagree.
 
 Already-set process env always wins over the auto-loaded file, so CI- and host-provided variables are respected either way.
 

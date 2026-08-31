@@ -27,13 +27,13 @@ Modeled on the studio milestone cadence: client involvement peaks at discovery a
 | CP3 | Structure sign-off | Phase 4 | "Are these the right pages, saying the right things?" | Page list + one line per section per page | ~3 min |
 | CP4 | First-page review | Phase 6, homepage first | "Is the real thing what the mockup promised?" | The built homepage: screenshots at 375 and 1440 + the running route + a `ultraweb:preview` URL when one exists | ~5 min |
 | CP5 | Voice review | Phase 8 | "Does it sound like us?" | Every headline + one representative body block per page | ~8 min |
-| CP6 | Preflight / UAT | Phase 11 green | "Do you accept this site?" | Gate summary, full-page screenshots per route, what-to-click list + a fresh `preview` URL so the list is clickable | ~15 min |
+| CP6 | Preflight / UAT | Phase 11 closed, no FAIL | "Do you accept this site?" | Gate summary, full-page screenshots per route, what-to-click list + a fresh `preview` URL so the list is clickable | ~15 min |
 
 The **Your time** column is a promise, not decoration: every checkpoint is minutes of the user's attention, and saying so up front is what lets a time-blind user leave the desk between them. Each checkpoint announcement states it ("~5 min of your time"), the session map printed after CP2 shows when the next one lands, and `design/PROGRESS.md` §Next-time-I-need-you keeps it current between announcements.
 
 CP4 exists because of the build-order rule it enforces: **the homepage is built completely before any inner page.** It exercises the entire system — tokens, hero, navigation, footer, section rhythm — so a system-level defect is found and fixed on one page, not rolled across all of them. This is the single largest rework saving in the pipeline, and it is how studios present a "homepage design concept" before touching inner pages.
 
-CP6 has a hard precondition: every gate in design/QA.md is green BEFORE the user sees anything. The user reviews a working site with real content — never lorem, never a broken form. They are the acceptance test, not the smoke test. If ship's deploy step runs, CP6's approval is what authorizes reaching for it; ship's own final deploy confirmation still applies.
+CP6 has a hard precondition: no gate in design/QA.md is FAIL before the user sees anything — a red gate blocks CP6 outright; UNVERIFIED entries (the tool-missing third verdict) do not block it, but they appear by name in the gate summary the user reviews, and `ship`'s step 8 re-confirms them as explicitly accepted risks before any production deploy. The user reviews a working site with real content — never lorem, never a broken form. They are the acceptance test, not the smoke test. If ship's deploy step runs, CP6's approval is what authorizes reaching for it; ship's own final deploy confirmation still applies.
 
 ## Process
 

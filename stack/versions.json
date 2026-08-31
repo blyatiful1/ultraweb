@@ -1,5 +1,5 @@
 {
-  "$comment": "Machine-readable stack manifest — the single authority for pinned versions. STACK.md carries the API facts and cites this file; skills never restate version numbers. Refresh with: node scripts/verify-stack.mjs [--write]. 'verified' older than 30 days means: re-verify before Phase 5.",
+  "$comment": "Machine-readable stack manifest — the single authority for pinned versions. STACK.md carries the API facts and cites this file; skills never restate version numbers. Refresh with: node scripts/verify-stack.mjs [--write]. 'verified' older than 30 days means: re-verify before Phase 5. Pins are the verified REFERENCE SNAPSHOT, not an install lock: scaffold verifies live-first at build time and gates MAJOR jumps through its drift protocol.",
   "verified": "2026-08-31",
   "packages": {
     "next": "16.3.3",
@@ -9,7 +9,7 @@
     "shadcn": "4.19.1",
     "lucide-react": "1.38.0",
     "next-themes": "0.4.6",
-    "motion": "12.42.2",
+    "motion": "13.1.1",
     "zod": "4.5.4",
     "drizzle-orm": "0.45.2",
     "drizzle-kit": "0.31.10",
@@ -20,14 +20,15 @@
     "@react-email/components": "1.0.12",
     "stripe": "22.6.0",
     "@next/mdx": "16.3.3",
-    "content-collections": "0.15.2",
+    "@content-collections/core": "0.15.2",
+    "@content-collections/next": "0.2.11",
     "velite": "0.4.0",
     "shiki": "4.4.3",
     "@shikijs/transformers": "4.4.3",
     "@shikijs/rehype": "4.4.3",
     "animejs": "4.5.0",
     "three": "0.185.1",
-    "@types/three": "0.185.4",
+    "@types/three": "0.185.1",
     "@react-three/fiber": "9.7.0",
     "@react-three/drei": "10.7.8",
     "@react-three/postprocessing": "3.1.1",
@@ -40,8 +41,8 @@
     "@next/mdx": "locked-to:next"
   },
   "majorPins": {
-    "$comment": "CLIs invoked via npx at a pinned MAJOR (never floating). ship and preview both read this entry.",
-    "vercel": "56"
+    "$comment": "CLIs invoked via npx at a pinned MAJOR (never floating). ship and preview both read this entry; verify-stack.mjs checks it against the live latest major.",
+    "vercel": "59"
   },
   "gated": [
     "animejs",
@@ -52,11 +53,5 @@
     "@react-three/postprocessing",
     "postprocessing",
     "@gltf-transform/cli"
-  ],
-  "observedDrift": {
-    "$comment": "Seen live but deliberately NOT folded. motion 13 is a MAJOR jump — STACK.md's motion API facts (motion/react import, LazyMotion, m.) are verified against 12.x and must be re-verified against the v13 migration guide before the pin moves. content-collections' latest dist-tag regressed below the pinned version (0.2.1 < 0.15.2) — a dist-tag anomaly to investigate, never auto-fold.",
-    "observedAt": "2026-08-31",
-    "motion": "13.1.1",
-    "content-collections": "0.2.1"
-  }
+  ]
 }

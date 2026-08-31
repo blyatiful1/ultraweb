@@ -27,7 +27,7 @@ description: The content layer for a Next.js 16 site — plain @next/mdx for a h
 ## Pick the pipeline
 
 - **≤ ~8 standalone long-form pages** (about, legal, a manifesto) → plain `@next/mdx`; the MDX files ARE routes (`app/(marketing)/about/page.mdx`).
-- **Collections** — blog, changelog, docs, case studies with listings, tags, ordering → **content-collections** (0.15.2) or **velite** (0.4.0): frontmatter validated at build, typed arrays exported to code.
+- **Collections** — blog, changelog, docs, case studies with listings, tags, ordering → **content-collections** (install `@content-collections/core` + `@content-collections/next`; the bare `content-collections` npm name is the project's own installer CLI (versions stop at 0.2.x), not the library) or **velite** — versions per stack/versions.json: frontmatter validated at build, typed arrays exported to code.
 - **Non-developer editors, weekly+ cadence, preview/scheduling workflows** → headless CMS (last section).
 - **Contentlayer / next-contentlayer** → never, under any prompt. Dead project.
 
@@ -59,7 +59,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 }
 ```
 
-- Pin `@next/mdx` to the exact `next` version (both 16.2.10 today) — they are version-locked; a mismatch is build-breaking drift.
+- Pin `@next/mdx` to the exact `next` version (they move together — stack/versions.json locks the pair) — a mismatch is build-breaking drift.
 - Install the companion packages the current docs list alongside it (loader/react/types) — verify against current docs first.
 - @next/mdx parses NO YAML frontmatter by default — a `---` block renders as literal text. For `page.mdx` routes, `export const metadata = { title, description }` feeds the Metadata API like any page. remark-frontmatter is possible, but Turbopack requires serializable plugin config — verify against current docs first.
 

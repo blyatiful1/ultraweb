@@ -19,7 +19,7 @@ A first-grade preview is the difference between reviewing a website and reviewin
 
 ## Process
 
-1. **Confirm the firing point.** CP4 (homepage built, before inner pages), CP6 (every gate green), or a direct user ask mid-build. Any other moment: don't deploy — a preview per commit is noise the reviewer learns to ignore.
+1. **Confirm the firing point.** CP4 (homepage built, before inner pages), CP6 (no gate FAIL — UNVERIFIED entries ride along, named in the gate summary), or a direct user ask mid-build. Any other moment: don't deploy — a preview per commit is noise the reviewer learns to ignore.
 2. **Refuse production outright.** If the request is to go live, to promote, to "make it the real URL", or contains `--prod` in any spelling, stop and hand off to `ultraweb:ship`. That command has one home and a set of rules — green gates, explicit ask, explicit confirmation, live verification — this skill does not implement.
 3. **Preconditions.** `npm run build` → exit 0. Then `ship`'s tracked-file secret scan → zero hits. A red build is fixed locally first; deploying to see whether it works on Vercel is the anti-pattern that costs an hour.
 4. **Noindex before the first deploy of the project.** Add the `headers()` block below to `next.config.ts` if absent, keyed on `process.env.VERCEL_ENV !== 'production'`. Verify it once, on the deployed URL, not by reading the file.

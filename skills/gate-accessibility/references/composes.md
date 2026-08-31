@@ -12,5 +12,5 @@
 - ultraweb:animejs — owns the Scope `mediaQueries.reduceMotion` branch item 5 sweeps for; an SVG path left undrawn under `reduce` is its defect to fix, and the fix is the drawn end state.
 - ultraweb:set-design — owns the per-route static edition and the DOM twin item 5 verifies; its reduced-motion contract is stricter than a pause (the canvas is never constructed), and a scene that leaves an empty page under `reduce` is a hard fail.
 - ultraweb:cards — fixed-height card titles (and ultraweb:data-display's stat blocks) are the primary text-spacing (1.4.12) clip risk; they own the `min-height` + flex fix item 8 reports.
-- ultraweb:footer — carries the `/barrierefreiheit` link beside Impressum + Datenschutz that item 9 checks.
-- ultraweb:i18n — owns the German-language `/barrierefreiheit` route and copy; this gate only verifies it exists and tells the truth.
+- ultraweb:footer — on an in-scope build, carries the `/barrierefreiheit` link beside Impressum + Datenschutz that item 9 checks.
+- ultraweb:i18n — owns the German-language `/barrierefreiheit` route and copy; this gate scopes the duty first (item 9) and, only for an in-scope build, verifies the information exists and tells the truth.

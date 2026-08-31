@@ -27,7 +27,7 @@ These patterns mark a site as AI-generated filler. They are BANNED unless `desig
 - Three identical icon-cards in a row as the default "features" section
 - "Welcome to", "Elevate your", "Unlock the power of", "Seamlessly", "Empower" — dead startup copy
 - Lorem ipsum, placeholder.com images, `href="#"`, "Feature 1"
-- Fabricated social proof: invented testimonials or reviews, star ratings without a source, "Trusted by" logos the client hasn't earned. This bullet takes NO DIRECTION.md exception — the only lawful form is a visibly-labeled `UNVERIFIED-PROOF` sample on a build BRIEF.md explicitly marks demo/staging (`social-proof` owns the rules; `ship` blocks the tag from production)
+- Fabricated social proof: invented testimonials or reviews, star ratings without a source, "Trusted by" logos the client hasn't earned. This bullet takes NO DIRECTION.md exception — the only lawful form is a visibly-labeled `UNVERIFIED-PROOF` sample on a build whose BRIEF.md carries `Deployment mode: demo` or `staging` (`social-proof` owns the rules; `ship` blocks the tag from production)
 - Glassmorphism smeared over everything; `backdrop-blur` as a personality substitute
 - `rounded-xl` + `shadow-lg` on every element uniformly — depth without hierarchy
 - Every section centered, same width, same padding — wallpaper rhythm

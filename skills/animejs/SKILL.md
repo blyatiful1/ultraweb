@@ -26,7 +26,7 @@ description: SVG choreography for ultraweb builds — anime.js v4 as the ONE spe
 3. Extend `lib/motion.ts` with the `animeEase`/`animeDur` mirror. No raw durations or beziers enter a component.
 4. Build the static drawn artwork first and ship the page with it. Only then add the `"use client"` leaf: `createScope({ root, mediaQueries })` inside `useEffect`, teardown via `scope.current?.revert()`.
 5. Author the moment as ONE `createTimeline`, not N parallel `animate()` calls — a single clock is the whole reason the engine is here. Scrub it by passing `onScroll({ …, sync: true })` as the timeline's `autoplay`.
-6. **Verify empirically:** a performance recording ≥5s of the moment — steady 60fps, zero long tasks >50ms (driven with Playwright `browser_run_code_unsafe` + the `performance`/`PerformanceObserver` API, the house mechanism); emulate `prefers-reduced-motion` and confirm every path reads drawn and every split line reassembled; run `npm run build` and hand the measured gzip delta plus the DIRECTION.md citation to `ultraweb:gate-performance` for design/QA.md.
+6. **Verify empirically:** a performance recording ≥5s of the moment — steady 60fps, zero long tasks >50ms (driven with Playwright `browser_run_code_unsafe` + the `performance`/`PerformanceObserver` API, the house mechanism); emulate `prefers-reduced-motion` and confirm every path reads drawn and every split line reassembled; run `npm run build`, then measure the gzip delta from the network log (or `npx next experimental-analyze --output` — the build table prints no sizes in Next 16) and hand it plus the DIRECTION.md citation to `ultraweb:gate-performance` for design/QA.md.
 
 ## Engine ownership
 

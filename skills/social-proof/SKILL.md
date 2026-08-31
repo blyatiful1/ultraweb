@@ -11,11 +11,11 @@ description: Design testimonial sections, logo walls, stat bands, and case-study
 
 The bar: a visitor who has been burned by fake reviews believes this section. Fake-looking proof is worse than no proof — it actively spends trust. Concretely:
 
-- Every testimonial carries full attribution: name + role + company, plus a face. "John D." or role-only attribution is banned.
+- Every testimonial carries full attribution: name + role + company, plus that person's real photo or a token-styled initials tile (§Attribution anatomy — never a generated portrait beside a real name). "John D." or role-only attribution is banned.
 - Quotes are specific: a task, a number, a before/after. A quote that could sit on any competitor's site is filler.
 - Logos are monochrome at one visual weight, normalized to consistent optical height — never a rainbow of mismatched bounding boxes.
 - Stats are believable: max 4 per band; precise numbers ("2,340 teams") beat round bragging ("1M+ users") unless the round number is the actual fact. The award record is blunt (`award-canon`): a real number with a cited source out-persuades a decorated one — a framed or animated stat still needs its timeframe/source caption, or the frame is lipstick on fiction.
-- Zero fabricated proof, period — not just from real companies. A testimonial no real person gave, a review count nobody counted, a star rating with no source is deception rendered in the site's own voice; a code comment doesn't make it honest, and "plausible" makes it worse. If BRIEF.md supplies no proof, don't manufacture it — walk the no-proof ladder below. The one sanctioned exception: a build design/BRIEF.md explicitly marks **demo/staging** may carry sample quotes, and each must be BOTH visibly labeled in the rendered UI ("Sample quote" / "Beispielstimme") AND tagged `UNVERIFIED-PROOF` in the source — gate-antislop and gate-content grep for that tag, and ship blocks production on any hit. Never name real brands the client hasn't earned.
+- Zero fabricated proof, period — not just from real companies. A testimonial no real person gave, a review count nobody counted, a star rating with no source is deception rendered in the site's own voice; a code comment doesn't make it honest, and "plausible" makes it worse. If BRIEF.md supplies no proof, don't manufacture it — walk the no-proof ladder below. The one sanctioned exception: a build whose design/BRIEF.md carries `Deployment mode: demo` or `Deployment mode: staging` may carry sample quotes, and each must be BOTH visibly labeled in the rendered UI ("Sample quote" / "Beispielstimme") AND tagged `UNVERIFIED-PROOF` in the source — gate-antislop and gate-content grep for that tag, and ship blocks production on any hit. Never name real brands the client hasn't earned.
 
 ## No proof yet — the honest ladder
 
@@ -23,8 +23,27 @@ A young product has no testimonials; it still has truths. In order of strength:
 
 1. **Cut the section** — tell sitemap the proof section is deferred; an absent testimonial wall beats a fictional one, and the page's argument tightens without it.
 2. **A founder's note** — signed with the founder's real name and face, stating why the product exists. It reads as conviction, not evidence, and that honesty is the credibility.
-3. **Verifiable product facts** — "Every order ships from our Leipzig workshop within 48h", a public changelog, an uptime page. Facts a visitor could check out-persuade praise they can't.
-4. **Guarantees and transparency** — a real refund policy, published pricing, a "how it's made" section. Skin in the game is proof of confidence.
+3. **Verifiable product facts** — "Every order ships from our Leipzig workshop within 48h", a public changelog, an uptime page. Facts a visitor could check out-persuade praise they can't. The facts must come from the prompt or the user's answers, never from §Assumed facts inventions — an invented "ships in 48h" is fabricated proof wearing a fact costume (brief's material-claims rule blocks it from production regardless).
+4. **Guarantees and transparency** — a real refund policy, published pricing, a "how it's made" section. Skin in the game is proof of confidence. Real means user-confirmed: an assumed guarantee is a material claim, blocked from production until the user confirms it.
+
+## The proof store — provenance as data
+
+Real proof enters the build through ONE canonical store (`data/proof.ts`, or the CMS collection `content-cms` types) — never as string literals scattered through components:
+
+```ts
+export type ProofRecord = {
+  status: "verified" | "sample";       // "sample" renders ONLY on staging/demo builds
+  quote: string;
+  attribution: { name: string; role?: string; company?: string };
+  source: string;                      // URL, file, or contact record it came from
+  permission: "confirmed" | "unknown"; // the client's right to publish it
+  verifiedAt: string;                  // YYYY-MM-DD
+};
+```
+
+- The rendered "Sample quote" label derives from `status === "sample"` — the component adds it, so no developer has to remember to.
+- Every `status: "sample"` record carries `UNVERIFIED-PROOF` in the store file — the write-time hook and both gates grep it, and `ship` rejects every record whose status isn't `"verified"` on a production build, CMS-sourced data included. Rejecting non-verified records in the store is provable; guessing what "got bundled" is not.
+- `permission: "unknown"` on a real quote BLOCKS a production ship (`site-check` and ship enforce `permission: "confirmed"` alongside the status check) — publishing praise without the confirmed right to publish it is its own harm. On staging/demo it is a handoff item.
 
 ## Process
 
@@ -58,7 +77,7 @@ A young product has no testimonials; it still has truths. In order of strength:
 
 ## Attribution anatomy
 
-Quote first, attribution after: name (medium weight, body size) · role, company (muted token, 0.875em) · avatar 36–44px, radius per SYSTEM §shape. Avatar is a real face or a brand-consistent generated portrait per `ultraweb:imagery` — never a default silhouette icon. Render via `next/image` with explicit `width`/`height` so the row never shifts.
+Quote first, attribution after: name (medium weight, body size) · role, company (muted token, 0.875em) · avatar 36–44px, radius per SYSTEM §shape. The avatar beside a REAL attributed quote is that person's actual photo — or no photo at all (an initials tile styled from SYSTEM tokens); a generated portrait next to a real name is a false representation exactly like an invented quote. Generated portraits are lawful only on `status: "sample"` demo records, where the visible Sample label already declares the fiction. Never a default silhouette icon. Render via `next/image` with explicit `width`/`height` so the row never shifts.
 
 ## States
 

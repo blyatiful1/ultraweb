@@ -1,14 +1,14 @@
 # ultraweb
 
-[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](https://code.claude.com/docs/en/plugins) [![Version](https://img.shields.io/badge/version-1.7.0-4C71F0)](.claude-plugin/plugin.json) [![Skills](https://img.shields.io/badge/skills-80-2EA44F)](ROSTER.md) [![Showcase](https://img.shields.io/badge/showcase-live-2EA44F)](https://ultraweb-site.vercel.app)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](https://code.claude.com/docs/en/plugins) [![Version](https://img.shields.io/badge/version-1.8.0-4C71F0)](.claude-plugin/plugin.json) [![Skills](https://img.shields.io/badge/skills-80-2EA44F)](ROSTER.md) [![Showcase](https://img.shields.io/badge/showcase-live-2EA44F)](https://ultraweb-site.vercel.app)
 
-*A Claude Code plugin for AI web design: a guided design session — a few sharp scoping questions, three fast mockups, your approval — then a production-grade Next.js 16 + Tailwind CSS v4 website: design system, brand mark, copywriting, motion, backend, SEO, and seven screenshot-verified quality gates. Sized by a scope dial, reviewable on your own phone, and resumable if life interrupts the build.*
+*A Claude Code plugin for AI web design: a guided design session — a few sharp scoping questions, three fast mockups, your approval — then a production-grade Next.js 16 + Tailwind CSS v4 website: design system, brand mark, copywriting, motion, backend, SEO, and seven empirically verified quality gates (screenshot-judged where a browser exists, honestly marked UNVERIFIED where not). Sized by a scope dial, reviewable on your own phone, and resumable if life interrupts the build.*
 
 ## You hire a design studio. It fits in one session.
 
 Somewhere in a nicer timeline there's a small agency that does this properly. An art director who refuses the purple gradient. A design engineer who ships tokens before components. A critic who screenshots your site at 375px and tells you the truth about it. And before any of them lift a pen, someone sits you down, asks the four questions that actually matter for *your* site, and shows you three sketches to point at. They cost forty thousand euros and they're booked until spring.
 
-**ultraweb is that studio, as a Claude Code plugin.** 80 skills and 3 subagents that argue with each other on your behalf until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it.
+**ultraweb is that studio, as a Claude Code plugin.** 80 skills and 3 subagents that hold each other to a written constitution until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it. (One lead agent runs the roster sequentially by default; parallel fan-out is opt-in.)
 
 ```text
 /ultraweb build me a website for a Berlin specialty coffee roastery with an online shop
@@ -20,7 +20,7 @@ Prefer the classic fire-and-forget? Say **"just build it, no questions"** and th
 
 ## Where it sits
 
-v0, Lovable, and Bolt hand you a page in ninety seconds; plain Claude Code will happily improvise a site from vibes. ultraweb is for the build where that isn't enough: it is the only tool in this row with a **written taste constitution**, an **adversarial critic that screenshots the result and scores it before you see it**, and a **paper trail** (`design/*.md`) that makes every decision inspectable and every future change surgical. The trade is honest: it is slower and it burns more tokens, because verification is the product. Use a prototype tool to explore an idea; use ultraweb to ship the site you'll defend.
+v0, Lovable, and Bolt hand you a page in ninety seconds; plain Claude Code will happily improvise a site from vibes. ultraweb is for the build where that isn't enough. What sets it apart in this row: a **written taste constitution**, an **adversarial critic that screenshots the result and scores it before you see it**, and a **paper trail** (`design/*.md`) that makes every decision inspectable and every future change surgical. The trade is honest: it is slower and it burns more tokens, because verification is the product. Use a prototype tool to explore an idea; use ultraweb to ship the site you'll defend.
 
 And it doesn't force the full price on a small ask: say "landing page" or "quick" and the **sketch tier** runs a thinner pipeline — fewer mockups, one-page structure, single-round gates — at a fraction of the cost. `standard` is the default; `flagship` unlocks the 3D/showpiece budget and a five-round visual critique.
 
@@ -95,7 +95,7 @@ One sentence about what you want — then a short conversation instead of a leap
 
 **Already have an ultraweb site?** Just say what's wrong — *"the hero's too timid"* — and `ultraweb:iterate` scopes the change and re-runs only the gates you actually disturbed.
 
-**Have some other site?** `ultraweb:retrofit` is the low-cost first taste: point it at any Next.js site and it hands back a scored, unflattering gap report — no redesign, no big bill, and every gap names the skill that would fix it. Honest label: it's an audit that writes — it adds `design/RETROFIT.md`, reconstructed `design/BRIEF.md`/`DIRECTION.md` and screenshots to your repo, and if the site won't boot it applies the minimal fix that gets pixels on screen. Nothing else changes until you approve a phase.
+**Have some other site?** `ultraweb:retrofit` is the low-cost first taste: point it at any Next.js site and it hands back a scored, unflattering gap report — no redesign, no big bill, and every gap names the skill that would fix it. Honest label: it's an audit that writes — it adds `design/RETROFIT.md`, reconstructed `design/BRIEF.md`/`DIRECTION.md` and screenshots to your repo, runs `npm install` (which can update your lockfile — commit first), and if the site won't boot it applies the minimal fix that gets pixels on screen. Nothing else changes until you approve a phase.
 
 **Built a few sites?** The studio remembers. Mockup verdicts and review feedback accrue into a **taste fingerprint** (`~/.claude/ultraweb/taste.md`) that breaks ties in your favor on the next build — with a mandatory "heretic seat" in every mockup round arguing against your profile, so it stays a preference, never a rut. Last 10 builds only; taste drifts.
 
@@ -115,13 +115,13 @@ Model routing keeps it as honest as it can — mechanical sweeps drop to Sonnet 
 
 Four things do most of the work:
 
-**`taste` — the constitution.** A banned list (no purple AI gradient, no untouched shadcn, no "Empower your workflow" copy), a required list (OKLCH palette, a real type pairing, deliberate asymmetry, honored reduced-motion), and the heuristics for deciding everything in between. Every other skill bows to it — and a plugin hook now enforces the greppable half of it at write time, on every file, before it can ship.
+**`taste` — the constitution.** A banned list (no purple AI gradient, no untouched shadcn, no "Empower your workflow" copy), a required list (OKLCH palette, a real type pairing, deliberate asymmetry, honored reduced-motion), and the heuristics for deciding everything in between. Every other skill bows to it — and a plugin hook enforces the greppable half of it at write time on supported source writes (ts/tsx/jsx/js/css/mdx/json/md inside a build), with the Phase 11 gates re-sweeping the whole tree regardless.
 
 **`award-canon` — the library.** 32 Awwwards Site-of-the-Year and SOTD-tier winners from 2017 to 2026, studied and rendered down into 25 named, transferable patterns — plus the invariants that survived every era, the jury's own scoring weights, and a list of moves that have visibly aged. Each claim carries its verified award tier; dead sites are marked *reconstructed*, never passed off as inspected. The prime directive: **steal the principle, never the surface.**
 
-**Seven gates that don't take your word for it.** Code, responsive, visual, accessibility, performance, anti-slop, content — each verified empirically. Real builds. Real Playwright screenshots. Computed contrast. Lighthouse. The site isn't finished until `design/QA.md` is green, and nothing is allowed to fake green — including faking it when the tools are missing: no browser means an honest **UNVERIFIED**, declared in Phase 0 before the build spends a cent, never a quiet wave-through discovered five hours in.
+**Seven gates that don't take your word for it.** Code, responsive, visual, accessibility, performance, anti-slop, content — each verified empirically. Real builds. Real Playwright screenshots. Computed contrast. Lighthouse. The site isn't finished until `design/QA.md` is green, and nothing is allowed to fake green — including faking it when the tools are missing: no browser means an honest **UNVERIFIED**, declared in Phase 0 before the build spends a cent, never a quiet wave-through discovered five hours in. The three verdicts have teeth: PASS may ship, FAIL never ships, and UNVERIFIED may preview and hand off but reaches production only after you explicitly accept each named unverified risk.
 
-**`STACK.md` — the reality check.** Stack facts checked against live npm and official docs rather than training memory, so skills cite Next 16's `proxy.ts` and `preload`, Tailwind v4's `@theme`, Motion 12's `motion/react`. Version pins live in `stack/versions.json` with a 30-day expiry and a refresh script; corpus invariants are enforced by a lint script in CI, not by memory.
+**`STACK.md` — the reality check.** Stack facts checked against live npm and official docs rather than training memory, so skills cite Next 16's `proxy.ts` and `preload`, Tailwind v4's `@theme`, Motion's `motion/react`. Version pins live in `stack/versions.json` with a 30-day expiry and a refresh script; corpus invariants are enforced by a lint script in CI, not by memory.
 
 And underneath all of it: nearly every skill ends with a real decision traced end to end, drawn from a recurring cast of eight fictional clients whose canonical facts live in [CAST.md](CAST.md) — a Berlin roastery, a port-logistics SaaS, an Oslo agency, a Lisbon restaurant, a law firm, a game studio, a foundation, a textiles shop. Skills sharing a client agree on its palette, its type, its routes. The examples don't just illustrate the skills; they demonstrate the handoff between them.
 

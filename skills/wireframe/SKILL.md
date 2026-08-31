@@ -38,7 +38,7 @@ Worked example:
 3. problem — skill: feature-sections — variant: numbered editorial list — density: 3 items, H3 + ≤25 words each — width: narrow — rhythm: compressed — job: name the enemy
 4. product — skill: feature-sections — variant: alternating split — density: 2 splits, screenshot + H2 + ≤40 words each — width: full-bleed images, contained text — rhythm: offset grid, image bleeds left (page's asymmetry) — job: show, don't claim
 5. numbers — skill: data-display — variant: stat block — density: 3 stats, figure + ≤6-word label — width: contained — rhythm: tight — job: quantify the promise
-6. testimonial — skill: social-proof — variant: single spotlight quote — density: ≤30 words + name, role, face — width: narrow — rhythm: airy, slow the read — job: let a human close
+6. testimonial — skill: social-proof — variant: single spotlight quote — density: ≤30 words + name, role, real photo or initials tile (social-proof's portrait rule) — width: narrow — rhythm: airy, slow the read — job: let a human close
 7. cta — skill: feature-sections — variant: full-width closer — density: H2 ≤8 words + 1 CTA — width: full-bleed — rhythm: double space before cta — job: the ask, nothing else
 Mobile: 4 stacks image-first; 5 drops to 2 stats; nothing reorders.
 ```

@@ -22,9 +22,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Linter self-test + manifest/hook-wiring tests
-        run: node --test tests/lint-skills.test.mjs tests/manifests.test.mjs
+      - name: Linter self-test + manifest/hook-wiring + policy + site-check mutation tests
+        run: node --test tests/*.test.mjs
       - name: Hook fixture tests (antislop blocking behavior, studio-log JSONL)
         run: bash tests/hook-antislop.test.sh
-      - name: Shellcheck the hooks (error severity)
-        run: shellcheck --severity=error hooks/*.sh
+      - name: Shellcheck the hooks and recipe scripts (error severity)
+        run: shellcheck --severity=error hooks/*.sh scripts/*.sh

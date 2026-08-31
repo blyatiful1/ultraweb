@@ -2,7 +2,7 @@
 // breakage classes it exists for, by running it against deliberately broken
 // copies of the real corpus. A linter that only ever sees a green corpus is
 // an unverified claim; this is its regression guard.
-// Run: node --test tests/
+// Run: node --test tests/*.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
@@ -86,4 +86,57 @@ test('catches a references/ pointer to a missing file', () => {
   });
   assert.equal(r.code, 1);
   assert.match(r.out, /skills\/ship: points at references\/example\.md which does not exist/);
+});
+
+test('catches a missing SKILL.md file', () => {
+  const r = lintMutated((dir) => {
+    rmSync(join(dir, 'skills', 'ship', 'SKILL.md'));
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /skills\/ship\/SKILL\.md missing/);
+});
+
+test('catches a frontmatter name that mismatches the directory', () => {
+  const r = lintMutated((dir) => {
+    const p = join(dir, 'skills', 'ship', 'SKILL.md');
+    writeFileSync(p, readFileSync(p, 'utf8').replace(/^name: ship$/m, 'name: shipping'));
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /frontmatter name "shipping" !== directory "ship"/);
+});
+
+test('catches an over-length description', () => {
+  const r = lintMutated((dir) => {
+    const p = join(dir, 'skills', 'ship', 'SKILL.md');
+    writeFileSync(p, readFileSync(p, 'utf8').replace(/^description: /m, `description: ${'x'.repeat(1400)} `));
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /description \d+ chars \(>1300\)/);
+});
+
+test('catches a wrong prose skill-count claim', () => {
+  const r = lintMutated((dir) => {
+    const p = join(dir, 'README.md');
+    writeFileSync(p, readFileSync(p, 'utf8').replace(/80 skills/, '99 skills'));
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /claims "99 skills"/);
+});
+
+test('catches a skill missing from ROSTER.md', () => {
+  const r = lintMutated((dir) => {
+    const p = join(dir, 'ROSTER.md');
+    writeFileSync(p, readFileSync(p, 'utf8').replace('**ship**', '**shipx**'));
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /ROSTER\.md: skill "ship" has no roster entry/);
+});
+
+test('catches an agent model-pin drift', () => {
+  const r = lintMutated((dir) => {
+    const p = join(dir, 'agents', 'design-judge.md');
+    writeFileSync(p, readFileSync(p, 'utf8').replace(/^model:\s*opus$/m, 'model: haiku'));
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /agents\/design-judge\.md: model pin is not "opus"/);
 });

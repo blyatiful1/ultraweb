@@ -15,7 +15,7 @@ Anything that tracks a gesture uses a spring, not a duration — the hand is ana
 - **Displacement is small.** Magnetic pull ≤ 12px on buttons; a springy press is scale 0.97, not 0.9.
 - **Overshoot belongs to gestures.** Section entrances use the easing curves from `motion-language`; bounce on a scroll reveal is slop.
 - **Touch degrades to nothing.** Magnetic hover and cursor followers are `(hover: hover) and (pointer: fine)` only. Drag must not fight page scroll.
-- **Bundle honesty (STACK.md):** hover/tap/spring animations run under `domAnimation`; `drag` and `layout` require `domMax` (+25kb). Adding one draggable element costs the whole delta — budget it consciously.
+- **Bundle honesty (STACK.md):** hover/tap/spring animations run under `domAnimation`; `drag` and `layout` require `domMax` (+25kb, 12.x-measured — unverified for 13 per STACK.md). Adding one draggable element costs the whole delta — budget it consciously.
 - **Gestures never leave motion.** Even on a site whose DIRECTION.md commissioned anime.js for an SVG moment, drag and pointer tracking stay here: anime's `createDraggable` is its heaviest module (per STACK.md) and a second drag system is fragmentation, not capability. The same line holds against a renderer: on a DIRECTION-commissioned `ultraweb:set-design` build, pointer→scene raycasting and camera damping are **scene input** and stay inside the canvas, while every DOM spring, magnetic hover and cursor follower stays here on motion — `domAnimation` until a real `drag`/`layout` moment earns `domMax`, per the bundle-honesty rule above. If the thing that moves is a DOM node it is this skill; if it is an `Object3D` it is not. `OrbitControls`/`CameraControls` are never installed on a site-scale scene — a free camera fights an authored journey, and a camera the user can lose is not a site.
 
 ## Process
@@ -92,7 +92,7 @@ Always constrain (`dragConstraints` as ref or `{ left, right }` bounds); `dragEl
 - Missing pointer guards — magnetic/follower code with no `(pointer: fine)` check ships dead weight and ghost behavior to phones.
 - Spring scale/pull on every card in a grid — physics on list items is mis-hover chaos; one moment, not a treatment.
 - `damping: 5`-class values — perpetual wobble.
-- Loading `domMax` when nothing drags — +25kb for hover springs `domAnimation` already covers (STACK.md).
+- Loading `domMax` when nothing drags — the whole domMax delta for hover springs `domAnimation` already covers (STACK.md).
 - Springs on section entrances — that's `scroll-motion`'s territory and it uses easing curves, not bounce.
 
 ## Worked example — Framewalk, cursor-reactive hero fog for a Steam launch

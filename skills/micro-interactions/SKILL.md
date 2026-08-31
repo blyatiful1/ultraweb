@@ -13,7 +13,7 @@ Every interactive element acknowledges input within 150–250ms, moves only via 
 
 - **150–250ms micro band.** Hover-in 150–200ms; press feedback 100–150ms (press must feel faster than hover). Never 300ms+ on hover — that band belongs to section reveals.
 - **One easing family** from SYSTEM.md tokens (`--ease-*`). Never invent a curve per component.
-- **CSS-first.** A hover lift is a `transition` + Tailwind utilities, not a client component. Reach for Motion 12 (`"use client"`, `LazyMotion` + `m.` per STACK.md) only for springs, exit animations, or orchestration.
+- **CSS-first.** A hover lift is a `transition` + Tailwind utilities, not a client component. Reach for Motion (`"use client"`, `LazyMotion` + `m.` per STACK.md) only for springs, exit animations, or orchestration.
 - **Feedback follows hierarchy.** The primary CTA gets the richest response; a footnote link gets an underline. Identical treatment everywhere flattens hierarchy.
 - **Hover parity.** Anything a pointer reveals on `:hover` must reveal identically on `:focus-within` and on tap — keyboard can't hover and touch has no hover, so a hover-only affordance (card metadata, a cursor-narrator label) is an accessibility defect, not a flourish (WCAG 2.2 SC 1.4.13). The focus-shown copy persists while focused, dismisses on `Escape` without moving focus, and never vanishes just because the pointer drifted off.
 - **Reduced motion:** transforms drop, color/opacity feedback stays — state change must never depend on movement alone.

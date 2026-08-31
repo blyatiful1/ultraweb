@@ -13,7 +13,7 @@ Taste's rule verbatim: 3D, shaders, canvas only when the direction demands it, i
 
 - **The showpiece never owns LCP.** Hero headline and CTA render from server HTML and paint first; the canvas mounts behind or after them.
 - **The static fallback is itself designed** — a poster frame (gradient, SVG composition, or treated image via `imagery`) that would pass `gate-visual` alone. Reduced-motion users, no-WebGL browsers, and the pre-hydration frame all see it; it is not a degradation, it is the second edition of the design.
-- **The fallback carries the argument in words, not just a picture.** A showpiece asserts a claim — about the product, the craft, the world; the accessible edition must state that claim, not gesture at it. Every canvas/WebGL/R3F section ships a sibling narrative — 2–4 sentences of real copy authored in Phase 8 (`ultraweb:copywriting`), never template alt text like "an interactive 3D scene" — in an `sr-only` block that becomes visible under `prefers-reduced-motion`. The meaning survives without the spectacle; that is the test. (Germany's BFSG, in force since 2025-06-28, makes this a legal floor for DACH sites, not a courtesy.)
+- **The fallback carries the argument in words, not just a picture.** A showpiece asserts a claim — about the product, the craft, the world; the accessible edition must state that claim, not gesture at it. Every canvas/WebGL/R3F section ships a sibling narrative — 2–4 sentences of real copy authored in Phase 8 (`ultraweb:copywriting`), never template alt text like "an interactive 3D scene" — in an `sr-only` block that becomes visible under `prefers-reduced-motion`. The meaning survives without the spectacle; that is the test. (Germany's BFSG, in force since 2025-06-28, makes this a legal floor for in-scope DACH builds — gate-accessibility owns the scoping — and the constitution's own floor everywhere else.)
 - **Three exits wired**: `prefers-reduced-motion` → static; WebGL/context unavailable → static; tab hidden or element offscreen → animation loop paused.
 - **A navigable scene is app state, not a demo reel.** If the showpiece is an explorable 3D/canvas view — an R3F scene, multiple camera framings, a scene selector — its camera (position, target, fov) and active scene belong in the URL, not trapped in `useState`. Encode them into a `?view=` search param and restore on mount, so the moment is bookmarkable, shareable, and reachable by back/forward — a place, not a reel. `ultraweb:routing` owns the URL contract; the discipline that keeps it cheap is in the mounting pattern below.
 - **Cheapest rung wins.** Climb the cost ladder only as far as the direction requires.
@@ -28,7 +28,7 @@ Taste's rule verbatim: 3D, shaders, canvas only when the direction demands it, i
 3. **Build the static fallback FIRST** and drop it into the layout. The page must be shippable at this point.
 4. Implement the live piece behind `next/dynamic` with `ssr: false` (this call must live in a `"use client"` file), using the fallback as `loading` state so there is never a blank frame.
 5. Wire the three exits; cap `devicePixelRatio` at 2; pause the loop when `document.hidden` or the element leaves the viewport (IntersectionObserver).
-6. **Verify empirically:** DevTools performance recording ≥5s of interaction — steady 60fps, no long tasks >50ms; re-run at 4x CPU throttle and confirm it stays fluid (≥30fps) or falls back; `npm run build` and compare client bundle before/after — the delta is a design decision, record it in SYSTEM.md.
+6. **Verify empirically:** DevTools performance recording ≥5s of interaction — steady 60fps, no long tasks >50ms; re-run at 4x CPU throttle and confirm it stays fluid (≥30fps) or falls back; measure the client-bundle delta from the network log (encodedBodySize per gate-performance's cold-load step) or `npx next experimental-analyze --output` before/after — Next 16's build prints no sizes — the delta is a design decision, record it in SYSTEM.md.
 
 ## Cost ladder
 
@@ -90,7 +90,7 @@ Record all six in design/SYSTEM.md (decision + bundle delta) and design/QA.md (m
 3. LCP element is server-rendered text/image, not the canvas — confirmed in DevTools.
 4. Reduced-motion emulation renders `StaticPoster` with its narrative text visible, and the poster plus that narrative carry the argument on their own (real copy, not template alt text).
 5. Kill WebGL (or test a no-WebGL context): static path renders, console clean.
-6. Client bundle delta measured via `npm run build` before/after and accepted deliberately.
+6. Client bundle delta measured before/after from the network log or `next experimental-analyze` (never the `next build` output — Next 16 prints no sizes) and accepted deliberately.
 
 ## Anti-patterns
 
@@ -106,7 +106,7 @@ Record all six in design/SYSTEM.md (decision + bundle delta) and design/QA.md (m
 - Skipping the 4x-throttle run — "60fps on my machine" is not "60fps on mid hardware".
 - Camera or scene locked in `useState` on a navigable piece — a view no link can reach and the back button can't undo is a demo reel wearing a URL bar. Grep an explorable scene for `useSearchParams`; its absence is the smell.
 - Writing the URL every frame — `router.replace` inside `useFrame` thrashes history and re-renders; sync only when the tween settles.
-- An `sr-only` narrative that parrots template alt text ("an interactive 3D scene") instead of the claim the visual makes — it must carry the argument, or it fails both the screen-reader user and the BFSG.
+- An `sr-only` narrative that parrots template alt text ("an interactive 3D scene") instead of the claim the visual makes — it must carry the argument, or it fails the screen-reader user (and, on an in-scope DACH build, the BFSG).
 
 ## Worked example — Studio Norra, Oslo agency portfolio index
 

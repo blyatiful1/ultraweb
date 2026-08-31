@@ -103,7 +103,7 @@ Most skills close with a **Worked example** traced from a shared bank of eight r
 - **preview** — non-production review URLs at CP4 and CP6 (and on request): `vercel deploy` with no `--prod`, preconditioned only on a clean build + secret scan, noindex headers on non-production, the URL logged beside the checkpoint's screenshots; production deploys stay ship's. *(built homepage / green gates → throwaway preview URL in REVIEWS.md)*
 - **ship** — production readiness: env var audit, build + start smoke test (including /studio 404), deploy (Vercel when asked), post-deploy verification of live URL. *(green QA.md → live site)*
 - **handoff** — closing docs: README with stack map, how to edit content/tokens, design/* artifacts explained, maintenance notes. *(everything → README.md)*
-- **retrofit** — entry point for existing sites: audit any Next.js site against the constitution, produce a scored gap report and a phased upgrade plan mapping each gap to the ultraweb skill that fixes it. *(existing code → design/RETROFIT.md)*
+- **retrofit** — entry point for existing sites: audit any Next.js site against the constitution, produce a scored gap report and a phased upgrade plan mapping each gap to the ultraweb skill that fixes it. *(existing code → design/RETROFIT.md + reconstructed BRIEF/DIRECTION + screenshots; a mutating audit — runs npm install and may apply the minimal boot fix)*
 
 ## Subagents (agents/)
 

@@ -1,6 +1,6 @@
 // Manifest and hook-wiring consistency tests — the corpus's machine-readable
 // surfaces must parse, agree with each other, and point at files that exist.
-// Run: node --test tests/
+// Run: node --test tests/*.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
@@ -37,9 +37,20 @@ test('hooks.json commands point at scripts that exist', () => {
   }
 });
 
-test('hook scripts are syntactically valid bash', () => {
-  for (const script of ['hooks/antislop.sh', 'hooks/studio-log.sh']) {
+test('hook and recipe scripts are syntactically valid bash', () => {
+  for (const script of ['hooks/antislop.sh', 'hooks/studio-log.sh', 'scripts/scaffold-fixture.sh']) {
     execFileSync('bash', ['-n', join(root, script)]); // throws on a syntax error
+  }
+});
+
+test('locked-to pins actually match their anchor', () => {
+  const stack = json('stack/versions.json');
+  for (const [pkg, rule] of Object.entries(stack.pins)) {
+    if (typeof rule === 'string' && rule.startsWith('locked-to:')) {
+      const anchor = rule.slice('locked-to:'.length);
+      assert.equal(stack.packages[pkg], stack.packages[anchor],
+        `${pkg} declares ${rule} but pins ${stack.packages[pkg]} vs ${anchor}'s ${stack.packages[anchor]}`);
+    }
   }
 });
 

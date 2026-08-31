@@ -25,7 +25,7 @@ A first-grade brief is decisive, specific, and complete:
 5. Fix ONE primary conversion (book, buy, sign up, contact, subscribe) and at most one secondary. A page that serves neither does not exist.
 6. Choose tone: 3 specific adjectives + 1 tension pair ("warm but exact", "playful but competent"). Reject any adjective that fits every site — "modern", "clean", "professional" are bans, not tone words. Write one sample sentence in the voice.
 7. List pages — the fewest that serve the conversion; 1–5 covers most briefs. Do not invent About/Blog/Careers pages nobody asked for; do not collapse pages the prompt explicitly named.
-8. Build the content inventory per page: the facts, claims, numbers, names, and proof points `copywriting` will need — opening hours, price points, team names, feature specifics, testimonial sources, stat claims. Where the prompt is silent, invent first-party facts: plausible, specific, internally consistent. Log every invention in §Assumed facts. **The invention license stops at third-party proof:** testimonials, reviews, press mentions, customer logos, and usage stats presented as measured are never invented — an empty proof inventory is recorded as empty, and `social-proof` builds honest credibility from it (or, on a build this brief explicitly marks demo/staging, labeled `UNVERIFIED-PROOF` samples). An invented endorsement logged in §Assumed facts is still a fabricated endorsement on the rendered page.
+8. Build the content inventory per page: the facts, claims, numbers, names, and proof points `copywriting` will need — opening hours, price points, team names, feature specifics, testimonial sources, stat claims. Where the prompt is silent, decide — but sort every invention into one of two classes and log it in §Assumed facts under that class. **Creative assumptions** (tone, visual direction, page structure, demo product names, copy angles) drive autonomous work freely. **Material claims** — opening hours, prices, addresses, delivery times, guarantees and refund terms, inventory, professional credentials, measured statistics — may be drafted as placeholders but are never production truth: log each ending `— material, unconfirmed`; it may render on a demo/staging build, and it BLOCKS a production ship until the user confirms or corrects it (`ship` greps the marker). An invented "open at 8" or "30-day refunds" harms a real visitor exactly like an invented testimonial. **The invention license stops entirely at third-party proof:** testimonials, reviews, press mentions, customer logos, and usage stats presented as measured are never invented — an empty proof inventory is recorded as empty, and `social-proof` builds honest credibility from it (or, on a build this brief explicitly marks demo/staging, labeled `UNVERIFIED-PROOF` samples). An invented endorsement logged in §Assumed facts is still a fabricated endorsement on the rendered page.
 9. Run the backend decision framework below. Record chosen Tier-6 skills AND rejected ones, each with a one-line reason.
 10. Write design/BRIEF.md in the format below. Grep it for `?` — a question mark in the FILE is a defect in either mode; the interview happens in conversation, and its answers land as decisions.
 
@@ -71,16 +71,26 @@ AI features are the one class that defaults to **rejected**: an assistant, chatb
 
 ```md
 # Brief — <working site name>
+Deployment mode: production
 ## Site type & energy budget
 ## Audience            (one named persona: situation, device, what they distrust)
 ## Goals               (primary conversion; secondary if any; what success means)
 ## Tone                (3 adjectives + 1 tension pair; one sample sentence in the voice)
 ## Pages               (each: name, route, job, which conversion it serves)
 ## Content inventory   (per page: facts, claims, numbers, proof the copy needs)
+## Compliance facts    (see below — only for briefs naming a market/jurisdiction)
 ## Backend: needs      (Tier-6 skill → the feature demanding it)
 ## Backend: rejected   (Tier-6 skill → one-line reason it's out)
-## Assumed facts       (every invention, one line each, so the user can correct)
+## Assumed facts       (every invention, one line each, classed creative or material —
+##                      material entries end with the material-unconfirmed marker from
+##                      Process step 8 and block production until confirmed)
 ```
+
+The skeleton shows the literal default (`production`); write `staging` or `demo` in its place only on the user's explicit request — never copy an options list into the file, the grammar takes exactly one value.
+
+**Deployment mode** is a machine-read field, exactly the literal `Deployment mode: production` (or `staging`/`demo`) on its own line — the antislop hook, gate-content, and ship grep it to decide whether labeled `UNVERIFIED-PROOF` samples are lawful. Rules: exactly ONE such line; allowed values exactly those three; a missing, duplicated, or misspelled line fails BRIEF validation and every consumer fails closed to production semantics. Default is `production`; only an explicit user request makes a build staging/demo, and switching a demo build to production re-triggers proof and material-claims validation.
+
+**§Compliance facts** exists so legal scoping happens where the facts are cheap (the user knows them) instead of being guessed at gate time. When the brief names a market or jurisdiction, record: seller's seat (country), targeted consumer markets, B2C or B2B, whether the site concludes consumer contracts online (shop/booking/ticketing — yes/no), employee count and turnover/balance relative to the €2M microenterprise thresholds, the evidence source for each (user statement vs assumed), and a `counsel-needed:` flag for anything asserted rather than known. `sitemap` consumes this to decide legal routes; `gate-accessibility` re-derives scope from the finished build and flags drift. These are user facts — ask for them in guided mode when a DACH/EU market is named; in autonomous mode record them as §Assumed facts entries with the counsel flag set.
 
 ## Anti-patterns
 

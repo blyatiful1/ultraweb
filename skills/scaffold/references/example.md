@@ -13,6 +13,6 @@ design/SITEMAP.md lists five routes — `/`, `/grants`, `/stories/[slug]`, `/vol
 
 Then `npm i motion lucide-react zod next-themes` — the base four only.
 
-Rejected: eagerly `npm i content-collections` now because the stories are MDX. It lost — scaffold installs only what Phase 5 needs; the content tier owns that dependency, and pulling it in here breaks the install discipline the smoke-test build is there to prove.
+Rejected: eagerly `npm i @content-collections/core @content-collections/next` now because the stories are MDX. It lost — scaffold installs only what Phase 5 needs; the content tier owns that dependency, and pulling it in here breaks the install discipline the smoke-test build is there to prove.
 
 Handoff: the running tree, the globals.css skeleton, and the first design/QA.md entry (version deltas plus the dev-server 200 and exit-0 build) go to ultraweb:tokens, which replaces the placeholder `:root` with the real Open Civic system — AAA-checked deep-green accent `oklch(0.45 0.1 155)` on warm paper.

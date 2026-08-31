@@ -46,7 +46,7 @@ A site is first-grade when ALL of these hold — verified, not assumed:
 5. WCAG 2.2 AA: contrast, focus states, keyboard path, reduced-motion honored.
 6. Motion is present and purposeful; nothing animates without a reason.
 7. Real metadata: title/description per page, OG image, favicon, sitemap, robots.
-8. The gate report (`design/QA.md`) shows every gate green.
+8. The gate report (`design/QA.md`) shows no FAIL — PASS wherever the tool existed, UNVERIFIED only where Phase 0 declared it missing (and production then needs each named risk accepted).
 
 ## Artifact contract
 
@@ -121,10 +121,10 @@ The choreography pass, applied to the finished layout. Respect `prefers-reduced-
 Metadata API, generated OG images, sitemap/robots, JSON-LD where it fits.
 
 ### Phase 11 — Gates (skills: `gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content`)
-Run ALL gates; loop fix→re-gate until green. `gate-visual` and `gate-responsive` require real screenshots (Playwright MCP). When Phase 0 reported no browser, their screenshot halves record **UNVERIFIED** — a third verdict, distinct from PASS and FAIL: everything code-checkable still runs in full (build, types, greps, computed contrast from tokens, link checks), QA.md states exactly what went unseen, and the build ships honest about the gap instead of dead-ending here. Record everything in `design/QA.md`. Do not report done with a red gate — and never write PASS where the truth is UNVERIFIED.
+Run ALL gates; loop fix→re-gate until green. `gate-visual` and `gate-responsive` require real screenshots (Playwright MCP). When Phase 0 reported no browser, their screenshot halves record **UNVERIFIED** — a third verdict, distinct from PASS and FAIL: everything code-checkable still runs in full (build, types, greps, computed contrast from tokens, link checks), QA.md states exactly what went unseen, and the build ships honest about the gap instead of dead-ending here. Record everything in `design/QA.md`. Do not report done with a red gate — and never write PASS where the truth is UNVERIFIED. The three verdicts form the release contract `ship` enforces: **PASS may ship; FAIL never ships; UNVERIFIED may produce a preview and a handoff, but production deploy requires the user explicitly accepting each named unverified risk immediately before the deploy command.**
 
 ### Phase 11.5 — Acceptance (skills: `checkpoint`, `preview` — guided/studio)
-**CP6 preflight/UAT**, strictly AFTER every gate is green: the user reviews a working site with real content — gate summary, per-route screenshots, a what-to-click list, and a fresh `preview` URL so the click-list is actually clickable on their own devices. They are the acceptance test, never the smoke test; the client being first QA is the cardinal studio error this ordering exists to prevent. Ship waits for the Approved line (or the logged auto-pass).
+**CP6 preflight/UAT**, strictly AFTER Phase 11 closes with no FAIL (UNVERIFIED entries are presented in the gate summary as the named-risk list `ship` re-confirms): the user reviews a working site with real content — gate summary, per-route screenshots, a what-to-click list, and a fresh `preview` URL so the click-list is actually clickable on their own devices. They are the acceptance test, never the smoke test; the client being first QA is the cardinal studio error this ordering exists to prevent. Ship waits for the Approved line (or the logged auto-pass).
 
 ### Phase 12 — Ship (skills: `ship`, `handoff`)
 Production build, env audit, deploy if asked, and a handoff README. `ship`'s own explicit deploy confirmation still applies on top of CP6.
@@ -173,7 +173,7 @@ Prompt: *"build me a website for a Berlin specialty coffee roastery with an onli
 - **Phase 6** builds `/` first, completely; **CP4** presents it at 375 and 1440 — verdict round 1: "the curve is perfect, the product cards feel cramped on the phone" → routed to `cards`, one changed screenshot re-presented, Approved. Only now do the inner pages build (this trace assumes fan-out mode was opted in: one Opus 5 agent per remaining page, artifacts passed verbatim, all inheriting the fixed card rhythm — in default solo mode the Lead builds the same sections sequentially); **Phase 7** wires Stripe checkout + raw-body webhook, the Drizzle schema, Resend order receipt.
 - **Phase 8** `copywriting`: hero headline becomes "Röstung No. 14. Apricot, black tea, honey." — the product is the poetry; no "Elevate your mornings".
 - **Phase 11**: `pixel-qa` (Sonnet 5) sweeps 375/768/1440 and catches the `/shop` grid overflowing at 375; `design-judge` (Opus 5) scores pages and flags a uniform card row on `/shop`; fixes land via `cards` group-layout rules; re-gate green → QA.md.
-- **CP6** (after QA.md goes green): gate table, five route screenshots, click-list (add to cart, test-mode checkout, contact form, 404) — Approved, logged in REVIEWS.md.
+- **CP6** (after Phase 11 closes with no FAIL): gate table, five route screenshots, click-list (add to cart, test-mode checkout, contact form, 404) — Approved, logged in REVIEWS.md.
 - **Phase 12** `ship`: env audit (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `DATABASE_URL`, `RESEND_API_KEY`), build + start smoke test, handoff README.
 
 ## Failure discipline
