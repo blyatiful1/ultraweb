@@ -1,7 +1,7 @@
 ## Worked example — Framewalk, Hollow Cartographer Steam launch site
 
 design/QA.md §gate-performance, first pass. SITEMAP.md routes: `/`, `/game`, `/devlog`, `/devlog/[slug]`, `/press`.
-build clean · cold-load JS (encodedBodySize, 500ms-quiet) `/` 132kB · `/game` 129kB (budget 140). `npm start`, then mobile Lighthouse.
+build clean · cold-load JS (encodedBodySize, network-idle after reload) `/` 132kB · `/game` 129kB (budget 140). `npm start`, then mobile Lighthouse.
 `/` scored 78 — LCP 4.2s. `audits["largest-contentful-paint-element"]` named the base fog layer, the
 near-black `oklch(0.16 0.02 200)` art. It rendered inside the `"use client"` `<FogParallax>` boundary, so
 the three cursor-answering layers only painted after hydration — the LCP image waited on JS, Speed Index high.

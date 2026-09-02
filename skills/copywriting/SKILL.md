@@ -90,25 +90,8 @@ No emoji in production copy (✨🚀🎉 — taste ban). Max 1 exclamation point
 
 ## Worked example — Kaffeewerk Ost, roastery shop voice + hero copy
 
-- Input read — BRIEF.md tone words: "sensory, direct, unhurried"; DIRECTION.md archetype: "Warm Organic/Humanist — craft, tactile, no marketing fluff."
-- Voice Matrix from those tone words: Formal↔Casual **4**, Serious↔Playful **2**, Plain↔Expressive **3**, Reserved↔Bold **3** — the casual-4 score sets the de-DE register to **Du**, logged in BRIEF.md ("a Berlin roaster talks to regulars, not account holders").
-- §Voice appended to DIRECTION.md: person "wir/du" (informal German); sentence ceiling 16 words; jargon IN: washed, natural, Röstprofil — OUT: "premium", "artisanal"; humor dry, never wacky.
-- Calibration hero H1 (Specific-number formula, 6 words): "Röstung No. 14. Frisch aus Berlin."
-- Subhead (11 words, one sentence): "Washed Yirgacheffe: Apricot, black tea, honey — dienstags geröstet, mittwochs bei dir."
-- CTAs: /shop primary "Bohnen ansehen"; /abo "Abo starten" — verb-first, ≤3 words, never "Jetzt sichern".
-- Sold-out empty state: "Ausverkauft — nächste Röstung Freitag." Order-confirm success: "Bestellung No. 4471 — geröstet und unterwegs zu dir."
-- Rejected H1: "Frisch gerösteter Kaffee für Genießer" — trips no banned phrase, but it fits any German roaster alive and fails the swap test; only "Röstung No. 14" names something Kaffeewerk alone can write.
-- Handoff: §Voice lands in design/DIRECTION.md; ultraweb:hero pulls the H1/subhead, ultraweb:pricing draws the /abo tier copy, and ultraweb:email drops the confirm string into the Resend order mail.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:brief — source of the tone words, audience, and offer the voice is built from
-- ultraweb:direction — the voice must serve the archetype; §Voice lives in its file
-- ultraweb:wireframe — its per-section density budgets are this skill's copy ceilings
-- ultraweb:ui-states — the error/empty/success standards here fill the states it designs
-- ultraweb:seo — meta titles and descriptions are written here, in the voice, within the char limits
-- ultraweb:gate-content — the empirical check that bans held and headlines tell the story; for de-DE it also flags Sie/Du register drift across pages
-- ultraweb:motion-language / ultraweb:scroll-motion — when a kinetic-type reveal is selected there, copy caps at 6–8 words per beat and the `prefers-reduced-motion` fallback shows the full string
-- Consumed by every component-tier skill (hero, pricing, buttons, feature-sections, forms, social-proof, faq, footer) — they draft strings against §Voice rather than writing their own
-- ultraweb:i18n — every string written here is what i18n externalizes into per-locale message catalogs; the voice — including the Sie/Du register decision — must survive translation intact
-- ultraweb:gate-antislop — runs the banned-phrase grep this skill sweeps for; a dead-copy phrase that ships is its gate failure, not a style call
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

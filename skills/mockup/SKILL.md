@@ -19,19 +19,22 @@ A first-grade mockup round is fast, divergent, and honest:
 ## Process
 
 1. Read design/BRIEF.md and the shortlist. Each candidate arrives as: archetype + one signature-move idea + a palette/type sketch. Do not deepen them first — the mockup IS the exploration.
-2. For each candidate, write ONE self-contained file `design/mockups/<letter>-<archetype-slug>.html`:
+2. **Render the candidates — delegate round 1** when all three hold: the Agent tool is available, the tier is not sketch, and the user has not asked for a single context ("no agents", "single context"). One Specialist agent (`model: opus`) per candidate, launched in one batch, each handed the turnkey brief in `references/candidate-brief.md` filled in for its seat. This holds in solo mode too (root SKILL.md §Orchestration modes): one mind still owns the shortlist and the pick — only the typing fans out. When a condition fails, and always at sketch tier, write the candidates in this context and load no brief; the bullets below are the whole spec. Either way each candidate is ONE self-contained file `design/mockups/<letter>-<archetype-slug>.html`:
    - Inline `<style>` only; zero JavaScript; fonts via a Google Fonts `<link>` with honest fallback stacks (the one permitted external request).
-   - Palette as OKLCH custom properties on `:root` — the same values DIRECTION.md would commit to.
+   - Palette as OKLCH custom properties on `:root` — the same values DIRECTION.md would commit to, every foreground/surface pair clearing WCAG AA.
+   - Real type pairing, display + body, hero at least 3.5× body size. Default-Inter-only is not a pairing.
    - Hero + the 2–3 sections that carry the most decision weight for THIS site type: e-commerce → product grid; restaurant → menu excerpt; SaaS → feature split; portfolio → work index; editorial → article opener. Not a full page inventory.
    - The signature move rendered as a static frame (the SVG motif drawn, the layout gesture placed) — enough to judge, not implemented.
    - Copy sketched in the brief's tone — headline, one section of body, real CTAs. No lorem, no "Feature 1/2/3". Sketch-grade is fine; placeholder-grade is not.
    - One honest small-screen pass: fluid widths and readable text at 375px. No breakpoint engineering beyond that.
    - The `taste` banned list applies in full — a mockup that wins with a banned move poisons the build that follows it.
+
+   Each agent returns the file path plus a ≤10-line spec: archetype, the OKLCH values it used, the type pairing, the signature move as drawn, and any refusal or deviation. Keep those specs — `direction` writes DIRECTION.md from the approved candidate's spec, not by re-reading its markup (ONE Read of the approved HTML is allowed when the spec leaves a decision genuinely open). An agent that returns no spec is asked for one; never reconstruct it by opening the file.
 3. Write `design/mockups/index.html` — the contact sheet: all candidates in one scrollable page (each embedded via `<iframe>` at a phone-ish and a desktop-ish width, labeled A/B/C with its one-line identity). Comparing three designs must not require juggling three tabs in working memory; one tab, scroll, point.
-4. Present the contact sheet (plus the individual files for full-size viewing), then ask ONE structured question: pick A/B/C, mix named elements across candidates, or request a revised round. Never ask them to describe what they want in prose first — the mockups exist so they can point.
+4. Present the contact sheet (plus the individual files for full-size viewing) — **the user opens them in their own browser, and you view no image in this phase.** Nothing serves `design/mockups/` before Phase 5 and the browser MCP refuses `file://`, so the round's own record is the returned specs — or, on the in-context path, the ten lines per candidate you wrote from. Then ask ONE structured question: pick A/B/C, mix named elements across candidates, or request a revised round. Never ask them to describe what they want in prose first — the mockups exist so they can point.
    **Tournament mode** — offered when the user says comparing three at once is hard ("one at a time", "just show me two"), or asks for it: pairwise duels instead of a 3-up menu. A vs B, winner vs C — two questions, each a binary with a "what tipped it" follow-up in the same breath. Same candidates, same approval bar, two more minutes; the per-duel verdicts are cleaner preference signal than a 3-way pick and land in the fingerprint (below) as one line each.
-5. Log the round in design/MOCKUPS.md (format below): every candidate's one-line identity, the user's verdict close to verbatim.
-6. On "mix": the base candidate keeps its archetype; borrowed elements become ONE recorded twist ("A, with B's type pairing") — never a 50/50 hybrid, per `direction`'s hedging ban. On "revise": generate the new round from the user's stated objection, retiring the weakest candidate; three rounds without an approval means the shortlist is wrong — return to `direction` and re-shortlist.
+5. Log the round in design/MOCKUPS.md (format below): every candidate's one-line identity, the user's verdict close to verbatim. It is a ledger — it only grows: append with an Edit anchored on its last line when the file is already in this context, with a `>>` heredoc when it is not (a fresh session, a resume). Never rewrite it.
+6. On "mix": the base candidate keeps its archetype; borrowed elements become ONE recorded twist ("A, with B's type pairing") — never a 50/50 hybrid, per `direction`'s hedging ban. On "revise": generate the new round from the user's stated objection, retiring the weakest candidate; three rounds without an approval means the shortlist is wrong — return to `direction` and re-shortlist. Revision rounds do not fan out again: write the revised candidate here, or send ONE agent the brief plus the user's verdict verbatim (never your paraphrase of it — the objection's exact words are the spec).
 7. Stop only at an explicit approval. Write it in design/MOCKUPS.md as the final line. That line is the pipeline's green light: `direction` turns the winner into DIRECTION.md, and no Phase 3+ work may start before it exists. Then feed the fingerprint (below).
 
 ## Fingerprint — what this round teaches the next build
@@ -64,26 +67,15 @@ The pick is the richest taste signal the harness ever receives, and throwing it 
 - Lorem ipsum, gray boxes, or `href="#"` in a mockup — sketch-grade copy is still real copy
 - Polishing a candidate past sketch grade before approval — spending the build's budget on a maybe
 - Shipping mockup markup into the app "since the user liked it" — the build derives from artifacts, never from sketches
-- Starting scaffold, foundation, or any Phase 3+ fan-out before the Approved line exists in MOCKUPS.md (the candidate renders themselves may fan out — that's the round's own work)
+- Starting scaffold, foundation, or any Phase 3+ fan-out before the Approved line exists in MOCKUPS.md (the candidate renders are the one exception — they are how the approval gets earned, and they delegate in either orchestration mode)
+- Reading the three candidate files into this context to judge them — the specs are ten lines each; that is the whole pick
+- Rewriting MOCKUPS.md to tidy an earlier round — a round's verdict is the user's words, and a ledger corrects by appending
 - Asking the user open-ended style questions alongside the mockups — the files answer, the user points
 
 ## Worked example — Kaffeewerk Ost, Berlin roastery shop + subscriptions
 
-BRIEF.md names e-commerce + `/abo`, tone tension *craft and tactile, but it has to sell*. `direction` shortlists three contrasting seats: **A — Warm Organic/Humanist**, **B — Swiss/International**, **C — Refined Luxury Serif**.
-
-- `a-warm-organic.html`: cream ground `oklch(0.97 0.008 75)`, rust accent, Fraunces + Work Sans; hero with the hand-drawn roast-curve SVG as a static spine; a 3-product shop grid; the Abo pitch strip.
-- `b-swiss.html`: white ground, signal-red accent, one neo-grotesque at two weights; visible grid lines; the same three products set as an index list.
-- `c-luxury-serif.html`: ivory ground, espresso ink, a high-contrast display serif; display type set into a full-bleed bean image; hushed product row.
-
-Verdict, Round 1: "A — but B's grid feels more organized." Logged; the mix is commissioned as A's archetype with one recorded twist (Swiss column discipline on the shop grid), not a hybrid. User approves. MOCKUPS.md gets its Approved line; `direction` writes DIRECTION.md as *Warm Organic/Humanist + twist: Swiss grid discipline on commerce surfaces*; the three HTML files stay behind as reference and not one line of their markup enters the app.
-
-Rejected alternative: rendering the candidates as AI-generated concept images — faster to look at, but nothing in them is real (no actual palette values, no actual type), so the built site drifts from the picture the user approved. The mockup's whole authority is that what they pick is made of the same decisions the build will inherit.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:taste — the banned list applies to mockups at full strength; a candidate may not win with a move the build could never keep.
-- ultraweb:brief — upstream; site type picks the decision-carrying sections, tone writes the sketch copy.
-- ultraweb:direction — bidirectional: it hands over the 3-candidate shortlist (reading the fingerprint as tiebreaker and seating the heretic), and consumes the Approved line to write DIRECTION.md (mixes become the recorded twist).
-- ultraweb:checkpoint — this round IS checkpoint CP2; MOCKUPS.md's Approved line doubles as the CP2 ledger entry, and the two-consolidated-rounds discipline is shared.
-- ultraweb:award-canon — a candidate's signature-move idea cites its pattern precedent, same as the real direction will.
-- ultraweb:iterate — post-build style regrets route through it; the mockup round is never re-run against a built site.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

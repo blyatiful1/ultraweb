@@ -1,0 +1,7 @@
+## Worked example — Kaffeewerk Ost, CP4 preview
+
+Phase 6 finishes `/` completely — roast-curve hero, nav, product strip, footer. `npm run build` exits 0; the secret scan over tracked files returns nothing (`STRIPE_SECRET_KEY` and friends live only in `.env.local`, which `git check-ignore` confirms). `next.config.ts` gets the `headers()` block, the four build-time keys go into the project's Preview environment, and `npx vercel@56 deploy` returns `https://kaffeewerk-ost-3f9a2c.vercel.app`. A fetch confirms 200 and `X-Robots-Tag: noindex, nofollow`.
+
+CP4 is presented as it always is — screenshots at 375 and 1440 — with the link added under them. The client opens it on her own phone in the Röstung and comes back with: *"the curve is perfect. The product cards feel cramped on the phone."* That verdict is worth more than the 375px PNG produced, because it came from a thumb on real glass — and it still routes through `cards`, exactly as `checkpoint` requires. Round 2 re-presents the one changed screenshot plus a fresh preview URL; **Approved**. Inner pages roll out afterwards. The deployment is left to expire on its own; nothing about it is promoted, and `/shop` reaches production only through `ship`, months of gates later.
+
+Rejected alternative: exposing the local dev server through a tunnel instead of deploying. Faster to start, but it serves dev-mode output — unminified, uncached, no production build semantics — so the reviewer judges a build the client will never receive, and the link dies the moment the session ends.

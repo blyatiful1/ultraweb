@@ -72,17 +72,8 @@ Preview: https://kaffeewerk-ost-<hash>.vercel.app — noindex verified, expires 
 
 ## Worked example — Kaffeewerk Ost, CP4 preview
 
-Phase 6 finishes `/` completely — roast-curve hero, nav, product strip, footer. `npm run build` exits 0; the secret scan over tracked files returns nothing (`STRIPE_SECRET_KEY` and friends live only in `.env.local`, which `git check-ignore` confirms). `next.config.ts` gets the `headers()` block, the four build-time keys go into the project's Preview environment, and `npx vercel@56 deploy` returns `https://kaffeewerk-ost-3f9a2c.vercel.app`. A fetch confirms 200 and `X-Robots-Tag: noindex, nofollow`.
-
-CP4 is presented as it always is — screenshots at 375 and 1440 — with the link added under them. The client opens it on her own phone in the Röstung and comes back with: *"the curve is perfect. The product cards feel cramped on the phone."* That verdict is worth more than the 375px PNG produced, because it came from a thumb on real glass — and it still routes through `cards`, exactly as `checkpoint` requires. Round 2 re-presents the one changed screenshot plus a fresh preview URL; **Approved**. Inner pages roll out afterwards. The deployment is left to expire on its own; nothing about it is promoted, and `/shop` reaches production only through `ship`, months of gates later.
-
-Rejected alternative: exposing the local dev server through a tunnel instead of deploying. Faster to start, but it serves dev-mode output — unminified, uncached, no production build semantics — so the reviewer judges a build the client will never receive, and the link dies the moment the session ends.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:checkpoint — CP4 and CP6 are the two firing points; the URL joins the presentation, the screenshots stay as the record
-- ultraweb:ship — the hard boundary: `--prod`, green gates, explicit confirmation, env push, and live verification all live there, never here
-- ultraweb:gate-responsive — the reviewer's own phone is one extra honest breakpoint, never a replacement for the 375/768/1440 sweep
-- ultraweb:status — records the URL in PROGRESS.md §Waiting-on-you so the reviewer never digs through a transcript for it
-- ultraweb:gate-code — its `npm run build` green is precondition one; this skill reuses the result rather than re-litigating it
-- ultraweb:seo — owns robots/sitemap for the production site; this skill's noindex is scoped to non-production and must never leak into it
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

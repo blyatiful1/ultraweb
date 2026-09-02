@@ -5,7 +5,7 @@ description: Scaffold the dev-only /studio route — the construction-site windo
 
 # studio — the build renders its own construction site
 
-**Stage:** Phase 5 — Scaffold (right after `scaffold`; skipped at sketch tier) - **Reads:** design/PROGRESS.md, design/QA.md, design/REVIEWS.md, design/screenshots/, design/studio-log.jsonl — all off disk, at request time - **Writes:** app/(studio)/studio/* (page, feed handler, shot handler, one client leaf)
+**Stage:** Phase 5 — Scaffold (right after `scaffold`; skipped at sketch tier) - **Reads:** design/PROGRESS.md, design/QA.md, design/REVIEWS.md, design/screenshots/, design/studio-log.jsonl — all off disk, at request time; `design/CONTEXT-HANDOFF.md` and the `qa/*.log` files are deliberately not rendered (the page shows PROGRESS, QA, REVIEWS, screenshots and the activity log, nothing else) - **Writes:** app/(studio)/studio/* (page, feed handler, shot handler, one client leaf)
 
 A long build is a long silence, and the usual fix is narration — tokens spent describing the work instead of doing it, and a transcript the user has to read. This route replaces narration with a window: the files the pipeline already writes, served by the dev server it already runs, at zero tokens per refresh. The client hired a studio, not a file browser — let them stand in the doorway.
 
@@ -71,24 +71,8 @@ Empty fields render blank, unknown keys are ignored, corrupt lines dropped; the 
 
 ## Worked example — Tidepool, port-logistics SaaS built in fan-out mode
 
-Phase 5 closes with `scaffold` green: six routes planned, dev server on :3000, `design/` at the project root. `studio` then costs twenty minutes — `app/(studio)/` beside `(marketing)`, gated, force-dynamic, five panels, one client leaf. Little exists yet: the gate table reads *nothing yet — Phase 11 writes this*, the ledger reads *CP2 approved, round 1*, the contact sheet is empty.
-
-Tidepool ships JetBrains Mono and a teal `oklch(0.68 0.12 200)` accent. `/studio` uses neither — `ui-monospace`, near-black on white, 1px borders — so nobody confuses the viewing platform with the instrument.
-
-Phase 6 runs fan-out. The Lead builds `/` completely; CP4 opens and the top panel flips to *Waiting on you — CP4 first-page review, 2 screenshots, approve or name what's wrong* — which the user sees unprompted, the tab having been open on the second monitor for an hour. Approved, three Specialist agents launch, and the feed narrates them without a model — three `PostToolUse` lines (*Build /product…*, */pricing…*, */docs…*), then a `SubagentStop` as each lands. Nobody asks for a status for forty minutes.
-
-By Phase 11 the contact sheet holds eighteen shots and the gate table reads `gate-code PASS`, `gate-responsive FAIL` (the pricing table overflowing at 375), `gate-visual` blank — the user sees the red row before the Lead reports it. `handoff` then documents the removal in one line: delete `app/(studio)/`.
-
-Rejected alternative: symlinking `design/screenshots/` into `public/` so the contact sheet needs no code. Instant in dev — and it puts every QA screenshot into the production build output, the construction site leaking past the exact boundary this skill exists to hold. The `shot` handler costs fifteen lines and dies with the route group.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:scaffold — creates it, right after the dev-server smoke test; skips it at sketch tier
-- ultraweb:status — PROGRESS.md is the page's spine; the top panel is that file rendered, never re-derived
-- ultraweb:checkpoint — REVIEWS.md fills the ledger panel; an open checkpoint is the loudest thing on the page
-- the Phase 11 gates — QA.md is the gate table's only source; every gate ignores `/studio` in return
-- ultraweb:hidden-craft — kinship, not overlap: both are craft signals, but hidden-craft ships to the visitor and this dies at the build boundary
-- ultraweb:ship — its smoke test fetches `/studio` on the production server expecting 404; a 200 blocks the deploy
-- ultraweb:handoff — documents the deletion: one route group, one folder, zero cleanup
-- ultraweb:app-structure — the feed is the single `"use client"` leaf; page and handlers stay server-side
-- ultraweb:seo — `/studio` never enters SITEMAP.md, `sitemap.ts`, or `robots.ts`
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

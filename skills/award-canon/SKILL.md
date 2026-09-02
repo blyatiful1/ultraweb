@@ -99,16 +99,8 @@ Moved to `references/INVARIANTS.md` — `design-judge` and `gate-visual` read th
 
 ## Worked example — Studio Norra, Oslo agency portfolio
 
-Studio Norra's brief tension — raw editorial authority that still has to *sell* the studio's craft — shortlists Editorial Brutalist and Art-House Immersive. `direction` reads `references/ARCHETYPE-MAP.md`: Brutalist → Type as the Image + The Prove-It Gesture; Art-House → The Persistent Hero Object + The Cursor as Narrator + Scroll-as-Camera. The signature move — cursor-proximity case-study image reveals on `/work` — borrows the *principle* of The Cursor as Narrator (the pointer communicates and acts on the scene) crossed with The Prove-It Gesture (the reveal rewards deliberate movement), executed at the cheapest rung (`clip-path` + a `useSpring` follower, 0kb WebGL) — exactly as Star Atlas's biggest lever was a *decision*, not a shader.
-
-What the canon explicitly kept OUT: Igloo's frozen-material world and its SDF-text (surface, not principle — and it breaks a11y); a Scroll-as-Camera dolly (the #1 scroll-jack hazard, and Studio Norra's content is an index, not a scene). DIRECTION.md's References line cites "The Cursor as Narrator (principle), The Prove-It Gesture (principle)"; `physics` owns the spring; `design-judge` scores Distinctiveness against invariant 1.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:taste — the constitution; the canon expresses its constants and never overrides its banned list or the gates. `taste` is what good means for us; `award-canon` is what the award record proves.
-- ultraweb:direction — primary consumer: `references/ARCHETYPE-MAP.md` supplies references + signature-move ideas in Phase 2, cited into DIRECTION.md by pattern name.
-- ultraweb:typography, ultraweb:color, ultraweb:imagery — cite the type/color/material patterns by name in the foundation phase.
-- ultraweb:hero, ultraweb:scroll-motion, ultraweb:motion-language, ultraweb:physics, ultraweb:page-transitions, ultraweb:showpiece, ultraweb:set-design — cite the motion/interaction/3D patterns; `showpiece` owns the WebGL gate the tier patterns operationalize for one set piece, and `set-design` owns it at site scale, where every tier must hold on every route.
-- ultraweb:data-display, ultraweb:social-proof — cite Framed Data for stat rows, KPI tiles, and credibility figures.
-- ultraweb:wireframe, ultraweb:navigation — cite The Metaphor Engine, Scroll-as-Journey, and Archive-as-Toy for structure and wayfinding.
-- ultraweb:gate-visual / design-judge — scores the invariants; the canon is the reference the Distinctiveness axis is measured against.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

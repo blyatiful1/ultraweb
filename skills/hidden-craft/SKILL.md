@@ -92,28 +92,8 @@ export function useEasterEgg(onFound: () => void) {
 
 ## Worked example — Framewalk, "Hollow Cartographer" launch site (Atmospheric Dark)
 
-DIRECTION.md commits Atmospheric Dark with a bioluminescent signal-green accent `oklch(0.78 0.15 160)`; BRIEF.md's whole conceit is cartography and exploration. Two gestures, chosen; a third deliberately declined.
-
-**Console signature:** a small compass-rose fragment and "you drifted off the charted edge" in signal-green, then a hiring nudge to `/careers` — the metaphor carried into devtools, no secrets logged, mounted once as a client leaf in the root layout.
-
-**The 404 (`app/not-found.tsx`):** "This region is uncharted." It ships the working error page first — `<h1>`, a "Return to charted territory →" link to `/`, and the primary nav, all keyboard-first. Layered on top as progressive enhancement (a reduced-motion-guarded client leaf) is a faint ASCII grid with a marker the visitor can walk with the arrow keys toward a home beacon — a nod to the game's core loop. Pressing the link works without ever touching the marker; the fragment gates nothing.
-
-**Deliberately skipped:** a separate Konami egg. Framewalk spends its one hidden gesture on the 404 fragment; a second hidden toy would tip into a scavenger hunt and pull attention from the game the site is selling. A one-line `humans.txt` credits the four-person studio — fitting for an indie team — and that's the ceiling.
-
-Rejected: making the 404 fragment a **gate** (reach the beacon to unlock the home link) — it fails "never gates, stay useful"; and a full-page Konami screen-shake — it competes with the game and risks key-hijack a11y.
-
-Handoff: `ultraweb:ui-states` established that `not-found.tsx` must be designed with a path home — hidden-craft only adds personality over that; `ultraweb:copywriting` wrote every console line, the 404 headline, and the humans.txt credit; `ultraweb:gate-accessibility` keyboard-audits the egg (no key hijack, Esc + focus return, operable from keyboard); `ultraweb:gate-performance` confirms zero LCP cost on the error path.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:ui-states — owns that `not-found.tsx` exists and is designed with a path home; hidden-craft adds brand personality on top, never removing the usable error page beneath.
-- ultraweb:routing — `not-found.tsx` per segment plus `global-not-found.tsx` for the app-wide 404; placement lives there.
-- ultraweb:copywriting — every console line, 404 headline, and humans.txt credit is written here in brand voice, banned-phrase-clean.
-- ultraweb:micro-interactions — any motion in the egg spends the same duration/easing tokens and honours reduced motion.
-- ultraweb:seo — humans.txt sits beside robots.txt / sitemap / manifest; the custom header lives with that config and must not clobber security headers.
-- ultraweb:command-palette — shares the guarded global-key-listener discipline (ignore inputs, Esc to close, never hijack keys); the egg must not collide with the palette's shortcut.
-- ultraweb:theme-worlds — a keyboard egg that flips to a micro-theme borrows the theme machinery there.
-- ultraweb:footer — the "made by" credit in humans.txt echoes the footer's human sign-off; keep the two consistent.
-- ultraweb:marginalia — a sibling in the human-authorship family; both are last-2% touches that reward a close look, budget them together so the site reads crafted, not cluttered.
-- ultraweb:taste — this is pillar 5 (craft in the last 2%); steal the PRINCIPLE — reward the curious — never a competitor's surface.
-- ultraweb:gate-accessibility / ultraweb:gate-performance — verify the egg never breaks tab order or key handling and never costs LCP.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

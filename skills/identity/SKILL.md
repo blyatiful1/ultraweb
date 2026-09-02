@@ -67,29 +67,8 @@ components/brand/: wordmark.tsx · monogram.tsx · og-template.tsx
 
 ## Worked example — Kaffeewerk Ost, mark for the Berlin roastery
 
-ASSETS.md: "No client assets provided" → invent branch, logged in §Assumed facts as a starting mark. DIRECTION.md: Warm Organic/Humanist, signature move = the roast-profile temperature curve. SYSTEM.md §type: Fraunces (`opsz`) + Work Sans.
-
-- **Wordmark:** `KAFFEEWERK OST` in Fraunces 600, `opsz 60`, one line, tracking **+0.06em** at 28px cap-height — caps in a high-contrast serif close up without it.
-- **The one custom cut:** the doubled F in KAFFEE takes a single continuous crossbar across both letters, its right terminal lifted 4° onto the roast curve's tangent. Everything else stays Fraunces as drawn.
-- **Monogram:** `K` on a 32×32 grid; the wedge between arm and leg is cut as the roast curve, so the negative space IS the signature move at favicon scale. Feeds `icon.tsx`, `apple-icon.tsx`, `manifest.ts` — one source, three surfaces.
-- **Geometry:** `x` = the K's stem width. Clear space 2x; minimum wordmark 128px (below that the shared crossbar closes); monogram floor 16px; print 22mm.
-- **Color:** `currentColor` everywhere; the curve's stroke takes `--color-accent` (rust `oklch(0.62 0.16 45)`) on the light ground only — on the dark bar it drops below AA.
-- **OG template:** cream ground, monogram top-left at 96px, title in Fraunces 72/1.05, the curve a rust hairline bleeding off the bottom edge; `seo` passes each route's real title in.
-- **Misuse:** no re-setting in Work Sans · no wordmark on the rust field · no rotation or arc · no drop shadow · no second curve in the lockup.
-
-Rejected alternative: a coffee-bean silhouette monogram — every roastery in Berlin owns one, it says nothing this brief said, and it spends the signature move's budget on a cliché the curve already spends better.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:typography — upstream and binding: it commits the display face this mark is cut from; a re-paired face means a redrawn wordmark.
-- ultraweb:brief + ultraweb:assets — the upstream fork: ASSETS.md decides formalize-vs-invent, §Assumed facts carries the starting-mark admission.
-- ultraweb:shape-language — the motif family the monogram's grid obeys; motifs are decoration, this mark is identity, and the two must not contradict.
-- ultraweb:tokens — downstream: mark colors are token references compiled into `@theme`, never literals in the SVG.
-- ultraweb:navigation — consumes the lockup at nav size and honors the clear-space rule as real padding.
-- ultraweb:footer — the closing lockup, usually the mono variant, larger than the header's.
-- ultraweb:seo — imports the monogram for `icon.tsx`/`apple-icon.tsx`/`manifest.ts`, renders `og-template.tsx` inside `ImageResponse`.
-- ultraweb:email — takes a 2x PNG export with explicit `width`/`height`; Outlook drops SVG, so email never imports the components.
-- ultraweb:print-craft — the mark is the ONE element granted `print-color-adjust: exact`; the rest goes to ink economy.
-- ultraweb:hidden-craft — the console signature is an ASCII reduction of this monogram, accent inlined since the console cannot read tokens.
-- ultraweb:icons — the mark is not an icon: `components/icons.tsx` never re-exports it, lucide never substitutes for it.
-- ultraweb:media-optimization — SVGO on every file in `public/brand/`, `mergePaths` off where the mark animates later.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

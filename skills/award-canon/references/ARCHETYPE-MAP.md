@@ -1,6 +1,6 @@
 # Per-archetype reference map
 
-The one award-canon file `direction` opens by default in Phase 2: the reference winners and pattern names for the committed archetype. Full site dossiers: `references/CANON.md`. Full pattern entries: `references/PATTERNS.md`.
+The one award-canon file `direction` opens by default in Phase 2: the reference winners and pattern names for the committed archetype. Full site dossiers: `references/CANON.md`. Full pattern entries: award-canon's `SKILL.md` §The canon — 25 patterns.
 
 
 Reference winners are *qualities to chase*, never URLs to reskin. `direction` reads this in Phase 2 for the committed archetype, cites the winners by name, and borrows the named patterns *by principle*.

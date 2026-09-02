@@ -1,52 +1,59 @@
 ---
 name: gate-code
-description: Build/type/lint quality gate — the FIRST gate of Phase 11 (nothing visual gets judged on a broken build). Invoke there, after any multi-file code change to an ultraweb site, or on "run the code gate", "does it build", "check types and lint", "is the build clean", "check the token contract". Proves the codebase green with commands, not claims: clean npm run build and strict tsc --noEmit, ESLint via the CLI (next lint is removed in Next 16), every route served with a clean console, "use client" placement audit, stack-relic greps, unused-dependency sweep, and a token-contract linter failing undeclared @theme tokens or sub-AA color pairs. Writes a dated pass/fail entry with command evidence to design/QA.md.
+description: Build/type/lint quality gate — executed by the gate-runner agent against the Lead's build of record, FIRST of the six measurement gates in Phase 11 (nothing visual gets judged on a broken build). Dispatched there, on an iterate re-gate, after any multi-file code change to an ultraweb site, or on "run the code gate", "does it build", "check types and lint", "is the build clean", "check the token contract". Proves the codebase green with commands, not claims: the build log's exit code, strict tsc --noEmit, the ESLint CLI (next lint is gone in Next 16), every route 200 with a clean prod log, "use client" placement, stack-relic greps, unused dependencies, and a token-contract linter failing undeclared @theme tokens or sub-AA color pairs. Appends a dated pass/fail entry with command evidence to design/QA.md.
 ---
 
 # gate-code — green by command, not claim
 
-**Stage:** Phase 11 — Gates (first gate; blocks all others) - **Reads:** full codebase, package.json, design/SITEMAP.md (route list), plugin STACK.md - **Writes:** design/QA.md entry + fixes for whatever fails
+**Stage:** Phase 11, gate 1 of 6 — code → responsive → antislop → content → accessibility → performance. Executed by the `gate-runner` agent against the Lead's build of record and the production server of record on `prodUrl`, both raised once in the Phase 11 preamble (`mkdir -p qa && rm -rf .next && npm run build > qa/build.log 2>&1`, then `PORT=3100 npm start > qa/prod.log 2>&1 &`; see root SKILL.md); the runner never builds and never starts a server - **Reads:** the codebase, package.json, design/PROGRESS.md (§Now's `Build of record:` line — check 1 reads the exit code there and never rebuilds), design/SITEMAP.md (routes), design/DIRECTION.md, design/SYSTEM.md, `<plugin>/STACK.md` - **Writes:** the design/QA.md entry (appended) + `qa/gate-code.log`; fixes are the Lead's
 
 ## Standard
 
-Every item on this gate is an exit code or a zero-hit grep — "looked fine" does not exist here. First-grade means: cold `npm run build` exits 0, `tsc --noEmit` is silent under strict with zero suppression comments, ESLint reports 0 problems with zero inline disables, every route in design/SITEMAP.md serves 200 with a clean dev terminal, `"use client"` lives only at interactive leaves, and package.json carries nothing the code doesn't import. Every `var(--token)` resolves to a declared `@theme` token and every semantic foreground/surface pair clears WCAG AA — proven by a script each build, not eyeballed once at design time. And the CSS that actually ships carries no vocabulary the system never decided.
+Every item is an exit code or a zero-hit grep; a measurement the runner did not run did not pass. The two facts the other gates inherit: the build of record is green, and the design system is honest — every `var(--token)` declared, every foreground/surface pair clearing AA by computation, not by eye.
 
 ## Checklist
 
-1. Production build clean
-2. Types clean, strict intact
-3. Lint clean via ESLint CLI
-4. Every route serves; dev terminal clean
-5. RSC boundaries at the leaves
-6. Zero stack relics
-7. Zero unused dependencies
-8. Token contract holds — no undeclared tokens, every pair passes AA
-9. Emitted CSS stays inside the system's own vocabulary
+1. Build of record exited 0 [MEASURED]
+2. Types clean, strict intact [MEASURED]
+3. Lint clean via the ESLint CLI [MEASURED]
+4. Every route serves 200; prod log clean [MEASURED]
+5. RSC boundaries at the leaves [MEASURED]
+6. Zero stack relics [MEASURED]
+7. Zero unused dependencies [MEASURED]
+8. Token contract holds — no undeclared tokens, every pair passes AA [MEASURED]
+9. Emitted CSS: zero `!important`, zero orphaned custom properties [MEASURED]
+10. `animejs` / `three` commissioned by name in DIRECTION.md — evidence returned: import file:line + the DIRECTION.md lines quoted, or "no citation" [JUDGMENT → Lead]
+11. Emitted colour/type census inside the system's scales — evidence returned: wallace's counts beside SYSTEM.md's palette and `clamp()` scale lengths [JUDGMENT → Lead]
 
 ## How to verify
 
-1. **Build:** `npm run build` → exit 0. Turbopack is the Next 16 default for dev AND build — no flag exists. When in doubt about staleness, `rm -rf .next` first and build cold. Any failure goes verbatim to the `stack-doctor` subagent; never downgrade a package to make it pass.
-2. **Types:** `npx tsc --noEmit` → exit 0, no output. Then prove nothing was loosened to get there: `grep -n '"strict"' tsconfig.json` shows `true`, and `grep -rn "@ts-ignore\|@ts-expect-error\|as any" app components lib` → each hit gets a one-line justification or gets removed. Common Next 16 failure here: `params`/`searchParams` used without `await` — they are Promises in pages, layouts, and generateMetadata.
-3. **Lint:** `npx eslint .` → exit 0, 0 problems. `next lint` was REMOVED in Next 16 — `grep -n "next lint" package.json` must return nothing; replace any hit with the ESLint CLI. `grep -rn "eslint-disable" app components lib` → each hit needs a one-line justification.
-4. **Routes + terminal console:** `npm run dev > qa/dev.log 2>&1 &`, then `curl -s -o /dev/null -w "%{http_code} %{url_effective}\n"` against every route in design/SITEMAP.md — all 200. Dev compiles routes on demand: a route never requested is a route never compiled, so sweep all of them. Then `grep -inE "error|hydrat|failed" qa/dev.log` → zero hits. Kill the server. Browser-side console errors are pixel-qa's job inside gate-responsive; this check owns the terminal side.
-5. **RSC boundary audit:** `grep -rn "use client" app components lib` → review every hit against the app-structure boundary plan:
-   - Zero hits in any `layout.tsx` — providers belong in `components/layout/providers.tsx`, imported as a leaf.
-   - A hit in `app/**/page.tsx` needs a one-line justification; the default is a server page composing client leaves.
-   - Expect ≤15 client files on a brochure/marketing site; 30+ means the boundary plan failed — re-read app-structure, don't rubber-stamp the census.
-   - Motion cross-check: `grep -rl "motion/react" app components | xargs -r grep -L "use client"` → empty. Every motion/react import forces the directive.
-   - Hook cross-check: `grep -rlE "useState|useEffect|useRef|onClick=" app components | xargs -r grep -L "use client"` → empty. A hit means add the directive at the true leaf or push the interactivity further down — never up.
-6. **Stack relics** — every check returns nothing:
-   - `ls middleware.ts` → no such file. Next 16 uses `proxy.ts` exporting `proxy(request)`.
-   - `grep -rn "framer-motion" package.json app components lib` — legacy alias; the package is `motion`.
-   - `grep -rn "onLoadingComplete" app components` — removed on next/image; it is `onLoad`.
-   - `grep -rn "priority" app components --include="*.tsx"` → any hit that is an `<Image>` prop is deprecated; use `preload`.
-   - `grep -rn "tailwind.config\|@tailwind base\|theme.extend" . --exclude-dir=node_modules` — Tailwind v3 relics; v4.3 is CSS-first via `@theme` in globals.css.
-   - `grep -rn "import anime from\|@types/animejs" package.json app components lib` — anime.js v3 relics; v4 has no default export and ships its own types (per STACK.md). Keep this grep tight: a bare `targets:` is too generic to mean anything.
-   - `grep -rn "createDraggable" app components lib` → zero hits. Drag is motion's at `domMax` — the engine boundary, not a style choice.
-   - `grep -rnE "ease: *['\"]cubicBezier" app components` → zero hits. The string form is silently linear; pass the imported `animeEase.*` function. Both of these can only land in the `from "animejs"` files check 7 already resolves.
-   - `grep -rnE "transpilePackages|MeshProps|Object3DNode|MaterialNode|BufferGeometryNode|LightNode|namespace JSX" next.config.* app components` — R3F v8 relics in a v9 world: `transpilePackages: ['three']` is stale on Next 16 + Turbopack, the per-element prop types were removed in favour of `ThreeElements['mesh']`, and JSX augmentation moved out of the global namespace into `declare module '@react-three/fiber'` (per STACK.md).
-   - `grep -n '"@types/three"' package.json` — its version must equal `three`'s exactly, or the `ThreeElements` augmentation drifts; and `three` must be pinned exactly whenever `postprocessing` is present, because its peer range caps three (per STACK.md).
-7. **Unused dependencies** — audit `dependencies` only (devDependencies serve tooling: typescript, eslint*, @types/*, @tailwindcss/postcss):
+**Runner contract** (the rest lives in `agents/gate-runner.md`):
+- **In:** `gate` · `pluginRoot` · `projectRoot` · `prodUrl` · `devUrl` · `artifacts` (BRIEF, DIRECTION, SYSTEM, SITEMAP, QA, PROGRESS) · `tier` · `market` · `themeStrategy` · optional `rerunOnly` (run only those checks).
+- **Out:** verdict `PASS` / `PASS-ON-MEASURED` / `FAIL` / `UNVERIFIED` (`PASS` only when `judgment-open` is empty); failed checks as `check · file:line · one line · owner skill · MECHANICAL|DESIGN`; JUDGMENT items as `judgment-open` with the evidence named above; the QA.md entry appended; the path `qa/gate-code.log`.
+- **Logs:** full stdout/stderr of every failing or unverified command → `<projectRoot>/qa/gate-code.log`; the return carries the path, never the contents. A tooling failure comes back as `<check> · qa/build.log · <first error line> · owner: stack-doctor · MECHANICAL`, and the Lead hands stack-doctor that LOG PATH.
+- **Never:** `npm run build`, `npm start`, `npm run dev`, `rm -rf .next`, `npm install`, any source edit, any `design/*` edit but the QA.md append. Its only other writes are `qa/gate-code.log` (a shell redirect is fine) and check 8's `qa/token-contract.mjs` (Write tool only).
+- **Degraded:** no browser is used here, so a NO BROWSER preflight downgrades nothing; UNVERIFIED means a missing toolchain or an unreadable `qa/build.log`, and every code-checkable step still runs.
+
+1. **Build of record:** read the exit code from PROGRESS.md §Now's `Build of record:` line — never rebuild — then `tail -n 20 <projectRoot>/qa/build.log`. Exit 0 → PASS, evidence = the "Compiled successfully" line. Non-zero → FAIL to `stack-doctor` per the contract.
+2. **Types:** `npx tsc --noEmit` → exit 0, no output. Then prove nothing was loosened to get there: `grep -n '"strict"' tsconfig.json` shows `true`, and `grep -rn "@ts-ignore\|@ts-expect-error\|as any" app components lib` → any hit without a justification comment on the line above fails at that file:line. Common Next 16 failure: `params`/`searchParams` used without `await` — they are Promises in pages, layouts, generateMetadata.
+3. **Lint:** `npx eslint .` → exit 0, 0 problems; never `--fix` (the runner reports, the Lead edits). `next lint` was REMOVED in Next 16 — `grep -n "next lint" package.json` returns nothing. `grep -rn "eslint-disable" app components lib` → the justification rule of check 2.
+4. **Routes + server log:** `curl -s -o /dev/null -w "%{http_code} %{url_effective}\n" <prodUrl><route>` for every route in design/SITEMAP.md — all 200; a route that exists only in dev is a build defect. Then `grep -inE "error|hydrat|failed" <projectRoot>/qa/prod.log` → zero hits. Browser-side console errors belong to gate-responsive's console check (7); this check owns the server side.
+5. **RSC boundary audit:** `grep -rn "use client" app components lib` — the census is the evidence; every failure here is owned by `app-structure`:
+   - Zero hits in any `layout.tsx`; providers belong in `components/layout/providers.tsx`, imported as a leaf.
+   - A hit in `app/**/page.tsx` fails unless the line above it is a `//` comment justifying it; the default is a server page composing client leaves.
+   - Return the count: expect ≤15 client files on a brochure/marketing site, over 30 the boundary plan failed → FAIL, DESIGN.
+   - `grep -rl "motion/react" app components | xargs -r grep -L "use client"` → empty, and the same with `-rlE "useState|useEffect|useRef|onClick="`. A hit means the directive belongs at the true leaf, or the interactivity pushes further down — never up.
+6. **Stack relics** — every grep returns nothing:
+   - `ls middleware.ts` → absent. Next 16 uses `proxy.ts` exporting `proxy(request)`.
+   - `grep -rn "framer-motion" package.json app components lib` — the package is `motion`.
+   - `grep -rn "onLoadingComplete" app components` — next/image dropped it; it is `onLoad`.
+   - `grep -rn "priority" app components --include="*.tsx"` — deprecated as an `<Image>` prop; use `preload`.
+   - `grep -rn "tailwind.config\|@tailwind base\|theme.extend" . --exclude-dir=node_modules` — v3 relics; v4.3 is CSS-first via `@theme`.
+   - `grep -rn "import anime from\|@types/animejs" package.json app components lib` — anime.js v3 relics; v4 has no default export and ships its own types (STACK.md); a bare `targets:` means nothing.
+   - `grep -rn "createDraggable" app components lib` and `grep -rnE "ease: *['\"]cubicBezier" app components` — drag is motion's at `domMax`, an engine boundary; the `cubicBezier` string form is silently linear, pass the imported `animeEase.*`.
+   - `grep -rnE "transpilePackages|MeshProps|Object3DNode|MaterialNode|BufferGeometryNode|LightNode|namespace JSX" next.config.* app components` — R3F v8 relics in a v9 world: prop types are now `ThreeElements['mesh']`, JSX augmentation moved into `declare module '@react-three/fiber'`, `transpilePackages: ['three']` is stale on Turbopack (STACK.md).
+   - `grep -n '"@types/three"' package.json` — must equal `three`'s version exactly or that augmentation drifts; `three` is pinned exactly whenever `postprocessing` is present (STACK.md).
+7. **Unused dependencies** — audit `dependencies` only; devDependencies serve tooling:
 
 ```bash
 for dep in $(node -p "Object.keys(require('./package.json').dependencies).join(' ')"); do
@@ -54,30 +61,23 @@ for dep in $(node -p "Object.keys(require('./package.json').dependencies).join('
 done
 ```
 
-   The prefix match catches subpath imports (`from "next/image"` matches `next`). Before uninstalling a hit, confirm it isn't consumed by a root config file (next.config.ts, proxy.ts, drizzle.config.ts) or globals.css (`@import "tailwindcss"`). Then `npm uninstall` it and re-run check 1. A dedicated analyzer (knip) can replace the loop — verify against current docs first.
+   The prefix match catches subpath imports (`from "next/image"` matches `next`). Before reporting a hit, grep the root configs (next.config.ts, proxy.ts, drizzle.config.ts) and globals.css too; the Lead uninstalls, then repeats the Phase 11 preamble and re-dispatches per Pass criteria. `animejs`, `three` and `@react-three/*` are exempt — their commissioning half is check 10.
 
-   `animejs` is the one dependency the loop cannot judge alone, because it is DIRECTION-gated: it passes only with BOTH a `from "animejs"` import under app/components — the import specifier is the only tell, since `animate(` is also motion/react and WAAPI — AND a design/DIRECTION.md line commissioning the SVG moment that earned it. Either half missing is a defect: uninstall it, or send the moment back to ultraweb:direction to be named.
-
-   `three` and the `@react-three/*` packages are judged the same way and for the same reason: they pass only with BOTH a `from "three"` / `from "@react-three/` import under app, components or lib — the import specifier is the only tell, since `<Canvas` and `useFrame(` also appear in comments, prose and dead code — AND a design/DIRECTION.md line commissioning the 3D that earned them: `ultraweb:showpiece` for one set piece, `ultraweb:set-design` **with its route scope and byte budget** for a scene that persists across routes. Either half missing is a defect: uninstall them, or send the moment back to ultraweb:direction to be named.
-
-8. **Token contract + AA, by script:** the `@theme` contract and WCAG AA are computable facts — assert them every build, not once by eye at design time. `node qa/token-contract.mjs` → exit 0. No new dependency (pure `node:fs` + math). It does two things: (a) fails on any `var(--token)` used in `app`/`components` that `app/globals.css` never declares — a typo, or a token renamed in globals.css but not its call sites, silently renders the CSS default; (b) re-derives contrast for every semantic foreground/surface pair (OKLCH tokens, which this stack mandates) — `--foreground`/`--background` plus every `--*-foreground`/`--*` — in BOTH `:root` and `.dark`, failing any below 4.5:1 (loosen to 3:1 per pair only where you know it is large-text-only). This turns ultraweb:color's one-time AA pass into a gate, so weeks of iterate/retrofit can't slip a `text-white`-on-`--warning` pair or a stale token past the other checks.
+8. **Token contract + AA, by script:** the runner puts the script below at `<projectRoot>/qa/token-contract.mjs` with the **Write tool** — a shell heredoc or `>` redirect to a `.mjs` is blocked by the shell-write guard — and runs `node qa/token-contract.mjs` → exit 0. Dependency-free. It fails (a) on any `var(--token)` in `app`/`components` that `app/globals.css` never declares — a typo or a half-finished rename silently renders the CSS default; (b) on any semantic foreground/surface pair below 4.5:1 — `--foreground`/`--background` and every `--*-foreground`/`--*`, re-derived from the OKLCH tokens in BOTH `:root` and `.dark` (3:1 per pair only where you know it is large-text-only). ultraweb:color's one-time AA pass becomes a per-build gate: weeks of iterate cannot slip a stale token or a sub-AA pair past the other checks.
 
 ```js
-// qa/token-contract.mjs — dependency-free; run: node qa/token-contract.mjs
+// qa/token-contract.mjs
 import { readFileSync, readdirSync, existsSync } from "node:fs";
-
 const css = readFileSync("app/globals.css", "utf8");
 const declared = new Set([...css.matchAll(/--([\w-]+)\s*:/g)].map(m => m[1]));
 let fail = 0;
-
-// (1) every var(--token) used in app/components must be declared in globals.css
+// (1) every var(--token) in app/components must be declared in globals.css
 const walk = d => readdirSync(d, { withFileTypes: true }).flatMap(e =>
   e.isDirectory() ? walk(`${d}/${e.name}`) : [`${d}/${e.name}`]);
 for (const f of ["app", "components"].filter(existsSync).flatMap(walk).filter(f => /\.(tsx?|css)$/.test(f)))
   for (const [, t] of readFileSync(f, "utf8").matchAll(/var\(\s*--([\w-]+)/g))
     if (!declared.has(t)) (console.error(`UNDECLARED  var(--${t})  ${f}`), fail = 1);
-
-// (2) WCAG-AA contrast for every foreground/surface pair, in both themes
+// (2) AA contrast for every fg/surface pair, both themes
 const lum = ([L, C, H]) => {                        // oklch -> WCAG relative luminance
   const h = H * Math.PI / 180, a = C * Math.cos(h), b = C * Math.sin(h), cube = x => x ** 3;
   const l = cube(L + .3963377774*a + .2158037573*b),
@@ -103,48 +103,42 @@ for (const [name, sel] of [["root", ":root"], ["dark", "\\.dark"]]) {
 process.exit(fail);
 ```
 
-9. **CSS entropy audit:** check 8 proves every `var(--token)` is declared; this one proves components aren't minting values the system never decided. The emitted stylesheet is the honest census — after `npm run build`, `npx wallace-cli .next/static/css/*.css` (one file per invocation if the glob expands to several). Read its counts against design/SYSTEM.md as ceilings, never equalities:
-   - unique colors ≤ palette + shadcn's base tokens — a long tail of near-duplicates is hardcoded hex/oklch in components
-   - unique font-sizes ≤ the `clamp()` scale length + a small tolerance; Tailwind utilities legitimately emit more, so judge the tail, never assert `==`
-   - `!important` count == 0 — the `@layer` order ultraweb:tokens sets is what overrides shadcn
-   - zero orphaned custom properties (declared in globals.css, referenced nowhere) — the mirror image of check 8's undeclared-token failure
-
-   Every excess traces back to a component. The fix is deleting the stray value, never widening the palette to match the census.
+9. **CSS entropy, the hard half:** the emitted stylesheet is the honest census of what components minted. `npx wallace-cli .next/static/css/*.css` against the build of record (one file per invocation if the glob expands to several) → `!important` count == 0 (the `@layer` order ultraweb:tokens sets is what overrides shadcn) and zero orphaned custom properties, declared in globals.css and referenced nowhere — the mirror image of check 8. Both fail at the declaring file:line, owner `tokens`.
+10. **DIRECTION-gated packages [JUDGMENT → Lead]:** `animejs` passes only with BOTH a `from "animejs"` import under app/components — the specifier is the only tell, since `animate(` is also motion/react and WAAPI — AND a design/DIRECTION.md line commissioning the SVG moment that earned it. `three` and `@react-three/*` are judged identically (`<Canvas`, `useFrame(` also appear in dead code): the import under app, components or lib AND a DIRECTION.md line naming `ultraweb:showpiece` for one set piece, or `ultraweb:set-design` **with route scope and byte budget** for a scene persisting across routes. Either half missing is a defect — uninstall, or send the moment back to ultraweb:direction to be named.
+11. **CSS census [JUDGMENT → Lead]:** the same wallace run read against design/SYSTEM.md as ceilings, never equalities — unique colours ≤ palette + shadcn's base tokens, unique font-sizes ≤ the `clamp()` scale length plus a tolerance (Tailwind utilities legitimately emit more, so the tail is what is judged). Every excess traces to a component: delete the stray value, never widen the palette to match the census.
 
 ## Pass criteria
 
-All nine checks green in ONE final sequential pass after the last fix — any fix invalidates earlier results, so checks 1–4 re-run to completion at the end, and checks 8–9 re-run whenever a fix touched globals.css or a component's tokens. Zero unjustified suppressions (`@ts-ignore`, `eslint-disable`, boundary hits in layouts). Every result recorded as the command's actual output line, not a memory of it.
+Checks 1–9 green in ONE sequential pass and 10–11 ruled, before PASS. Checks 2, 3 and 5–9 read the current source and re-verify a fix on the spot, but the server serves the build of record, not the working tree: any fix that touched source, config, tokens or dependencies has the Lead repeat the Phase 11 preamble first — one rebuild, the new exit code in PROGRESS.md §Now — then re-dispatch `rerunOnly: [1, <the fixed checks>]`: check 1's evidence is that new build, 4 reads the server serving it. A config or token change (globals.css, next.config.ts) widens the re-run to the whole gate. Zero unjustified suppressions. Every result recorded as the command's actual output line, not a memory of it.
 
 ## QA.md entry
+
+Appended by the runner with `cat >> design/QA.md <<'EOF'` — never rewritten, never Read first for an anchor. On `rerunOnly` the append is a dated `### gate-code — re-run <date>` block listing only the re-run checks and their new results.
 
 ```markdown
 ## gate-code — 2026-07-16 — PASS
 | # | Check | Result | Evidence |
 |---|-------|--------|----------|
-| 1 | npm run build | PASS | exit 0 — "Compiled successfully" |
+| 1 | build of record | PASS | qa/build.log exit 0 — "Compiled successfully" |
 | 2 | npx tsc --noEmit | PASS | exit 0, silent |
 | 3 | npx eslint . | PASS | 0 problems |
-| 4 | routes + dev console | PASS | 7/7 routes 200, qa/dev.log clean |
-| 5 | RSC boundary audit | PASS | 9 client files, all leaves, 0 in layouts |
-| 6 | stack relics | PASS | 0 hits across 5 checks |
+| 4 | routes + prod log | PASS | 7/7 routes 200 on :3100, qa/prod.log clean |
+| 5 | RSC boundaries | PASS | 9 client files, all leaves, 0 in layouts |
+| 6 | stack relics | PASS | 0 hits across 10 greps |
 | 7 | unused dependencies | PASS | 11 deps audited, 0 unused |
-| 8 | token contract + AA | PASS | node qa/token-contract.mjs exit 0 — 0 undeclared, 14 pairs ≥4.5:1 |
-| 9 | CSS entropy | PASS | wallace: 19 colors (palette 16 + base), 11 font-sizes (scale 9), 0 !important, 0 orphans |
+| 8 | token contract + AA | PASS | qa/token-contract.mjs exit 0 — 0 undeclared, 14 pairs ≥4.5:1 |
+| 9 | CSS entropy | PASS | wallace: 0 !important, 0 orphans |
+| 10 | DIRECTION-gated deps | PASS | animejs: seal.tsx:12 + DIRECTION.md L41 — Lead ruled commissioned |
+| 11 | CSS census | PASS | 19 colours (palette 16 + base), 11 font-sizes (scale 9) — Lead ruled inside ceiling |
 Issues fixed: removed unused `date-fns`; moved "use client" from app/page.tsx to components/sections/hero.tsx; raised `--muted-foreground` lightness to clear AA in `.dark`.
 ```
 
 ## Anti-patterns
 
 - `next lint` anywhere — removed in Next 16; ESLint CLI only
-- `"strict": false` or `as any` sprinkles to silence tsc — hiding the defect, not fixing it
-- Blanket `/* eslint-disable */` at file top
+- `"strict": false`, `as any` sprinkles, or a blanket `/* eslint-disable */` to silence a tool — hiding the defect, not fixing it
 - `"use client"` slapped on a layout to make a hook error vanish — the error is telling you the boundary is wrong
-- Deleting a failing route or component instead of fixing it
-- Reporting green from a stale `.next` or a build run before the last edit
-- Downgrading next/tailwindcss/motion to dodge an error — hand it to stack-doctor instead
-- Skipping the route sweep because "/" worked — dev compiles per route; unrequested routes are unverified routes
-- Eyeballing contrast once at design time, then stacking new components on top for weeks — an AA-failing pair sails through every other gate; `node qa/token-contract.mjs` re-derives it each build
-- Treating a `var(--token)` typo, or a token renamed in globals.css but not its call sites, as harmless — it silently renders the CSS default; check 8 is the only thing that catches it
+- Downgrading next/tailwindcss/motion to dodge an error — hand `stack-doctor` the log path instead
 
 ## Worked example — Tidepool, first cold pass of the code gate
 

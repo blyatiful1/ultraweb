@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ultraweb measurement fixture</title>
+<!--
+  Fixture for tests/qa-scripts.test.mjs and for hand-probing scripts/measure/*.mjs.
+  Served over http (the test starts a static server; the MCP server refuses file://, and
+  file:// hides the network paths of links-collect, cold-load-js and font-requests).
+  Local siblings only — fixture.js and fixture-face.woff2 — never a third-party origin.
+  Every planted defect is marked with an HTML comment "defect: <kind>"; every defect
+  has a correct counterpart on the same page so each script also produces passes.
+  Themes: light by default, dark by adding class="dark" to <html> (class strategy).
+-->
+<style>
+  :root { --page: #ffffff; --ink: #111111; --faint: #999999; --edge: #d4d4d4; }
+  html.dark { --page: #111111; --ink: #eeeeee; --faint: #666666; --edge: #333333; }
+  body { margin: 0; background: var(--page); color: var(--ink);
+         font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .skip { position: absolute; left: -9999px; top: 0; z-index: 9;
+          padding: 12px 16px; background: #111111; color: #ffffff; }
+  .skip:focus { left: 0; }
+  nav { padding: 16px; border-bottom: 1px solid var(--edge); }
+  nav a { display: inline-block; padding: 10px 0; margin-right: 16px; color: var(--ink); }
+  main > section { padding: 40px 16px; }
+  h1 { font-size: 32px; margin: 0 0 16px; }
+  h2, h3 { font-size: 20px; margin: 24px 0 8px; }
+  p { margin: 0 0 12px; }
+  .faint { color: var(--faint); }
+  .wide { width: 1200px; height: 48px; background: var(--edge); }
+  button { min-height: 44px; font: inherit; }
+  .icon { width: 16px; height: 16px; min-height: 16px; padding: 0; line-height: 0; }
+  .icon-ok { width: 44px; height: 44px; }
+  .no-ring { outline: none; }
+  .no-ring:focus { outline: none; box-shadow: none; }
+  .box { display: inline-block; width: 44px; height: 44px; background: var(--edge); }
+  input, select, textarea { min-height: 44px; font: inherit; display: block; margin: 4px 0 16px; }
+  .check { width: 24px; height: 24px; display: inline-block; }
+  label { display: block; }
+  img { display: block; width: 64px; height: 48px; background: var(--edge); }
+  footer { padding: 24px 16px; border-top: 1px solid var(--edge); }
+  @font-face { font-family: "Fixture Face"; src: url("fixture-face.woff2") format("woff2"); font-display: swap; }
+  .brand { font-family: "Fixture Face", system-ui, sans-serif; font-size: 24px; letter-spacing: 2px; }
+  .error { color: var(--ink); font-weight: 600; }
+  .error-hidden { display: none; }
+  .dialog { position: fixed; inset: 20% 20%; z-index: 10; padding: 24px;
+            background: var(--page); color: var(--ink); border: 1px solid var(--edge); }
+  .dialog[hidden] { display: none; }
+</style>
+</head>
+<body>
+
+<a class="skip" href="#content">Skip to content</a>
+
+<nav aria-label="Primary">
+  <a href="index.html">Home</a>
+  <a href="index.html#content">Work</a>
+  <a href="https://example.com/" target="_blank" rel="noopener">Partner site</a>
+</nav>
+
+<!-- defect: four sections with IDENTICAL padding (main > section { padding: 40px 16px }) — wallpaper rhythm -->
+<main id="content">
+
+  <section id="intro">
+    <h1>Measurement fixture</h1>
+    <!-- the only text in the webfont, so the browser actually fetches fixture-face.woff2 -->
+    <p class="brand">FIXTURE FACE</p>
+    <p>This paragraph is normal body text at full contrast, so the contrast matrix records a passing pair.</p>
+    <!-- defect: low-contrast paragraph (#999 on #fff in light, #666 on #111 in dark) -->
+    <p class="faint">This paragraph is deliberately too faint to reach 4.5:1 in either theme.</p>
+    <!-- defect: skipped heading level (h1 followed by h3) -->
+    <h3>Skipped straight from h1 to h3</h3>
+    <!-- defect: empty heading -->
+    <h2></h2>
+  </section>
+
+  <section id="media">
+    <h2>Artwork and controls</h2>
+    <img src="ok.png" alt="A folded paper crane resting on a dark table">
+    <!-- defect: image without alt -->
+    <img src="missing.png">
+    <!-- defect: filename as alt text -->
+    <img src="hero-shot.png" alt="hero-shot.png">
+    <p>Two icon buttons follow: one named, one not.</p>
+    <button type="button" class="icon-ok" aria-label="Play the showreel">&#9654;</button>
+    <!-- defect: 16x16 icon button with no accessible name (unnamed AND under any sane target size) -->
+    <button type="button" class="icon"></button>
+  </section>
+
+  <section id="signup">
+    <h2>Newsletter</h2>
+    <form action="index.html" method="get">
+      <label for="email-ok">Email address</label>
+      <input id="email-ok" name="email" type="email" autocomplete="email">
+      <!-- control: required AND visibly marked with "*" — must never read as required-unmarked -->
+      <label for="name-ok">Full name *</label>
+      <input id="name-ok" name="name" type="text" autocomplete="name" required aria-required="true">
+      <label for="company">Company</label>
+      <!-- defect: required declared only in code (aria-required) with nothing visible on the label -->
+      <input id="company" name="company" type="text" autocomplete="organization" aria-required="true">
+      <!-- defect: input with no label and no autocomplete ("postal_code" is an autofill field) -->
+      <input name="postal_code" type="text">
+      <!-- control: "Sortieren nach" is no address field — whole-word matching must leave it alone -->
+      <label for="sort-by">Sortieren nach</label>
+      <select id="sort-by" name="sort_by">
+        <option>Neueste zuerst</option>
+        <option>Älteste zuerst</option>
+      </select>
+      <!-- defect: aria-invalid bound to an error node that renders nothing -->
+      <label for="email-bad">Backup email</label>
+      <input id="email-bad" name="backup_email" type="email" autocomplete="email"
+             aria-invalid="true" aria-describedby="email-bad-error">
+      <p id="email-bad-error" class="error error-hidden">Enter a valid address.</p>
+      <!-- control: aria-invalid bound to a VISIBLE role="alert" node — never a no-error-binding -->
+      <label for="email-good">Work email</label>
+      <input id="email-good" name="work_email" type="email" autocomplete="email"
+             aria-invalid="true" aria-describedby="email-good-error">
+      <p id="email-good-error" class="error" role="alert">Enter a valid address.</p>
+      <label for="terms">
+        <input id="terms" class="check" type="checkbox" name="terms" style="display:inline-block">
+        I accept the terms
+      </label>
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+
+  <!-- defect: generic section heading ("Features") -->
+  <section id="features">
+    <h2>Features</h2>
+    <p>Links below cover the good case and two broken ones.</p>
+    <a href="index.html#signup">Jump to the signup form</a>
+    <!-- defect: href="#" dead link -->
+    <a href="#">Dead hash link</a>
+    <!-- defect: link with no text -->
+    <a href="index.html#media" class="box"></a>
+    <!-- defect: internal link to a route that answers 404 -->
+    <a href="/missing-page">A page that is not there</a>
+    <p>The button below is focusable but paints no focus ring.</p>
+    <!-- defect: focusable element with outline:none and no focus style -->
+    <button type="button" class="no-ring">No focus ring</button>
+    <p>The block below is wider than a 375px viewport.</p>
+    <!-- defect: 1200px-wide element inside a 375-friendly layout -->
+    <div class="wide"></div>
+    <p>The dialog below is the keyboard-cycle case: closed until the button opens it.</p>
+    <button type="button" id="open-dialog">Open the dialog</button>
+    <!-- control: a modal whose Tab ring CYCLES (fixture.js) — keyboard-walk's cycledWithin, never trap -->
+    <div class="dialog" id="dialog" role="dialog" aria-modal="true" aria-label="Fixture dialog" hidden>
+      <p>Three focusable buttons. Tab wraps to the first and never pins one.</p>
+      <button type="button" id="dialog-confirm">Confirm</button>
+      <button type="button" id="dialog-cancel">Cancel</button>
+      <button type="button" id="dialog-close">Close</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>Fixture footer. No tracking, no network, no build step.</p>
+</footer>
+
+<script>
+  // Marks the page ready for the measurement scripts; also proves an inline script
+  // never shows up as a script resource entry in cold-load-js.
+  document.documentElement.dataset.fixture = 'ready';
+</script>
+<!-- the real script resource cold-load-js must weigh, and the dialog's Tab cycle -->
+<script src="fixture.js"></script>
+
+</body>
+</html>

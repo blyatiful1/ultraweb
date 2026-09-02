@@ -72,23 +72,8 @@ Source: <path or "none provided"> · <n> files scanned, <n> kept
 
 ## Worked example — Loop & Thread, a shoebox of shop assets
 
-The user says "here's our stuff" and points at `~/loopthread-brand/`. Scan returns 47 files: 31 product photos, a scanned woven label, a 2019 brand PDF, two `.otf` files, an About doc.
-
-- **Photography (31)** — 3000px flat-lays on undyed linen, already the direction's ground. Kept: 18, slotted to `/shop` cards and `/products/[slug]` galleries; the in-hand crops become the hover state `imagery` specs. Rejected: 13 phone shots under 1200px with mixed white balance.
-- **Mark** — `label-scan.jpg`, 1200×800, a photograph of a woven label. Raster-only, so it is flagged for `identity` to formalize as a drawn wordmark referencing the weave, **not traced**. Clear space measures 1× mark height; no mono variant exists; knocked out on dark it dissolves — `identity` inherits both gaps.
-- **Color** — thread green sampled at `oklch(0.42 0.06 148)`. Against the linen ground it computes 3.1:1 — AA fail for body text. Logged as adjusted: `oklch(0.36 0.07 148)`, 5.4:1, hue held, and `color` takes the adjusted value as a candidate for its accent, not as its ramp.
-- **Type** — the 2019 guide names Sofia Pro; the `.otf` pair carries a desktop-only license. Substitution logged, and `typography` commits Fraunces + Karla on its own terms.
-- **Voice** — the About doc yields "small-batch", "undyed", "milled in Donegal"; handed to `copywriting` as vocabulary, and the Du register it already uses is confirmed there.
-
-Rejected alternative: sampling the palette from the product photos instead of the label — the photos are lit warm and would have taught `color` a linen tint that is a lighting accident, not a brand decision.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:brief — upstream; §Pages and §Content inventory supply the slots, and an empty intake writes its line back into §Assumed facts.
-- ultraweb:identity — reads the Mark block: formalizes a client mark, never redraws it, and inherits the missing mono variant and knockout as scoped work.
-- ultraweb:color — reads Color candidates as proposals into its OKLCH ramp; the AA adjustment logged here is already computed, never re-litigated by eye.
-- ultraweb:typography — reads Type: an open-licensed client face may be committed, an unlicensed one arrives as a named substitution with its reason.
-- ultraweb:imagery — reads the photography rows and their ceilings; real client photography replaces generated placeholders and passes the same single treatment.
-- ultraweb:copywriting — reads Voice source for the client's own vocabulary and register; it still writes every string.
-- ultraweb:media-optimization — consumes the Treatment column: dimensions, remote patterns, `blurDataURL`, which shot is the LCP element.
-- ultraweb:direction — owns any reference site the user points at ("our current site is X", "make it like Y"); hand the URL over and let Phase 2 judge it.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

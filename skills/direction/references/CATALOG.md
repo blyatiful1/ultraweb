@@ -1,0 +1,98 @@
+# Direction catalog — 12 archetypes
+
+### 1. Editorial / Magazine
+- **Type:** high-contrast display serif at 4–6× body for headlines; grotesque or humanist sans body at 60–75ch measure; caps eyebrows with +0.08em tracking; pull quotes and drop caps that earn their place.
+- **Color:** paper — warm off-white ground (oklch L≈0.97, warm hue), near-black ink, ONE editorial accent (oxblood, cobalt, or signal-red family) on <5% of the surface.
+- **Motion:** restrained — 150–200ms micro only; at most one 400ms fade-up per section; no parallax.
+- **Use for:** editorial/content sites, magazines, newsletters, long-form marketing, thought-leadership.
+- **Signature moves:** oversized issue-number/date typography as section markers; a full-bleed pull quote at 8–12vw between sections; visible hairline column rules as permanent structure.
+- **Canon** (`award-canon`): Type as Evidence + Type as the Image make the words the picture; Scroll-as-Journey paces the long read — chase The Other Side of Truth's documentary conviction (SOTY 2022).
+
+### 2. Swiss / International
+- **Type:** one neo-grotesque family, 2 weights, nothing else; hard scale jumps (hero 5–8× body); flush-left rag-right; −0.02em tracking on display.
+- **Color:** white/black + ONE saturated primary (signal red, cobalt, or yellow); flat — no gradients, no shadows, depth via borders.
+- **Motion:** instant-feeling — 150ms ease-out micro; reveals slide strictly on grid axes (x or y, never diagonal); no springs.
+- **Use for:** agencies, studios, architecture, conferences, portfolios that want authority.
+- **Signature moves:** visible grid lines as permanent chrome; giant vertically-set labels along viewport edges; index-list hover where rows swap one shared image preview.
+- **Canon** (`award-canon`): Type as the Image + The Three-Token Contract — a monochrome frame with chroma entering only through content, Synchronized Studio's discipline (SOTD 2020).
+
+### 3. Brutalist
+- **Type:** system mono or an aggressive grotesque; ALL-CAPS headers; hero up to 10–15vw; 3–4px underlines; default-blue links allowed as a statement.
+- **Color:** pure white/black plus one clashing accent (acid green, cyan); 1–2px solid borders everywhere shadows would be.
+- **Motion:** abrupt — 150ms at linear or steps(); hover states swap rather than fade; marquees ≤60px/s so they stay readable.
+- **Use for:** art projects, fashion drops, music, event one-pagers, attention-courting portfolios. Never trust-critical domains (finance, health, legal).
+- **Signature moves:** hard-positioned cursor-following element; overlapping z-index collage hero; exposed metadata (file sizes, timestamps, coordinates) as decoration.
+- **Canon** (`award-canon`): Type as the Image at heroic scale; add at most one Prove-It Gesture as the deliberate interaction (KPR/Resn's press-and-hold, SOTY 2022) — never a wall of them.
+
+### 4. Neo-grotesque Minimal
+- **Type:** single grotesque, 2 weights max; hero 3.5–4.5× body — big but calm; body line-height 1.6–1.7; near-zero tracking.
+- **Color:** tinted neutral ramp of 8+ steps; the accent nearly invisible — interactive elements only; contrast comes from spacing, not color.
+- **Motion:** soft and slow — 200–250ms micro, 500–700ms reveals, one expo-style ease-out family; opacity + 8–12px translate only.
+- **Use for:** SaaS/product, developer tools, premium services, designers who don't need to shout.
+- **Signature moves:** one enormous whitespace gap (2–3× normal section spacing) before the key claim; single-word section headers at display scale; 1px hairline dividers as the only ornament.
+- **Canon** (`award-canon`): Type as Evidence + The Three-Token Contract + One Physics + Semantic Motion Only — Lusion v3's quiet shell, loud disciplined motion (SOTY 2023).
+
+### 5. Warm Organic / Humanist
+- **Type:** rounded or humanist sans, or a soft serif; hero 3.5–4× body; comfortable leading; nothing sharp.
+- **Color:** earth-tinted neutrals (cream, clay, sage) in oklch warm hues; ONE working accent (terracotta/clay family) for CTAs; sage or ochre as supporting surface tints, never interactive.
+- **Motion:** gentle low-stiffness springs; 250ms micro; reveals scale from 0.97 + fade; nothing snaps.
+- **Use for:** local businesses, food/hospitality, wellness, crafts, community orgs, nonprofits.
+- **Signature moves:** hand-drawn SVG underline or circle on the key word of the headline; 3–5% opacity grain/paper texture overlay; per-brief cut organic section dividers (drawn for this site — a template wave is slop).
+- **Canon** (`award-canon`): One Material World (one hand-made primitive site-wide) + Invert the Genre Palette + Semantic Motion Only's living idle — Nomadic Tribe's gouache warmth (SOTY 2019).
+
+### 6. Refined Luxury Serif
+- **Type:** high-contrast or old-style display serif at weight ≤500; hero 4–5× body but airy; labels in letter-spaced caps (+0.15em) or small caps; serif body welcome.
+- **Color:** near-monochrome — espresso/charcoal ink on ivory; metallic tones only as hairlines or small marks, never large fills; dark mode reads candlelight, not black.
+- **Motion:** slow and smooth — 400–700ms reveals on a long ease-out; hover image scale 1.0→1.04; nothing bounces, ever.
+- **Use for:** luxury goods, high-end hospitality, jewelry, architecture, premium real estate, fine dining.
+- **Signature moves:** display type set INTO full-bleed imagery; a 4–6s hero image cross-fade sequence; a caps wordmark pinned to the viewport edge on scroll. Symmetry may lead here — but `taste` still requires one deliberate asymmetric moment.
+- **Canon** (`award-canon`): Type as Evidence + One Physics (weighted-fluid easing reads "expensive") + The Persistent Hero Object, all held by The Three-Token Contract's near-monochrome.
+
+### 7. Playful Geometric
+- **Type:** geometric sans, heavy display weights (700–900), rounded terminals welcome; hero 4–6× body; chunky throughout.
+- **Color:** light neutral ground + ONE working accent for CTAs; 2–3 further saturated brights (oklch C 0.15–0.2) as decorative shape/section fills only; color-blocked sections instead of gray dividers.
+- **Motion:** springy — visible overshoot; hover scale 1.05 with ±2–3° rotation; 40–80ms staggered entrances, hero only.
+- **Use for:** kids/education, consumer apps, creative tools, festivals, brands selling fun.
+- **Signature moves:** oversized geometric shapes bleeding off-canvas behind content; physical squash on press (scale 0.95 active); one shape-scale element that reacts to the cursor (via `physics`).
+- **Canon** (`award-canon`): One Physics (springy overshoot) + The Prove-It Gesture + Interaction as Argument — Don't Board Me's cartoon physics (Users'-Choice SOTY 2024).
+
+### 8. Dark Tech — WARNING: the most cliched choice
+The dark-navy-glowing-accents look is the `taste` banned list's "AI startup template". Picking it requires a written DIRECTION.md justification — the audience genuinely lives in dark IDEs/terminals, or the brand already lives dark — plus a differentiating execution. When in doubt, take Neo-grotesque Minimal with dark mode leading instead.
+- **Type:** grotesque + mono pairing — mono for labels, data, and real code set properly; hero 4–5× body.
+- **Color:** near-black tinted ground (oklch L 0.15–0.20 with a hue, never pure #000); ONE glow accent on <5% of the surface; borders at 8–12% white; purple-to-blue gradients stay banned.
+- **Motion:** precise — 150–200ms; terminal-flavored reveals (typing, scan) only if the product is genuinely dev-native; restraint is what separates it from the template.
+- **Use for:** developer tools, infrastructure, security, CLI products — only when the audience lives there.
+- **Signature moves:** a real, typeable terminal / CLI emulator as the hero (the actual product, never a decorative dashboard mockup); low-contrast ambient log-tail animation; keyboard shortcuts surfaced as visible UI. The terminal is the redemption move — a client-side `<Terminal>` the visitor types into, with arrow-key command history and tab-complete over 3–5 real product commands (never invented ones, never faked output), monospace pulled from the type pairing, cursor blink gated on `prefers-reduced-motion`, and a `<noscript>` static-transcript fallback — because real commands force genuinely per-client content no template can fake.
+- **Canon** (`award-canon`): Progressive Spectacle Tiers (DARK/Netflix, Users'-Choice SOTY 2020) + Content-Derived Color (Active Theory v4, SOTY 2018); escape the cliché by reinventing the palette — Invert the Genre Palette (Star Atlas went light and warm) or an ironic, AA-contrast Web1/kitsch register — or by earning the dark look through the typeable-terminal redemption, which still needs the DIRECTION.md justification and adds faked output, invented commands, a decorative gradient-dashboard mockup, and motion-blur blink to the We-will-NOT list.
+
+### 9. Retro-Futurist
+- **Type:** extended/wide grotesque or chrome-era display; caps at +0.1em tracking; mono details for the "system" flavor.
+- **Color:** commit to ONE era, never mixed — 70s (orange/brown/cream), 80s (chrome + sunset tones), Y2K (silver, bubble gloss). An 80s sunset gradient touches the banned list — usable only with the explicit DIRECTION.md justification this archetype provides, and never as gradient body text.
+- **Motion:** era-appropriate at 200–250ms micro; chrome shine sweeps, subtle scan lines; no true flashing (WCAG 2.2), reduced-motion path mandatory.
+- **Use for:** music/entertainment, fashion, gaming, event brands, nostalgia-trading products.
+- **Signature moves:** chrome-gradient treatment on the ONE hero headline only; a grid-horizon or starfield canvas backdrop (gated by `showpiece`); era-correct sticker/badge cluster elements.
+- **Canon** (`award-canon`): Invert the Genre Palette + One Material World (analog grain) + Fake-Depth Before Real Depth — Prometheus Fuels' warm-analog conviction (SOTY 2021).
+
+### 10. Soft Depth
+- **Type:** friendly grotesque or humanist sans, medium weights; hero 3.5–4.5× body.
+- **Color:** light tinted ground with 3–4 layered surface tints as elevation steps; mid-chroma accent; shadows TINTED with the ground hue, never gray-on-white; 2–3 elevation levels max.
+- **Motion:** smooth lift — hover raises elevation (shadow + 2–4px translate-y) in 200ms; layered parallax capped at 8–12px offsets; light springs.
+- **Use for:** consumer SaaS, approachable fintech, productivity tools, health apps.
+- **Signature moves:** floating product-UI card collage hero at slight z-offsets; a consistent light-source narrative — every shadow cast from one angle site-wide; pressed-state surfaces that go inset. Glassmorphism stays banned; this archetype is its disciplined replacement, not its excuse.
+- **Canon** (`award-canon`): Fake-Depth Before Real Depth (layered 2D, baked light, matcaps — "no lights, just illusions") + One Physics — Bruno Simon's warm faux-3D (SOTY 2019).
+
+### 11. Data-Dense Utilitarian
+- **Type:** mono or grotesque with tabular numerals mandatory; body 14px minimum, leading 1.4; caps labels at 11–12px +0.06em; the hero still hits the 3.5× `taste` floor — everything else stays small.
+- **Color:** quiet tinted ground; chroma reserved for data semantics (status, deltas, categories) — chart colors ARE the palette; AA verified at small sizes, not eyeballed.
+- **Motion:** near-none — 150ms state changes; numbers tick; zero decorative reveals; skeletons match real layout exactly (`ui-states`).
+- **Use for:** dashboards, analytics, pro fintech, admin panels, consoles, live-data products.
+- **Signature moves:** a live-updating stat or feed as hero proof; one dense table treated as the typographic centerpiece; row counts, timestamps, and coordinates as designed chrome.
+- **Canon** (`award-canon`): Type as Evidence + Weight as a Feature + Semantic Motion Only; embody a hero stat with Framed Data (the number in a thematic SVG frame — real DOM text + static fallback) — Orano's instrument aesthetic (Dev SOTY 2018).
+
+### 12. Art-House Immersive
+- **Type:** experimental display faces at 10–20vw — type as image; body text minimal and staged, appearing in defined moments.
+- **Color:** cinematic — deep grounds, imagery leads; palettes may shift per scene, but every scene keeps the one-working-accent discipline and all values stay in `@theme` tokens.
+- **Motion:** the medium itself — scroll-driven scenes and canvas/WebGL set pieces carry 60–70% of the design effort; 60fps verified on mid hardware, static fallback mandatory, reduced-motion serves full content statically (`showpiece` gates a single set piece; a scene that persists across routes is gated by `ultraweb:set-design`, which needs the route scope and the byte budget named here too).
+- **Use for:** portfolio/agency showpieces, campaign microsites, film/music releases. Never conversion-critical or content-heavy sites.
+- **Signature moves:** a scroll-scrubbed frame or 3D sequence as the narrative spine; display type that assembles or distorts with scroll velocity (`physics`); one continuous scene the whole site inhabits, each route a window of one camera clip (`ultraweb:set-design`; `page-transitions` keeps the route grammar).
+- **Canon** (`award-canon`): The Persistent Hero Object + One Material World + Scroll-as-Camera + The Loader is the Overture + The Masked Cut, all under Progressive Spectacle Tiers + Weight as a Feature — Igloo (SOTY 2024), Lusion v3 (SOTY 2023), hirotos.com (SOTD + Developer Award 2026 — mechanism and cautionary, not a design exemplar). Borrow the principle; the canvas-only surface rarely lasts.

@@ -8,6 +8,7 @@
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
+import { STUBS, sections } from './split-references.mjs';
 
 const root = process.argv[2] ? resolve(process.argv[2]) : join(dirname(fileURLToPath(import.meta.url)), '..');
 // Normalize CRLF so a Windows checkout (core.autocrlf) lints identically to CI.
@@ -67,19 +68,45 @@ for (const d of skillDirs) {
   if (!readme.includes(`\`${d}\``)) fail(`README.md: skill "${d}" missing from the studio-floor table`);
 }
 
-// ---- 5. Agent model pins match the routing table's story
-for (const [agent, model] of [['design-judge', 'opus'], ['pixel-qa', 'sonnet'], ['stack-doctor', 'opus']]) {
-  const src = read(`agents/${agent}.md`);
-  if (!new RegExp(`^model:\\s*${model}$`, 'm').test(src)) fail(`agents/${agent}.md: model pin is not "${model}"`);
+// ---- 5. Agents: every bundled agent is in the routing map with its tier, and the pin matches
+const AGENT_MODELS = { 'design-judge': 'opus', 'pixel-qa': 'sonnet', 'stack-doctor': 'opus', 'gate-runner': 'sonnet' };
+const agentFiles = readdirSync(join(root, 'agents')).filter(f => f.endsWith('.md')).map(f => f.replace(/\.md$/, '')).sort();
+for (const a of agentFiles) {
+  const expected = AGENT_MODELS[a];
+  if (!expected) { fail(`agents/${a}.md: not in the routing map (AGENT_MODELS in this linter) — add it with its tier`); continue; }
+  if (!new RegExp(`^model:\\s*${expected}$`, 'm').test(read(`agents/${a}.md`))) fail(`agents/${a}.md: model pin is not "${expected}"`);
+}
+for (const a of Object.keys(AGENT_MODELS)) if (!agentFiles.includes(a)) fail(`agents/${a}.md: missing (the routing map names it)`);
+if (agentFiles.includes('gate-runner')) {
+  const tools = read('agents/gate-runner.md').match(/^tools:\n((?:[ \t]+-[ \t]+.+\n)+)/m);
+  if (tools && !(/-\s+Skill\b/.test(tools[1]) && /-\s+Bash\b/.test(tools[1]))) fail('agents/gate-runner.md: a tools: list must include Skill and Bash (it loads gates with the Skill tool and runs commands)');
+}
+// The Lead's context budget depends on the agents' return caps staying in their files.
+for (const [a, cap] of [['gate-runner', '≤400 tokens'], ['pixel-qa', '≤500 tokens'], ['design-judge', '≤700 tokens']]) {
+  if (agentFiles.includes(a) && !read(`agents/${a}.md`).includes(cap)) fail(`agents/${a}.md: return cap "${cap}" missing — the Lead's context budget depends on it`);
 }
 
-// ---- 6. references/ pointers resolve
+// ---- 6. references/ pointers resolve (per skill, and at the repo root)
 for (const d of skillDirs) {
   const src = read(`skills/${d}/SKILL.md`);
-  for (const m of src.matchAll(/references\/([a-zA-Z0-9._-]+\.md)/g)) {
+  // Bare `references/<file>.md` means THIS skill's directory; a path like <plugin>/skills/other/references/X.md is another skill's and is skipped.
+  for (const m of src.matchAll(/(?<![\w/])references\/([a-zA-Z0-9._-]+\.md)/g)) {
     if (!existsSync(join(root, 'skills', d, 'references', m[1]))) fail(`skills/${d}: points at references/${m[1]} which does not exist`);
   }
 }
+for (const m of read('SKILL.md').matchAll(/(?<![\w/])references\/([a-zA-Z0-9._-]+\.md)/g)) {
+  if (!existsSync(join(root, 'references', m[1]))) fail(`SKILL.md: points at references/${m[1]} which does not exist at the repo root`);
+}
+// Qualified cross-skill pointers (<plugin>/skills/<slug>/references/<file>.md) resolve against the named skill.
+for (const p of mdFiles) {
+  for (const m of read(p).matchAll(/skills\/([a-z0-9-]+)\/references\/([a-zA-Z0-9._-]+\.md)/g)) {
+    if (!existsSync(join(root, 'skills', m[1], 'references', m[2]))) fail(`${p}: points at skills/${m[1]}/references/${m[2]} which does not exist`);
+  }
+}
+// The README's version badge must match plugin.json — releases have shipped with it one version behind.
+const pluginVersion = JSON.parse(read('.claude-plugin/plugin.json')).version;
+const vbadge = read('README.md').match(/version-([\d.]+)-/);
+if (vbadge && vbadge[1] !== pluginVersion) fail(`README.md: version badge says ${vbadge[1]}, plugin.json says ${pluginVersion}`);
 
 // ---- 7. No bare package-version literals creeping into prose (versions live in stack/versions.json)
 const versionProseFiles = [...skillDirs.map(d => `skills/${d}/SKILL.md`), 'STACK.md', 'README.md'].filter(p => existsSync(join(root, p)));
@@ -95,7 +122,7 @@ const clients = [...cast.matchAll(/^## (?!Known)(.+)$/gm)].map(m => m[1].trim())
 for (const d of skillDirs) {
   const src = read(`skills/${d}/SKILL.md`);
   const we = src.match(/^## Worked example[^\n]*/m);
-  if (!we) { if (!['taste', 'award-canon'].includes(d)) warn(`skills/${d}: no ## Worked example section`); continue; }
+  if (!we) { if (d !== 'taste') warn(`skills/${d}: no ## Worked example section`); continue; }
   if (clients.length && !clients.some(c => we[0].includes(c.split(' (')[0]))) warn(`skills/${d}: worked example "${we[0].slice(3, 80)}" names no CAST.md client`);
 }
 
@@ -103,6 +130,41 @@ for (const d of skillDirs) {
 const manifest = JSON.parse(read('stack/versions.json'));
 const age = Math.floor((Date.now() - new Date(manifest.verified)) / 86400000);
 if (age > 30) warn(`stack/versions.json: verified ${manifest.verified} is ${age} days old (>30) — run scripts/verify-stack.mjs`);
+
+// ---- 10. Progressive disclosure: inline Worked-example / Composes-with bodies must be the standard stub.
+// The Lead carries every SKILL.md it loads for the rest of the session; examples and compose maps live in
+// references/ and are read only when a build's case needs them. (taste has no example by design.)
+for (const d of skillDirs) {
+  if (d === 'taste') continue;
+  const lines = read(`skills/${d}/SKILL.md`).split('\n');
+  for (const s of sections(lines)) {
+    if (!s.heading) continue;
+    const kind = /^## Worked example/.test(s.heading) ? 'example' : /^## Composes with/.test(s.heading) ? 'composes' : null;
+    if (!kind) continue;
+    const body = lines.slice(s.start + 1, s.end).join('\n').trim();
+    if (body !== STUBS[kind]) fail(`skills/${d}: "${s.heading.slice(3, 40)}" body is inline (${body.length} chars) — run scripts/split-references.mjs; only the standard stub belongs in SKILL.md`);
+  }
+}
+
+// ---- 11. Subagent-count claims agree with agents/ ("N subagents", "Three specialists"; skill counts are >10 and skipped)
+const COUNT_WORDS = { two: 2, three: 3, four: 4, five: 5, six: 6 };
+for (const p of countFiles) {
+  if (!existsSync(join(root, p))) continue;
+  for (const m of read(p).matchAll(/\b(\d+|two|three|four|five|six)\s+(?:model-routed\s+|bundled\s+)?(?:subagents|specialists)\b/gi)) {
+    const n = /^\d+$/.test(m[1]) ? Number(m[1]) : COUNT_WORDS[m[1].toLowerCase()];
+    if (n > 10) continue;
+    if (n !== agentFiles.length) fail(`${p}: claims "${m[0]}" but agents/ holds ${agentFiles.length}`);
+  }
+}
+
+// ---- 12. Measurement-library mentions resolve to scripts/measure/<name>.mjs
+const measureDir = join(root, 'scripts', 'measure');
+const measureFiles = existsSync(measureDir) ? readdirSync(measureDir).filter(f => f.endsWith('.mjs')) : [];
+for (const p of mdFiles) {
+  for (const m of read(p).matchAll(/scripts\/measure\/([A-Za-z0-9_-]+\.mjs)/g)) {
+    if (!measureFiles.includes(m[1])) fail(`${p}: mentions scripts/measure/${m[1]} which does not exist`);
+  }
+}
 
 console.log(`\n${fails} failure(s), ${warns} warning(s) across ${skillDirs.length} skills (+ root = ${expectedCount}).`);
 process.exit(fails ? 1 : 0);

@@ -76,23 +76,8 @@ No two adjacent sections on a page share a layout pattern — counting ALL neigh
 
 ## Worked example — SaaS landing feature stack
 
-SITEMAP.md lists: hero, logo wall, 3 core capabilities (each with product screenshot), a 4-step onboarding story, 6 secondary features, pricing. A passing order:
-
-1. Hero (typographic, from `ultraweb:hero`) → 2. logo wall (compressed band, `ultraweb:social-proof`)
-3. Alternating split ×3 for the core capabilities — paragraphs + screenshots fit the shape
-4. Sticky-scroll showcase for onboarding — sequential story, one evolving visual, contrast against the splits above
-5. Bento grid for the 6 secondary features — one spans 2 cols (the strongest), dark band background for release after the sticky section
-6. Pricing (contained, light) → FAQ (accordion list — differs from the contained pricing table in pattern and density)
-
-Every neighbor pair differs in pattern AND in at least one of background/width/density. That is the bar.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:wireframe — upstream owner of section order; adjacency conflicts get fixed there first.
-- ultraweb:cards — designs bento cells and any card-shaped feature entries.
-- ultraweb:layout-grid — the grid, container widths, and compression/release rhythm these patterns live on.
-- ultraweb:scroll-motion — entrance reveals and useScroll wiring for the sticky showcase.
-- ultraweb:copywriting — feature headlines and body; a weak-looking pattern is often weak copy.
-- ultraweb:imagery — the visuals in splits and bento hero cells; never gray boxes.
-- ultraweb:gate-antislop — greps the built sections for the three-identical-cards pattern and adjacency twins this skill guards against; a slip fails there, not here.
-- ultraweb:icons — supplies the icon set and stroke-width discipline for any single icon placed in a bento cell or list entry — never three identical icon-cards.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

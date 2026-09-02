@@ -94,29 +94,8 @@ The motif must appear ≥3 places or be cut — a single occurrence reads as an 
 
 ## Worked example — Loop & Thread, geometry for a handmade-textiles shop
 
-DIRECTION.md reads "Soft Craft — tactility through generous radius, close-up photography, unhurried motion." Generous radius is stated intent, so the archetype maps to **Round** (1–1.5rem band), the whole column shifted up one notch:
-
-```css
-@theme {
-  --radius-sm: 0.625rem;  /* review pills, chips */
-  --radius-md: 0.875rem;  /* buttons, form fields */
-  --radius-lg: 1.25rem;   /* product cards */
-  --radius-xl: 1.5rem;    /* hero media, /journal covers */
-}
-```
-
-The flat-lay→in-hand hover image sits in a `--radius-lg` card with `p-2` (0.5rem), so it takes `rounded-[calc(var(--radius-lg)-0.5rem)]` = 0.75rem — concentric, no drifting corner behind the crop. Motif family: **Arc & capsule** — capsule "small-batch" tags on shop cards, an arced SVG divider (fill = the shop grid's linen) between hero and grid, and a thread-spool circle accent in the footer: three placements, so it stays.
-
-Rejected **Stamp & notch** (ticket-edge product cards): the notched-coupon look reads as discount commerce and undercuts the unhurried, handmade calm the palette (`oklch(0.94 0.012 80)` linen, `oklch(0.45 0.08 265)` indigo) is buying.
-
-Output lands in design/SYSTEM.md §shape; the four `--radius-*` tokens hand to ultraweb:tokens, which writes them into app/globals.css `@theme`, and ultraweb:cards pulls the concentric calc for every `/products/[slug]` gallery frame.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:direction — the archetype dictates the radius personality and motif family.
-- ultraweb:tokens — the scale ships as `--radius-*` tokens in app/globals.css `@theme`.
-- ultraweb:cards — heaviest consumer of the concentric formula (images and media inside cards).
-- ultraweb:buttons — button/input radii come from `--radius-md`; input-group nesting uses the formula.
-- ultraweb:imagery — image masks and background patterns borrow this skill's geometry; imagery owns texture, shape owns form.
-- ultraweb:gate-antislop — sweeps for uniform rounded-xl, blob SVGs, and default dividers.
-- ultraweb:icons — SVG accents and motif glyphs match lucide's icon stroke-width so decoration and UI icons read as one weight.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

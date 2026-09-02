@@ -37,9 +37,9 @@ CP6 has a hard precondition: no gate in design/QA.md is FAIL before the user see
 
 ## Process
 
-1. Assemble the presentation per the table — summary first, artifacts attached. Screenshots wherever the artifact is visual; never describe pixels in prose when a screenshot exists.
+1. Assemble the presentation per the table — summary first, artifacts attached. Screenshots wherever the artifact is visual; never describe pixels in prose when a screenshot exists. **The screenshots are for the human's eyes.** At CP4 and CP6 you attach the full-page captures without opening them; you yourself view at most two images per checkpoint — viewport frames, or the crop of the spot actually in question. Narrating captures the user is already looking at buys the review nothing and spends the window the rest of the build needs.
 2. Ask ONE structured question (AskUserQuestion): **Approve** (first option) / **Request changes** / at CP2–CP4 also **Bigger problem — revisit direction/scope**. Free text always available. Never ask open-ended "thoughts?" — the studio proposes, the client disposes.
-3. Log the round in design/REVIEWS.md (format below), verdict near-verbatim. When `~/.claude/ultraweb/` exists, also append the verdict's operative words to `~/.claude/ultraweb/taste.md` (the cross-build taste fingerprint — see `ultraweb:mockup` §Fingerprint for its rules; this skill only ever appends observations, never reads them into a verdict).
+3. Log the round in design/REVIEWS.md (format below), verdict near-verbatim. **REVIEWS.md is a ledger: appended, never rewritten.** When it is already in this context, append with an Edit anchored on its last line; when it is not (fresh session, resume, a file another context wrote), append with a shell `>>` heredoc — an append cannot destroy content and needs no Read. The engagement/tier header is written once, when the file is created, and never touched again. When `~/.claude/ultraweb/` exists, also append the verdict's operative words to `~/.claude/ultraweb/taste.md` (the cross-build taste fingerprint — see `ultraweb:mockup` §Fingerprint for its rules; this skill only ever appends observations, never reads them into a verdict).
 4. On **Request changes**: treat the reply as ONE consolidated round. Route each item to its owning skill (table below), apply, re-present ONLY what changed. This is a revision round, not a new build.
 5. Round discipline: **two consolidated rounds per checkpoint.** A third request means the problem is not at this checkpoint — something upstream is wrong. Stop revising, name the upstream phase, reopen it deliberately (via `ultraweb:iterate` semantics), and log the escalation. This mirrors industry practice: 2–3 rounds is the standard, and endless polishing is a scope failure, not diligence.
 6. On **Approve** (or unattended): write the Approved line and continue the pipeline. Downstream phases may verify the line exists exactly as Phase 3 verifies MOCKUPS.md's.
@@ -62,7 +62,7 @@ Routing through the owning skill keeps the artifact contract intact: the fix lan
 
 ```md
 # Reviews — <working site name>
-Engagement level: <hands-off | guided | studio> — <how it was set: user words / default / unattended>
+Engagement level: <hands-off | guided | studio> · Scope: <sketch | standard | flagship> — <how it was set: user words / default / unattended>
 ## CP4 — First-page review
 Presented: homepage at /, screenshots 375+1440 (design/screenshots/cp4/)
 Round 1: "nav feels heavy, otherwise great" → routed: navigation (weight variant)
@@ -72,7 +72,7 @@ Presented: 7/7 gates green, per-route screenshots, click-list (form, cart, 404)
 **Approved** — cleared for ship
 ```
 
-One block per activated checkpoint, in pipeline order. `**Approved**`, `**Approved with notes**`, or `**Auto-passed (unattended)**` — a checkpoint block without one of these is an open checkpoint, and Phase 12 refuses to run past an open CP6 the same way it refuses a red gate.
+The header line lands once, at creation; every later write appends one block to the end. One block per activated checkpoint, in pipeline order. `**Approved**`, `**Approved with notes**`, or `**Auto-passed (unattended)**` — a checkpoint block without one of these is an open checkpoint, and Phase 12 refuses to run past an open CP6 the same way it refuses a red gate.
 
 ## Anti-patterns
 
@@ -84,6 +84,8 @@ One block per activated checkpoint, in pipeline order. `**Approved**`, `**Approv
 - Letting the user first-QA a broken site — CP6 strictly after gates are green
 - Inner pages built before the homepage is approved at CP4 (guided/studio) — rolls unverified system decisions across the site
 - Re-presenting the whole site after a change round — show what changed, link the rest
+- Rewriting REVIEWS.md to slot a block in or tidy an old verdict — the ledger only grows, and a correction is a new line under the block it corrects
+- Reading every full-page capture yourself before handing it over — two images per checkpoint, and the human reads the rest
 
 ## Worked example — Kaffeewerk Ost, guided level
 

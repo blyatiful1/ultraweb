@@ -11,7 +11,7 @@ headings  /practice/litigation H1→H2 = "Litigation / Our Approach / Team / FAQ
           a table of contents, not offer→proof→ask for "book a consultation"
 micro     /contact consultation form shipped a bare "Submit"; the "Cancel appointment?"
           dialog offered [Yes]/[No] and named no consequence
-price     N/A — Ledger & Lane sells no discounted goods; item 6 logged N/A (the brief-gate holding)
+price     N/A — Ledger & Lane sells no discounted goods; check 10 logged N/A (the brief-gate holding)
 voice     /insights/data-breach-duties drifted into corporate-generic ("leverage our
           expertise") against the firm's declared "measured, plainspoken authority"
 links     footer bar-association disclosure used href="#" — 0 of 3 disclosures resolved
@@ -25,7 +25,7 @@ We'll release the slot." + [Keep it] / [Cancel appointment] (ultraweb:copywritin
 ultraweb:ui-states); the drifting insights article rewritten to the firm's register (ultraweb:copywriting).
 Re-run PASS: 6/6 titles unique (max 57ch), descriptions 142–159ch, 1 H1/page, 24 internal 200 ·
 0 bare labels, cancel dialog names its consequence · voice within one tone-point across 7 sections ·
-item 6 N/A (no discounted goods in the brief).
+check 10 N/A (no discounted goods in the brief).
 
 Rejected: a static `metadata` export on [slug] to dodge the await bug — it stamps one article's
 title onto every slug, and the gate samples 3 real slugs and re-fails it. Handoff: QA.md flips to

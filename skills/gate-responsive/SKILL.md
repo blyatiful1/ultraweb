@@ -1,66 +1,61 @@
 ---
 name: gate-responsive
-description: Breakpoint quality gate — delegates to the pixel-qa subagent to drive a real browser over every route at 375×812, 768×1024, and 1440×900. Screenshots each combination, evaluates document.documentElement.scrollWidth against clientWidth for horizontal overflow, measures every interactive element against the 44px touch-target floor via getBoundingClientRect, and exercises the mobile menu end to end (open, screenshot, tap, navigate). Defects route to the owning skill, then the sweep re-runs until one full pass is clean. Invoke in Phase 11 of the ultraweb pipeline after gate-code is green, after any layout/navigation/grid change to an ultraweb site, or when the user says "check responsive", "test it on mobile", "does it work at 375", or "run the breakpoint sweep". Writes pass/fail with screenshot paths to design/QA.md.
+description: Breakpoint quality gate — executed by the gate-runner agent against the production server of record. Drives a real browser over every route in design/SITEMAP.md at 375×812, 768×1024 and 1440×900, saves a capture per combination under qa/ as the runner's evidence for the Lead and gate-antislop, measures overflow and the 44px touch-target floor with the measurement library, and exercises the mobile menu, one interaction per route, and the console. Invoke in Phase 11 after gate-code is green, on an iterate re-gate, after any layout or navigation change, or when the user says "check responsive", "test it on mobile", "does it work at 375", or "run the breakpoint sweep". Appends pass/fail with screenshot paths to design/QA.md.
 ---
 
 # gate-responsive — three widths, zero excuses
 
-**Stage:** Phase 11 — Gates (after gate-code; needs a serving app) - **Reads:** running dev server, design/SITEMAP.md (route list), agents/pixel-qa.md - **Writes:** design/QA.md entry + qa/*.png screenshots + layout fixes
+**Stage:** Phase 11 — Gates, second of six: code → **responsive** → antislop → content → accessibility → performance - **Executed by:** the `gate-runner` agent against the **production server of record** the Lead built and started in the Phase 11 preamble (`mkdir -p qa && rm -rf .next && npm run build > qa/build.log 2>&1`, then `PORT=3100 npm start > qa/prod.log 2>&1 &`; root SKILL.md) - **Reads:** `design/SITEMAP.md`, `prodUrl` - **Writes:** `design/QA.md` (append) + `qa/<route>-<width>.png` + `qa/gate-responsive.log`
 
 ## Standard
 
-Deliberate at 375, 768, AND 1440 — three designed layouts, not one desktop layout squeezed. Empirical throughout: every claim in this gate is backed by a screenshot file on disk or a browser-evaluated number captured by pixel-qa. Zero horizontal scroll anywhere, zero interactive targets under 44×44 CSS px, no stranded grid orphans at tablet, and a mobile menu that provably opens and navigates.
+Deliberate at 375, 768 AND 1440 — three designed layouts, not one desktop layout squeezed. Every claim below is a PNG on disk or a number the measurement library returned — never an impression.
 
 ## Checklist
 
-1. Full sweep: every route × 375/768/1440 screenshotted
-2. Zero horizontal overflow at any combination
-3. Touch targets ≥44×44px at 375
-4. Mobile menu opens, navigates, closes
-5. No orphan layouts at 768 (the forgotten middle)
-6. Browser console clean at all breakpoints
+1. Every route × 375/768/1440 captured to `qa/<route>-<width>.png` [MEASURED]
+2. Zero horizontal overflow at every route × width [MEASURED]
+3. Every interactive target ≥44×44 CSS px at 375 [MEASURED]
+4. Mobile menu opens, navigates, closes at 375 [OBSERVED]
+5. One primary interaction per route exercised without a visual break [OBSERVED]
+6. No orphan layouts at 768; no letterboxed media or runaway measure at 1440 [OBSERVED]
+7. Browser console clean at every route × width [OBSERVED]
+8. Each width looks deliberate — designed, not squeezed [JUDGMENT → design-judge, ruled in gate-visual round 1; evidence: this gate's three capture paths per route, cross-reference]
 
 ## How to verify
 
-Delegate the sweep to the **pixel-qa subagent** (agents/pixel-qa.md) — hand it the dev-server URL and the full route list from design/SITEMAP.md. It drives Playwright MCP; you read its report and route fixes. Never eyeball-and-grade in your own context what a subagent can measure.
+**Runner contract.** The Lead dispatches this gate to `gate-runner` and never loads this file.
+In: `gate` · `pluginRoot` · `projectRoot` · `prodUrl` (`http://localhost:3100`) · `devUrl` · `artifacts` · `tier` · `market` · `themeStrategy` · `rerunOnly` (optional — run only those checks).
+Out: verdict `PASS` | `PASS-ON-MEASURED` | `FAIL` | `UNVERIFIED`; each failed check as `check · file:line · one line · owner skill · MECHANICAL|DESIGN`; check 8's judgment-open evidence; the QA.md entry appended; `qa/gate-responsive.log`.
+Full stdout/stderr of every failing or unverified command goes to `<projectRoot>/qa/gate-responsive.log` — the return carries the path, never the contents.
+Never: `npm run build`, `npm start`, `npm run dev`, `rm -rf .next`, `npm install`, any source or `design/*` edit other than the QA.md append.
 
-1. **Sweep:** pixel-qa resizes to 375×812 / 768×1024 / 1440×900, navigates each route, waits for network idle, saves `qa/<route>-<width>.png`. A breakpoint without its file was not checked — pixel-qa's own rule; enforce it when reading the report.
-2. **Overflow:** at each route × breakpoint, pixel-qa evaluates `document.documentElement.scrollWidth > document.documentElement.clientWidth` → must be `false` (clientWidth excludes the scrollbar; innerWidth does not, and hides up to ~15px of overflow). On `true`, locate the culprit before fixing:
+1. **Sweep [1].** Routes from `design/SITEMAP.md`. Per route × 375×812 / 768×1024 / 1440×900: resize, navigate `<prodUrl><route>`, wait for network idle, save to `<projectRoot>/qa/<route>-<width>.png` (route `/` → `home`). A combination without its file was not checked (`ls qa/*-375.png | wc -l` = route count, likewise 768/1440). Name every path in the QA.md entry: gate-antislop's runner pass reads them instead of re-shooting; gate-visual round 1 shoots its own frames and cross-references these.
+2. **Overflow [2].** Per route × width, `<plugin>/scripts/measure/overflow-culprits.mjs` via `browser_run_code_unsafe` (`filename:`). Asserts `!overflowX` — `documentElement.scrollWidth > clientWidth` (`innerWidth` counts the scrollbar and hides ~15px of overflow); `culprits[]` (`selector,text,left,right,width`) are the elements whose `right` passes `innerWidth`, deepest first — the file:line leads. Re-evaluate per route; client-side navigation carries state.
+3. **Targets [3].** At 375 only, per route: seed `window.__ultraweb` with `{threshold:44}` (one `browser_evaluate` per navigation; WCAG's floor is 24, ultraweb ships 44), then `<plugin>/scripts/measure/targets.mjs`. Asserts `small.length === 0`; read `small[]` (`selector,text,w,h`) and `count`. Links inline in a paragraph are exempt (WCAG 2.5.8); nav links, icon buttons, accordion triggers and form controls are not.
+4. **Menu [4].** At 375: open the trigger, capture `qa/<route>-375-menu.png`, tap a nav link, confirm the URL changed and the route rendered, close it. A menu that opens but strands the user is a defect; an undersized trigger is check 3's.
+5. **Interaction [5].** One primary control per route (hero CTA, form submit, accordion, tab strip): activate it at 375 and report what the page did — clipped panel, off-screen overlay, layout break, or nothing wrong.
+6. **Orphans [6].** Read the 768 captures: a 3-column grid collapsing to 2 strands the third item alone. At 1440: letterboxed hero media, body measure past ~75ch.
+7. **Console [7].** Collect console messages at every route × width. Any error or hydration warning is a defect: hydration mismatches surface HERE, not in gate-code's terminal check.
+8. **Deliberate [8].** JUDGMENT → design-judge, ruled in gate-visual round 1 from its own 375/768/1440 frames in `qa/visual/round-1/`; forward this gate's three capture paths per route as cross-reference, never a rating.
 
-```js
-[...document.querySelectorAll('*')]
-  .filter(el => el.getBoundingClientRect().right > innerWidth + 1)
-  .slice(0, 5).map(el => `${el.tagName}.${el.getAttribute('class') ?? ''}`)
-```
+Fallback for checks 2/3 (Phase 0 recorded `measure-library: unavailable`): the inline snippets — `git -C <plugin> show V1.8.0:skills/gate-responsive/SKILL.md`, a git checkout only; in a marketplace snapshot checks 2 and 3 go UNVERIFIED.
 
-   Usual suspects: unwrapped tables and code blocks, fixed-width hero art, negative-margin bleeds without a clipping section, 100vw used where 100% was meant.
-3. **Touch targets** at 375, per route — this evaluation returns an empty array:
+## Fix routing
 
-```js
-[...document.querySelectorAll('a,button,input,select,textarea,summary,[role="button"]')]
-  .map(el => ({ el, r: el.getBoundingClientRect() }))
-  .filter(({r}) => r.width > 0 && r.height > 0 && (r.width < 44 || r.height < 44))
-  .map(({el, r}) => `${el.tagName}.${el.className} ${Math.round(r.width)}×${Math.round(r.height)}`)
-```
-
-   Links inline in a paragraph are exempt (the WCAG 2.5.8 inline exception); everything else — nav links, icon buttons, accordion triggers, form controls — holds 44. WCAG's legal floor is 24px; ultraweb ships 44.
-4. **Mobile menu** at 375: open the trigger, screenshot the open state (`qa/<route>-375-menu.png`), tap a nav link, verify the URL changed and the target route rendered. A menu that opens but traps the user is a fail; so is a trigger under 44px (check 3 catches it).
-5. **Orphans** — read the 768 captures specifically: a 3-column grid collapsing to 2 strands the third item alone — fix by going 2-up at md or spanning the orphan deliberately (layout-grid owns the pattern). At 1440: body text lines over ~75ch and hero media letterboxed by an unconsidered aspect ratio are the same class of defect.
-6. **Console:** pixel-qa captures console messages at every route × breakpoint; any error or hydration warning is a defect, not noise — hydration mismatches surface HERE, not in gate-code's terminal check.
-
-## Fix loop
-
-Route each defect to its owner and fix there — never patch with a stray `overflow-hidden`: overflow and orphans → layout-grid; menu breaks → navigation; undersized targets → buttons (nav links → navigation); console errors → gate-code territory, fix before continuing. After fixes, re-run pixel-qa on the affected routes only; once every defect is closed, run ONE full sweep of all routes × all breakpoints — pass is judged on that final sweep alone.
+Overflow and orphans → `layout-grid`; menu breaks → `navigation`; undersized targets → `buttons` (nav links → `navigation`), then re-check neighbors for overlap; console errors → gate-code territory, fixed before the next gate. A fix that touched source, config, tokens or dependencies repeats the Phase 11 preamble first — the server serves the build of record, not the working tree — then re-dispatch with `rerunOnly` naming the failed checks; a token or config change widens that to the whole gate.
 
 ## Pass criteria
 
-Final sweep, zero fixes in between: every route × 3 breakpoints has a screenshot on disk; overflow evaluation `false` everywhere; touch-target evaluation empty outside the inline exception; mobile-menu open + navigation proven with screenshots; console clean per pixel-qa's report. Anything pixel-qa listed as "could not verify" is a fail, not a footnote.
+`PASS-ON-MEASURED`: every route × 3 widths has its PNG; `overflowX` false everywhere; `small.length === 0` outside the inline exception; menu and one interaction per route observed; console clean. Check 8 stays open until design-judge's round-1 `responsive-8` lines land and the Lead writes the `## gate-responsive — rulings (<date>)` block, which turns PASS-ON-MEASURED into PASS. What a WORKING browser could not verify — a route that would not load — is a FAIL, not a footnote.
 
 ## Degraded mode (no browser)
 
-When Phase 0's preflight reported no Playwright MCP, this gate's verdict is **UNVERIFIED** — a third state, never conflated with PASS or FAIL. What still runs, in full: the code-side responsive audit (grep for fixed pixel widths, missing `sizes` on fill images, viewport meta, absent breakpoint variants in section components) — defects it finds are real and get fixed. What cannot run: screenshots, overflow evaluation, touch-target measurement, the mobile-menu proof. The QA.md entry states exactly that: `UNVERIFIED — no browser: code audit clean; screenshots/overflow/touch-targets/menu unproven. Verify before relying on mobile.` The build proceeds and may ship — `ship` carries the UNVERIFIED line into its report. Banned: writing PASS on a code audit alone, or letting "could not verify" from a WORKING browser (a route that wouldn't load) hide inside UNVERIFIED — that one is still a fail.
+When Phase 0's preflight reported no Playwright MCP, the verdict is **UNVERIFIED**. Still runs, its defects real: the code-side audit — `rg -n '(w|h|min-w|max-w)-\[[0-9]+px\]' app components`, fill `<Image>` without `sizes`, missing viewport meta, sections with no `sm:`/`md:`/`lg:` variant. Cannot run: captures, overflow, targets, menu, interactions, console — and check 8, which has no round-1 frames to be ruled from. The QA.md entry says exactly that: `UNVERIFIED — no browser: code audit clean; screenshots/overflow/touch-targets/menu unproven. Verify before relying on mobile.` The build may ship; `ship` carries the line. Banned: PASS on a code audit alone, or a route that would not load hiding inside UNVERIFIED.
 
 ## QA.md entry
+
+The runner APPENDS this with a `cat >> design/QA.md <<'EOF'` heredoc — never rewrites it, never reads it for an anchor. On `rerunOnly` it appends a dated `re-run` block naming only those checks and their new results.
 
 ```markdown
 ## gate-responsive — 2026-07-16 — PASS
@@ -69,51 +64,18 @@ When Phase 0's preflight reported no Playwright MCP, this gate's verdict is **UN
 | / | qa/home-375.png | qa/home-768.png | qa/home-1440.png | none | 0 | clean |
 | /pricing | qa/pricing-375.png | qa/pricing-768.png | qa/pricing-1440.png | none | 0 | clean |
 Mobile menu: opens + navigates — qa/home-375-menu.png.
-Issues fixed: pricing table overflowed at 375 → wrapped in a scroll container per layout-grid; footer social icons 32×32 → padded to 44.
+Issues fixed: pricing table overflowed at 375 → scroll container per layout-grid; footer icons 32×32 → padded to 44.
 ```
 
 ## Anti-patterns
 
-- Grading responsiveness from the 1440 screenshot and imagination — 375 and 768 get their own captures or the gate didn't run
+- Grading responsiveness from the 1440 capture and imagination — 375 and 768 get their own files or the gate did not run
 - `overflow-hidden` on `<body>` to "fix" horizontal scroll — hides the symptom, ships the broken layout
-- Testing only "/" — every route in SITEMAP.md, every breakpoint
-- Trusting one overflow evaluation across client-side navigations — re-evaluate per route, state persists
-- Inflating targets with padding until neighbors overlap — after any target fix, re-check adjacent elements for collision
-- Mobile menu "verified" by opening it — navigating through it is the check
-- Treating 768 as the average of the other two — tablet gets designed, not interpolated
 
 ## Worked example — Casa Verde, EN/PT menu across three widths
 
-From design/SITEMAP.md: `/en`, `/en/menu`, `/en/story`, `/en/reservations` and the `/pt/*` mirror — pixel-qa swept all eight routes × 375/768/1440.
-
-Defect caught (check 2, overflow): the signature day's-harvest strip — the horizontally-scrolling row of today's market finds above the menu — used `w-screen` inside the padded `<main>`, so `/en/menu` at 375 gave `scrollWidth` 390 vs `clientWidth` 375: 15px of page-level horizontal scroll.
-
-Fix → ultraweb:layout-grid: the bleed moved off `w-screen` onto a `100%`-width section that clips, with the strip scrolling inside its own `overflow-x-auto`. Re-check: overflow evaluation `false` at all three widths, in both `/en` and `/pt`.
-
-Also at 375 → ultraweb:i18n (it owns the switcher and the translated strings): the EN/PT locale toggle measured 30×30 (check 3, padded to 44), and the PT label "Reservar mesa" overflowed the header where "Book a table" fit — shortened for the mobile header.
-
-Rejected: `overflow-hidden` on `<body>` — it zeroes the scrollWidth number while shipping the clipped harvest strip. Symptom hidden, defect shipped.
-
-Final sweep, zero fixes in between — all eight routes × three widths on disk, overflow `false` and no target under 44 anywhere:
-
-| Route | 375 | 768 | 1440 |
-|-------|-----|-----|------|
-| /en | qa/en-375.png | qa/en-768.png | qa/en-1440.png |
-| /en/menu | qa/en-menu-375.png | qa/en-menu-768.png | qa/en-menu-1440.png |
-| /en/story | qa/en-story-375.png | qa/en-story-768.png | qa/en-story-1440.png |
-| /en/reservations | qa/en-reservations-375.png | qa/en-reservations-768.png | qa/en-reservations-1440.png |
-| /pt | qa/pt-375.png | qa/pt-768.png | qa/pt-1440.png |
-| /pt/menu | qa/pt-menu-375.png | qa/pt-menu-768.png | qa/pt-menu-1440.png |
-| /pt/story | qa/pt-story-375.png | qa/pt-story-768.png | qa/pt-story-1440.png |
-| /pt/reservations | qa/pt-reservations-375.png | qa/pt-reservations-768.png | qa/pt-reservations-1440.png |
-
-Handoff: the PASS row lands in design/QA.md with `qa/en-menu-375.png` + `qa/en-menu-375-menu.png`; ultraweb:gate-visual then reuses this dev server and pixel-qa harness to score the corrected layouts, not the broken ones.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- pixel-qa (subagent) — runs the entire sweep; this gate reads its report and routes fixes
-- ultraweb:layout-grid — owns overflow and orphan fixes: grid collapse rules, bleed discipline
-- ultraweb:navigation — owns the mobile menu this gate exercises
-- ultraweb:gate-accessibility — inherits the 44px concern (WCAG 2.5.8) and takes over keyboard, contrast, reduced-motion
-- ultraweb:gate-visual — reuses the same dev server and pixel-qa harness; run responsive first so the judge scores fixed layouts
-- ultraweb:i18n — the sweep runs both locale trees; overflow from long PT strings and locale-switcher targets under 44 route here for the fix
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

@@ -60,7 +60,7 @@ Under `prefers-reduced-motion`, transform motifs (lift, zoom) fall back to the b
 
 ## Worked example — case-study grid
 
-Six case studies, editorial direction. Not 6 clones: row 1 is one wide media-top card (featured, 2-col span, 16/10 image) beside one stat card (the featured project's headline metric). Rows 2-3 are four editorial cards, no images, offset alternate columns by 32px. One hover motif site-wide: lift -2px + shadow step, 200ms. Each card is a stretched link named by its title; skeletons mirror all three shapes. The grid reads as a curated wall, not a database dump — and the featured project is unmistakably first.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## A11y
 
@@ -81,11 +81,4 @@ Six case studies, editorial direction. Not 6 clones: row 1 is one wide media-top
 
 ## Composes with
 
-- ultraweb:feature-sections — decides WHERE cards appear and the group pattern; this skill designs the card itself.
-- ultraweb:depth — the shadow/border elevation language cards consume.
-- ultraweb:shape-language — radius scale and icon-container geometry.
-- ultraweb:micro-interactions — hover/press choreography beyond the CSS defaults here.
-- ultraweb:ui-states — skeletons that mirror card layout 1:1.
-- ultraweb:imagery — image treatment and placeholder strategy for media-top and feature-object.
-- ultraweb:component-api — the variant/prop contract a reusable card exposes; `@container` reflow is the responsive half of that same "the component owns its own behavior" contract.
-- ultraweb:social-proof — testimonial and "proof number" (stat variant) cards are card compositions: this skill owns the box and its states, social-proof owns the trust content and where proof appears.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

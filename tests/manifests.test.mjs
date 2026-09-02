@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -38,9 +38,22 @@ test('hooks.json commands point at scripts that exist', () => {
 });
 
 test('hook and recipe scripts are syntactically valid bash', () => {
-  for (const script of ['hooks/antislop.sh', 'hooks/studio-log.sh', 'scripts/scaffold-fixture.sh']) {
+  const hookScripts = readdirSync(join(root, 'hooks')).filter((f) => f.endsWith('.sh')).map((f) => `hooks/${f}`);
+  assert.ok(hookScripts.length >= 3, `expected antislop, studio-log and shell-write-guard under hooks/, found ${hookScripts}`);
+  for (const script of [...hookScripts, 'scripts/scaffold-fixture.sh']) {
     execFileSync('bash', ['-n', join(root, script)]); // throws on a syntax error
   }
+  for (const f of readdirSync(join(root, 'hooks')).filter((f) => f.endsWith('.mjs'))) {
+    execFileSync(process.execPath, ['--check', join(root, 'hooks', f)]); // throws on a syntax error
+  }
+});
+
+test('every hook script is wired in hooks.json', () => {
+  const wired = JSON.stringify(json('hooks/hooks.json')); // re-serialized, so quotes inside commands are escaped — match the path only
+  for (const f of readdirSync(join(root, 'hooks')).filter((f) => f.endsWith('.sh'))) {
+    assert.ok(wired.includes(`/hooks/${f}`), `hooks/${f} exists but hooks.json never runs it`);
+  }
+  assert.ok(json('hooks/hooks.json').hooks.PreToolUse?.some((b) => b.matcher === 'Bash'), 'shell-write-guard must be a PreToolUse hook matching Bash');
 });
 
 test('locked-to pins actually match their anchor', () => {

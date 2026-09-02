@@ -96,35 +96,8 @@ Segments needing loading.tsx / not-found.tsx: <list> (build: routing)
 
 ## Worked example — Tidepool, port-logistics SaaS marketing site
 
-design/BRIEF.md: "B2B analytics for container-terminal ops managers; primary conversion is self-serve Start free (Starter $0), Growth $490/mo is the tier we push, Fleet is custom (talk to sales)."
-
-The one-pager test fails — two conversion modes plus a real docs collection — so the page budget lands on the SaaS-with-pricing row: six routes, each with one job.
-
-| Page | Route | Conversion goal |
-|---|---|---|
-| Home | `/` | Start free |
-| Product | `/product` | Start free |
-| Pricing | `/pricing` | Start free (Fleet → Talk to sales exit) |
-| Docs | `/docs` | Read next |
-| Changelog | `/changelog` | Subscribe to launch notes |
-| Login | `/login` | Sign in — Better Auth email + SSO |
-
-Nav, ordered by visitor priority not org chart: Product · Pricing · Docs · Changelog, plus one CTA "Start free" → `/login`. Active-state: exact-match on `/`, prefix-match on `/docs/*`. Route group `(marketing)` wraps the five marketing pages; `/login` sits outside it as the app-shell entry, and the `/api/v1/*` handlers are not pages — they never enter the sitemap.
-
-Legal: the brief names no DACH market, so the jurisdiction lookup yields `/privacy` + `/terms` only — had Tidepool been the Hamburg entity selling into Germany, `/impressum` + `/datenschutz` would join the list as mandatory, not optional.
-
-Rejected: a `/contact` page for the Fleet "Talk to sales" exit — a product-led SaaS routes enterprise interest to a scheduler CTA on /pricing, not a form page nobody would link to; adding it would have been the reflex 5-pager instinct dressed up.
-
-Handoff: this writes `design/SITEMAP.md` part 1 (pages, routes, nav); ultraweb:wireframe appends part 2 section blueprints, and ultraweb:navigation reads the Product · Pricing · Docs · Changelog order and the single "Start free" CTA verbatim.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:brief — upstream: the content inventory and conversion goals this skill clusters into pages
-- ultraweb:wireframe — appends part 2 (section blueprints) to the SITEMAP.md this skill starts
-- ultraweb:routing — implements the route tree, route groups, and the loading/error/not-found files flagged here
-- ultraweb:navigation — builds the header from the nav order, CTA, and active-state rules decided here
-- ultraweb:footer — home for every link that didn't earn top nav, in the three groups defined here
-- ultraweb:copywriting — structures the Impressum and Datenschutz pages as headed, plain-language content, not a legal wall of text
-- ultraweb:consent — the cookie/consent banner routed out of the page list here — a runtime layer, never a route
-- ultraweb:seo — per-page purpose sentences seed each route's title and description
-- ultraweb:gate-content — the Phase 11 gate that holds this sitemap accountable: it crawls the route list for 200s and reads each page's heading story against the conversion goal assigned here
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

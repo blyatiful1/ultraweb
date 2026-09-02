@@ -97,35 +97,8 @@ Always constrain (`dragConstraints` as ref or `{ left, right }` bounds); `dragEl
 
 ## Worked example — Framewalk, cursor-reactive hero fog for a Steam launch
 
-design/DIRECTION.md motion stance: *"Atmospheric Dark — the fog answers the hand. One interactive moment, everything else holds still; static art under reduced motion."* The signature move (three-layer parallax fog) is the whole physics budget — no other element gets a spring.
-
-Each fog layer lags the pointer with the **Trailing** recipe (`stiffness 180, damping 18, mass 1`), pulling a different distance so depth reads as parallax — back 8px, mid 20px, front 40px. One spring drives all three via `useTransform`; the constant lives in `lib/motion.ts` beside the easing tokens.
-
-```tsx
-"use client";
-import { m, useSpring, useTransform } from "motion/react";
-import { fogTrail } from "@/lib/motion"; // { stiffness: 180, damping: 18, mass: 1 }
-
-const px = useSpring(0, fogTrail); // -1..1 from pointer, mounted only under (pointer: fine)
-const back  = useTransform(px, [-1, 1], [-8, 8]);
-const mid   = useTransform(px, [-1, 1], [-20, 20]);
-const front = useTransform(px, [-1, 1], [-40, 40]);
-```
-
-No drag anywhere on the site, so `domAnimation` (+15kb) carries it — loading `domMax` for a hover-only effect would be dead weight (STACK.md). Under `prefers-reduced-motion` the layers render as flat art; on touch/coarse pointers the fog never mounts the springs.
-
-Rejected: a magnetic "Wishlist on Steam" button. One physics moment is the budget, and a bouncy CTA beside somber fog-and-lantern art reads as playful marketing — wrong tone for Atmospheric Dark, so the CTA keeps only the CSS press from `micro-interactions`.
-
-Handoff: `components/hero-fog.tsx` + the `fogTrail` constant in `lib/motion.ts`; `ultraweb:gate-performance` records the ≥5s pointer session at 60fps and `ultraweb:gate-accessibility` confirms the reduced-motion static fallback before it ships.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:direction — the gate: physics exists only when the archetype's motion stance commissions it.
-- ultraweb:motion-language — spring recipes live beside the easing/duration vocabulary as one motion system.
-- ultraweb:micro-interactions — everything below the gesture threshold (plain hover/press/focus) stays there; never double-treat an element.
-- ultraweb:showpiece — a cursor-reactive canvas or WebGL moment graduates there with its gating rules.
-- ultraweb:set-design — the site-scale sibling: scene-graph input and camera damping live there, every DOM spring and cursor follower lives here, and no second drag system is installed on either side.
-- ultraweb:animejs — the other DIRECTION-gated engine, and the boundary is firm: it owns SVG choreography, this skill owns every gesture; `createDraggable` is never installed.
-- ultraweb:gate-performance — 60fps verification of pointer-tracking effects is its pass bar.
-- ultraweb:gate-accessibility — verifies touch degradation and the reduced-motion path.
-- ultraweb:award-canon — The Prove-It Gesture and The Cursor as Narrator are the canon patterns this skill owns; their discipline (never the sole affordance, keyboard-operable, touch fallback) is its guardrail.
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.

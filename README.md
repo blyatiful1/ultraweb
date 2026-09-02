@@ -1,6 +1,6 @@
 # ultraweb
 
-[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](https://code.claude.com/docs/en/plugins) [![Version](https://img.shields.io/badge/version-1.8.0-4C71F0)](.claude-plugin/plugin.json) [![Skills](https://img.shields.io/badge/skills-80-2EA44F)](ROSTER.md) [![Showcase](https://img.shields.io/badge/showcase-live-2EA44F)](https://ultraweb-site.vercel.app)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757)](https://code.claude.com/docs/en/plugins) [![Version](https://img.shields.io/badge/version-1.9.0-4C71F0)](.claude-plugin/plugin.json) [![Skills](https://img.shields.io/badge/skills-80-2EA44F)](ROSTER.md) [![Showcase](https://img.shields.io/badge/showcase-live-2EA44F)](https://ultraweb-site.vercel.app)
 
 *A Claude Code plugin for AI web design: a guided design session — a few sharp scoping questions, three fast mockups, your approval — then a production-grade Next.js 16 + Tailwind CSS v4 website: design system, brand mark, copywriting, motion, backend, SEO, and seven empirically verified quality gates (screenshot-judged where a browser exists, honestly marked UNVERIFIED where not). Sized by a scope dial, reviewable on your own phone, and resumable if life interrupts the build.*
 
@@ -8,7 +8,7 @@
 
 Somewhere in a nicer timeline there's a small agency that does this properly. An art director who refuses the purple gradient. A design engineer who ships tokens before components. A critic who screenshots your site at 375px and tells you the truth about it. And before any of them lift a pen, someone sits you down, asks the four questions that actually matter for *your* site, and shows you three sketches to point at. They cost forty thousand euros and they're booked until spring.
 
-**ultraweb is that studio, as a Claude Code plugin.** 80 skills and 3 subagents that hold each other to a written constitution until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it. (One lead agent runs the roster sequentially by default; parallel fan-out is opt-in.)
+**ultraweb is that studio, as a Claude Code plugin.** 80 skills and 4 subagents that hold each other to a written constitution until something good comes out the other end — a real Next.js site, built, judged, and fixed before you ever see it. (One lead agent runs the roster sequentially by default; parallel fan-out is opt-in.)
 
 ```text
 /ultraweb build me a website for a Berlin specialty coffee roastery with an online shop
@@ -103,9 +103,9 @@ One sentence about what you want — then a short conversation instead of a leap
 
 The showcase table above is the receipt for a maximum-thoroughness `standard` build: 4,753 API calls, 2.78 million tokens generated, 756 million tokens processed, six hours and six minutes. A full `/ultraweb` run is a studio engagement, not an API call. Where the money goes:
 
-- **twelve phases**, each one actually loading and following its skills — now split into decision cores with reference files loaded only on need, under a written context discipline (each artifact read once per context) that targets the single largest line in that receipt: the ~154K-token resident prefix dragged through every call;
-- **quality gates that loop** — screenshots at 375 / 768 / 1440, scored against a rubric, fix → re-gate → fix again until it goes green. The showcase needed three rounds. Hooks now kill banned-list slop at write time — thirty milliseconds of grep instead of an Opus fix round later;
-- **and in fan-out mode**, an agent per page group and an agent per gate — 37 of them in the showcase build.
+- **twelve phases**, each one actually loading and following its skills — every skill split into a decision core with reference files loaded only on need (v1.9.0 finished the split: all 78 worked examples and compose maps live in `references/`, the twelve-archetype catalog too), under a seven-rule context discipline (each artifact read once per context, Edit the smallest hunk, no shell writes inside a build — a hook enforces that one — ledgers appended never rewritten, two images per decision, bounded output) that targets the single largest line in that receipt: the resident prefix dragged through every call;
+- **quality gates that loop** — screenshots at 375 / 768 / 1440, scored against a rubric, fix → re-gate → fix again until it goes green. The showcase needed three rounds. Hooks now kill banned-list slop at write time — thirty milliseconds of grep instead of an Opus fix round later. Since v1.9.0 the six measurement gates run inside a Sonnet 5 `gate-runner` context, strictly sequentially against one production build, and return ≤400-token verdicts — roughly 90 KB of gate prose the Lead used to carry never enters its window; only `gate-visual`'s judgment loop stays with the Lead, and a fix round re-runs only the checks that failed;
+- **and in fan-out mode**, an agent per page group — 37 agents in the showcase build. Gates no longer fan out: they share one browser, one `.next`, and one port, so they run one after another through the runner.
 
 Model routing keeps it as honest as it can — mechanical sweeps drop to Sonnet 5, judgment stays up on Opus 5 — but cheaper per call is not the same as cheap. Rough sizing: a **sketch**-tier landing page should land an order of magnitude under the showcase numbers; **standard** is the receipt above as the ceiling for a comparable site; **flagship** buys more critique rounds and the 3D budget on top. Plan for it.
 
@@ -119,7 +119,7 @@ Four things do most of the work:
 
 **`award-canon` — the library.** 32 Awwwards Site-of-the-Year and SOTD-tier winners from 2017 to 2026, studied and rendered down into 25 named, transferable patterns — plus the invariants that survived every era, the jury's own scoring weights, and a list of moves that have visibly aged. Each claim carries its verified award tier; dead sites are marked *reconstructed*, never passed off as inspected. The prime directive: **steal the principle, never the surface.**
 
-**Seven gates that don't take your word for it.** Code, responsive, visual, accessibility, performance, anti-slop, content — each verified empirically. Real builds. Real Playwright screenshots. Computed contrast. Lighthouse. The site isn't finished until `design/QA.md` is green, and nothing is allowed to fake green — including faking it when the tools are missing: no browser means an honest **UNVERIFIED**, declared in Phase 0 before the build spends a cent, never a quiet wave-through discovered five hours in. The three verdicts have teeth: PASS may ship, FAIL never ships, and UNVERIFIED may preview and hand off but reaches production only after you explicitly accept each named unverified risk.
+**Seven gates that don't take your word for it.** Code, responsive, visual, accessibility, performance, anti-slop, content — each verified empirically. Real builds. Real Playwright screenshots. Computed contrast. Lighthouse. Six of the seven are executed by the `gate-runner` subagent from a shared measurement library (`scripts/measure/`, run through Playwright's `browser_run_code_unsafe`), every checklist item tagged MEASURED, OBSERVED, or JUDGMENT — the runner asserts the first two and hands the third back with evidence for the Lead to rule on. The site isn't finished until `design/QA.md` is green, and nothing is allowed to fake green — including faking it when the tools are missing: no browser means an honest **UNVERIFIED**, declared in Phase 0 before the build spends a cent, never a quiet wave-through discovered five hours in. The three verdicts have teeth: PASS may ship, FAIL never ships, and UNVERIFIED may preview and hand off but reaches production only after you explicitly accept each named unverified risk.
 
 **`STACK.md` — the reality check.** Stack facts checked against live npm and official docs rather than training memory, so skills cite Next 16's `proxy.ts` and `preload`, Tailwind v4's `@theme`, Motion's `motion/react`. Version pins live in `stack/versions.json` with a 30-day expiry and a refresh script; corpus invariants are enforced by a lint script in CI, not by memory.
 
@@ -139,11 +139,12 @@ And underneath all of it: nearly every skill ends with a real decision traced en
 | **QA** | `gate-code`, `gate-responsive`, `gate-visual`, `gate-accessibility`, `gate-performance`, `gate-antislop`, `gate-content` |
 | **Delivery** | `preview` (review URLs at the checkpoints), `ship`, `handoff`, `retrofit` |
 
-Three specialists work outside the main line, each pinned to its own model tier:
+Four specialists work outside the main line, each pinned to its own model tier:
 
 - **`design-judge`** — the adversarial critic. Looks at screenshots, scores them against the award-canon invariants and the jury model, and is under no obligation to be nice. *(Opus 5)*
 - **`pixel-qa`** — sweeps every breakpoint with Playwright and reports what it actually saw. *(Sonnet 5)*
 - **`stack-doctor`** — fixes broken toolchains without the classic cowardice of downgrading. *(Opus 5)*
+- **`gate-runner`** — executes one measurement gate end to end against the production server of record, asserts every measured item, hands the judgment items back with evidence, and appends the gate's QA.md entry — ≤400 tokens return to the Lead. *(Sonnet 5)*
 
 The same policy governs all fan-out work: judgment stays on the lead model, specialist builds and critiques on Opus 5, mechanical sweeps on Sonnet 5.
 
@@ -153,7 +154,7 @@ Want the full scope of all 80? → [ROSTER.md](ROSTER.md). Want the per-site awa
 
 - **Claude Code** — CLI, desktop, or web.
 - **Node + npm** — something has to build the Next.js app.
-- **Playwright MCP** — the eyes. Without it, the visual, responsive, and accessibility gates record an honest *UNVERIFIED* instead of quietly waving your site through — and the Phase 0 preflight tells you so before the build starts, not five hours in.
+- **Playwright MCP** — the eyes. Without it, every gate but the code gate records its browser half as an honest *UNVERIFIED* instead of quietly waving your site through — and the Phase 0 preflight tells you so before the build starts, not five hours in. The gates' measurement scripts run through its `browser_run_code_unsafe` tool; preflight self-tests that channel too.
 - **Vercel CLI auth** *(optional)* — enables the preview URLs at the review checkpoints. Without it, you review screenshots; nothing blocks.
 - **Token headroom** — see [the bill](#the-bill). Start a `standard` build when you have room for it; say "landing page" when you don't.
 

@@ -5,16 +5,16 @@ description: Entry point for existing Next.js sites that ultraweb did not build 
 
 # retrofit — diagnose before redesigning
 
-**Stage:** Entry point — before any pipeline phase, for sites ultraweb did not build - **Reads:** existing codebase, running site, taste - **Writes:** design/RETROFIT.md, design/screenshots/retrofit/*, reconstructed design/BRIEF.md + DIRECTION.md
+**Stage:** Entry point — before any pipeline phase, for sites ultraweb did not build - **Reads:** existing codebase, running site, taste - **Writes:** design/RETROFIT.md, design/screenshots/retrofit/*, qa/visual/round-1/VERDICT.md, reconstructed design/BRIEF.md + DIRECTION.md
 
 ## Standard
 
-A diagnosis a studio would charge for: every gap carries evidence (a screenshot path or a file:line grep hit), a score against the taste rubric, the ONE ultraweb skill that fixes it, and a phase. Scores come from looking at rendered pages — never from reading code alone. Retrofit is a **mutating audit** and says so up front: it writes the design record into the repo (design/RETROFIT.md, screenshots, a reconstructed BRIEF.md + DIRECTION.md) and touches app code only where required to boot the site — each boot fix named in RETROFIT.md so the owner can see exactly what the audit changed. All treatment happens afterward, through ultraweb:iterate, one approved phase at a time.
+A diagnosis a studio would charge for: every gap carries evidence (a screenshot path or a file:line grep hit), a score against the taste rubric, the ONE ultraweb skill that fixes it, and a phase. Scores come from looking at rendered pages — never from reading code alone. Retrofit is a **mutating audit** and says so up front: it writes the design record into the repo (design/RETROFIT.md, screenshots, a reconstructed BRIEF.md + DIRECTION.md) and touches app code only where required to boot the site — each boot fix named in RETROFIT.md. All treatment happens afterward, through ultraweb:iterate, one approved phase at a time.
 
 ## Process
 
 1. **Qualify the patient.** First: if `design/DIRECTION.md` already exists, STOP — this is an ultraweb site, and retrofit against it would overwrite real recorded decisions with reconstructed guesses. A complete record is `ultraweb:iterate`'s case; a partial one is the root skill's §Resuming ladder. Then read package.json and the tree. Next.js App Router → proceed. Pages Router, CRA, or another framework → say so and stop; retrofit audits, it doesn't port. Offer a fresh `ultraweb` build as the alternative.
-2. **Inventory.** Routes (every `app/**/page.tsx`), components, styling entry (`@theme` in app/globals.css vs `tailwind.config.js` — the config file marks Tailwind v3), and deps of record: next major, `framer-motion` vs `motion`, zod major, `middleware.ts` (pre-Next-16 signal) vs `proxy.ts`.
+2. **Inventory.** Routes (every `app/**/page.tsx`), components, styling entry (`@theme` in app/globals.css vs `tailwind.config.js` — the config file marks Tailwind v3), and deps of record: next major, `framer-motion` vs `motion`, zod major, `middleware.ts` (pre-Next-16 signal) vs `proxy.ts`. Collect any written direction statement too (style guide, brand page, README §design) — step 6 needs it.
 3. **Static anti-slop sweep** — grep the banned list before rendering anything:
    - `lorem`, `href="#"`, `Feature 1`, `placeholder.com`
    - `from-purple-|from-violet-|to-blue-` and headline `bg-clip-text` gradient text
@@ -23,8 +23,8 @@ A diagnosis a studio would charge for: every gap carries evidence (a screenshot 
    - `Elevate|Unlock the power|Seamlessly|Empower|Welcome to`
    Every hit is a pre-scored gap with file:line evidence.
 4. **Boot it.** `npm install`, `npm run dev`. Won't start → hand the verbatim error to stack-doctor and apply the minimal fix that gets pixels on screen. No other code changes during the audit.
-5. **Screenshot everything.** pixel-qa drives Playwright MCP: every route at 375/768/1440, light AND dark if a theme toggle exists → design/screenshots/retrofit/. Console errors are recorded as gaps.
-6. **Score.** Send screenshots (plus any existing direction statement) to design-judge with the rubric below. The judge returns per-axis scores and ranked defects.
+5. **Screenshot everything.** pixel-qa drives Playwright MCP, `outputDir: design/screenshots/retrofit/`: viewport frames per route at 375/768/1440, light + dark when a toggle exists, plus 1440 sectionals. No full-page captures — the judge refuses frames >2500px. Console errors are recorded as gaps.
+6. **Score.** `mkdir -p qa`, then dispatch design-judge as round 1, pointed at `design/screenshots/retrofit/` as the round directory (frames + sectionals), the project and plugin roots. No `design/DIRECTION.md` exists — step 1 refused the site if it did — so hand it the step-2 direction statement as the stand-in and tell it to score against the taste constitution and the award-canon invariants alone. It scores its own fixed six axes, writes the full review to `qa/visual/round-1/VERDICT.md`, returns ≤700 tokens: scores, ranked defects, verdict, plus round-1's antislop/responsive lines — fold every violation into the gap table. Compute the mean and the worst axis yourself from that table — the judge returns neither.
 7. **Map every gap to one skill** (table below). A gap without a named fixing skill isn't finished — "improve the design" ships nothing.
 8. **Phase the plan** into design/RETROFIT.md: A quick wins → B system fixes → C direction change (only when triggered).
 9. **Bootstrap the artifacts iterate needs.** Reverse-engineer design/BRIEF.md from the evident site (audience, purpose, pages, backend surface) — including the machine-read fields every consumer expects: `Deployment mode: production` (an existing live site is production; never guess demo) and, when the site serves a named market, §Compliance facts reconstructed from the Impressum and shop surface (flag each entry `counsel-needed` — reconstructed facts are assumptions, not knowledge). Write design/DIRECTION.md as the TARGET direction — the existing aesthetic sharpened, or, when Phase C triggers, a fresh pick via ultraweb:direction.
@@ -32,17 +32,16 @@ A diagnosis a studio would charge for: every gap carries evidence (a screenshot 
 
 ## Scoring rubric
 
-Seven axes, 0–10, scored per page from screenshots by design-judge:
+design-judge's six fixed axes, 1–10 per page — Motion folded into Craft (its contract has no Motion axis):
 
 | Axis | 8–10 looks like | ≤4 means |
 |---|---|---|
 | Hierarchy | the eye lands where the page intends | everything shouts equally |
-| Spacing rhythm | compression and release on a base unit | uniform py-24 wallpaper |
 | Typography | real pairing, hero ≥3.5× body | default Inter at timid sizes |
+| Spacing | compression and release on a base unit | uniform py-24 wallpaper |
 | Color | one accent doing real work, AA verified | slate + purple gradient, or gray soup |
 | Distinctiveness | a point of view and a signature move | interchangeable template |
-| Motion | purposeful, one easing family, reduced-motion path | everything fades up, or nothing moves |
-| Craft | focus rings, favicon, optical alignment | defaults everywhere in the last 2% |
+| Craft | focus rings, favicon, optical alignment; purposeful motion, one easing family, reduced-motion path | defaults in the last 2%; everything fades up, or nothing moves |
 
 Report the WORST axis alongside the mean — a 7.0 average hiding a 2/10 distinctiveness IS a distinctiveness problem. Triggers: any axis ≤4 → its system fix goes to Phase B. Distinctiveness ≤4, or no identifiable direction at all → Phase C candidate.
 
@@ -93,19 +92,8 @@ Execute each phase via ultraweb:iterate, pointing it at this file and the phase 
 
 ## Worked example — Ledger & Lane, auditing the firm's inherited site
 
-**Patient (what retrofit reads):** a two-partner law firm's existing Next.js site from a prior vendor. Inventory finds Next 14, `tailwind.config.js` (the Tailwind v3 marker), `framer-motion`, `middleware.ts`, and default Inter at 16/32px with slate body text on white.
-
-**Diagnosis.** The static sweep flags "Welcome to Ledger & Lane" hero copy, three identical practice-area icon-cards, and uniform `rounded-xl`+`shadow-lg`. design-judge scores the 375/768/1440 screenshots: mean 4.1/10, worst axis Distinctiveness 2/10. The target isn't a rebuild but the existing bones sharpened toward "Quiet Authority" — Newsreader + Public Sans, ink-navy `oklch(0.25 0.02 260)` on warm paper `oklch(0.975 0.005 80)`, muted gold `oklch(0.72 0.09 85)` reserved for one CTA per page, ruled hairlines as the signature move. Gaps map one-to-one: dead copy → copywriting (A); icon-cards → feature-sections (B); Inter/slate → tokens+color+typography (B); the v3-config / framer-motion / `middleware.ts` triad → stack migration as **B-0**, prerequisite to all Phase B token work.
-
-**Phase C candidate — pending user confirmation:** distinctiveness at 2/10 records a full direction change (ultraweb:direction) as a Phase C candidate, not a verdict — it stays open until the user confirms scope; retrofit can't close it unilaterally. The recommended default meanwhile is Phase B: the routes (`/practice/[area]`, `/attorneys`, `/insights/[slug]`) and the MDX content model are sound, so burning it down would re-solve problems the site doesn't have. Phase B proceeds; Phase C waits on the recorded confirmation.
-
-**Handoff:** written to design/RETROFIT.md alongside a reconstructed design/BRIEF.md + DIRECTION.md; each approved phase hands to ultraweb:iterate, which executes it against this file one phase at a time.
+Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
 
 ## Composes with
 
-- ultraweb:taste — the rubric IS the constitution; every score traces to its lists
-- ultraweb:iterate — executes each approved phase; RETROFIT.md is its change request
-- ultraweb:direction — Phase C's engine; also sharpens the reconstructed DIRECTION.md
-- ultraweb:gate-antislop — its greppable pattern list powers the step-3 static sweep
-- design-judge (subagent) — scores the screenshots against the rubric
-- pixel-qa (subagent) — drives the breakpoint screenshot sweep
+Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.
