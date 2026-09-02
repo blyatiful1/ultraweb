@@ -99,6 +99,20 @@ One sentence about what you want — then a short conversation instead of a leap
 
 **Built a few sites?** The studio remembers. Mockup verdicts and review feedback accrue into a **taste fingerprint** (`~/.claude/ultraweb/taste.md`) that breaks ties in your favor on the next build — with a mandatory "heretic seat" in every mockup round arguing against your profile, so it stays a preference, never a rut. Last 10 builds only; taste drifts.
 
+## What changed in v1.9.0 — the context diet
+
+The first full flagship build kept a ledger of its own context window ([docs/context-telemetry-2026-09-01.md](docs/context-telemetry-2026-09-01.md)): about a third of the lead model's window was skill prose, a fifth was the echo of its own edits, and the six gate bodies plus the direction catalog were all resident by Phase 11. v1.9.0 answers that report — the record, with numbers and the trade-offs that were rejected, is [docs/context-diet-2026-09-01.md](docs/context-diet-2026-09-01.md). What you will notice in a build:
+
+- **Phase 11 runs on a production server.** The lead builds once, starts `npm start` on `:3100`, and a Sonnet 5 `gate-runner` subagent runs the six measurement gates one after another — code, responsive, anti-slop, content, accessibility, performance — against it. Every gate checklist item is tagged MEASURED, OBSERVED, or JUDGMENT: the runner asserts the first two and hands the third back with evidence, and the lead's rulings land in `design/QA.md` as dated "rulings" blocks. `gate-visual` is still the lead's own judgment loop. Any code fix triggers a rebuild before the re-check, so gate rounds take a little longer and lie a lot less.
+- **A `qa/` folder at the project root.** Build and server logs, one raw log per gate, Lighthouse reports, the measurement results, and `qa/visual/round-N/VERDICT.md` with the design critic's full rationale. It is disposable evidence; `design/` stays the record.
+- **A second hook.** `shell-write-guard` blocks shell writes (`sed -i`, `>` redirects, heredocs) to source files and top-level `design/*.md` inside a build — the lead edits with the Edit tool and appends ledgers with `>>`. For a deliberate exception, start the command with `ULTRAWEB_SHELL_WRITE_OK=1 `.
+- **Solo mode delegates more.** Even without fan-out mode the lead hands off the round-1 mockup candidates, every measurement gate, and gate-visual's shoot and judge rounds. More agents, a smaller lead window, a slightly higher total bill; say "single context" if you want none of that.
+- **Measurements come from a script library.** `scripts/measure/*.mjs` runs through Playwright MCP's `browser_run_code_unsafe` tool; Phase 0 self-tests the channel and, if it is missing, the affected checks record UNVERIFIED instead of guessing.
+- **`design/CONTEXT-HANDOFF.md`.** What a session learned the hard way, appended at phase boundaries so a resumed or compacted session does not re-learn it; `handoff` folds it into the site's README.
+- **Less prose per phase.** Every skill's worked example and compose map now lives in `references/` and loads on demand, the twelve-archetype catalog too. What a standard build loads into the lead dropped from 676 KB to 498 KB (about 26%), with roughly 96 KB of gate bodies now read by the runner instead.
+
+Upgrading: marketplace installs run `/plugin marketplace update ultraweb`; clones run `git pull`. Existing sites need nothing — the next `iterate` simply re-gates through the new pipeline.
+
 ## The bill
 
 The showcase table above is the receipt for a maximum-thoroughness `standard` build: 4,753 API calls, 2.78 million tokens generated, 756 million tokens processed, six hours and six minutes. A full `/ultraweb` run is a studio engagement, not an API call. Where the money goes:
