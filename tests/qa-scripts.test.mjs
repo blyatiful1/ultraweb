@@ -39,6 +39,7 @@ const CONTRACT = [
   'cold-load-js',
   'font-requests',
   'axe',
+  'tells-census',
 ];
 
 const files = readdirSync(measureDir).filter((f) => f.endsWith('.mjs')).sort();
@@ -216,6 +217,12 @@ test('the library measures the fixture and its planted defects', { timeout: 1800
     assert.ok(contrast.counts.pairs > 5, 'contrast-matrix found almost no text');
     assert.ok(contrast.failing.length >= 1, 'contrast-matrix missed the low-contrast paragraph');
     assert.ok(contrast.pairs.some((p) => p.pass), 'contrast-matrix reported no passing pair');
+    const grad = contrast.pairs.find((p) => /Text over a gradient/.test(p.text));
+    assert.ok(grad, 'contrast-matrix did not see the gradient text');
+    assert.equal(grad.review, true, 'text over a gradient must be review, not measured against an assumed white');
+    assert.equal(grad.pass, null, 'a review pair is neither pass nor fail');
+    assert.ok(!contrast.failing.some((p) => p.review), 'a review pair leaked into failing');
+    assert.ok(contrast.reviewing.length >= 1 && contrast.counts.review === contrast.reviewing.length, 'contrast-matrix returned no reviewing list');
 
     await seed(wide, { theme: 'dark', themeStrategy: 'class', threshold: 24 });
     const dark = await load('contrast-matrix.mjs')(wide);
@@ -264,6 +271,10 @@ test('the library measures the fixture and its planted defects', { timeout: 1800
 
     const forms = await load('forms-a11y.mjs')(wide);
     assert.ok(kinds(forms.issues).includes('unlabelled'), 'forms-a11y missed the unlabelled input');
+    assert.ok(
+      forms.issues.some((i) => i.kind === 'required-unmarked' && i.selector === '#unlabelled-required'),
+      'forms-a11y let a required field with no label at all escape required-unmarked'
+    );
     const unmarked = forms.issues.filter((i) => i.kind === 'required-unmarked').map((i) => i.selector);
     assert.ok(
       unmarked.includes('#company'),
@@ -309,6 +320,23 @@ test('the library measures the fixture and its planted defects', { timeout: 1800
     assert.equal(rhythm.verdict, 'wallpaper', 'wallpaper-rhythm did not flag four identically padded sections');
     assert.equal(rhythm.sections.length, 4, 'wallpaper-rhythm did not find the four sections');
 
+    // the padding lives on a wrapper inside each section, and everything sits in one outer wrapper
+    const wrapped = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    await wrapped.setContent(
+      '<main><div id="app">' +
+        [1, 2, 3, 4].map((i) => '<section><div style="padding:' + (i % 2 ? 40 : 96) + 'px 16px"><h2>S' + i + '</h2><p>text</p></div></section>').join('') +
+        '</div></main>'
+    );
+    const wr = await load('wallpaper-rhythm.mjs')(wrapped);
+    assert.equal(wr.sections.length, 4, 'wallpaper-rhythm did not walk past the single-child wrapper');
+    assert.ok(wr.sections.every((s) => s.carrier), 'wallpaper-rhythm did not read the padding from the inner wrapper');
+    assert.equal(wr.verdict, 'ok', 'alternating wrapper padding was called wallpaper');
+    await wrapped.setContent('<main><section><h2>a</h2><p>x</p></section></main>');
+    assert.equal((await load('wallpaper-rhythm.mjs')(wrapped)).verdict, 'unmeasured', 'one section must be unmeasured, not ok');
+    await wrapped.setContent('<main></main>');
+    assert.equal((await load('wallpaper-rhythm.mjs')(wrapped)).verdict, 'unmeasured', 'no sections must be unmeasured, not ok');
+    await wrapped.close();
+
     const links = await load('links-collect.mjs')(wide);
     assert.ok(links.deadHash.length >= 1, 'links-collect missed the href="#" link');
     assert.ok(links.emptyText.length >= 1, 'links-collect missed the empty-text link');
@@ -350,11 +378,24 @@ test('the library measures the fixture and its planted defects', { timeout: 1800
     } else {
       t.diagnostic(`axe: source=${axe.source} violations=${axe.violations.length} passes=${axe.passes}`);
       assert.ok(axe.violations.length >= 1, `axe (${axe.source}) found no violation on a page full of them`);
+      assert.ok(Array.isArray(axe.incompleteItems), 'axe returned no incompleteItems list');
+      assert.ok(axe.incompleteItems.length >= 1, 'axe returned no needs-review items — the gradient text is a color-contrast incomplete');
       assert.ok(
         axe.violations.some((v) => /image-alt|button-name|label|heading/.test(v.id)),
         'axe found violations but none of the planted kinds'
       );
     }
+
+    const census = await load('tells-census.mjs')(wide);
+    assert.equal('error' in census, false, `tells-census errored: ${census.error}`);
+    assert.ok(census.counts.eyebrows >= 1, 'tells-census missed the uppercase letter-spaced label above the h2');
+    assert.ok(census.counts.numberedMarkers >= 3, 'tells-census missed the 01/02/03 markers');
+    assert.ok(census.counts.arrowLinks >= 1, 'tells-census missed the arrow link');
+    assert.ok(census.counts.middleDotMeta >= 1, 'tells-census missed the middle-dot meta string');
+    const ids = census.flags.map((f) => f.id);
+    assert.ok(ids.includes('numbered-markers'), 'tells-census did not flag the numbered markers');
+    assert.ok(census.families.body, 'tells-census returned no body family');
+    assert.ok(typeof census.ground.lightness === 'number' && Array.isArray(census.ground.hues), 'tells-census returned no ground');
 
     const cold = await load('cold-load-js.mjs')(wide);
     assert.ok(Array.isArray(cold.scripts), 'cold-load-js returned no script list');

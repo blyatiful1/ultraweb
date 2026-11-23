@@ -10,7 +10,7 @@ import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
-import { spawnSync, execFileSync } from 'node:child_process';
+import { spawn, spawnSync, execFileSync } from 'node:child_process';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const gates = join(root, 'scripts', 'gates.mjs');
@@ -58,9 +58,22 @@ function playwrightAvailable() {
   });
 }
 
-function runGates(args, cwd) {
-  return spawnSync(process.execPath, [gates, ...args], { cwd, encoding: 'utf8', timeout: 240000 });
+// async on purpose: the fixture server lives in this process, and spawnSync would block its event loop
+function runGatesAsync(args, cwd) {
+  return new Promise((resolve) => {
+    const child = spawn(process.execPath, [gates, ...args], { cwd });
+    let stdout = '';
+    let stderr = '';
+    child.stdout.on('data', (d) => (stdout += d));
+    child.stderr.on('data', (d) => (stderr += d));
+    const timer = setTimeout(() => child.kill('SIGKILL'), 240000);
+    child.on('close', (status) => {
+      clearTimeout(timer);
+      resolve({ status, stdout, stderr });
+    });
+  });
 }
+const runGates = (args, cwd) => spawnSync(process.execPath, [gates, ...args], { cwd, encoding: 'utf8', timeout: 60000 });
 
 const have = playwrightAvailable();
 const gate = (name, fn) =>
@@ -98,7 +111,7 @@ gate('a site with planted defects exits 1 and names the failing checks', async (
   const { server, origin } = await serve(join(fixtures, 'defects'), { bigJs: true });
   const proj = mkdtempSync(join(tmpdir(), 'gates-bad-'));
   try {
-    const r = runGates(['--url', origin, '--routes', '/,/about.html', '--project', proj, '--only', 'content,a11y,responsive,perf,tells'], root);
+    const r = await runGatesAsync(['--url', origin, '--routes', '/,/about.html', '--project', proj, '--only', 'content,a11y,responsive,perf,tells'], root);
     assert.equal(r.status, 1, `expected exit 1, got ${r.status}\n${r.stdout}\n${r.stderr}`);
     assert.ok(r.stdout.split('\n').length <= 61, 'stdout exceeds 60 lines');
     const g = JSON.parse(readFileSync(join(proj, 'qa', 'gates.json'), 'utf8'));
@@ -118,20 +131,20 @@ gate('a site with planted defects exits 1 and names the failing checks', async (
     assert.ok(existsSync(join(proj, 'qa', 'GATES.md')));
     assert.ok(existsSync(join(proj, 'qa', 'shots', 'home-375.png')), 'no 375 screenshot');
     // a second run increments the round
-    const r2 = runGates(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive'], root);
+    const r2 = await runGatesAsync(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive'], root);
     assert.equal(r2.status, 1);
     assert.equal(JSON.parse(readFileSync(join(proj, 'qa', 'gates.json'), 'utf8')).round, 2);
     // waivers turn a fail into waived
     mkdirSync(join(proj, 'qa'), { recursive: true });
     writeFileSync(join(proj, 'qa', 'waivers.json'), JSON.stringify([{ check: 'responsive.overflow', reason: 'intentional wide block' }]));
-    const r3 = runGates(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive'], root);
+    const r3 = await runGatesAsync(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive'], root);
     assert.equal(r3.status, 0, r3.stdout);
     const g3 = JSON.parse(readFileSync(join(proj, 'qa', 'gates.json'), 'utf8'));
     assert.ok(g3.records.some((x) => x.id === 'responsive.overflow' && x.status === 'waived'));
     // ESCALATE at round >= 4 while failing
     writeFileSync(join(proj, 'qa', 'waivers.json'), '[]');
     let last;
-    for (let i = 0; i < 2; i++) last = runGates(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive', '--quick'], root);
+    for (let i = 0; i < 2; i++) last = await runGatesAsync(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive', '--quick'], root);
     assert.equal(last.status, 1);
     assert.match(last.stdout, /^ESCALATE:/m);
   } finally {
@@ -144,7 +157,7 @@ gate('a clean site exits 0', async () => {
   const { server, origin } = await serve(join(fixtures, 'clean'));
   const proj = mkdtempSync(join(tmpdir(), 'gates-ok-'));
   try {
-    const r = runGates(['--url', origin, '--routes', '/,/about.html', '--project', proj, '--only', 'content,a11y,responsive,perf,tells'], root);
+    const r = await runGatesAsync(['--url', origin, '--routes', '/,/about.html', '--project', proj, '--only', 'content,a11y,responsive,perf,tells'], root);
     const g = JSON.parse(readFileSync(join(proj, 'qa', 'gates.json'), 'utf8'));
     const bad = g.records.filter((x) => x.status === 'fail' || x.status === 'error');
     const axeOnly = bad.length > 0 && bad.every((x) => x.id === 'a11y.axe' && x.status === 'error');
@@ -160,7 +173,7 @@ gate('a clean site exits 0', async () => {
 gate('an unreachable server is UNVERIFIED (exit 3), never PASS', async () => {
   const proj = mkdtempSync(join(tmpdir(), 'gates-down-'));
   try {
-    const r = runGates(['--url', 'http://127.0.0.1:9', '--routes', '/', '--project', proj, '--only', 'content', '--quick'], root);
+    const r = await runGatesAsync(['--url', 'http://127.0.0.1:9', '--routes', '/', '--project', proj, '--only', 'content', '--quick'], root);
     assert.equal(r.status, 3, `${r.stdout}\n${r.stderr}`);
   } finally {
     rmSync(proj, { recursive: true, force: true });

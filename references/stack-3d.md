@@ -41,7 +41,7 @@ Status marks: "verified 2026-11-23" means re-checked against the installed packa
 ### Assets
 `@gltf-transform/cli`: `gltf-transform inspect <in>`, then `gltf-transform optimize <in> <out> --compress draco --texture-compress webp`. `gltfjsx` for GLTF to JSX. Both dev-only. Draco decoder is about 75 KB gzip; the KTX2 transcoder about 260 KB gzip (measured 2026-07-29) and pays off only past several 2K textures; below that use WebP. Decoders are not counted by bundle analyzers.
 
-### Bundle measurements (measured 2026-07-29, esbuild + gzip, three 0.185 era; not repeated)
+### Bundle measurements (measured 2026-07-29 with esbuild + gzip on the three.js release current then; not repeated since)
 
 | Import | gzip |
 |---|---|
