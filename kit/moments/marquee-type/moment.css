@@ -6,10 +6,10 @@
   margin: 0;
   font-family: var(--font-display, inherit);
   font-size: var(--mq-size, clamp(3rem, 13vw, 11rem));
-  line-height: var(--mq-leading, 1.05);
+  line-height: var(--mq-leading, 1.2);
   color: var(--foreground, inherit);
 }
-[data-moment="marquee-type"][data-moment-ready] { white-space: nowrap; }
+[data-moment="marquee-type"][data-moment-ready] { white-space: nowrap; min-block-size: 3.5rem; }
 [data-moment="marquee-type"] .mq-track {
   display: flex;
   width: max-content;
@@ -23,7 +23,8 @@
 }
 [data-moment="marquee-type"] .mq-pause {
   position: absolute;
-  inset-block-end: 0.5rem;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
   inset-inline-end: 0.5rem;
   z-index: 1;
   font: 500 0.875rem/1 var(--font-sans, system-ui, sans-serif);

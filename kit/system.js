@@ -11,14 +11,22 @@ const BASE = new URL('./moments/', import.meta.url);
 const mounted = new Map(); // element -> cleanup function, or 'pending'
 let observer = null;
 
+// Links moment.css once; resolves when it has loaded (or failed) so mount never runs unstyled.
+const cssReady = new Map(); // name -> Promise
 function linkCss(name) {
+  if (cssReady.has(name)) return cssReady.get(name);
   const href = new URL(`${name}/moment.css`, BASE).href;
-  for (const l of document.querySelectorAll('link[rel="stylesheet"]')) if (l.href === href) return;
+  for (const l of document.querySelectorAll('link[rel="stylesheet"]')) if (l.href === href) return Promise.resolve();
   const link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href = href;
   link.dataset.kitMoment = name;
+  const ready = new Promise((r) => {
+    link.onload = link.onerror = r;
+  });
   document.head.append(link);
+  cssReady.set(name, ready);
+  return ready;
 }
 
 async function mountOne(el) {
@@ -30,8 +38,7 @@ async function mountOne(el) {
   }
   mounted.set(el, 'pending');
   try {
-    linkCss(name);
-    const mod = await import(new URL(`${name}/moment.js`, BASE).href);
+    const [mod] = await Promise.all([import(new URL(`${name}/moment.js`, BASE).href), linkCss(name)]);
     if (typeof mod.default !== 'function') throw new Error('moment.js has no default export');
     if (mounted.get(el) !== 'pending') return; // unmounted while loading
     const cleanup = mod.default(el, {});

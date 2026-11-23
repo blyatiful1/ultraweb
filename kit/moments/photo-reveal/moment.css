@@ -1,4 +1,5 @@
-/* photo-reveal: structure and motion only. Colours come from tokens. */
+/* photo-reveal: structure and motion only. Colours come from tokens.
+   The frame never moves or clips itself; the picture inside is clipped, scaled and (optionally) translated. */
 [data-moment="photo-reveal"] [data-reveal],
 [data-moment="photo-reveal"][data-reveal] {
   position: relative;
@@ -8,59 +9,60 @@
   border-radius: var(--radius, 0);
 }
 [data-moment="photo-reveal"] [data-reveal] > :is(img, svg, video, picture, canvas),
-[data-moment="photo-reveal"][data-reveal] > :is(img, svg, video, picture, canvas) {
+[data-moment="photo-reveal"][data-reveal] > :is(img, svg, video, picture, canvas),
+[data-moment="photo-reveal"] [data-reveal] > picture > img,
+[data-moment="photo-reveal"][data-reveal] > picture > img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   max-width: none;
 }
-/* Hidden start states exist only once mount() has set data-moment-ready. */
-[data-moment="photo-reveal"][data-moment-ready] [data-reveal]:not([data-revealed]),
-[data-moment="photo-reveal"][data-moment-ready][data-reveal]:not([data-revealed]) {
-  clip-path: inset(0 100% 0 0);
-}
-[data-moment-ready] [data-reveal][data-from="right"]:not([data-revealed]) { clip-path: inset(0 0 0 100%); }
-[data-moment-ready] [data-reveal][data-from="top"]:not([data-revealed]) { clip-path: inset(0 0 100% 0); }
-[data-moment-ready] [data-reveal][data-from="bottom"]:not([data-revealed]) { clip-path: inset(100% 0 0 0); }
-[data-moment-ready] [data-reveal][data-from="centre"]:not([data-revealed]) { clip-path: inset(50% 50% 50% 50%); }
-[data-moment-ready][data-reveal][data-from="right"]:not([data-revealed]) { clip-path: inset(0 0 0 100%); }
-[data-moment-ready][data-reveal][data-from="top"]:not([data-revealed]) { clip-path: inset(0 0 100% 0); }
-[data-moment-ready][data-reveal][data-from="bottom"]:not([data-revealed]) { clip-path: inset(100% 0 0 0); }
-[data-moment-ready][data-reveal][data-from="centre"]:not([data-revealed]) { clip-path: inset(50% 50% 50% 50%); }
 
+/* Hidden start states exist only once mount() has set data-moment-ready on the root. */
+[data-moment-ready] [data-reveal]:not([data-pr-failed]),
+[data-moment-ready][data-reveal]:not([data-pr-failed]) { background: transparent; }
 [data-moment-ready] [data-reveal] > :is(img, svg, video, picture, canvas),
 [data-moment-ready][data-reveal] > :is(img, svg, video, picture, canvas) {
+  clip-path: inset(0 100% 0 0);
   scale: 1.18;
   translate: 0 0;
 }
-[data-moment-ready] [data-reveal][data-revealed],
-[data-moment-ready][data-reveal][data-revealed] {
-  clip-path: inset(0 0 0 0);
-  transition: clip-path var(--dur-section, 900ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)) var(--pr-delay, 0ms);
-}
+[data-moment-ready] [data-reveal][data-from="right"] > :is(img, svg, video, picture, canvas),
+[data-moment-ready][data-reveal][data-from="right"] > :is(img, svg, video, picture, canvas) { clip-path: inset(0 0 0 100%); }
+[data-moment-ready] [data-reveal][data-from="top"] > :is(img, svg, video, picture, canvas),
+[data-moment-ready][data-reveal][data-from="top"] > :is(img, svg, video, picture, canvas) { clip-path: inset(0 0 100% 0); }
+[data-moment-ready] [data-reveal][data-from="bottom"] > :is(img, svg, video, picture, canvas),
+[data-moment-ready][data-reveal][data-from="bottom"] > :is(img, svg, video, picture, canvas) { clip-path: inset(100% 0 0 0); }
+[data-moment-ready] [data-reveal][data-from="centre"] > :is(img, svg, video, picture, canvas),
+[data-moment-ready][data-reveal][data-from="centre"] > :is(img, svg, video, picture, canvas) { clip-path: inset(50% 50% 50% 50%); }
+
+/* Revealed. Parallax frames settle at a slightly larger scale so travel never shows an edge. */
 [data-moment-ready] [data-reveal][data-revealed] > :is(img, svg, video, picture, canvas),
 [data-moment-ready][data-reveal][data-revealed] > :is(img, svg, video, picture, canvas) {
+  clip-path: inset(0 0 0 0);
   scale: 1;
-  transition: scale calc(var(--dur-section, 900ms) * 1.35) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)) var(--pr-delay, 0ms);
+  transition:
+    clip-path var(--dur-section, 900ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)) var(--pr-delay, 0ms),
+    scale calc(var(--dur-section, 900ms) * 1.35) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)) var(--pr-delay, 0ms);
 }
-/* Parallax frames settle to a slightly larger picture so travel never shows an edge. */
 [data-moment-ready] [data-reveal][data-parallax-on][data-revealed] > :is(img, svg, video, picture, canvas),
-[data-moment-ready][data-reveal][data-parallax-on][data-revealed] > :is(img, svg, video, picture, canvas) {
-  scale: 1.06;
-}
+[data-moment-ready][data-reveal][data-parallax-on][data-revealed] > :is(img, svg, video, picture, canvas) { scale: 1.06; }
 [data-moment-ready] [data-reveal][data-parallax-on] > :is(img, svg, video, picture, canvas),
 [data-moment-ready][data-reveal][data-parallax-on] > :is(img, svg, video, picture, canvas) {
   translate: 0 calc(var(--pr-y, 0) * 1%);
   will-change: translate;
 }
-[data-moment-ready] [data-reveal][data-pr-done],
-[data-moment-ready][data-reveal][data-pr-done] { clip-path: none; transition: none; }
-[data-moment-ready] [data-reveal][data-instant],
+/* A picture that is still loading when its frame opens fades in when it arrives. */
+[data-moment-ready] [data-reveal] > img { transition-property: clip-path, scale, opacity; }
+[data-moment-ready] [data-reveal][data-pr-wait] > img { opacity: 0; }
+/* Settled: drop the clip so focus rings and shadows are never cut. */
+[data-moment-ready] [data-reveal][data-pr-done] > :is(img, svg, video, picture, canvas),
+[data-moment-ready][data-reveal][data-pr-done] > :is(img, svg, video, picture, canvas) { clip-path: none; transition: none; }
 [data-moment-ready] [data-reveal][data-instant] > :is(img, svg, video, picture, canvas),
-[data-moment-ready][data-reveal][data-instant],
 [data-moment-ready][data-reveal][data-instant] > :is(img, svg, video, picture, canvas) { transition: none; }
 @media (prefers-reduced-motion: reduce) {
-  [data-moment="photo-reveal"] [data-reveal], [data-moment="photo-reveal"][data-reveal] { clip-path: none !important; }
-  [data-moment="photo-reveal"] [data-reveal] > *, [data-moment="photo-reveal"][data-reveal] > * { scale: 1 !important; translate: none !important; transition: none !important; }
+  [data-moment="photo-reveal"] [data-reveal] > *, [data-moment="photo-reveal"][data-reveal] > * {
+    clip-path: none !important; scale: 1 !important; translate: none !important; transition: none !important;
+  }
 }

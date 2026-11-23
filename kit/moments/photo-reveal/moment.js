@@ -28,7 +28,7 @@ export default function mount(root, options = {}) {
     cancelAnimationFrame(raf);
     timers.forEach(clearTimeout);
     frames.forEach((f) => {
-      ['data-revealed', 'data-pr-done', 'data-instant', 'data-parallax-on'].forEach((a) => f.removeAttribute(a));
+      ['data-revealed', 'data-pr-done', 'data-instant', 'data-parallax-on', 'data-pr-failed', 'data-pr-wait'].forEach((a) => f.removeAttribute(a));
       f.style.removeProperty('--pr-delay');
       f.style.removeProperty('--pr-y');
     });
@@ -70,11 +70,14 @@ export default function mount(root, options = {}) {
       later(() => f.setAttribute('data-pr-done', ''), instant ? 0 : delay + 2000);
     };
     const m = media.get(f);
-    if (m && m.tagName === 'IMG' && !m.complete) {
-      // late image: wait (bounded) so the wipe never opens on an empty box; a failed image still reveals
-      const once = () => { m.removeEventListener('load', once); m.removeEventListener('error', once); go(); };
-      m.addEventListener('load', once); m.addEventListener('error', once);
-      later(go, 1500);
+    const img = m && m.tagName === 'IMG';
+    if (img && m.complete && m.getAttribute('src') && !m.naturalWidth) f.setAttribute('data-pr-failed', '');
+    if (img && (!m.complete || !m.getAttribute('src'))) {
+      // late image: wait (bounded) so the wipe rarely opens on an empty box; if it is still late, it fades in after
+      const once = () => { m.removeEventListener('load', once); m.removeEventListener('error', bad); f.removeAttribute('data-pr-wait'); go(); };
+      const bad = () => { f.setAttribute('data-pr-failed', ''); once(); };
+      m.addEventListener('load', once); m.addEventListener('error', bad);
+      later(() => { f.setAttribute('data-pr-wait', ''); go(); }, 1200);
     } else go();
   };
 

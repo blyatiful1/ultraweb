@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>cursor-trail demo</title>
+<link rel="stylesheet" href="../../system.css">
+<link rel="stylesheet" href="moment.css">
+<style>
+/* demo-only tokens */
+:root{--background:#f6f4ef;--foreground:#1c1b19;--muted:#dcd8cf;--muted-foreground:#5b5850;--primary:#2f5d50;--primary-foreground:#fff;--accent:#d9893b;--radius:6px;--dur-micro:180ms;--dur-section:900ms;--ease-out:cubic-bezier(.22,1,.36,1);--font-sans:system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--background);color:var(--foreground);font:17px/1.55 var(--font-sans)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+h1{font-size:clamp(2.2rem,7vw,5rem);line-height:1.02;margin:0 0 .4em}
+h2{margin:0 0 .6em}
+.hero{min-height:80vh;display:flex;flex-direction:column;justify-content:center;padding:6vh 16px;border-bottom:1px solid var(--muted)}
+section.list{padding:10vh 16px 14vh}
+ul.rows{list-style:none;margin:0;padding:0;max-width:640px}
+ul.rows li{border-top:1px solid var(--muted)}
+ul.rows a{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 0;font-size:1.6rem;color:inherit;text-decoration:none}
+ul.rows a span{display:inline-flex;align-items:center}
+ul.rows a:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
+ul.rows small{color:var(--muted-foreground);font-size:.9rem}
+.pad{height:50vh}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="pad"><h2 style="padding-top:12vh">Scroll to the hero</h2></div>
+<div data-moment="cursor-trail" class="hero" id="trail" data-mode="trail" data-count="8">
+<h1>Move through this area</h1>
+<p style="max-width:52ch">Small shapes follow the pointer with spring lag and fade out behind it. They sit beside the cursor, never under it, so this sentence stays readable. On touch screens and with reduced motion nothing follows.</p>
+</div>
+<section data-moment="cursor-trail" class="list" id="list" data-mode="list">
+<h2>List mode</h2>
+<p style="max-width:52ch">Hover a row to see its preview near the pointer. Tab to a row to dock the preview beside it.</p>
+<ul class="rows">
+<li data-preview="" data-n="0"><a href="#row-0"><span>Harbour lights</span><small>01</small></a></li>
+<li data-preview="" data-n="1"><a href="#row-1"><span>Salt flats</span><small>02</small></a></li>
+<li data-preview="" data-n="2"><a href="#row-2"><span>Night market</span><small>03</small></a></li>
+<li data-preview="" data-n="3"><a href="#row-3"><span>Glasshouse</span><small>04</small></a></li>
+<li data-preview="" data-n="4"><a href="#row-4"><span>Quarry swim</span><small>05</small></a></li>
+</ul>
+</section>
+<div class="pad"></div>
+</div>
+<script type="module">
+import mount from './moment.js';
+const cols=[['#2f5d50','#d9893b'],['#d9893b','#1c1b19'],['#1c1b19','#dcd8cf'],['#5b7f95','#f6f4ef'],['#a64b3c','#f2d6a0']];
+const uri=(i)=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="480" height="600" viewBox="0 0 480 600"><rect width="480" height="600" fill="${cols[i][0]}"/><circle cx="240" cy="230" r="120" fill="${cols[i][1]}"/><rect x="60" y="430" width="360" height="40" fill="${cols[i][1]}"/></svg>`);
+document.querySelectorAll('#list [data-preview]').forEach((r,i)=>r.setAttribute('data-preview',uri(i)));
+window.__cleanups=[...document.querySelectorAll('[data-moment]')].map((el)=>mount(el));
+window.__mount=mount;
+</script>
+</body>
+</html>

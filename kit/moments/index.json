@@ -1,1 +1,54 @@
-[]
+[
+  {
+    "name": "type-lines",
+    "kind": "type",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "product",
+      "studio",
+      "shop",
+      "editorial",
+      "place",
+      "launch"
+    ],
+    "intensity": 1,
+    "bytes": 6487,
+    "summary": "Headline or paragraph rises line by line from behind a mask, once, measured from the real layout."
+  },
+  {
+    "name": "type-scrub",
+    "kind": "scroll",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "studio",
+      "editorial",
+      "product",
+      "launch",
+      "place"
+    ],
+    "intensity": 2,
+    "bytes": 5452,
+    "summary": "Statement whose words go from muted to full colour in reading order as it scrolls through; reversible, no pinning."
+  },
+  {
+    "name": "marquee-type",
+    "kind": "type",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "studio",
+      "shop",
+      "editorial",
+      "launch",
+      "product"
+    ],
+    "intensity": 2,
+    "bytes": 6711,
+    "summary": "Oversized looping line of text with scroll-velocity nudge, pause button, and static wrapped fallback."
+  }
+]

@@ -1,0 +1,21 @@
+/* image-sequence. Default (no JS, reduced motion) = poster image, then captions as normal text. */
+[data-moment="image-sequence"] [data-is-poster] { display: block; width: 100%; height: auto; max-height: 80vh; object-fit: cover; }
+[data-moment="image-sequence"] [data-is-caption] { padding: 1rem var(--is-gutter, max(1rem, 4vw)); max-width: 40rem; }
+
+[data-moment="image-sequence"][data-moment-ready] { position: relative; height: calc(var(--is-length, 400) * 1vh); }
+[data-moment="image-sequence"][data-moment-ready] [data-is-sticky] {
+  position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
+  background: var(--background, #fff); color: var(--foreground, #111);
+}
+[data-moment="image-sequence"][data-moment-ready] [data-is-poster],
+[data-moment="image-sequence"][data-moment-ready] [data-is-canvas] {
+  position: absolute; inset: 0; width: 100%; height: 100%; max-height: none; object-fit: cover;
+}
+[data-moment="image-sequence"][data-moment-ready] [data-is-canvas] { z-index: 1; }
+[data-moment="image-sequence"][data-is-drawn] [data-is-poster] { visibility: hidden; }
+[data-moment="image-sequence"][data-moment-ready] [data-is-caption] {
+  position: absolute; z-index: 2; left: 0; right: auto; bottom: var(--is-caption-bottom, 10vh);
+  opacity: 0; will-change: opacity, transform; pointer-events: none;
+}
+[data-moment="image-sequence"][data-moment-ready] [data-is-caption][data-align="right"] { left: auto; right: 0; text-align: right; }
+[data-moment="image-sequence"][data-moment-ready] [data-is-caption][data-align="center"] { left: 0; right: 0; margin-inline: auto; text-align: center; }

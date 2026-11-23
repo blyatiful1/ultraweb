@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>type-scrub demo</title>
+<link rel="stylesheet" href="../../system.css">
+<link rel="stylesheet" href="./moment.css">
+<style>
+/* demo-only placeholder tokens: a real site supplies its own */
+:root{--background:#f6f4ef;--foreground:#16150f;--muted-foreground:#6b675c;--border:#cfcabb;--ring:#2a4bd7;--radius:.5rem;--dur-section:.9s;--ease-out:cubic-bezier(.16,1,.3,1);--font-display:Georgia,"Times New Roman",serif;--font-sans:system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--background:#13120e;--foreground:#f1eee4;--muted-foreground:#9a9585;--border:#3a372c;--ring:#8ea2ff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--background);color:var(--foreground);font:1rem/1.6 var(--font-sans)}
+.pad{padding:12vh 16px}
+.wrap{max-width:70rem;margin-inline:auto;padding-inline:16px}
+.note{max-width:40rem;color:var(--muted-foreground)}
+a{color:inherit}
+a:focus-visible{outline:2px solid var(--ring);outline-offset:3px}
+.stmt{font-family:var(--font-display);font-size:clamp(1.9rem,6vw,4.6rem);line-height:1.12;letter-spacing:-.01em;margin:0;max-width:24ch}
+.stmt em{font-style:italic}
+.stmt a{text-decoration:underline;text-underline-offset:.15em}
+</style>
+</head>
+<body>
+<header class="pad wrap"><h1 style="font-family:var(--font-display);font-weight:400;font-size:clamp(2rem,6vw,4rem);margin:0">Scroll-scrubbed statement</h1><p class="note">Scroll down. The words below move from muted to full colour in reading order, and back when you scroll up.</p></header>
+<section class="wrap pad" style="padding-block:30vh">
+  <p class="stmt" data-moment="type-scrub" id="stmt">Words arrive in reading order as you scroll, no pinning, no hijacked wheel. Each one moves from <em>muted</em> to full colour, and returns when you <a href="#stmt">scroll back up</a>.</p>
+</section>
+<section class="wrap pad" style="padding-block:20vh">
+  <p class="stmt" data-moment="type-scrub" data-engine="js" data-muted="0.25" id="stmt2">The same effect through the JavaScript path, used when the browser has no scroll timelines.</p>
+</section>
+<div style="height:60vh"></div>
+<script type="module">
+import mount from './moment.js';
+window.mountAll = () => [...document.querySelectorAll('[data-moment]')].map((el) => mount(el));
+window.cleanups = window.mountAll();
+</script>
+</body>
+</html>

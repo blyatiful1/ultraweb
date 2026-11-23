@@ -27,6 +27,19 @@ export default function mount(root, options = {}) {
     }
   });
 
+  // inline-block words do not inherit an underline from <a>, so copy it onto the word
+  const decoCache = new Map();
+  const decoration = (el) => {
+    if (decoCache.has(el)) return decoCache.get(el);
+    let out = '';
+    for (let e = el; e && !out; e = e === root ? null : e.parentElement) {
+      const cs = win.getComputedStyle(e);
+      if (cs.textDecorationLine && cs.textDecorationLine !== 'none') out = `${cs.textDecorationLine} ${cs.textDecorationStyle} ${cs.textDecorationColor}`;
+    }
+    decoCache.set(el, out);
+    return out;
+  };
+
   // split every text node into word masks (inline elements such as <em>/<a> stay intact)
   const words = [];
   const walker = doc.createTreeWalker(root, 4);
@@ -44,6 +57,8 @@ export default function mount(root, options = {}) {
       const inner = doc.createElement('span');
       inner.className = 'tl-i';
       inner.textContent = part;
+      const deco = decoration(n.parentNode);
+      if (deco) inner.style.textDecoration = deco;
       mask.appendChild(inner);
       frag.appendChild(mask);
       words.push(mask);
