@@ -4,10 +4,13 @@
 // Config keys read: axePath (absolute path to axe.min.js), axeUrl (override the CDN),
 //                   tags (default wcag2a, wcag2aa, wcag22aa), theme.
 // Returns: { url, viewport, theme, violations:[{id,impact,help,helpUrl,nodes:[{target,html}]}],
-//            passes, incomplete, source:'path'|'cdn'|'page'|null, tags, truncated,
+//            incompleteItems:[{id,impact,help,nodes:[{target,html}]}] (axe "needs review" results;
+//            the runner reports them as review),
+//            passes, incomplete (count), source:'path'|'cdn'|'page'|null, tags, truncated,
 //            error: string, only when a measurement could not run — the runner treats it as UNVERIFIED }.
 // source 'page' means axe was already loaded by the previous route — acceptable, record it as
-// the source. The gate asserts: violations.length === 0. source === null means UNVERIFIED, not PASS.
+// the source. The gate asserts: violations.length === 0; incompleteItems are review, never a
+// pass or a fail. source === null means UNVERIFIED, not PASS.
 async (page) => {
   const config =
     (await page
@@ -53,6 +56,7 @@ async (page) => {
       violations: [],
       passes: 0,
       incomplete: 0,
+      incompleteItems: [],
       source: null,
       tags,
       error: error || 'axe-core unavailable (no axePath, no network)',
@@ -64,7 +68,7 @@ async (page) => {
     .evaluate(
       (t) =>
         window.axe
-          .run(document, { runOnly: { type: 'tag', values: t }, resultTypes: ['violations'] })
+          .run(document, { runOnly: { type: 'tag', values: t }, resultTypes: ['violations', 'incomplete'] })
           .then((r) => {
             const cap = 500;
             const violations = r.violations.slice(0, cap).map((v) => ({
@@ -77,8 +81,18 @@ async (page) => {
                 html: String(n.html || '').replace(/\s+/g, ' ').slice(0, 200),
               })),
             }));
+            const incompleteItems = (r.incomplete || []).slice(0, 100).map((v) => ({
+              id: v.id,
+              impact: v.impact || null,
+              help: String(v.help || '').slice(0, 160),
+              nodes: (v.nodes || []).slice(0, 5).map((n) => ({
+                target: (n.target || []).join(' ').slice(0, 200),
+                html: String(n.html || '').replace(/\s+/g, ' ').slice(0, 200),
+              })),
+            }));
             return {
               violations,
+              incompleteItems,
               passes: (r.passes || []).length,
               incomplete: (r.incomplete || []).length,
               truncated: r.violations.length > cap,
@@ -96,6 +110,7 @@ async (page) => {
     violations: data.violations,
     passes: data.passes,
     incomplete: data.incomplete,
+    incompleteItems: data.incompleteItems || [],
     source: data.error ? null : source, // a run that threw measured nothing — never green
     tags,
     truncated: !!data.truncated,

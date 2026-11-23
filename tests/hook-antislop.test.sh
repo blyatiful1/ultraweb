@@ -1,105 +1,105 @@
 #!/usr/bin/env bash
-# Fixture tests for hooks/antislop.sh and hooks/studio-log.sh.
-# Each case feeds a real PostToolUse payload on stdin and asserts the exit code
-# the hook contract promises (0 = pass through, 2 = blocking feedback).
+# Fixture tests for hooks/antislop.mjs. Each case feeds a PostToolUse payload on stdin
+# and asserts the exit code (0 = pass through, 2 = findings shown to Claude).
 # Run: bash tests/hook-antislop.test.sh   (exit 1 on any failing case)
 set -u
 root="$(cd "$(dirname "$0")/.." && pwd)"
+hook="$root/hooks/antislop.mjs"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 
 pass=0; fail=0
-expect() { # $1 = case name, $2 = file_path payload value, $3 = expected exit code
-  printf '{"tool_input":{"file_path":"%s"}}' "$2" | bash "$root/hooks/antislop.sh" >/dev/null 2>&1
-  got=$?
-  if [ "$got" -eq "$3" ]; then pass=$((pass+1)); echo "ok    $1"
-  else fail=$((fail+1)); echo "FAIL  $1 — expected exit $3, got $got"; fi
+
+# payload <tool> <file_path> <new text> [existing-file-text]
+payload() {
+  node -e '
+    const [tool, file, text] = process.argv.slice(1);
+    let input;
+    if (tool === "Write") input = { file_path: file, content: text };
+    else if (tool === "Edit") input = { file_path: file, old_string: "OLD", new_string: text };
+    else input = { file_path: file, edits: [{ old_string: "A", new_string: "clean text" }, { old_string: "B", new_string: text }] };
+    process.stdout.write(JSON.stringify({ hook_event_name: "PostToolUse", tool_name: tool, tool_input: input }));
+  ' "$1" "$2" "$3"
 }
 
-# An "ultraweb build" is any tree with a design/BRIEF.md ancestor.
+# expect <name> <expected exit> <tool> <file_path> <new text>
+expect() {
+  local name="$1" want="$2" got
+  [ -e "$4" ] || { mkdir -p "$(dirname "$4")"; printf '%s\n' "$5" > "$4"; }
+  payload "$3" "$4" "$5" | node "$hook" >"$tmp/out" 2>&1
+  got=$?
+  if [ "$got" -eq "$want" ]; then pass=$((pass+1)); echo "ok    $name"
+  else fail=$((fail+1)); echo "FAIL  $name: expected exit $want, got $got"; sed 's/^/      /' "$tmp/out"; fi
+}
+
 site="$tmp/site"
-mkdir -p "$site/design" "$site/components"
-echo "brief" > "$site/design/BRIEF.md"
+mkdir -p "$site/design" "$site/components" "$site/app"
+printf '# Brief\nDeployment mode: production\n' > "$site/design/BRIEF.md"
 
-printf '<div className="bg-gradient-to-r from-purple-500 to-blue-500" />\n' > "$site/components/bad-gradient.tsx"
-expect "purple-to-blue gradient blocks (exit 2)" "$site/components/bad-gradient.tsx" 2
+# Hard defects block.
+expect 'lorem ipsum blocks' 2 Write "$site/components/a.tsx" '<p>Lorem ipsum dolor</p>'
+expect 'multi-space, mixed-case lorem blocks' 2 Write "$site/components/b.tsx" '<p>LOREM   Ipsum</p>'
+expect 'href="#" blocks' 2 Write "$site/components/c.tsx" '<a href="#">x</a>'
+expect "single-quoted href='#' blocks" 2 Write "$site/components/d.tsx" "<a href='#'>x</a>"
+expect 'JSX-expression href={"#"} blocks' 2 Write "$site/components/e.tsx" '<a href={"#"}>x</a>'
+expect 'unquoted HTML href=# blocks' 2 Write "$site/app/f.html" '<a href=# class=x>x</a>'
+expect 'placehold.co image blocks' 2 Write "$site/components/g.tsx" '<img src="https://placehold.co/600x400" alt="" />'
+expect 'picsum.photos image blocks' 2 Write "$site/components/h.tsx" '<img src="https://picsum.photos/200" alt="" />'
+expect 'star-emoji rating blocks' 2 Write "$site/components/i.tsx" '<span>⭐⭐⭐⭐⭐</span>'
+expect 'star-glyph rating blocks' 2 Write "$site/components/j.tsx" '<span>★ ★ ★ ★ ★</span>'
+expect 'Happy Customer attribution blocks' 2 Write "$site/components/k.tsx" '<cite>happy  customer</cite>'
+expect 'John D. attribution blocks' 2 Write "$site/components/l.tsx" '<cite>John D.</cite>'
+expect 'Feature N copy blocks' 2 Write "$site/components/m.tsx" '<h3>Feature 2</h3>'
+expect 'UNVERIFIED-PROOF on production blocks' 2 Write "$site/components/n.tsx" '// UNVERIFIED-PROOF sample'
+expect 'Edit new_string is scanned' 2 Edit "$site/components/o.tsx" '<a href="#">x</a>'
+expect 'MultiEdit second new_string is scanned' 2 MultiEdit "$site/components/p.tsx" 'lorem ipsum'
 
-printf 'lorem ipsum dolor sit amet\n' > "$site/components/lorem.tsx"
-expect "lorem ipsum blocks (exit 2)" "$site/components/lorem.tsx" 2
+# False positives from the v1 audit stay quiet.
+expect 'purple gradient is style, not blocked' 0 Write "$site/components/r.tsx" '<div className="bg-gradient-to-r from-purple-500 to-blue-500" />'
+expect 'emoji is style, not blocked' 0 Write "$site/components/s.tsx" '<p>Launch day 🚀</p>'
+expect 'README.md is not a source file' 0 Write "$site/README.md" 'Lorem ipsum notes'
+expect 'JSON is not a source file' 0 Write "$site/app/x.json" '{"a":"lorem ipsum"}'
+expect 'design/ record is skipped' 0 Write "$site/design/notes.mdx" 'lorem ipsum'
+expect 'test files are skipped' 0 Write "$site/components/a.test.tsx" 'expect(html).not.toContain("lorem ipsum")'
+expect 'skip link href="#main" passes' 0 Write "$site/components/t.tsx" '<a href="#main">Skip to content</a>'
+expect 'prose "happy customers" passes' 0 Write "$site/components/u.tsx" '<p>Our customers are happy customers of the roastery.</p>'
+expect 'clean source passes' 0 Write "$site/components/v.tsx" 'export const H = () => <h1>Closed books, not seats.</h1>;'
 
-printf '<a href="#">read more</a>\n' > "$site/components/dead-link.tsx"
-expect 'dead href="#" blocks (exit 2)' "$site/components/dead-link.tsx" 2
+# An edit with clean new text passes even when the file already holds a defect.
+printf '<a href="#">old</a>\n<p>OLD</p>\n' > "$site/components/w.tsx"
+expect 'clean edit to a file with a pre-existing defect passes' 0 Edit "$site/components/w.tsx" '<p>Real copy</p>'
 
-printf '<figcaption>Happy Customer</figcaption>\n' > "$site/components/fake-proof.tsx"
-expect "fabricated-proof tell blocks (exit 2)" "$site/components/fake-proof.tsx" 2
+# Demo mode makes UNVERIFIED-PROOF lawful.
+demo="$tmp/demo"
+mkdir -p "$demo/design" "$demo/components"
+printf '# Brief\nDeployment mode: demo\n' > "$demo/design/BRIEF.md"
+expect 'UNVERIFIED-PROOF on demo passes' 0 Write "$demo/components/a.tsx" '// UNVERIFIED-PROOF sample'
+printf 'Deployment mode: demo\n' >> "$demo/design/BRIEF.md"
+expect 'duplicated mode line fails closed to production' 2 Write "$demo/components/b.tsx" '// UNVERIFIED-PROOF sample'
 
-printf 'export function Hero() { return <h1>Closed books, not seats.</h1>; }\n' > "$site/components/clean.tsx"
-expect "clean source passes (exit 0)" "$site/components/clean.tsx" 0
+# Outside an ultraweb build the hook stands down.
+expect 'no design/BRIEF.md ancestor passes' 0 Write "$tmp/plain/src/a.tsx" '<a href="#">x</a> lorem ipsum'
 
-# Outside an ultraweb build (no design/BRIEF.md ancestor) the hook must stand down.
-mkdir -p "$tmp/plain/components"
-printf 'lorem ipsum <a href="#">x</a>\n' > "$tmp/plain/components/outside.tsx"
-expect "non-ultraweb tree is exempt (exit 0)" "$tmp/plain/components/outside.tsx" 0
+# Relative path: cwd from the payload.
+printf '<a href="#">x</a>\n' > "$site/components/rel.tsx"
+node -e 'process.stdout.write(JSON.stringify({tool_name:"Write",cwd:process.argv[1],tool_input:{file_path:"components/rel.tsx",content:"<a href=\"#\">x</a>"}}))' "$site" | node "$hook" >/dev/null 2>&1
+if [ $? -eq 2 ]; then pass=$((pass+1)); echo 'ok    relative path uses payload cwd'; else fail=$((fail+1)); echo 'FAIL  relative path uses payload cwd'; fi
 
-# The design record itself is never policed.
-printf 'banned-list notes: lorem ipsum, href="#"\n' > "$site/design/notes.tsx"
-expect "design/ record is exempt (exit 0)" "$site/design/notes.tsx" 0
+# Fail open on garbage input and on an empty payload.
+for input in 'not json' '' '{"tool_input":{}}'; do
+  printf '%s' "$input" | node "$hook" >/dev/null 2>&1
+  if [ $? -eq 0 ]; then pass=$((pass+1)); echo "ok    fails open on: ${input:-<empty>}"; else fail=$((fail+1)); echo "FAIL  did not fail open on: ${input:-<empty>}"; fi
+done
 
-# Non-source extensions are out of scope.
-printf 'lorem ipsum\n' > "$site/components/notes.txt"
-expect "non-source extension is exempt (exit 0)" "$site/components/notes.txt" 0
+# The stderr message names the line inside the file, not inside the edit.
+printf 'line one\nline two\n<a href="#">x</a>\n' > "$site/components/lines.tsx"
+payload Edit "$site/components/lines.tsx" '<a href="#">x</a>' | node "$hook" 2>"$tmp/err" >/dev/null
+if grep -q 'line 3: dead "#" link' "$tmp/err"; then pass=$((pass+1)); echo 'ok    reports the file line'; else fail=$((fail+1)); echo 'FAIL  reports the file line'; cat "$tmp/err"; fi
 
-# UNVERIFIED-PROOF: blocked on a production build, allowed once BRIEF declares demo mode.
-printf '<figure data-proof="UNVERIFIED-PROOF"><blockquote>Sample quote</blockquote></figure>\n' > "$site/components/demo-proof.tsx"
-expect "UNVERIFIED-PROOF blocks on production BRIEF (exit 2)" "$site/components/demo-proof.tsx" 2
-printf 'brief\nDeployment mode: demo\n' > "$site/design/BRIEF.md"
-expect "UNVERIFIED-PROOF passes on demo BRIEF (exit 0)" "$site/components/demo-proof.tsx" 0
-printf 'brief\nDeployment mode: demo-bogus\n' > "$site/design/BRIEF.md"
-expect "invalid mode value fails closed (exit 2)" "$site/components/demo-proof.tsx" 2
-printf 'brief\nDeployment mode: production\nDeployment mode: demo\n' > "$site/design/BRIEF.md"
-expect "duplicated mode lines fail closed (exit 2)" "$site/components/demo-proof.tsx" 2
-printf 'brief\n' > "$site/design/BRIEF.md"   # restore production mode
+# The hooks.json guard exits 0 when node is missing.
+cmd="$(node -e 'const h=require(process.argv[1]);process.stdout.write(h.hooks.PostToolUse[0].hooks[0].command)' "$root/hooks/hooks.json")"
+printf '{}' | env -i PATH=/nonexistent CLAUDE_PLUGIN_ROOT="$root" /bin/sh -c "$cmd" >/dev/null 2>&1
+if [ $? -eq 0 ]; then pass=$((pass+1)); echo 'ok    missing node exits 0'; else fail=$((fail+1)); echo 'FAIL  missing node exits 0'; fi
 
-# Data files are in scope — fake proof hides in JSON as easily as in TSX.
-printf '{"quote":"lorem ipsum dolor"}\n' > "$site/components/reviews.json"
-expect "banned string in .json blocks (exit 2)" "$site/components/reviews.json" 2
-
-# Windows-form path must not make the guard stand down (Git Bash / cygpath hosts only).
-if command -v cygpath >/dev/null 2>&1; then
-  winpath="$(cygpath -w "$site/components/bad-gradient.tsx")"
-  expect "Windows-form path still blocks (exit 2)" "$winpath" 2
-else
-  echo "skip  Windows-form path case (no cygpath on this host — POSIX CI covers the rest)"
-fi
-
-# A payload without file_path must not crash the hook chain.
-printf '{}' | bash "$root/hooks/antislop.sh" >/dev/null 2>&1
-got=$?
-if [ "$got" -eq 0 ]; then pass=$((pass+1)); echo "ok    empty payload passes (exit 0)"
-else fail=$((fail+1)); echo "FAIL  empty payload — expected exit 0, got $got"; fi
-
-# studio-log.sh: appends one parseable JSONL line inside a build, no-ops outside.
-(
-  cd "$site" || exit 1
-  printf '{"hook_event_name":"SubagentStop","description":"built hero section","subagent_type":"ultraweb:pixel-qa"}' \
-    | bash "$root/hooks/studio-log.sh"
-)
-if [ -f "$site/design/studio-log.jsonl" ] \
-  && node -e 'const l=require("fs").readFileSync(process.argv[1],"utf8").trim().split("\n").pop();const j=JSON.parse(l);if(j.event!=="SubagentStop"||j.agent!=="ultraweb:pixel-qa")process.exit(1)' "$site/design/studio-log.jsonl"; then
-  pass=$((pass+1)); echo "ok    studio-log writes parseable JSONL"
-else
-  fail=$((fail+1)); echo "FAIL  studio-log JSONL missing or unparseable"
-fi
-(
-  cd "$tmp/plain" || exit 1
-  printf '{"hook_event_name":"SubagentStop","description":"x"}' | bash "$root/hooks/studio-log.sh"
-)
-if [ ! -e "$tmp/plain/design/studio-log.jsonl" ]; then
-  pass=$((pass+1)); echo "ok    studio-log no-ops outside a build"
-else
-  fail=$((fail+1)); echo "FAIL  studio-log wrote outside an ultraweb build"
-fi
-
-echo ""
 echo "$pass passed, $fail failed"
-[ "$fail" -eq 0 ] || exit 1
+[ "$fail" -eq 0 ]

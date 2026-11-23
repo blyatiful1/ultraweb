@@ -1,9 +1,10 @@
-# fixture-build — proves the scaffold recipe against the LIVE ecosystem.
-# scripts/scaffold-fixture.sh is the single executable core of skills/scaffold
-# (Phase 5): this workflow runs that exact script weekly and whenever the recipe,
-# the skill, or the stack manifest changes, so ecosystem drift that would break a
-# real build turns a badge red here first, not in a client session. The drift
-# report is informational; the script is the gate.
+# fixture-build — keeps stack/versions.json true and buildable.
+# Two gates, both blocking:
+#   1. verify-stack: any pin that differs from the live npm registry fails the job. A weekly red
+#      run is the signal to run `node scripts/verify-stack.mjs --write`, re-verify the STACK.md API
+#      facts for any major, and commit the new manifest.
+#   2. scaffold-fixture: installs exactly the pinned versions, builds, type-checks and serves a
+#      fresh Next project, then checks every resolved version equals its pin.
 name: fixture-build
 on:
   workflow_dispatch:
@@ -12,9 +13,10 @@ on:
   push:
     paths:
       - 'stack/versions.json'
+      - 'STACK.md'
+      - 'references/scaffold.md'
       - 'scripts/scaffold-fixture.sh'
       - 'scripts/verify-stack.mjs'
-      - 'skills/scaffold/**'
       - '.github/workflows/fixture-build.yml'
 
 jobs:
@@ -26,8 +28,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Stack drift report (informational)
+      - name: Pins match the live registry (drift fails the job)
         run: node scripts/verify-stack.mjs
-        continue-on-error: true
-      - name: Run the scaffold recipe (the same file skills/scaffold cites)
+      - name: Scaffold, build and serve the pinned stack
         run: bash scripts/scaffold-fixture.sh fixture

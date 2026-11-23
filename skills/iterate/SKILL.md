@@ -1,41 +1,50 @@
 ---
 name: iterate
-description: Targeted revision pipeline for an existing ultraweb-built site — scope a requested change ("make the hero bolder", "add a pricing page", "darker palette"), touch only the affected phases, and re-run only the affected quality gates. Use for any change request to a site that has design/* artifacts; use the root ultraweb skill only for building from scratch.
+description: "Make a targeted change to a site ultraweb built (it has design/BRIEF.md, DIRECTION.md, SYSTEM.md and SITEMAP.md): change copy, a section, a page, the palette or type, or add a feature, then re-run only the affected gates."
 ---
 
-# iterate — surgical changes that keep the system coherent
+# iterate
 
-**Stage:** post-ship, any change request - **Reads:** design/BRIEF.md, design/DIRECTION.md, design/SYSTEM.md, design/SITEMAP.md, design/QA.md, design/CONTEXT-HANDOFF.md §Lessons - **Writes:** the affected code + amended design/* artifact + design/QA.md entry
+Apply one change request to an existing ultraweb site without rebuilding it.
 
-A change request against an existing ultraweb site is NOT a rebuild and NOT a freestyle patch. The design system is law until deliberately amended.
+`<plugin>` is `${CLAUDE_PLUGIN_ROOT}`, or the path on the first line of `design/PROGRESS.md`.
 
-## Process
+## 1. Check the record
 
-1. **Load the record.** Read `design/BRIEF.md`, `design/DIRECTION.md`, `design/SYSTEM.md`, `design/SITEMAP.md`, `design/QA.md`, and `design/CONTEXT-HANDOFF.md` §Lessons when that file exists — what earlier contexts learned the hard way; an iteration that repeats a banked debugging saga has wasted the ledger. Then resolve the **plugin root** exactly as root SKILL.md Phase 0 does: the `installPath` of the newest `ultraweb@…` entry in `~/.claude/plugins/installed_plugins.json`, then `~/.claude/skills/ultraweb`, each candidate validated by reading its `.claude-plugin/plugin.json`; neither validates → STOP with the install-repair message. Record it as `Plugin: <path>` on `design/PROGRESS.md`'s header line if it is not already there. Every `<plugin>/…` path below means that directory. If none of the artifacts exist, this isn't an ultraweb site — run `ultraweb:retrofit` first. If SOME exist but the set is partial (a DIRECTION with no QA, artifacts but half-built routes), this is an **interrupted build, not an iteration** — hand to the root skill's §Resuming ladder; classifying a resume as a change request rebuilds paid-for work.
-2. **Classify the request** into the shallowest layer that truly satisfies it:
-   - **Content** — copy, images, data. Touch content only. Consult `copywriting`/`imagery`. Re-gate: `gate-content`.
-   - **Component** — one section looks wrong / needs variants. Consult that section's skill (`hero`, `pricing`, …). Re-gate: `gate-visual` on affected pages + `gate-code`.
-   - **Page** — new page or restructure. Amend `SITEMAP.md` first, then build via the component skills it names. Re-gate: `gate-visual`, `gate-responsive`, `gate-code`, `gate-content` on the new surface.
-   - **System** — palette, type, spacing, motion feel ("make it warmer", "less corporate"). This amends `SYSTEM.md` + `app/globals.css` tokens — components should mostly follow via tokens. Consult the relevant foundation skill (`color`, `typography`, `motion-language`…). Re-gate: `gate-visual` + `gate-accessibility` (contrast changed!) + `gate-antislop` sweep.
-   - **Direction** — "I hate the vibe". This is a re-run of `direction` + Phase 3 of the root pipeline. Confirm scope with the user before burning it down — this is the one case where asking beats deciding.
-   - **Feature** — backend behavior. Consult the matching Tier-6 skill; re-gate `gate-code` + affected flows.
-3. **Amend the artifact before the code.** Whatever layer you touched, update its design/* file in the same change — drifted artifacts poison every later iteration.
-4. **Make the change** at the classified layer. Resist scope creep: "bolder hero" doesn't license retouching the footer. But DO flag (one line, no action) anything adjacent that the change now makes inconsistent.
-5. **Re-gate the affected surface only** (per the classification above). Run root SKILL.md's Phase 11 preamble first — you are the Lead here: `mkdir -p qa && rm -rf .next && npm run build > qa/build.log 2>&1` (a delivered tree may arrive with `qa/` deleted; read the exit code and `tail -n 5 qa/build.log`, nothing more), then `PORT=3100 npm start > qa/prod.log 2>&1 &`, with the build's exit code, the PID and the port recorded in PROGRESS.md §Now — gate-code reads the exit code there, it never rebuilds. Dispatch only the measurement gates the classification named, one at a time, to the `gate-runner` agent with Phase 11's payload (`gate` · `pluginRoot` · `projectRoot` · `prodUrl` · `devUrl` · `artifacts` · `tier` · `market` · `themeStrategy`), adding `rerunOnly` with the check numbers when a single check is what this change put in question. Never open a measurement gate's SKILL.md yourself — the runner appends each gate's QA.md entry and returns the verdict. Rule on every returned `judgment-open` item marked `rules: Lead` and append a `## <gate> — rulings (<date>)` block. Items marked `rules: design-judge` — gate-antislop's checks 12–17 and gate-responsive's check 8 — stay open until gate-visual's round-1 sweep reports, when you write their blocks from its rulings; when the change moved no visual surface and gate-visual therefore does not run, re-affirm them from the previous rulings blocks as `unchanged since <date>` in a new block — an unruled item is not a pass. The production server serves the build of record, not the working tree, so any fix round that touched source, config, tokens, or dependencies repeats that preamble — one rebuild, one restart, an exit code and five log lines — before the same gate is re-dispatched with `rerunOnly` naming the failed checks; a rulings-only round changed no code and skips the rebuild, and a token or config change widens the re-run back to the full gate, since it can move every measurement. Then `gate-visual`, which you run yourself, only when the change moved a visual surface — its fix rounds repeat the preamble too, because the frames come from that same server of record. Your own QA.md and rulings entries follow the ledger rule — an Edit anchored on the file's last line when QA.md is already in this context, a `>>` heredoc when it is not — never a rewrite. Report: what changed, which artifacts were amended, gate results.
+Read `design/PROGRESS.md` (including `## Lessons`), `design/BRIEF.md`, `design/DIRECTION.md`, `design/SYSTEM.md` and `design/SITEMAP.md`.
 
-## Rules
+- All four design files present: continue.
+- None present: this is not an ultraweb site. Say so and offer `retrofit` (`<plugin>/skills/retrofit/SKILL.md`).
+- Some present: name the missing files to the user. If PROGRESS.md shows an unfinished build, offer to resume it (root `SKILL.md` §Resuming). Otherwise offer `retrofit` to reconstruct the rest. Do not start the change, and do not re-run the mockup round or any other phase on your own.
 
-- A request that names a look ("like linear.app", "more brutalist") is a **Direction**-layer conversation, not a CSS tweak — check before classifying it smaller.
-- Never edit token VALUES ad hoc inside components to satisfy a local request — that forks the system. Change the token, or add a deliberate variant.
-- If the same element gets its third revision request, the layer was misclassified — step up one layer and fix the cause (usually SYSTEM or DIRECTION).
-- A request for SVG choreography — "make the logo draw itself", "animate the diagram", "scrub the illustration with scroll" — is a **Direction** question before it is a motion one: `ultraweb:animejs` installs only against a DIRECTION.md commission naming the moment. If the amendment grants it, the change adds a dependency, so `gate-performance`'s bundle audit re-runs alongside the classified gates; if a later request cuts the moment, the package leaves with it.
-- A request to make the site itself three-dimensional — "make the whole thing 3D", "can it be a world you fly through", "like that immersive site" — is a **Direction rewrite**, not a motion tweak, and it is the largest amendment this skill can classify. It re-opens the archetype (only 12 qualifies), the intensity dial (3), the byte budget, and the static edition of every route, so **every** gate re-runs, not just the classified ones — a persistent canvas changes what `gate-accessibility` and `gate-visual` are even looking at. `ultraweb:set-design` installs only against a DIRECTION.md commission naming the skill, its route scope AND its byte budget, and granting it spends the site's entire signature budget: any previously commissioned animejs or physics moment is cut in the same amendment, or the request is declined. If a later request cuts the world, the renderer, the model, the decoders and the posters all leave with it.
-- Screenshots before/after for any visual change; the after-shot goes through `design-judge` if the change was Page-level or bigger.
+## 2. Classify
 
-## Worked example — Kaffeewerk Ost, "make the hero bolder"
+Pick the smallest layer that satisfies the request.
 
-Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
+| Layer | Examples | Read from `<plugin>/references/` | Re-run gates |
+|---|---|---|---|
+| Content | wording, an image, data | `copy.md` | `--only content --routes <changed>` |
+| Section | one section looks wrong | `sections.md`, `primitives.md` | `--only code,content,a11y,responsive --routes <changed>`, one judge round on those routes |
+| Page | new or restructured page | `structure.md`, `copy.md`, `sections.md` | all gates on the new routes, one judge round |
+| System | palette, type, spacing, motion feel | the matching file among `tokens.md`, `color.md`, `typography.md`, `layout.md`, `motion.md` | all gates on all routes, one judge round |
+| Feature | backend behavior, forms, checkout | `backend.md` or `commerce.md` | `--only code,content,a11y --routes <affected>` |
+| Direction | "I don't like the look", "make it like <site>" | `taste.md`, `direction.md`, `mockup.md` | everything after the rebuild |
 
-## Composes with
+A request that names a look or another site is a Direction change. Confirm the scope with the user before starting one: it reopens Phase 2 and redoes Phases 3 onward. Adding a showpiece or 3D scene is also a Direction change and needs an entry in DIRECTION.md first (`references/showpiece.md`).
 
-Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.
+If the same element gets a third change request, the layer was too small. Move up one layer and fix the cause.
+
+## 3. Change
+
+1. Update the design file for the layer first: copy deck in SITEMAP.md, tokens in SYSTEM.md, a new page in SITEMAP.md, a new decision in DIRECTION.md.
+2. Make the code change at that layer. Change token values in the token CSS, never inside components.
+3. Do not touch unrelated surfaces. Name, in one line each, anything nearby that the change now makes inconsistent, and leave it.
+4. Edit files with the Edit and Write tools, not shell redirects.
+
+## 4. Re-gate
+
+Run `node <plugin>/scripts/gates.mjs --url <url> --only <gates> --routes <routes>` against a fresh production build, using the gates from the table. Read `references/gates.md` if it is not in context. Fix every fail, rebuild, and re-run the same command. Send judge rounds to the `design-judge` agent with the screenshots from `qa/shots/`. A FAIL is never reported as done.
+
+## 5. Log
+
+Append to `design/PROGRESS.md`: the request, the layer, the files and design artifacts changed, the gates run and their verdict. Add a `## Lessons` line if something surprised you. Commit as `ultraweb: iterate — <short summary>`. Report what changed, which artifacts were updated, and the gate results.

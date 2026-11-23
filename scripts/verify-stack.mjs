@@ -14,6 +14,20 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
+if (process.argv.includes('--help') || process.argv.includes('-h')) {
+  console.log(`verify-stack.mjs: compare stack/versions.json with the live npm registry.
+
+Usage:
+  node scripts/verify-stack.mjs                         report; exit 1 on drift, UNREACHABLE or anomalies
+  node scripts/verify-stack.mjs --write                 fold patch/minor drift and stamp 'verified'
+  node scripts/verify-stack.mjs --write --allow-major   also fold major jumps (re-verify STACK.md API facts first)
+  node scripts/verify-stack.mjs --help                  this text
+
+Exit codes: 0 all pins match (or --write succeeded), 1 drift, unreachable package or anomaly.
+Env: ULTRAWEB_NPM_SHIM=<script.mjs> routes registry lookups through a stub (used by tests).`);
+  process.exit(0);
+}
+
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const manifestPath = join(root, 'stack', 'versions.json');
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
@@ -32,12 +46,30 @@ function npmView(spec) {
   return out.trim();
 }
 
-const nums = v => v.split('-')[0].split('.').map(Number);
+// Semver comparison including prereleases: 1.0.0-rc.6 < 1.0.0, rc.2 < rc.10, rc < rc.1.
+function parse(v) {
+  const [core, pre = ''] = v.replace(/\+.*$/, '').split(/-(.*)/s);
+  return { n: core.split('.').map(Number), pre: pre ? pre.split('.') : [] };
+}
 const cmp = (a, b) => {
-  const [x, y] = [nums(a), nums(b)];
-  for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) < (y[i] || 0) ? -1 : 1;
+  const [x, y] = [parse(a), parse(b)];
+  for (let i = 0; i < 3; i++) if ((x.n[i] || 0) !== (y.n[i] || 0)) return (x.n[i] || 0) < (y.n[i] || 0) ? -1 : 1;
+  if (!x.pre.length && !y.pre.length) return 0;
+  if (!x.pre.length) return 1;
+  if (!y.pre.length) return -1;
+  for (let i = 0; i < Math.max(x.pre.length, y.pre.length); i++) {
+    const [p, q] = [x.pre[i], y.pre[i]];
+    if (p === undefined) return -1;
+    if (q === undefined) return 1;
+    if (p === q) continue;
+    const [pn, qn] = [/^\d+$/.test(p), /^\d+$/.test(q)];
+    if (pn && qn) return Number(p) < Number(q) ? -1 : 1;
+    if (pn !== qn) return pn ? -1 : 1;
+    return p < q ? -1 : 1;
+  }
   return 0;
 };
+const major = v => v.split('.')[0];
 
 let drift = 0, unreachable = 0, majors = 0, anomalies = 0;
 const rows = [];
@@ -57,7 +89,7 @@ for (const [pkg, pinned] of Object.entries(manifest.packages)) {
   if (!pinExists) { anomalies++; rows.push([pkg, pinned, live, 'NONEXISTENT PIN']); continue; }
   if (cmp(live, pinned) < 0) { anomalies++; rows.push([pkg, pinned, live, 'DOWNGRADE?!']); continue; }
   drift++;
-  const majorJump = live.split('.')[0] !== pinned.split('.')[0];
+  const majorJump = major(live) !== major(pinned);
   if (majorJump) majors++;
   rows.push([pkg, pinned, live, majorJump ? 'MAJOR DRIFT' : 'drift']);
   if (write && (!majorJump || allowMajor)) manifest.packages[pkg] = live;
@@ -83,7 +115,7 @@ for (const [pkg, major] of Object.entries(manifest.majorPins ?? {})) {
   if (pkg === '$comment') continue;
   let live;
   try { live = npmView(pkg); } catch { unreachable++; rows.push([`${pkg} (majorPin)`, major, 'UNREACHABLE', '?']); continue; }
-  const liveMajor = live.split('.')[0];
+  const liveMajor = major(live);
   if (liveMajor !== major) { majors++; drift++; rows.push([`${pkg} (majorPin)`, major, live, 'MAJORPIN DRIFT — bump by hand after checking the CLI changelog']); }
   else rows.push([`${pkg} (majorPin)`, major, live, 'ok']);
 }

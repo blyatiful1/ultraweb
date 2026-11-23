@@ -3,7 +3,8 @@
 // an invalid field points at its error text, and whether a known autofill field declares its
 // autocomplete token. Fields outside any <form> are collected under a synthetic "(orphan)" form.
 // 'required-unmarked' judges the VISIBLE marking only: the field is required (the attribute or
-// aria-required) and its accessible name carries no *, "required" or "Pflicht". aria-required
+// aria-required), labelled or not (an unlabelled required field earns both issues), and its
+// accessible name carries no *, "required" or "Pflicht". aria-required
 // never silences it — that attribute is the programmatic half, and this check is the other half.
 // 'missing-autocomplete' matches WHOLE WORDS of the field's name/id/accessible name, split on
 // non-letters and camelCase: "Sortieren nach", "Support", "report" and "landing" are not address
@@ -136,7 +137,7 @@ async (page) => {
             fields.push({ selector, name, type, labelled, required, ariaInvalid, describedBy, describedByResolved, autocomplete });
             fieldCount++;
             if (!labelled) issues.push({ kind: 'unlabelled', selector, detail: tag + '[type=' + type + ']' });
-            if (required && labelled && !/[*✱]|required|pflicht|obligator/i.test(name))
+            if (required && !/[*✱]|required|pflicht|obligator/i.test(name))
               issues.push({ kind: 'required-unmarked', selector, detail: 'required but nothing visible marks it: "' + name + '"' });
             if (ariaInvalid && (!describedBy || !describedByResolved.exists || !describedByResolved.visible))
               issues.push({

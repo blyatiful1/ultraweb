@@ -2,17 +2,21 @@
 // background: ancestor backgrounds are composited with alpha down to html, so a token that
 // only looks fine because a parent paints behind it is measured honestly. A background that
 // is still transparent at html is treated as white and flagged bgAssumed.
-// Config keys read: theme ("light"|"dark"), themeStrategy ("class"|"media"), keepTheme, maxPairs.
+// Text over a background-image, a gradient, or a positioned image/video/canvas painted behind it
+// cannot be measured from computed colors: such pairs come back review:true, pass:null (a human or
+// the judge looks), never pass or fail against an assumed white.
+// Config keys read: theme ("light"|"dark"), themeStrategy ("class"|"media"), keepTheme, maxPairs,
+//                   normal (required ratio for normal text, default 4.5), large (default 3).
 // A theme in the config is applied before measuring (class → html.dark, media → emulated),
 // so the gate runs the same script twice, once per theme. What it applied is undone before the
 // return — html.dark goes back to the state found on entry, and colorScheme emulation is cleared
 // only when THIS script set it — so the next script measures the page it inherited; keepTheme:
 // true leaves the applied theme standing for a follow-up measurement.
 // Returns: { url, viewport, theme, bgAssumed, truncated,
-//            pairs:[{selector,text,fg,bg,ratio,fontSize,weight,required,pass,bgAssumed}],
-//            failing:[same shape], counts:{pairs,failing},
+//            pairs:[{selector,text,fg,bg,ratio,fontSize,weight,required,pass,bgAssumed,review,reviewReason}],
+//            failing:[same shape, review excluded], reviewing:[review pairs], counts:{pairs,failing,review},
 //            error: string, only when a measurement could not run — the runner treats it as UNVERIFIED }.
-// The gate asserts: failing.length === 0.
+// The gate asserts: failing.length === 0; reviewing pairs are review.
 async (page) => {
   const config =
     (await page
@@ -64,7 +68,11 @@ async (page) => {
   };
 
   const data = await page
-    .evaluate((max) => {
+    .evaluate((opts) => {
+      const max = opts.max;
+      const reqNormal = Number.isFinite(opts.normal) ? opts.normal : 4.5;
+      const reqLarge = Number.isFinite(opts.large) ? opts.large : 3;
+      const mediaCache = new Map();
       const cap = Number.isFinite(max) && max > 0 ? max : 500;
       const cv = document.createElement('canvas');
       cv.width = 1;
@@ -171,9 +179,14 @@ async (page) => {
               el.getClientRects().length > 0;
             if (visible) {
               let bg = { r: 0, g: 0, b: 0, a: 0 };
+              let reviewReason = null;
               let n = el;
               while (n && n.nodeType === 1) {
                 const ns = getComputedStyle(n);
+                if (ns.backgroundImage && ns.backgroundImage !== 'none') {
+                  reviewReason = /gradient/.test(ns.backgroundImage) ? 'gradient-background' : 'background-image';
+                  break;
+                }
                 const c = toRgba(ns.backgroundColor);
                 if (c && c.a > 0) {
                   const o = parseFloat(ns.opacity);
@@ -181,6 +194,30 @@ async (page) => {
                   if (bg.a >= 0.999) break;
                 }
                 n = n.parentElement;
+              }
+              if (!reviewReason) {
+                // a positioned image, video or canvas painted behind the text, beside a near ancestor
+                let a = el;
+                for (let up = 0; a && a !== document.body && up < 4 && !reviewReason; up++, a = a.parentElement) {
+                  const par = a.parentElement;
+                  if (!par) break;
+                  for (const sib of par.children) {
+                    if (sib === a) continue;
+                    let has = mediaCache.get(sib);
+                    if (has === undefined) {
+                      has = false;
+                      if (/^(IMG|VIDEO|CANVAS|PICTURE)$/.test(sib.tagName) || sib.querySelector('img,video,canvas,picture')) {
+                        const sp = getComputedStyle(sib).position;
+                        has = sp === 'absolute' || sp === 'fixed';
+                      }
+                      mediaCache.set(sib, has);
+                    }
+                    if (has) {
+                      reviewReason = 'media-behind';
+                      break;
+                    }
+                  }
+                }
               }
               let assumed = false;
               if (bg.a < 0.999) {
@@ -195,7 +232,7 @@ async (page) => {
               const ratio = (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
               const fontSize = parseFloat(s.fontSize) || 16;
               const weight = parseInt(s.fontWeight, 10) || 400;
-              const required = fontSize >= 24 || (fontSize >= 18.66 && weight >= 700) ? 3 : 4.5;
+              const required = fontSize >= 24 || (fontSize >= 18.66 && weight >= 700) ? reqLarge : reqNormal;
               const rounded = Math.round(ratio * 100) / 100;
               pairs.push({
                 selector: sel(el),
@@ -206,8 +243,10 @@ async (page) => {
                 fontSize: Math.round(fontSize * 10) / 10,
                 weight,
                 required,
-                pass: rounded >= required,
+                pass: reviewReason ? null : rounded >= required,
                 bgAssumed: assumed,
+                review: !!reviewReason,
+                reviewReason,
               });
             }
           }
@@ -217,11 +256,12 @@ async (page) => {
         node = walker.nextNode();
       }
       return { pairs, truncated, bgAssumed: anyAssumed };
-    }, config.maxPairs)
+    }, { max: config.maxPairs, normal: config.normal, large: config.large })
     .catch(() => ({ pairs: [], truncated: false, bgAssumed: false, error: 'evaluate failed' }));
 
   const pairs = data.pairs || [];
-  const failing = pairs.filter((p) => !p.pass);
+  const failing = pairs.filter((p) => p.pass === false);
+  const reviewing = pairs.filter((p) => p.review);
   let viewport = null;
   try {
     viewport =
@@ -239,7 +279,8 @@ async (page) => {
     truncated: !!data.truncated,
     pairs,
     failing,
-    counts: { pairs: pairs.length, failing: failing.length },
+    reviewing,
+    counts: { pairs: pairs.length, failing: failing.length, review: reviewing.length },
     ...(data.error ? { error: data.error } : {}),
   };
 }

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defect Co</title>
+<meta name="description" content="A page with planted defects.">
+<style>
+  body { margin: 0; font: 16px/1.5 system-ui, sans-serif; background: #fff; color: #111; }
+  header, main, footer { padding: 0 16px; }
+  nav a { display: inline-block; padding: 10px 6px; }
+  .faint { color: #bbbbbb; }
+  .wide { width: 1400px; height: 40px; background: #ddd; }
+  .tiny { width: 14px; height: 14px; padding: 0; border: 0; background: #444; }
+</style>
+</head>
+<body>
+<header><nav aria-label="Primary"><a href="about.html">About</a></nav></header>
+<main>
+  <h1>Defect Co</h1>
+  <h2>Features</h2>
+  <p class="faint">This text is far too faint against the white page.</p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  <img src="hero.png" width="200" height="100">
+  <button class="tiny"></button>
+  <a href="#">Dead link</a>
+  <a href="/missing-page">Missing page</a>
+  <div class="wide"></div>
+</main>
+<footer><p>Footer</p></footer>
+<script src="/big.js"></script>
+<script>
+  // a late banner pushes the whole page down: layout shift
+  setTimeout(function () {
+    var b = document.createElement('div');
+    b.style.cssText = 'height:320px;background:#eef';
+    b.textContent = 'late banner';
+    document.querySelector('main').insertBefore(b, document.querySelector('main').firstChild);
+  }, 300);
+</script>
+</body>
+</html>

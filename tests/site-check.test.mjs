@@ -5,7 +5,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -137,15 +137,56 @@ test('a committed .env.local with a live key fails the secret sweep', () => {
   assert.match(r.out, /FAIL {2}\[secrets\].*\.env\.local/);
 });
 
-test('every write-time hook pattern has a site-check counterpart (parity)', () => {
-  const hook = readFileSync(join(root, 'hooks', 'antislop.sh'), 'utf8');
-  const checker = readFileSync(join(root, 'scripts', 'site-check.mjs'), 'utf8');
-  // Each `check '<pattern>' '<label>'` row in the hook must have a SLOP twin, so the
-  // write-time guard and the executable gate/ship pre-pass can't silently drift apart.
-  // Keyed on a distinctive literal per hook row; extend BOTH lists together.
-  const anchors = ['from-(purple|violet|fuchsia)', 'bg-clip-text', 'href="#"', 'orem ipsum', 'Feature [0-9]', 'placeholder\\.com', 'Elevate your', '🚀', 'Happy Customer'];
-  for (const a of anchors) {
-    assert.ok(hook.includes(a), `anchor "${a}" vanished from hooks/antislop.sh — update this parity list`);
-    assert.ok(checker.includes(a), `hook pattern "${a}" has no counterpart in scripts/site-check.mjs SLOP list`);
+test('the hook and site-check share one pattern list', () => {
+  const hook = readFileSync(join(root, 'hooks', 'antislop.mjs'), 'utf8');
+  const sc = readFileSync(join(root, 'scripts', 'site-check.mjs'), 'utf8');
+  assert.match(hook, /scripts['"], ['"]slop-patterns\.mjs/, 'hooks/antislop.mjs must import scripts/slop-patterns.mjs');
+  assert.match(sc, /from '\.\/slop-patterns\.mjs'/, 'site-check.mjs must import ./slop-patterns.mjs');
+  assert.doesNotMatch(hook, /new RegExp|\/[^/\n]*lorem/i, 'the hook must not carry its own patterns');
+});
+
+test('each HARD pattern fails site-check', () => {
+  const samples = {
+    'lorem-ipsum': '<p>LOREM   ipsum</p>',
+    'placeholder-copy': '<h1>Your Company Here</h1>',
+    'feature-n': '<h3>Feature 3</h3>',
+    'placeholder-image': '<img src="https://placehold.co/10" alt="" />',
+    'dead-hash-link': "<a href={'#'}>x</a>",
+    'fake-rating': '<span>⭐️⭐️⭐️⭐️⭐️</span>',
+    'fake-attribution': '<cite>Jane Doe</cite>',
+  };
+  for (const [id, text] of Object.entries(samples)) {
+    const r = check((dir) => append(dir, 'components/hero.tsx', `\nexport const X = () => ${text};\n`));
+    assert.equal(r.code, 1, `${id}: ${r.out}`);
+    assert.match(r.out, /FAIL {2}\[anti-slop\]/, id);
   }
+});
+
+test('SOFT style tells warn without failing', () => {
+  const r = check((dir) => append(dir, 'components/hero.tsx',
+    '\nexport const G = () => <div className="bg-gradient-to-r from-purple-500 to-blue-500">Elevate your mornings 🚀</div>;\n'));
+  assert.equal(r.code, 0, r.out);
+  assert.match(r.out, /warn {2}\[style-tell\].*purple-to-blue gradient/);
+  assert.match(r.out, /warn {2}\[style-tell\].*stock startup phrasing/);
+  assert.match(r.out, /warn {2}\[style-tell\].*emoji/);
+});
+
+test('static HTML is scanned; a root README and package.json are not', () => {
+  const html = check((dir) => writeFileSync(join(dir, 'index.html'), '<a href=#>x</a>\n'));
+  assert.equal(html.code, 1, html.out);
+  assert.match(html.out, /index\.html:1: dead "#" link/);
+  const docs = check((dir) => {
+    writeFileSync(join(dir, 'README.md'), 'Lorem ipsum for the dev notes.\n');
+    writeFileSync(join(dir, 'package.json'), '{"description":"lorem ipsum"}\n');
+  });
+  assert.equal(docs.code, 0, docs.out);
+});
+
+test('content markdown is in scope', () => {
+  const r = check((dir) => {
+    mkdirSync(join(dir, 'content'), { recursive: true });
+    writeFileSync(join(dir, 'content', 'post.md'), '# Post\n\nLorem ipsum dolor.\n');
+  });
+  assert.equal(r.code, 1, r.out);
+  assert.match(r.out, /content\/post\.md:3: lorem ipsum/);
 });

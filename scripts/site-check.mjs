@@ -9,12 +9,15 @@
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
+import { HARD, SOFT, UNVERIFIED_PROOF, deploymentMode, scan } from './slop-patterns.mjs';
 
 const site = resolve(process.argv[2] ?? '.');
 if (!existsSync(site)) { console.error(`no such directory: ${site}`); process.exit(2); }
 
 const SKIP_DIRS = new Set(['node_modules', '.next', '.git', 'design', 'tests', 'fixtures', 'coverage', 'dist', '.vercel']);
-const CONTENT_EXT = /\.(tsx?|jsx?|mjs|css|mdx|md|json)$/;
+const CONTENT_EXT = /\.(tsx?|jsx?|mjs|cjs|css|mdx|md|json|html?)$/;
+// Slop is judged in source files anywhere, and in md/json only where site content lives.
+const SLOP_SCOPE = p => /\.(tsx?|jsx?|mjs|cjs|css|mdx|html?)$/.test(p) || /(^|\/)(content|data|messages|locales)\/.*\.(md|json)$/.test(p);
 
 function* walk(dir) {
   for (const name of readdirSync(dir)) {
@@ -40,22 +43,20 @@ const pass = check => console.log(`ok    [${check}]`);
 // Counted against the raw occurrence count so a malformed duplicate ("Deployment mode: demo extra") can't hide.
 const briefPath = join(site, 'design', 'BRIEF.md');
 const brief = existsSync(briefPath) ? read(briefPath) : '';
-const rawModeCount = (brief.match(/^Deployment mode:/gim) || []).length;
-const modeLines = [...brief.matchAll(/^Deployment mode:\s*(production|staging|demo)\s*$/gim)].map(m => m[1].toLowerCase());
-let mode = 'production';
-if (rawModeCount === 1 && modeLines.length === 1) {
-  mode = modeLines[0];
+const { mode: parsedMode, wellFormed, raw: rawModeCount } = deploymentMode(brief);
+const mode = parsedMode;
+if (wellFormed) {
   pass('deployment-mode');
 } else if (rawModeCount === 0) {
   fail('deployment-mode', 'design/BRIEF.md has no "Deployment mode:" line — failing closed to production semantics');
 } else {
-  fail('deployment-mode', `expected exactly one well-formed "Deployment mode:" line, found ${rawModeCount} occurrence(s) of which ${modeLines.length} valid — failing closed to production semantics`);
+  fail('deployment-mode', `expected exactly one well-formed "Deployment mode:" line, found ${rawModeCount} occurrence(s) — failing closed to production semantics`);
 }
 const production = mode === 'production';
 
 // ---- Fabricated-proof tag: demo/staging-only.
 {
-  const hits = files.flatMap(p => read(p).includes('UNVERIFIED-PROOF') ? [rel(p)] : []);
+  const hits = files.flatMap(p => read(p).includes(UNVERIFIED_PROOF) ? [rel(p)] : []);
   if (hits.length && production) fail('unverified-proof', `UNVERIFIED-PROOF on a production build: ${hits.join(', ')}`);
   else pass('unverified-proof');
 }
@@ -129,26 +130,19 @@ const production = mode === 'production';
   else pass('env-example');
 }
 
-// ---- Anti-slop absolutes (the deterministic half of the taste banned list).
+// ---- Anti-slop: HARD patterns fail (same list as hooks/antislop.mjs); SOFT style tells only warn,
+// because whether they are wrong depends on design/DIRECTION.md.
 {
-  const SLOP = [
-    [/from-(purple|violet|fuchsia)-[0-9]+.*to-(blue|indigo|violet)-[0-9]+/, 'purple-to-blue gradient — the AI-slop signature'],
-    [/bg-clip-text.*text-transparent.*bg-gradient|bg-gradient.*bg-clip-text.*text-transparent/, 'gradient headline text as a default move'],
-    [/[Ll]orem ipsum/, 'lorem ipsum'],
-    [/placeholder\.com|placehold\.it|via\.placeholder/, 'placeholder image service'],
-    [/href="#"/, 'dead href="#"'],
-    [/>Feature [0-9]</, 'stock "Feature N" copy'],
-    [/Elevate your|Unlock the power|Empower your|Welcome to our/i, 'dead startup copy'],
-    [/★★★★★|Happy Customer|John D\./, 'fabricated-proof tell'],
-    [/✨|🚀|🎉/u, 'emoji in production copy'],
-  ];
-  const hits = [];
-  for (const p of files) {
+  const hard = [];
+  const soft = [];
+  for (const p of files.filter(f => SLOP_SCOPE(rel(f)))) {
     const src = read(p);
-    for (const [re, label] of SLOP) if (re.test(src)) hits.push(`${rel(p)}: ${label}`);
+    for (const h of scan(src, HARD)) hard.push(`${rel(p)}:${h.line}: ${h.label}`);
+    for (const h of scan(src, SOFT)) soft.push(`${rel(p)}:${h.line}: ${h.label}`);
   }
-  if (hits.length) fail('anti-slop', hits.join('; '));
+  if (hard.length) fail('anti-slop', hard.join('; '));
   else pass('anti-slop');
+  for (const w of soft) console.log(`warn  [style-tell] ${w} — fine only when design/DIRECTION.md argues it`);
 }
 
 console.log(`\n${fails ? `${fails} check(s) FAILED` : 'all checks passed'} — mode: ${mode}${production ? '' : ' (sample proof lawful, production checks relaxed accordingly)'}`);
