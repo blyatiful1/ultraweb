@@ -136,7 +136,7 @@ gate('a site with planted defects exits 1 and names the failing checks', async (
     assert.equal(JSON.parse(readFileSync(join(proj, 'qa', 'gates.json'), 'utf8')).round, 2);
     // waivers turn a fail into waived
     mkdirSync(join(proj, 'qa'), { recursive: true });
-    writeFileSync(join(proj, 'qa', 'waivers.json'), JSON.stringify([{ check: 'responsive.overflow', reason: 'intentional wide block' }]));
+    writeFileSync(join(proj, 'qa', 'waivers.json'), JSON.stringify([{ check: 'responsive.overflow', reason: 'intentional wide block' }, { check: 'responsive.targets-44', reason: 'fixture icon button' }]));
     const r3 = await runGatesAsync(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive'], root);
     assert.equal(r3.status, 0, r3.stdout);
     const g3 = JSON.parse(readFileSync(join(proj, 'qa', 'gates.json'), 'utf8'));
