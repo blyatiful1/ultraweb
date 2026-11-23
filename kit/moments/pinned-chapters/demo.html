@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pinned-chapters demo</title>
+<link rel="stylesheet" href="../../system.css">
+<style>
+/* demo-only placeholder tokens */
+:root{--background:#f6f5f1;--foreground:#16161a;--card:#fff;--card-foreground:#16161a;--primary:#2b4acb;--primary-foreground:#fff;--muted:#e6e4dc;--muted-foreground:#5b5b63;--accent:#f0c94a;--accent-foreground:#16161a;--border:#d6d3c8;--ring:#2b4acb;--radius:14px;--dur-micro:.2s;--dur-section:.6s;--ease-out:cubic-bezier(.22,1,.36,1);--font-sans:system-ui,sans-serif;--font-display:Georgia,serif}
+body{margin:0;background:var(--background);color:var(--foreground);font-family:var(--font-sans);line-height:1.55}
+.pad{padding:clamp(3rem,10vw,7rem) max(1rem,5vw)}
+.pad h1,.pad h2{font-family:var(--font-display);font-weight:500;line-height:1.05;margin:0 0 1rem}
+.pad h1{font-size:clamp(2.2rem,6vw,4.5rem)}
+.wrap{padding-inline:max(1rem,5vw)}
+[data-pc-body] h2{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.4rem);margin:0 0 .6rem;font-weight:500}
+[data-pc-body] p{margin:0;max-width:34ch;color:var(--muted-foreground)}
+</style>
+<link rel="stylesheet" href="moment.css">
+</head>
+<body>
+<header class="pad"><h1>Pinned chapters</h1><p>Scroll down. The media column stays in view with CSS sticky and changes to match the chapter crossing the middle of the screen.</p></header>
+
+<section data-moment="pinned-chapters" class="wrap" aria-label="How pinned chapters work" data-transition="fade">
+  <article data-pc-chapter id="ch-sticky" data-pc-title="Sticky">
+    <div data-pc-media data-pc-tone="primary" role="img" aria-label="Numeral one"><span data-pc-big aria-hidden="true">01</span></div>
+    <div data-pc-body><h2>The column stays put</h2><p>The left column uses position: sticky. Nothing is pinned by script, so native scrolling is never touched.</p></div>
+  </article>
+  <article data-pc-chapter id="ch-observe" data-pc-title="Observe">
+    <div data-pc-media role="img" aria-label="Concentric circles">
+      <svg viewBox="0 0 400 300" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="var(--accent,#f0c94a)"/><g fill="none" stroke="var(--accent-foreground,#16161a)" stroke-width="3"><circle cx="200" cy="150" r="30"/><circle cx="200" cy="150" r="70"/><circle cx="200" cy="150" r="110"/><circle cx="200" cy="150" r="150"/></g></svg>
+    </div>
+    <div data-pc-body><h2>An observer picks the chapter</h2><p>An IntersectionObserver watches a line across the middle of the viewport and marks the chapter that crosses it.</p></div>
+  </article>
+  <article data-pc-chapter id="ch-links" data-pc-title="Links">
+    <div data-pc-media data-pc-tone="card" role="img" aria-label="Numeral three"><span data-pc-big aria-hidden="true">03</span></div>
+    <div data-pc-body><h2>The progress list is real links</h2><p>Each item below the media is an anchor to its chapter, so keyboard and anchor navigation work.</p></div>
+  </article>
+  <article data-pc-chapter id="ch-phone" data-pc-title="Phones">
+    <div data-pc-media data-pc-tone="accent" role="img" aria-label="Numeral four"><span data-pc-big aria-hidden="true">04</span></div>
+    <div data-pc-body><h2>Phones get a stack</h2><p>Under 900px wide, with reduced motion, or without JavaScript, each chapter shows its media above its text.</p></div>
+  </article>
+</section>
+
+<footer class="pad"><h2>After the chapters</h2><p>Normal page flow resumes here. The media column leaves with the last chapter, with no jump.</p></footer>
+<script type="module">
+import mount from './moment.js';
+const root = document.querySelector('[data-moment]');
+window.__mount = () => mount(root);
+window.__cleanup = mount(root);
+</script>
+</body>
+</html>

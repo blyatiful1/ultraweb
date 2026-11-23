@@ -1,0 +1,96 @@
+/* pinned-chapters. Default (no JS, phones, reduced motion) = stacked: media above text per chapter. */
+[data-moment="pinned-chapters"] { position: relative; }
+[data-moment="pinned-chapters"] [data-pc-chapter] {
+  display: grid; gap: clamp(1rem, 3vw, 2rem);
+  padding-block: clamp(2rem, 6vw, 4rem);
+  scroll-margin-top: 0;
+}
+[data-moment="pinned-chapters"] [data-pc-media] {
+  position: relative; display: grid; place-items: center; overflow: hidden;
+  aspect-ratio: 4 / 3; width: 100%;
+  border-radius: var(--radius, 0.75rem);
+  background: var(--muted, #e9e9ec); color: var(--muted-foreground, #555);
+}
+[data-moment="pinned-chapters"] [data-pc-media] > img,
+[data-moment="pinned-chapters"] [data-pc-media] > svg,
+[data-moment="pinned-chapters"] [data-pc-media] > picture,
+[data-moment="pinned-chapters"] [data-pc-media] > picture img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+}
+[data-moment="pinned-chapters"] [data-pc-tone="primary"] { background: var(--primary, #1d4ed8); color: var(--primary-foreground, #fff); }
+[data-moment="pinned-chapters"] [data-pc-tone="accent"] { background: var(--accent, #f4d35e); color: var(--accent-foreground, #111); }
+[data-moment="pinned-chapters"] [data-pc-tone="card"] { background: var(--card, #fff); color: var(--card-foreground, #111); box-shadow: inset 0 0 0 1px var(--border, #d8d8de); }
+[data-moment="pinned-chapters"] [data-pc-big] {
+  font-family: var(--font-display, inherit); font-weight: 600; line-height: 0.9;
+  font-size: clamp(4.5rem, 22vw, 12rem); letter-spacing: -0.04em;
+}
+
+/* Pinned layout (set by mount on wide screens only). Root children must be the chapters only. */
+[data-moment="pinned-chapters"][data-pc-mode="pinned"] {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: var(--pc-gap, clamp(2rem, 5vw, 6rem)); align-items: start;
+}
+[data-moment="pinned-chapters"][data-pc-mode="pinned"] [data-pc-chapter] {
+  grid-column: 2; min-height: 100vh; min-height: 100svh;
+  align-content: center; padding-block: 12vh;
+}
+[data-moment="pinned-chapters"][data-pc-mode="pinned"][data-pc-side="right"] [data-pc-chapter] { grid-column: 1; }
+[data-moment="pinned-chapters"][data-pc-mode="pinned"][data-pc-side="right"] [data-pc-col] { grid-column: 2; }
+[data-moment="pinned-chapters"] [data-pc-col] { grid-column: 1; align-self: stretch; }
+[data-moment="pinned-chapters"] [data-pc-sticky] {
+  position: sticky; top: 0; height: 100vh; height: 100svh;
+  display: flex; flex-direction: column; justify-content: center; gap: 1.25rem;
+  padding-block: 6vh;
+}
+[data-moment="pinned-chapters"] [data-pc-stage] {
+  position: relative; width: 100%; height: min(68vh, 44rem);
+  border-radius: var(--radius, 0.75rem); overflow: hidden;
+  background: var(--muted, #e9e9ec);
+}
+[data-moment="pinned-chapters"] [data-pc-stage] > [data-pc-media] {
+  position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0;
+  opacity: 0; visibility: hidden; will-change: opacity, transform;
+  transition:
+    opacity var(--dur-section, 0.6s) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+    transform var(--dur-section, 0.6s) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+    clip-path var(--dur-section, 0.6s) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+    visibility 0s linear var(--dur-section, 0.6s);
+}
+[data-moment="pinned-chapters"] [data-pc-stage] > [data-pc-state="active"] {
+  opacity: 1; visibility: visible; transform: none; clip-path: inset(0); z-index: 2;
+  transition-delay: 0s;
+}
+/* slide */
+[data-pc-transition="slide"] [data-pc-stage] > [data-pc-state="before"] { transform: translate3d(0, -7%, 0); }
+[data-pc-transition="slide"] [data-pc-stage] > [data-pc-state="after"] { transform: translate3d(0, 7%, 0); }
+/* clip: new panel wipes in over the previous one */
+[data-pc-transition="clip"] [data-pc-stage] > [data-pc-media] { opacity: 1; clip-path: inset(0); }
+[data-pc-transition="clip"] [data-pc-stage] > [data-pc-state="before"] { visibility: visible; z-index: 1; transition-delay: 0s; }
+[data-pc-transition="clip"] [data-pc-stage] > [data-pc-state="after"] { clip-path: inset(100% 0 0 0); z-index: 2; }
+
+/* progress */
+[data-moment="pinned-chapters"] [data-pc-progress] { display: grid; gap: 0.6rem; }
+[data-moment="pinned-chapters"] [data-pc-count] {
+  margin: 0; font-size: 0.8rem; letter-spacing: 0.08em; font-variant-numeric: tabular-nums;
+  color: var(--muted-foreground, #555);
+}
+[data-moment="pinned-chapters"] [data-pc-progress] ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; }
+[data-moment="pinned-chapters"] [data-pc-progress] a {
+  position: relative; display: inline-flex; gap: 0.5rem; align-items: baseline; padding-block: 0.4rem;
+  font-size: 0.875rem; color: var(--foreground, #111); text-decoration: none; opacity: 0.5;
+  transition: opacity var(--dur-micro, 0.2s) ease;
+}
+[data-moment="pinned-chapters"] [data-pc-progress] a::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+  background: var(--primary, currentColor); transform: scaleX(0); transform-origin: left;
+  transition: transform var(--dur-section, 0.5s) var(--ease-out, ease);
+}
+[data-moment="pinned-chapters"] [data-pc-progress] a[aria-current="step"] { opacity: 1; }
+[data-moment="pinned-chapters"] [data-pc-progress] a[aria-current="step"]::after { transform: scaleX(1); }
+[data-moment="pinned-chapters"] [data-pc-progress] a:hover { opacity: 1; }
+[data-moment="pinned-chapters"] [data-pc-progress] a:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 3px; border-radius: 2px; }
+[data-moment="pinned-chapters"] [data-pc-num] { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-moment="pinned-chapters"] * { transition: none !important; }
+}

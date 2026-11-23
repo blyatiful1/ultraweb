@@ -1,0 +1,15 @@
+/* type-scrub: word opacity is driven by one custom property, --tsp (0..1). */
+@property --tsp { syntax: "<number>"; inherits: true; initial-value: 0; }
+@keyframes ts-progress { from { --tsp: 0; } to { --tsp: 1; } }
+
+[data-moment="type-scrub"][data-moment-ready] .ts-w {
+  /* each word fades over a window of 3 words, so the colour sweeps through the text */
+  opacity: calc(var(--ts-m, 0.18) + (1 - var(--ts-m, 0.18)) * clamp(0, calc((var(--tsp, 0) * (var(--n, 1) + 3) - var(--i, 0)) / 3), 1));
+}
+[data-moment="type-scrub"][data-ts-engine="css"] {
+  animation: ts-progress linear both;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-moment="type-scrub"] .ts-w { opacity: 1 !important; }
+  [data-moment="type-scrub"] { animation: none !important; }
+}
