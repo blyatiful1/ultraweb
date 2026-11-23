@@ -1,10 +1,10 @@
-// particle-field: soft points advected through curl noise, optionally gathering into a word or SVG path.
+// particle-field: curl-noise points that can gather into a word or an SVG path.
 const MOUNTED = new WeakMap();
 const VS = `attribute vec2 p;attribute vec2 s;uniform vec2 R;uniform float Z;varying float v;
 void main(){v=s.x;gl_Position=vec4(p.x/R.x*2.-1.,1.-p.y/R.y*2.,0.,1.);gl_PointSize=Z*(.55+.9*s.y);}`;
 const FS = `precision mediump float;uniform vec3 P,A;uniform float O;varying float v;
 void main(){float d=length(gl_PointCoord-.5)*2.,a=smoothstep(1.,.25,d)*O;gl_FragColor=vec4(mix(P,A,v)*a,a);}`;
-const GR = [1, 0, -1, 0, 0, 1, 0, -1, 0.7071, 0.7071, -0.7071, 0.7071, 0.7071, -0.7071, -0.7071, -0.7071];
+const S2 = .7071, GR = [1, 0, -1, 0, 0, 1, 0, -1, S2, S2, -S2, S2, S2, -S2, -S2, -S2];
 
 function readColors(root, list) {
 	const c = Object.assign(document.createElement('canvas'), { width: 1, height: 1 });
@@ -26,19 +26,19 @@ export default function mount(root, options = {}) {
 	const wordEl = root.querySelector('[data-particle-word]');
 	const path = String(opt('path', ''));
 	const vb = String(opt('viewbox', '0 0 100 100')).split(/[\s,]+/).map(Number);
-	const gatherMode = wordEl || path ? String(opt('gather', 'scroll')) : 'off';
+	const mode = wordEl || path ? String(opt('gather', 'scroll')) : 'off';
 	const rmq = mm('(prefers-reduced-motion: reduce)'), dark = mm('(prefers-color-scheme: dark)'), coarse = mm('(pointer: coarse)').matches;
-	const ptrMode = mm('(pointer: fine)').matches ? String(opt('pointer', 'repel')) : 'off';
+	const pm = mm('(pointer: fine)').matches ? String(opt('pointer', 'repel')) : 'off';
 
 	let cv, gl, pr, pb, sb, U, col, add, btn, raf = 0, vis = false, paused = false, lost = false, reduced = rmq.matches;
 	let t = 0, last = 0, w = 0, h = 0, dpr = 1, ft = 16, fc = 0, nx = 0, ny = 0;
-	let n = 0, active = 0, pos, vel, seed, tgt, gather = gatherMode === 'always' ? 1 : 0;
+	let n = 0, active = 0, pos, vel, seed, tgt, gather = mode === 'always' ? 1 : 0;
 	let secTop = 0, secH = 1, vh = 800, sy = 0, token = 0;
 	const ptr = { x: 0, y: 0, on: 0 };
 
 	root.setAttribute('data-moment-ready', '');
 
-	// 2D gradient noise; adds its analytic gradient to nx, ny.
+	// noise(): adds the gradient-noise derivative to nx, ny
 	const hash = (i, j) => { let k = Math.imul(i, 374761393) + Math.imul(j, 668265263) | 0; k = Math.imul(k ^ (k >>> 13), 1274126177); return ((k ^ (k >>> 16)) & 7) * 2; };
 	function noise(x, y, s) {
 		const i = Math.floor(x), j = Math.floor(y), X = x - i, Y = y - j;
@@ -66,11 +66,11 @@ export default function mount(root, options = {}) {
 		sample();
 	}
 
-	// Targets: the SVG path, or the [data-particle-word] text drawn at its own box in its own font.
+	// targets: SVG path, or the word element's text in its own box and font
 	async function sample() {
-		if (gatherMode === 'off' || !w) return;
+		if (mode === 'off' || !w) return;
 		const my = ++token;
-		if (!path && document.fonts) await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 3000))]);
+		if (!path) await document.fonts?.ready;
 		if (my !== token || !pos) return;
 		const k = 0.5, W = Math.ceil(w * k), H = Math.ceil(h * k), c = document.createElement('canvas');
 		c.width = W; c.height = H;
@@ -104,8 +104,8 @@ export default function mount(root, options = {}) {
 	}
 
 	function step(dt) {
-		const fs = 0.0021, tt = t * 0.06, flow = 34 * speed, rr = radius * radius, sgn = ptrMode === 'attract' ? -1 : 1;
-		const pon = ptrMode !== 'off' && ptr.on, damp = Math.exp(-dt * 2.6), gd = Math.exp(-dt * (2.6 + 5 * gather));
+		const fs = .0021, tt = t * .06, flow = 34 * speed, rr = radius * radius, sgn = pm === 'attract' ? -1 : 1;
+		const pon = pm !== 'off' && ptr.on, damp = Math.exp(-dt * 2.6), gd = Math.exp(-dt * (2.6 + 5 * gather));
 		for (let i = 0; i < active * 2; i += 2) {
 			let px = pos[i], py = pos[i + 1], ax = 0, ay = 0;
 			nx = ny = 0;
@@ -188,10 +188,10 @@ export default function mount(root, options = {}) {
 	function schedule() { if (!raf && running()) { last = performance.now(); raf = requestAnimationFrame(frame); } }
 	function frame(now) {
 		raf = 0;
-		const dt = Math.min(Math.max(now - last, 0), 33) / 1000;
+		const dt = cl(now - last, 0, 33) / 1000;
 		last = now;
 		t = (t + dt * speed) % 10000;
-		if (gatherMode === 'scroll') {
+		if (mode === 'scroll') {
 			const c = Math.abs(cl((sy + vh - secTop) / (vh + secH), 0, 1) - 0.5) * 2;
 			gather += (1 - cl((c - 0.3) / 0.4, 0, 1) - gather) * (1 - Math.exp(-dt * 3));
 		}
@@ -213,8 +213,8 @@ export default function mount(root, options = {}) {
 		draw(); schedule();
 	}
 	function setup() {
-		cv = document.createElement('canvas');
-		cv.className = 'pf-canvas'; cv.setAttribute('aria-hidden', 'true');
+		cv = Object.assign(document.createElement('canvas'), { className: 'pf-canvas' });
+		cv.setAttribute('aria-hidden', 'true');
 		gl = cv.getContext('webgl2', { antialias: false, depth: false, stencil: false }) || cv.getContext('webgl', { antialias: false, depth: false });
 		if (!gl) { cv = null; return; }
 		if (!pos) alloc();
@@ -235,17 +235,15 @@ export default function mount(root, options = {}) {
 		root.removeAttribute('data-gl');
 	}
 	function setPaused(v) {
-		paused = v;
-		if (btn) { btn.setAttribute('aria-pressed', String(v)); btn.textContent = v ? 'Play motion' : 'Pause motion'; }
-		if (v) stop(); else schedule();
+		paused = v; v ? stop() : schedule();
+		if (btn) btn.setAttribute('aria-pressed', v), btn.textContent = v ? 'Play motion' : 'Pause motion';
 	}
 	const onBtn = () => setPaused(!paused);
 	function apply() {
 		reduced = rmq.matches;
 		if (reduced) kill(); else if (!gl) setup();
 		if (gl && !reduced && !btn) {
-			btn = document.createElement('button');
-			btn.type = 'button'; btn.className = 'pf-pause';
+			btn = Object.assign(document.createElement('button'), { type: 'button', className: 'pf-pause' });
 			btn.addEventListener('click', onBtn);
 			root.append(btn);
 			setPaused(paused);
@@ -254,11 +252,10 @@ export default function mount(root, options = {}) {
 	}
 
 	const ro = new ResizeObserver(() => {
-		const nw = root.clientWidth, nh = root.clientHeight;
-		if (nw === w && nh === h) return;
-		w = nw; h = nh;
+		if (w === root.clientWidth && h === root.clientHeight) return;
+		w = root.clientWidth; h = root.clientHeight;
 		measure(); size();
-		if (pos) { alloc(); sample(); }
+		if (pos) alloc(), sample();
 		if (!raf) draw();
 	});
 	const io = new IntersectionObserver((en) => {
@@ -273,7 +270,7 @@ export default function mount(root, options = {}) {
 		[window, 'scroll', () => { sy = window.scrollY; }],
 		[window, 'resize', measure],
 	];
-	if (ptrMode !== 'off') L.push(
+	if (pm !== 'off') L.push(
 		[root, 'pointermove', (e) => { const r = root.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = 1; }],
 		[root, 'pointerleave', () => { ptr.on = 0; }],
 	);

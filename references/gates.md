@@ -10,7 +10,7 @@ Reads: `qa/gates.json`, `qa/GATES.md`, `qa/waivers.json`. Writes: `qa/gates.json
 ```
 node <plugin>/scripts/gates.mjs --url <base-url> [--routes /,/pricing] [--project <dir>]
      [--out <dir>] [--only code,content,a11y,responsive,perf,tells] [--quick]
-     [--lighthouse] [--done "<reason>"]
+     [--js-budget <kB>] [--lighthouse] [--done "<reason>"]
 ```
 
 | When | Command | Scope |
@@ -24,7 +24,7 @@ Rules for the server:
 - Static path: serve `site/` with any static server and pass its URL.
 - Any other site: pass its URL.
 
-Routes come from `--routes`, else `qa/routes.txt` (one per line), else a same-origin crawl from `/` (cap 25). Pass dynamic routes with at least two real slugs.
+Routes come from `--routes`, else `qa/routes.txt` (one per line), else a same-origin crawl from `/` (cap 25). Pass dynamic routes with at least two real slugs. A full run takes roughly ten seconds per route on a local server, so while fixing use `--routes` and `--only` for what the fix touched and finish with one full run.
 
 Playwright is resolved from the project's `node_modules`, then the plugin directory, then globally. If none resolves the script prints an install line and exits 3.
 
@@ -39,8 +39,8 @@ Statuses: `pass`, `fail`, `review`, `skip`, `error`.
 | code | `tsc --noEmit`, the project's lint script if present, `site-check.mjs` | exit 0; runs only when a `package.json` or source tree exists |
 | content | internal links and `#anchors` | every internal href answers 200; every anchor id exists on its target page; no empty or `#` hrefs |
 | content | headings | exactly one `h1` per route; no empty or generic headings |
-| content | metadata | title, description and Open Graph tags present on every route; titles and descriptions unique; title about 60 characters or fewer; description about 140 to 160 |
-| content | placeholder text | zero lorem ipsum, "your text here" and similar |
+| content | metadata | `<title>`, meta description and `<html lang>` present on every route; titles and descriptions unique across routes |
+| content | placeholder text | zero lorem ipsum, "your text here" and similar, unreplaced `TODO-COPY` markers, placeholder image services |
 | a11y | axe, tags `wcag2a`, `wcag2aa`, `wcag22aa` | zero violations |
 | a11y | contrast | text 4.5:1; large text (24px, or 18.66px bold) 3:1; non-text UI and focus rings 3:1; pairs over images or gradients are `review` |
 | a11y | keyboard walk | skip link first; no trap; visible focus ring on every stop |
@@ -52,10 +52,10 @@ Statuses: `pass`, `fail`, `review`, `skip`, `error`.
 | responsive | overflow | no horizontal scroll at 375, 768 and 1440 |
 | responsive | targets | at least 44x44 CSS px at 375; inline paragraph links exempt |
 | responsive | screenshots | one per route and width in `qa/shots/` |
-| perf | cold-load JS | encoded bytes against the budget in `design/DIRECTION.md`; default 140 kB for marketing routes, 170 kB for app-like routes |
-| perf | fonts | no failed faces; at most 2 families; same-origin woff2 |
-| perf | observed LCP and CLS | recorded per route; CLS above 0.1 fails |
-| perf | Lighthouse | only with `--lighthouse`; performance 90 or higher on mobile |
+| perf | cold-load JS | transferred bytes on a cold load against the budget: 140 kB by default; pass `--js-budget <kB>` for an app-like route or a budget set in `design/DIRECTION.md` |
+| perf | fonts | no failed font face; total font transfer at most 300 kB |
+| perf | observed LCP and CLS | per route on the local production server: LCP above 2,500 ms fails; CLS above 0.05 fails |
+| perf | Lighthouse | only with `--lighthouse` and only when Lighthouse is installed; report-only, it never fails the run |
 | tells | census of AI-default patterns, section rhythm | report-only: every item is `review` |
 
 ### What `review` means

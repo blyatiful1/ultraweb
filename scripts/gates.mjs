@@ -496,6 +496,7 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
             metaSeen.push({ route, title: m.title, description: m.description });
             const PLACE = [
               [/lorem ipsum|dolor sit amet/i, 'lorem ipsum'],
+              [/TODO-COPY/, 'unreplaced TODO-COPY marker from the kit starter'],
               [/\b(TODO|TBD|FIXME)\b/, 'TODO/TBD marker'],
               [/your (text|headline|title|content|company name) here|insert (text|headline) here|heading goes here|sample text|placeholder text/i, 'template placeholder copy'],
               [/\bFeature [0-9]\b/, 'stock "Feature N" copy'],
