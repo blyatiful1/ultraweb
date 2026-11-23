@@ -114,7 +114,15 @@ function writeHistory(opts, entries) {
   try {
     const file = historyPath(opts);
     mkdirSync(dirname(file), { recursive: true });
-    writeFileSync(file, JSON.stringify({ entries: entries.slice(-KEEP) }, null, 2) + '\n');
+    // moments.mjs keeps its own key in the same file: keep every key that is not ours.
+    let existing = {};
+    try {
+      const parsed = JSON.parse(readFileSync(file, 'utf8'));
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) existing = parsed;
+    } catch {
+      // no file yet, or unreadable: start fresh
+    }
+    writeFileSync(file, JSON.stringify({ ...existing, entries: entries.slice(-KEEP) }, null, 2) + '\n');
   } catch {
     // history is a convenience; a read-only home must not break the deal
   }

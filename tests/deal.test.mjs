@@ -58,6 +58,15 @@ test('record and recent round-trip an approved direction', () => {
   assert.match(run(['recent'], { ULTRAWEB_HOME: home }), /ground=dark type=slab layout=dense-index/);
 });
 
+test('other keys in the history file survive a deal', () => {
+  const home = mkdtempSync(join(tmpdir(), 'uw-deal-'));
+  writeFileSync(join(home, 'history.json'), JSON.stringify({ moments: [{ name: 'type-lines' }], entries: [] }));
+  run(['--seed', '5'], { ULTRAWEB_HOME: home });
+  const stored = JSON.parse(readFileSync(join(home, 'history.json'), 'utf8'));
+  assert.deepEqual(stored.moments, [{ name: 'type-lines' }]);
+  assert.equal(stored.entries.length, 1);
+});
+
 test('an unwritable history location does not break the deal', () => {
   // A regular file where the history directory should be: mkdir fails fast with ENOTDIR.
   const blocker = join(mkdtempSync(join(tmpdir(), 'uw-deal-')), 'not-a-dir');
