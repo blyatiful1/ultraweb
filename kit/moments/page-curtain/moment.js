@@ -20,7 +20,7 @@ export default function mount(root, options = {}) {
   const failsafe = +opt('timeout', 4000) || 4000;
   const timers = new Set();
   const later = (fn, ms) => { const t = setTimeout(() => { timers.delete(t); fn(); }, ms); timers.add(t); return t; };
-  let dead = false, curtain = null, live = null, state = 'idle', pending = '', focusEl = null, focusHad = null;
+  let dead = false, optOut = null, curtain = null, live = null, state = 'idle', pending = '', focusEl = null, focusHad = null;
 
   const arrived = (() => {
     const flag = store.get(NAV); store.del(NAV);
@@ -37,6 +37,10 @@ export default function mount(root, options = {}) {
   document.body.appendChild(live);
 
   if (useCurtain) {
+    if (hasVT) { // curtain forced in a View Transitions browser: opt this page out so the two never stack
+      optOut = document.createElement('style'); optOut.textContent = '@view-transition{navigation:none}';
+      document.head.appendChild(optOut);
+    }
     curtain = document.createElement('div');
     curtain.className = 'pc-curtain'; curtain.setAttribute('aria-hidden', 'true');
     curtain.setAttribute('data-state', covered ? 'covered' : 'idle');
@@ -130,7 +134,7 @@ export default function mount(root, options = {}) {
     dead = true; mounted.delete(root);
     document.removeEventListener('click', onClick); removeEventListener('pageshow', onShow);
     timers.forEach(clearTimeout);
-    curtain && curtain.remove(); live && live.remove();
+    curtain && curtain.remove(); live && live.remove(); optOut && optOut.remove();
     if (focusEl && focusHad === null) focusEl.removeAttribute('tabindex');
   };
   mounted.set(root, cleanup);

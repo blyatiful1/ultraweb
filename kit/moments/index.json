@@ -84,7 +84,7 @@
     ],
     "intensity": 2,
     "summary": "Row of cards moves sideways as the page scrolls down a tall section; keyboard reachable; native snap strip on phones.",
-    "bytes": 11296
+    "bytes": 11366
   },
   {
     "name": "image-sequence",
