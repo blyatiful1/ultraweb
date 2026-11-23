@@ -217,6 +217,10 @@ const VIRTUAL = {
 <div style="height:6000px"></div>
 <div id="far" data-moment="zz-probe"><p>far content</p></div>
 </main><script type="module" src="../system.js"></script></body></html>`,
+  '/__harness/hidden.html': `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>hidden</title></head><body>
+<div data-moment="zz-hidden"><p style="opacity:0">faded</p><p style="clip-path:inset(0 0 100% 0)">masked</p>
+<p style="visibility:hidden">invisible</p><p>shown</p><button>Pause</button>
+<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">screen reader</span></div></body></html>`,
 };
 
 // Strip the demo's own module script that imports ./moment.js, so the harness mounts.
@@ -501,6 +505,13 @@ test('system.js mounts near the viewport, links CSS once, fails soft, unmounts, 
     await page.evaluate(() => window.ultrawebKit.mountAll());
     await page.waitForFunction(() => window.__mounts === 3, null, { timeout: 5000 });
     await ctx.close();
+
+    // the visibility probe itself must catch what it is meant to catch
+    const probe = await browser.newPage();
+    await probe.goto(`${origin}/__harness/hidden.html`);
+    const found = await probe.evaluate(hiddenText, '[data-moment="zz-hidden"]');
+    assert.deepEqual(found.map((f) => f.split('"')[1]), ['faded', 'masked', 'invisible'], 'hiddenText probe');
+    await probe.close();
 
     // mobile nav
     const phone = await browser.newContext({ viewport: { width: 375, height: 812 } });
