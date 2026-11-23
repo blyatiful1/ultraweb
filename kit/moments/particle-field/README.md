@@ -1,6 +1,6 @@
 # particle-field
 
-Thousands of soft points drift through curl noise, move away from the pointer and gather into a word or SVG path.
+Soft points drift through curl noise, dodge the pointer, gather into a word or SVG path.
 
 Fits: launch, studio, product, editorial. Needs: none.
 
@@ -12,7 +12,7 @@ Fits: launch, studio, product, editorial. Needs: none.
 </section>
 <script type="module">import mount from '/kit/moments/particle-field/moment.js'; mount(document.querySelector('[data-moment="particle-field"]'));</script>
 ```
-The word is real text in its own element; style its size there. Particles draw it at that box in its own font; it turns transparent only while WebGL runs. One short word, one line.
+The word is real text; style its size there. Particles draw it in its box and font; it is transparent only while WebGL runs. One short word.
 
 | option | values | default |
 |---|---|---|
@@ -28,4 +28,4 @@ The word is real text in its own element; style its size there. Particles draw i
 Weight: 16.1 KB (js+css), 5.6 KB gzip js. Count follows area (max 7000; phones half, max 3000) and drops when frames exceed 20 ms. Dark background token: additive glow; light: normal blending.
 Reduced motion, no WebGL, lost context, no JS: the word stays visible over a dotted token ground. Adds a Pause motion button.
 
-Do not: put the word only in options; use long phrases; put body copy where the word forms.
+Do not: use long phrases; put body copy where the word forms.

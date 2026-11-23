@@ -1,6 +1,6 @@
 # shader-orb
 
-Raymarched 3D object in one fragment shader, lit with the primary and accent tokens; turns with pointer and scroll. Asset-free stand-in for a 3D hero object.
+Raymarched 3D object in one fragment shader, lit by the primary and accent tokens, turning with pointer and scroll. Asset-free 3D hero object.
 
 Fits: product, studio, launch. Needs: none.
 
@@ -12,7 +12,7 @@ Fits: product, studio, launch. Needs: none.
 </section>
 <script type="module">import mount from '/kit/moments/shader-orb/moment.js'; mount(document.querySelector('[data-moment="shader-orb"]'));</script>
 ```
-The element is square (aspect-ratio 1) and fills its column; put it in the media slot, never behind text. Scroll progress is measured on the closest `<section>`.
+It is square and fills its column; put it in the media slot, not behind text. Scroll progress is measured on the closest `<section>`.
 
 | option | values | default |
 |---|---|---|

@@ -11,7 +11,7 @@ Fits: product, studio, launch, editorial bands. Needs: none.
 </section>
 <script type="module">import mount from '/kit/moments/shader-ground/moment.js'; mount(document.querySelector('[data-moment="shader-ground"]'));</script>
 ```
-Give the section a height (min-height or padding). Every direct child sits above the canvas.
+Give the section a height. Direct children sit above the canvas.
 
 | option | values | default |
 |---|---|---|
@@ -27,4 +27,4 @@ Weight: 13.9 KB (js+css), 4.6 KB gzip js.
 Reduced motion, no WebGL, lost context, no JS: CSS gradient from the same tokens. Phones: same shader, DPR 1.5, resolution drops when frames exceed 20 ms. Adds a Pause motion button.
 Text over the ground: the gates' contrast check marks it `review`; use `data-contrast="scrim"` or intensity <= 0.4 and check the worst frame.
 
-Do not: put body copy over it without the scrim; mount two on one screen; set colours in JS; hide the pause button.
+Do not: put body copy over it without the scrim; mount two per screen; hide the pause button.
