@@ -2,7 +2,7 @@
 
 A [Claude Code](https://code.claude.com) plugin that builds websites through a guided design session: a short interview, mockups you pick from, a design system derived from the subject, the build, and quality gates that run in a real browser and return an exit code.
 
-Version 2 is a rewrite. Version 1 shipped 80 skills and about 1.2 MB of instructions; it was slow, expensive and crowded the skill list of every session it was installed in. Version 2 has four skills, about a quarter of the text, and replaces the model-run checks with one script.
+Version 2 is a rewrite. Version 1 shipped 80 skills and about 1.2 MB of instructions; it was slow, expensive and crowded the skill list of every session it was installed in. Version 2 has four skills and about a quarter of the text. It replaces the model-run checks with one script, and it moves the hard parts (colour maths, effects, choosing between options) out of prose into tested scripts and a kit of mountable building blocks, so that smaller models can follow it too.
 
 ## Status and evidence
 
@@ -61,6 +61,20 @@ Version 1 banned the AI tells of 2023 and prescribed the ones of 2026. Version 2
 2. Current default looks are named (`references/taste.md`) and counted by the gates' tells census. Each one needs a sentence in `design/DIRECTION.md` that derives it from the brief.
 3. One of the three mockup candidates is dealt at random along eight axes and must be made to fit the brief, because options chosen by judgment cluster.
 
+### A kit instead of instructions
+
+A model does not have to be able to write a scroll-scrubbed sequence or a shader to use one. `kit/` holds effects ("moments") that are mounted with a few lines of documented markup: line-by-line type reveals, scroll-scrubbed text, a type marquee, pinned chapters, a horizontal rail, an image-sequence scrubber, photo reveals, a cursor trail, page transitions, shader grounds, a raymarched object and a particle field. Each one is dependency-free, reads the site's tokens, shows its content without JavaScript, stands still under reduced motion, cleans up after itself and is covered by `tests/kit.test.mjs`.
+
+Scripts do the rest of what is easy to get wrong:
+
+| Script | What it takes over |
+|---|---|
+| `scripts/palette.mjs` | colour tokens in OKLCH with every text and UI pair verified for contrast |
+| `scripts/deal.mjs` | one mockup candidate dealt at random along eight axes, avoiding recent deals |
+| `scripts/moments.mjs` | choosing kit moments that fit the site and its assets |
+| `scripts/check-phase.mjs` | whether a phase's artifacts are complete before the build moves on |
+| `scripts/gates.mjs` | the quality gates |
+
 ### Gates
 
 ```bash
@@ -82,7 +96,8 @@ SKILL.md                 the ultraweb skill (orchestrator)
 skills/                  iterate, retrofit, gates
 references/              per-phase instructions, loaded on demand
 agents/design-judge.md   the fresh-context critic
-scripts/                 gates.mjs, measure/*, deal.mjs, site-check.mjs, verify-stack.mjs, lint-corpus.mjs
+kit/                     base stylesheet, auto-mounter, React wrapper and the moments
+scripts/                 gates.mjs, measure/*, palette.mjs, deal.mjs, moments.mjs, check-phase.mjs, site-check.mjs, verify-stack.mjs, lint-corpus.mjs
 hooks/                   write-time placeholder check, gate Stop hook
 stack/versions.json      the only place package versions are pinned
 evals/                   briefs, capture and blind comparison
