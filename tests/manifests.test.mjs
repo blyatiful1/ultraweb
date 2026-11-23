@@ -15,45 +15,71 @@ test('plugin.json and marketplace.json parse and agree', () => {
   const plugin = json('.claude-plugin/plugin.json');
   const market = json('.claude-plugin/marketplace.json');
   assert.equal(plugin.name, 'ultraweb');
+  assert.match(plugin.version, /^2\.\d+\.\d+$/);
   const entry = market.plugins.find((p) => p.name === 'ultraweb');
   assert.ok(entry, 'marketplace.json lists no ultraweb plugin');
   assert.equal(entry.version, plugin.version, 'plugin.json and marketplace.json disagree on the version');
   assert.equal(entry.repository, plugin.repository);
+  assert.equal(entry.description, plugin.description, 'the two descriptions should be the same sentence');
 });
 
-test('hooks.json commands point at scripts that exist', () => {
-  const hooks = json('hooks/hooks.json');
-  const commands = [];
-  for (const eventHooks of Object.values(hooks.hooks)) {
-    for (const matcherBlock of eventHooks) {
-      for (const h of matcherBlock.hooks) commands.push(h.command);
-    }
+test('manifests carry no dead $schema, short one-sentence descriptions and no counts', () => {
+  const plugin = json('.claude-plugin/plugin.json');
+  const market = json('.claude-plugin/marketplace.json');
+  for (const [where, obj] of [['plugin.json', plugin], ['marketplace.json', market], ['marketplace entry', market.plugins[0]]]) {
+    assert.equal(obj.$schema, undefined, `${where} has a $schema (the anthropic.com URL is a 404)`);
+    assert.ok(obj.description && obj.description.length <= 200, `${where} description is ${obj.description?.length} chars (max 200)`);
+    assert.equal(obj.description.split(/(?<=[.!?])\s+/).length, 1, `${where} description must be one sentence`);
   }
-  assert.ok(commands.length >= 2, 'expected at least the antislop and studio-log hooks');
-  for (const cmd of commands) {
-    const m = cmd.match(/\$\{CLAUDE_PLUGIN_ROOT\}\/(\S+?)"/);
-    assert.ok(m, `command has no \${CLAUDE_PLUGIN_ROOT} path: ${cmd}`);
+  const text = readFileSync(join(root, '.claude-plugin/plugin.json'), 'utf8') + readFileSync(join(root, '.claude-plugin/marketplace.json'), 'utf8');
+  assert.doesNotMatch(text, /\b\d+\s+(?:\w+\s+)?(?:skills|subagents|agents)\b/i, 'manifests must not state skill or subagent counts');
+});
+
+test('skills key keeps the root SKILL.md; hooks load once, from the default hooks/hooks.json', () => {
+  const plugin = json('.claude-plugin/plugin.json');
+  assert.deepEqual(plugin.skills, ['./']);
+  assert.equal(plugin.hooks, undefined, 'hooks/hooks.json loads by default; a hooks key pointing at it again is redundant');
+  assert.ok(existsSync(join(root, 'hooks', 'hooks.json')));
+});
+
+function hookCommands() {
+  const hooks = json('hooks/hooks.json');
+  const out = [];
+  for (const [event, blocks] of Object.entries(hooks.hooks)) {
+    for (const block of blocks) for (const h of block.hooks) out.push({ event, matcher: block.matcher, ...h });
+  }
+  return out;
+}
+
+test('hooks.json wires antislop on PostToolUse and gate-stop on Stop, node-guarded', () => {
+  const cmds = hookCommands();
+  const anti = cmds.find((c) => c.command.includes('/hooks/antislop.mjs'));
+  const stop = cmds.find((c) => c.command.includes('/hooks/gate-stop.mjs'));
+  assert.ok(anti && anti.event === 'PostToolUse', 'antislop.mjs must be a PostToolUse hook');
+  assert.deepEqual(anti.matcher.split('|').sort(), ['Edit', 'MultiEdit', 'Write']);
+  assert.ok(stop && stop.event === 'Stop', 'gate-stop.mjs must be a Stop hook');
+  for (const c of cmds) {
+    assert.equal(c.type, 'command');
+    assert.match(c.command, /^command -v node >\/dev\/null 2>&1 \|\| exit 0; node "\$\{CLAUDE_PLUGIN_ROOT\}\/hooks\/[\w-]+\.mjs"$/, c.command);
+    const m = c.command.match(/\$\{CLAUDE_PLUGIN_ROOT\}\/(\S+?)"/);
     assert.ok(existsSync(join(root, m[1])), `hooks.json points at missing file: ${m[1]}`);
   }
 });
 
-test('hook and recipe scripts are syntactically valid bash', () => {
-  const hookScripts = readdirSync(join(root, 'hooks')).filter((f) => f.endsWith('.sh')).map((f) => `hooks/${f}`);
-  assert.ok(hookScripts.length >= 3, `expected antislop, studio-log and shell-write-guard under hooks/, found ${hookScripts}`);
-  for (const script of [...hookScripts, 'scripts/scaffold-fixture.sh']) {
-    execFileSync('bash', ['-n', join(root, script)]); // throws on a syntax error
-  }
-  for (const f of readdirSync(join(root, 'hooks')).filter((f) => f.endsWith('.mjs'))) {
-    execFileSync(process.execPath, ['--check', join(root, 'hooks', f)]); // throws on a syntax error
+test('every hook script is wired, parses, and no shell hooks remain', () => {
+  const wired = hookCommands().map((c) => c.command).join('\n');
+  const files = readdirSync(join(root, 'hooks')).filter((f) => f !== 'hooks.json');
+  assert.deepEqual(files.filter((f) => !f.endsWith('.mjs')), [], 'hooks/ holds only node hooks and hooks.json');
+  for (const f of files) {
+    assert.ok(wired.includes(`/hooks/${f}`), `hooks/${f} exists but hooks.json never runs it`);
+    execFileSync(process.execPath, ['--check', join(root, 'hooks', f)]);
   }
 });
 
-test('every hook script is wired in hooks.json', () => {
-  const wired = JSON.stringify(json('hooks/hooks.json')); // re-serialized, so quotes inside commands are escaped — match the path only
-  for (const f of readdirSync(join(root, 'hooks')).filter((f) => f.endsWith('.sh'))) {
-    assert.ok(wired.includes(`/hooks/${f}`), `hooks/${f} exists but hooks.json never runs it`);
+test('remaining shell scripts are syntactically valid bash', () => {
+  for (const dir of ['scripts', 'tests']) {
+    for (const f of readdirSync(join(root, dir)).filter((n) => n.endsWith('.sh'))) execFileSync('bash', ['-n', join(root, dir, f)]);
   }
-  assert.ok(json('hooks/hooks.json').hooks.PreToolUse?.some((b) => b.matcher === 'Bash'), 'shell-write-guard must be a PreToolUse hook matching Bash');
 });
 
 test('locked-to pins actually match their anchor', () => {

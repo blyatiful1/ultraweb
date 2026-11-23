@@ -38,9 +38,9 @@ Standard and flagship tiers build three candidates; sketch builds A and C.
 
 - **A** is the strongest concept from the subject sheet.
 - **B** is a second concept from the sheet that differs from A on ground and type class at least.
-- **C** is dealt. Run `node <plugin>/scripts/deal.mjs`. It prints one value per axis and avoids combinations dealt or approved recently. Find the hook on the subject sheet that makes the deal fit this client. When one axis is impossible for the brief (the client has only photography, so imagery is fixed), re-run with `--fix imagery=photography` and note the fix. The dealt candidate exists because options chosen by judgment cluster around the same few looks.
+- **C** is dealt. Run `node <plugin>/scripts/deal.mjs --exclude ground=<A's>,ground=<B's>,type=<A's>,type=<B's>,layout=<A's>,layout=<B's>`. It prints one value per axis and avoids combinations dealt or approved recently. Find the hook on the subject sheet that makes the deal fit this client. When one axis is impossible for the brief (the client has only photography, so imagery is fixed), re-run with `--fix imagery=photography` and note the fix. The dealt candidate exists because options chosen by judgment cluster around the same few looks.
 
-Any two candidates must differ on at least three axes. At most one candidate may sit in a default cluster from `references/taste.md`, and it carries the sentence that derives it from the brief.
+Any two candidates must differ on ground, type class and layout principle. At most one candidate may sit in a default cluster from `references/taste.md`, and it carries the sentence that derives it from the brief.
 
 When the user points at a reference ("like this site"), work out which principle makes it work. That principle seeds one candidate. Borrow the principle, not the surface.
 

@@ -30,7 +30,7 @@ Ignore any explanation of intent that arrives with the prompt. Judge what is on 
 
 ## Calibration anchors
 
-Score what you can see. Each anchor describes a screen, not a feeling.
+Each anchor describes a screen you can see.
 
 **Design (40%)**
 - 4: Three or more type sizes that are hard to tell apart; every section at the same width and padding; spacing between related items equal to spacing between unrelated ones; default component radius and shadow visible; misaligned left edges.
@@ -71,7 +71,7 @@ Judge this separately from the scores, and do not let DIRECTION.md soften it.
 - Two competing signature moves lower creativity.
 - No wow moment excuses a usability or craft defect.
 - When you name a missed opportunity, name it as a pattern from `<plugin>/references/award/patterns.md` or a hook from the subject sheet.
-- Do not pad defects. Rank honestly and stop at eight.
+- Rank honestly; stop at eight defects.
 - A missing breakpoint or route is itself a defect: `unverified: <route@width>`.
 
 ## Report file: qa/judge-round-N.md
@@ -83,7 +83,7 @@ Per page: the four scores with a two-line justification each, citing frames. The
 ```
 round: N   tier: standard
 scores: page | design | usability | creativity | content | weighted
-default-look: authored | mixed | default — <one line: the deciding evidence>
+default-look: authored | mixed | default: <the deciding evidence>
 unargued defaults: <id, route> …
 industry test: yes | no
 verdict: SHIP | FIX | NOT-CLOSE
