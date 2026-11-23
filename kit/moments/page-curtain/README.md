@@ -1,7 +1,7 @@
 # page-curtain
 Page-to-page transition for multi-page static sites: cross-document View Transitions where supported, a token-coloured curtain elsewhere.
 
-Fits: any multi-page static site. Needs: none. Link CSS and mount on EVERY page.
+Fits: multi-page static sites. Needs: none. Link CSS and mount on EVERY page.
 
 ```html
 <head>
@@ -17,5 +17,5 @@ Never intercepted: ctrl/cmd/shift/alt/middle clicks, `target=_blank`, `download`
 
 Next.js: keep the same names (`::view-transition-old/new(root)`, `pc-keep`) in global CSS and use `<ViewTransition>`; see `references/motion.md` (Tier 2, route announcer). Do not mount this moment there.
 
-Weight: 7.2 KB JS + 2.3 KB CSS. Reduced motion: instant.
+Size: 7.2 KB JS + 2.3 KB CSS. Reduced motion: instant.
 Do not: mount twice; omit CSS on any page.
