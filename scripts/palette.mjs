@@ -16,9 +16,15 @@ export const TOKENS = [
   'background', 'foreground', 'card', 'card-foreground', 'primary', 'primary-foreground',
   'muted', 'muted-foreground', 'accent', 'accent-foreground', 'border', 'ring',
 ];
+export const EXT_TOKENS = [
+  'popover', 'popover-foreground', 'secondary', 'secondary-foreground', 'destructive', 'destructive-foreground',
+  'input', 'success', 'success-foreground', 'warning', 'warning-foreground',
+];
 export const EXTRA_TOKENS = ['shadow-color', 'shadow-k', 'radius'];
-export const ALL_TOKENS = [...TOKENS, ...EXTRA_TOKENS];
-// [foreground-side token, surface token, floor, target (or null)]
+export const COLOUR_TOKENS = [...TOKENS, ...EXT_TOKENS];
+export const CORE_TOKENS = [...TOKENS, ...EXTRA_TOKENS]; // what a project must define (check-phase 3)
+export const ALL_TOKENS = [...COLOUR_TOKENS, ...EXTRA_TOKENS];
+// [foreground-side token, surface token, floor, target (or null), optional]
 export const PAIRS = [
   ['foreground', 'background', 4.5, 7],
   ['card-foreground', 'card', 4.5, null],
@@ -28,6 +34,16 @@ export const PAIRS = [
   ['accent-foreground', 'accent', 4.5, null],
   ['border', 'background', 1.3, null],
   ['ring', 'background', 3, null],
+  // extended shadcn set: verified when present, optional in `check`
+  ['popover-foreground', 'popover', 4.5, null, true],
+  ['secondary-foreground', 'secondary', 4.5, null, true],
+  ['destructive-foreground', 'destructive', 4.5, null, true],
+  ['destructive', 'background', 3, null, true],
+  ['input', 'background', 3, null, true],
+  ['success-foreground', 'success', 4.5, null, true],
+  ['success', 'background', 3, null, true],
+  ['warning-foreground', 'warning', 4.5, null, true],
+  ['warning', 'background', 3, null, true],
 ];
 const MARGIN = 0.05; // generation aims this far above each floor so rounding cannot undercut it
 
@@ -43,6 +59,8 @@ Generate:
   --hue <0-360>       hue of the ground (neutrals carry a hint of it)                      (required)
   --accent-hue <n>    hue of primary/ring; default = --hue
   --chroma <c>        low | medium | high   accent strength; default medium
+  --destructive-hue <n>  hue of the error colour; default 25, shifted automatically (and noted in the
+                      table) when the ground or accent hue is within 30 degrees of it
   --colour <m>        monochrome | one-accent | two-colour-pair; default one-accent
   --second-hue <n>    hue of the second colour (the --accent token) for two-colour-pair;
                       default accent hue + 150
@@ -55,17 +73,23 @@ Generate:
                       verification table to stderr; with it the table goes to stdout.
 
 Tokens: ${ALL_TOKENS.join(' ')}
+  (shadcn set: popover, secondary, destructive, input, success, warning with foregrounds; --input is the form
+  field boundary >= 3:1, --border stays the decorative hairline >= 1.3:1; status fills are >= 3:1 on the
+  background so they can be used as large text and icons)
 
 Guarantees (measured on the 8-bit sRGB that actually renders; adjustments are noted in the table):
   foreground/background >= 7:1 where achievable, never < 4.5   card-foreground/card >= 4.5
   muted-foreground on background and on muted >= 4.5           primary-foreground/primary >= 4.5
   accent-foreground/accent >= 4.5   border/background >= 1.3   ring/background >= 3
+  popover, secondary, destructive, success, warning foregrounds >= 4.5; destructive, success, warning,
+  input against background >= 3
 Out-of-gamut colours are mapped by reducing chroma (hue and lightness kept), never clipped.
 Emitted colours are always inside sRGB, so no browser gamut-mapping can change a verified pair.
 
 Check an existing file:
   node palette.mjs check <css-file>
-  Reads --token: oklch()|#hex|rgb()|hsl() declarations (var(--x) resolved) in :root and .dark,
+  Reads --token: oklch()|#hex|rgb()|hsl() declarations (var(--x) resolved) in :root and .dark
+  (the extended shadcn tokens are verified when present, not required),
   prints the same table, exits 1 if any pair fails the floors (7:1 is a target, not a failure).
 `;
 
@@ -338,6 +362,34 @@ function buildTheme(themeName, ground, o, dark, flip = false) {
   if (!bs.ok) throw new PaletteError(themeName, 'border', 'background', bs.r, 1.3);
   const border = bs.c;
 
+  // extended shadcn set
+  const popover = card;
+  const secDir = mutedDelta >= 0 ? 1 : -1;
+  const secondary = mk(muted.L + secDir * 0.035, bg.C * 1.2, H);
+  const sr = seek({ L0: side === 'dark' ? 0.28 : 0.95, dir, C: fgC, H, bgs: [secondary], target: 4.5 + MARGIN });
+  if (!sr.ok) throw new PaletteError(themeName, 'secondary-foreground', 'secondary', sr.r, 4.5);
+  const secondaryFg = sr.c;
+  const ir = seek({ L0: bg.L + bdir * 0.3, dir: bdir, C: bg.C, H, bgs: [bg], target: 3 + MARGIN });
+  if (!ir.ok) throw new PaletteError(themeName, 'input', 'background', ir.r, 3);
+  const input = ir.c;
+  let dH = o.destructiveHue ?? 25;
+  if (o.destructiveHue === undefined && (angDiff(dH, H) < 30 || angDiff(dH, accentH) < 30)) {
+    const alt = [25, 10, 40, 355, 340, 55].find((c) => angDiff(c, H) >= 30 && angDiff(c, accentH) >= 30);
+    if (alt !== undefined) {
+      addNote('destructive/background', `error hue shifted 25 -> ${alt} to stay distinct from the brand hue`);
+      addNote('destructive-foreground/destructive', `error hue shifted 25 -> ${alt} to stay distinct from the brand hue`);
+      dH = alt;
+    }
+  }
+  const status = (key, hue, C, prefDark, prefLight) => {
+    const f = pickFill({ H: hue, C: dark && !sat ? C * 0.85 : C, pref: side === 'dark' ? prefDark : prefLight, bg });
+    if (!f) throw new PaletteError(themeName, key, 'background', 0, 3);
+    return f;
+  };
+  const dest = status('destructive', dH, 0.19, bg.L > 0.9 ? 0.55 : 0.35, bg.L < 0.3 ? 0.72 : 0.88);
+  const succ = status('success', 150, 0.15, bg.L > 0.9 ? 0.52 : 0.35, bg.L < 0.3 ? 0.74 : 0.88);
+  const warn = status('warning', 80, 0.14, bg.L > 0.9 ? 0.55 : 0.35, bg.L < 0.3 ? 0.8 : 0.9);
+
   // shadow: dark-text grounds get a tinted shadow; light-text (dark) themes a black one at higher strength
   const sh = side === 'light' && !sat ? { color: mk(0, 0, 0), k: 2.2 } : sat ? { color: mk(0.2, 0.06, H), k: 1.2 } : { color: mk(0.25, 0.04, H), k: 1 };
 
@@ -346,6 +398,9 @@ function buildTheme(themeName, ground, o, dark, flip = false) {
     primary, 'primary-foreground': primaryFg, muted, 'muted-foreground': mutedFg,
     accent, 'accent-foreground': accentFg, border, ring,
     'shadow-color': sh.color,
+    popover, 'popover-foreground': foreground, secondary, 'secondary-foreground': secondaryFg,
+    destructive: dest.c, 'destructive-foreground': dest.on, input,
+    success: succ.c, 'success-foreground': succ.on, warning: warn.c, 'warning-foreground': warn.on,
   };
   return { tokens, shadowK: sh.k, notes, side, ground: spec };
 }
@@ -369,11 +424,12 @@ function buildWithFallback(themeName, ground, o, dark) {
 
 // ---------- verification ----------
 export function verify(tokens, theme, notes = {}) {
-  return PAIRS.map(([fg, bg, floor, target]) => {
+  return PAIRS.flatMap(([fg, bg, floor, target, optional]) => {
     const a = tokens[fg];
     const b = tokens[bg];
     const key = `${fg}/${bg}`;
-    if (!a || !b) return { theme, fg, bg, floor, target, ratio: null, status: 'FAIL', note: `missing token ${!a ? `--${fg}` : `--${bg}`}` };
+    if (optional && (!a || !b)) return [];
+    if (!a || !b) return [{ theme, fg, bg, floor, target, ratio: null, status: 'FAIL', note: `missing token ${!a ? `--${fg}` : `--${bg}`}` }];
     const ratio = contrast(a, b);
     let status = ratio >= floor ? 'PASS' : 'FAIL';
     let note = notes[key] || '';
@@ -382,7 +438,7 @@ export function verify(tokens, theme, notes = {}) {
       status = 'PASS*';
     }
     if (a.mapped || b.mapped) note = `${note ? `${note}; ` : ''}out of sRGB gamut, measured after chroma reduction`;
-    return { theme, fg, bg, floor, target, ratio, status, note };
+    return [{ theme, fg, bg, floor, target, ratio, status, note }];
   });
 }
 
@@ -398,7 +454,7 @@ export function formatTable(rows) {
 // ---------- output ----------
 function block(selector, t, radius, withRadius, scheme) {
   const L = [`${selector} {`, `  color-scheme: ${scheme};`];
-  for (const k of TOKENS) L.push(`  --${k}: ${t.tokens[k].css};`);
+  for (const k of COLOUR_TOKENS) L.push(`  --${k}: ${t.tokens[k].css};`);
   L.push(`  --shadow-color: ${t.tokens['shadow-color'].css};`, `  --shadow-k: ${t.shadowK};`);
   if (withRadius) L.push(`  --radius: ${radius};`);
   L.push('}');
@@ -412,7 +468,7 @@ function render(themes, o) {
   const blocks = [block(':root', main, radius, true, main.side === 'dark' ? 'light' : 'dark')];
   if (dual) blocks.push(block('.dark', dual, radius, false, 'dark'));
   if (o.format === 'css') return `${header}\n${blocks.join('\n')}\n`;
-  const bridge = TOKENS.map((k) => `  --color-${k}: var(--${k});`).join('\n');
+  const bridge = COLOUR_TOKENS.map((k) => `  --color-${k}: var(--${k});`).join('\n');
   return `${header}
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
@@ -435,7 +491,7 @@ ${bridge}
 }
 
 function renderJson(themes, o, rows) {
-  const toObj = (t) => ({ ...Object.fromEntries([...TOKENS, 'shadow-color'].map((k) => [k, t.tokens[k].hex])), 'shadow-k': t.shadowK });
+  const toObj = (t) => ({ ...Object.fromEntries([...COLOUR_TOKENS, 'shadow-color'].map((k) => [k, t.tokens[k].hex])), 'shadow-k': t.shadowK });
   const out = { root: toObj(themes[0]), ...(themes[1] ? { dark: toObj(themes[1]) } : {}), radius: `${o.radius}rem`, verification: rows.map((r) => ({ theme: r.theme, pair: `${r.fg}/${r.bg}`, ratio: r.ratio == null ? null : round(r.ratio, 2), floor: r.floor, result: r.status, note: r.note })) };
   return `${JSON.stringify(out, null, 2)}\n`;
 }
@@ -516,7 +572,7 @@ export function checkCss(text) {
     const raw = theme === 'dark' ? { ...blocks.root, ...blocks.dark } : blocks.root;
     const resolve = (name) => raw[name] ?? (theme === 'dark' ? blocks.root[name] : undefined);
     const tokens = {};
-    for (const name of TOKENS) {
+    for (const name of COLOUR_TOKENS) {
       if (raw[name] === undefined) continue;
       const c = parseColour(raw[name], resolve);
       if (c) tokens[name] = c;
@@ -561,6 +617,7 @@ function parseArgs(argv) {
     if (a === '--ground') { o.ground = next(); if (!GROUNDS.includes(o.ground)) die(`--ground must be one of ${GROUNDS.join(', ')}`); }
     else if (a === '--hue') o.hue = num(a, next(), 0, 360);
     else if (a === '--accent-hue') o.accentHue = num(a, next(), 0, 360);
+    else if (a === '--destructive-hue') o.destructiveHue = num(a, next(), 0, 360);
     else if (a === '--second-hue') o.secondHue = num(a, next(), 0, 360);
     else if (a === '--chroma') { o.chroma = next(); if (!['low', 'medium', 'high'].includes(o.chroma)) die('--chroma must be low, medium or high'); }
     else if (a === '--colour' || a === '--color') { o.colour = next(); if (!['monochrome', 'one-accent', 'two-colour-pair'].includes(o.colour)) die('--colour must be monochrome, one-accent or two-colour-pair'); }

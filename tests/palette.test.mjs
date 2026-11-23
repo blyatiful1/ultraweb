@@ -38,8 +38,8 @@ function parseBlocks(css) {
   }
   return out;
 }
-const FLOORS = [['foreground', 'background', 4.5], ['card-foreground', 'card', 4.5], ['muted-foreground', 'background', 4.5], ['muted-foreground', 'muted', 4.5], ['primary-foreground', 'primary', 4.5], ['accent-foreground', 'accent', 4.5], ['border', 'background', 1.3], ['ring', 'background', 3]];
-const SEMANTIC = ['background', 'foreground', 'card', 'card-foreground', 'primary', 'primary-foreground', 'muted', 'muted-foreground', 'accent', 'accent-foreground', 'border', 'ring', 'shadow-color', 'shadow-k', 'radius'];
+const FLOORS = [['foreground', 'background', 4.5], ['card-foreground', 'card', 4.5], ['muted-foreground', 'background', 4.5], ['muted-foreground', 'muted', 4.5], ['primary-foreground', 'primary', 4.5], ['accent-foreground', 'accent', 4.5], ['border', 'background', 1.3], ['ring', 'background', 3], ['popover-foreground', 'popover', 4.5], ['secondary-foreground', 'secondary', 4.5], ['destructive-foreground', 'destructive', 4.5], ['destructive', 'background', 3], ['input', 'background', 3], ['success-foreground', 'success', 4.5], ['success', 'background', 3], ['warning-foreground', 'warning', 4.5], ['warning', 'background', 3]];
+const SEMANTIC = ['background', 'foreground', 'card', 'card-foreground', 'primary', 'primary-foreground', 'muted', 'muted-foreground', 'accent', 'accent-foreground', 'border', 'ring', 'popover', 'popover-foreground', 'secondary', 'secondary-foreground', 'destructive', 'destructive-foreground', 'input', 'success', 'success-foreground', 'warning', 'warning-foreground', 'shadow-color', 'shadow-k', 'radius'];
 
 test('contrast: black on white is 21:1 and #767676 on white is about 4.54', () => {
   assert.ok(Math.abs(ratio('#000000', '#ffffff') - 21) < 0.001);
@@ -182,6 +182,27 @@ test('check: passes a generated file, exits 1 on a planted failing pair, reads h
   const m = run(['check', missing]);
   assert.equal(m.status, 1);
   assert.match(m.stdout, /missing token/);
+});
+
+test('extended tokens: secondary differs from muted, error hue shifts near a red ground, --destructive-hue is honoured, check treats them as optional', () => {
+  const b = parseBlocks(run(['--ground', 'light-neutral', '--hue', '250', '--dual']).stdout);
+  assert.notEqual(b.root.secondary, b.root.muted);
+  assert.ok(Math.abs(parseOklch(b.root.secondary)[0] - parseOklch(b.root.muted)[0]) <= 0.04);
+  const near = run(['--ground', 'light-tinted', '--hue', '20']);
+  assert.match(near.stderr, /error hue shifted/);
+  const h = parseOklch(parseBlocks(near.stdout).root.destructive)[2];
+  assert.ok(Math.abs(h - 20) >= 29.9, `shifted hue ${h}`);
+  const pinned = parseBlocks(run(['--ground', 'light-neutral', '--hue', '250', '--destructive-hue', '350']).stdout);
+  assert.ok(Math.abs(parseOklch(pinned.root.destructive)[2] - 350) < 1);
+  const dir = mkdtempSync(join(tmpdir(), 'pal-'));
+  const f = join(dir, 'core.css');
+  writeFileSync(f, run(['--ground', 'light-neutral', '--hue', '250']).stdout.replace(/ {2}--(popover|secondary|destructive|input|success|warning)[\w-]*: [^;]+;\n/g, ''));
+  assert.equal(run(['check', f]).status, 0);
+  const g = join(dir, 'bad-input.css');
+  writeFileSync(g, run(['--ground', 'light-neutral', '--hue', '250']).stdout.replace(/--input: [^;]+;/, '--input: oklch(0.95 0.004 250);'));
+  const r = run(['check', g]);
+  assert.equal(r.status, 1);
+  assert.match(r.stdout, /--input on --background/);
 });
 
 test('bad input exits 2', () => {

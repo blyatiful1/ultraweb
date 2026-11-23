@@ -5,6 +5,8 @@ Motion vocabulary and the build patterns that use it: scroll, feedback, route tr
 Load when: §Vocabulary in Phase 3 (system); the rest in Phase 5 and 6 when sections get their motion.
 Reads: design/DIRECTION.md, design/SYSTEM.md, design/SITEMAP.md, built sections. Writes: design/SYSTEM.md §motion, tokens in `app/globals.css` (or `site/styles.css`), `lib/motion.ts`, the Reveal wrapper, transition layer, interaction states.
 
+Use the kit first: `<plugin>/kit/README.md` and `node <plugin>/scripts/moments.mjs list` show tested effects (line reveals, scroll-scrubbed text, pinned chapters, a horizontal rail, image reveals, shader grounds and more) that mount with a few lines of markup and already handle reduced motion, phones and cleanup. Write motion by hand, following the rest of this file, only for what the kit does not cover.
+
 ## Vocabulary
 
 Every animation draws its numbers from one token set. Raw durations and curves exist in exactly two files: the token CSS and `lib/motion.ts`. Components import from them.

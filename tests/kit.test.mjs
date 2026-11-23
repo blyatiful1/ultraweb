@@ -407,9 +407,15 @@ test('every moment passes the live checks', { timeout: 900000 }, async (t) => {
           await visit();
           const diff1 = await page.evaluate(() => {
             const h = window.__h;
+            const where = (a, b) => {
+              let i = 0;
+              while (i < a.length && a[i] === b[i]) i++;
+              return `at char ${i}:\n  before …${a.slice(Math.max(0, i - 60), i + 80)}\n  after  …${b.slice(Math.max(0, i - 60), i + 80)}`;
+            };
+            window.__where = where;
             const bad = h.cleanups.map((c, i) => (typeof c === 'function' ? null : `root ${i}: mount returned ${typeof c}`)).filter(Boolean);
             h.cleanups.forEach((c) => typeof c === 'function' && c());
-            return bad.concat(h.roots.map((r, i) => (r.outerHTML === h.before[i] ? null : `root ${i} differs after cleanup:\n  before ${h.before[i].slice(0, 300)}\n  after  ${r.outerHTML.slice(0, 300)}`)).filter(Boolean));
+            return bad.concat(h.roots.map((r, i) => (r.outerHTML === h.before[i] ? null : `root ${i} differs after cleanup ${where(h.before[i], r.outerHTML)}`)).filter(Boolean));
           });
           assert.deepEqual(diff1, [], `${name}: first cleanup`);
           await page.waitForTimeout(200);
@@ -434,7 +440,7 @@ test('every moment passes the live checks', { timeout: 900000 }, async (t) => {
               if (typeof a === 'function') a();
               if (typeof b === 'function' && b !== a) b();
             }
-            return h.roots.map((r, i) => (r.outerHTML === h.before[i] ? null : `root ${i} differs after the second cleanup:\n  after ${r.outerHTML.slice(0, 300)}`)).filter(Boolean);
+            return h.roots.map((r, i) => (r.outerHTML === h.before[i] ? null : `root ${i} differs after the second cleanup ${window.__where(h.before[i], r.outerHTML)}`)).filter(Boolean);
           });
           assert.deepEqual(diff2, [], `${name}: second cleanup`);
           assert.deepEqual(log.pageErrors, [], `${name}: page errors during mount/cleanup`);
@@ -507,15 +513,20 @@ test('system.js mounts near the viewport, links CSS once, fails soft, unmounts, 
     await toggle.click();
     assert.equal(await p2.evaluate(() => document.getElementById('nav-dialog').open), true, 'menu did not open');
     assert.equal(await toggle.getAttribute('aria-expanded'), 'true');
+    const closed = async (how) => {
+      await p2.waitForFunction(() => !document.getElementById('nav-dialog').open, null, { timeout: 2000 }).catch(() => {});
+      assert.equal(await p2.evaluate(() => document.getElementById('nav-dialog').open), false, `${how} did not close the menu`);
+      await p2.waitForFunction(() => document.querySelector('.nav-toggle').getAttribute('aria-expanded') === 'false', null, { timeout: 2000 }).catch(() => {});
+      assert.equal(await toggle.getAttribute('aria-expanded'), 'false', `aria-expanded not reset after ${how}`);
+    };
     await p2.keyboard.press('Escape');
-    assert.equal(await p2.evaluate(() => document.getElementById('nav-dialog').open), false, 'Escape did not close the menu');
-    assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
+    await closed('Escape');
     await toggle.click();
     await p2.locator('#nav-dialog a').first().click();
-    assert.equal(await p2.evaluate(() => document.getElementById('nav-dialog').open), false, 'a link did not close the menu');
+    await closed('a link');
     await toggle.click();
     await p2.locator('#nav-dialog [data-nav-close]').click();
-    assert.equal(await p2.evaluate(() => document.getElementById('nav-dialog').open), false, 'Close did not close the menu');
+    await closed('Close');
     const o = await p2.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
     assert.equal(o, true, 'fixture overflows at 375');
     assert.deepEqual(log2.pageErrors, []);
@@ -587,16 +598,20 @@ test('moments.mjs: exit 2 with a clear message when nothing matches', () => {
 test('moments.mjs: history steers away from recent picks and keeps other keys', () => {
   const hist = join(tmp, 'history.json');
   const deal = [{ kind: 'dealt', at: '2026-11-01', axes: { ground: 'dark' } }];
-  writeFileSync(hist, JSON.stringify({ entries: deal, moments: Array.from({ length: 10 }, () => ({ names: ['alpha'] })) }));
+  const seedHistory = () => writeFileSync(hist, JSON.stringify({ entries: deal, moments: Array.from({ length: 10 }, () => ({ names: ['alpha'] })) }));
   let alpha = 0;
   for (let seed = 1; seed <= 20; seed++) {
+    seedHistory();
     const names = picked(runCli(['pick', '--fits', 'studio', '--kind', 'type', '--seed', String(seed)]).stdout);
     if (names[0] === 'alpha') alpha++;
   }
   assert.ok(alpha <= 3, `alpha picked ${alpha}/20 times despite ten recent uses`);
   const data = JSON.parse(readFileSync(hist, 'utf8'));
   assert.deepEqual(data.entries, deal, 'deal.mjs entries were disturbed');
-  assert.ok(data.moments.length > 10 && data.moments.length <= 24, 'picks recorded and capped');
+  assert.equal(data.moments.length, 11, 'the pick was recorded');
+  writeFileSync(hist, JSON.stringify({ moments: Array.from({ length: 30 }, () => ({ names: ['beta'] })) }));
+  runCli(['pick', '--fits', 'studio', '--seed', '1']);
+  assert.equal(JSON.parse(readFileSync(hist, 'utf8')).moments.length, 24, 'history capped at 24 picks');
   assert.ok(Array.isArray(data.moments.at(-1).names));
   // --no-history writes nothing
   const before = readFileSync(hist, 'utf8');

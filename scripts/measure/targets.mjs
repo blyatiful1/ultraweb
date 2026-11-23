@@ -58,6 +58,8 @@ async (page) => {
           if (el.disabled) continue;
           const r = el.getBoundingClientRect();
           if (r.width <= 0 || r.height <= 0) continue;
+          // a visually hidden control (sr-only, a skip link parked off screen) is no pointer target until focused
+          if (r.width <= 2 && r.height <= 2) continue;
           checked++;
           // an inline link inside a paragraph is text, not a target — WCAG 2.2 exempts it
           const inlineInText =

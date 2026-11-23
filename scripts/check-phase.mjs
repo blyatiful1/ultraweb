@@ -10,7 +10,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { checkCss, ALL_TOKENS } from './palette.mjs';
+import { checkCss, CORE_TOKENS } from './palette.mjs';
 
 const HELP = `check-phase.mjs — has this build really finished phase N?
 
@@ -150,7 +150,7 @@ function phase3(root, p) {
   if (!tf) return p(TOKEN_FILES.join(' | '), 'no token file found');
   const css = read(join(root, tf));
   const declared = new Set([...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/(--[\w-]+)\s*:/g)].map((m) => m[1].slice(2)));
-  const missing = ALL_TOKENS.filter((t) => !declared.has(t));
+  const missing = CORE_TOKENS.filter((t) => !declared.has(t));
   if (missing.length) p(tf, `missing semantic token(s): ${missing.map((t) => `--${t}`).join(' ')}`);
   const { rows, problems } = checkCss(css);
   for (const r of rows) if (r.status === 'FAIL' && r.ratio !== null) p(tf, `contrast fails (palette.mjs check), ${r.theme}: --${r.fg} on --${r.bg} is ${r.ratio.toFixed(2)}:1, floor ${r.floor}:1`);

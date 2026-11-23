@@ -5,6 +5,8 @@ Build the OKLCH palette from the direction, name it as semantic tokens, re-decid
 Load when: building or changing a palette, adding dark mode, or fixing contrast.
 Reads: design/DIRECTION.md, design/BRIEF.md. Writes: design/SYSTEM.md §color (the value table that `references/tokens.md` encodes).
 
+Generate the tokens with `node <plugin>/scripts/palette.mjs` (ground and hues from `design/DIRECTION.md`; `--help` lists the options). It decides lightness, maps out-of-gamut colours and prints a verified contrast table, so the rules below are for choosing its inputs, reviewing its output and adjusting by hand. After any hand edit run `node <plugin>/scripts/palette.mjs check <token file>`.
+
 ## What DIRECTION.md decides, and what this file decides
 
 DIRECTION.md picks the ground (near-white, near-black, a saturated brand field, a mid-tone, a pastel), the accent hue and how much color the page carries. This file gives ranges and procedure; it has no house palette. A saturated or mid-tone ground is as valid as a tinted off-white or off-black. Pure `oklch(L 0 0)` gray needs a reason in DIRECTION.md, but a neutral that carries a hint of the ground's hue is usually right.

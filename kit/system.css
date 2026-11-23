@@ -252,7 +252,7 @@
   .nav-dialog::backdrop { background-color: color-mix(in oklab, var(--foreground, CanvasText) 40%, transparent); }
   .nav-dialog__head { display: flex; justify-content: space-between; align-items: center; min-height: 4rem; margin-block-end: 1.5rem; }
   .nav-dialog ul { list-style: none; padding: 0; display: grid; gap: 0.25rem; max-width: none; }
-  .nav-dialog a { display: block; padding-block: 0.6rem; font-size: var(--text-h3, 1.5rem); font-family: var(--font-display, inherit); text-decoration: none; }
+  .nav-dialog ul a { display: block; padding-block: 0.6rem; font-size: var(--text-h3, 1.5rem); font-family: var(--font-display, inherit); text-decoration: none; }
   @media (min-width: 48rem) { .nav-dialog[open] { display: none; } }
   @media (prefers-reduced-motion: no-preference) {
     .nav-dialog[open] { animation: kit-dialog-in var(--dur-micro, 180ms) var(--ease-out, ease-out); }

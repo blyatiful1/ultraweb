@@ -109,6 +109,7 @@ export default function mount(root, options = {}) {
     win.removeEventListener('hashchange', onHash);
     win.removeEventListener('load', measure);
     track.style.transform = '';
+    if (!track.getAttribute('style')) track.removeAttribute('style');
     if (bar) bar.remove();
     bar = barFill = null;
     tabbed.splice(0).forEach((it) => it.removeAttribute('tabindex'));

@@ -5,6 +5,8 @@ The award path: one commissioned signature spectacle (a hero set piece, an SVG s
 Load when: design/DIRECTION.md commissions a showpiece (flagship tier). Never loaded otherwise.
 Reads: design/DIRECTION.md, design/SYSTEM.md §motion, `references/motion.md`, `references/stack-3d.md`, client assets. Writes: components/showpiece/* (or components/scene/*, lib/scene/*), the static edition, SYSTEM.md §scene.
 
+Check the kit before writing a scene: `node <plugin>/scripts/moments.mjs list --kind webgl` and `--kind canvas` show asset-free shader grounds, a raymarched object, a particle field and an image-sequence scrubber that are already tested against the conditions below. Build a custom scene only when `design/DIRECTION.md` commissions something they cannot do.
+
 ## 1. When a showpiece is warranted
 
 A showpiece is one signature move that DIRECTION.md names, places (page and section) and bounds (byte budget, route scope). Requirements, all of them:
