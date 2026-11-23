@@ -19,7 +19,7 @@ Fits: studio, shop, editorial. Needs: photos or none (none = shapes from tokens)
 | `count` / `size` / `step` / `life` | 8 / 88 / 64 / 900 | pool, px, px between drops, ms |
 | `layer` | `below` | `above` puts trail over text |
 
-Weight: 10.7 KB JS + 2.2 KB CSS.
+Weight: 10.7 KB JS + 2.3 KB CSS.
 Touch and reduced motion: effect off; list rows show inline thumbnails. No JS: plain list. Keyboard focus docks the preview beside the row.
 
 Do not: put meaning only in the preview; mount outside the area; add your own `mousemove` handlers.

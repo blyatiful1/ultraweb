@@ -100,5 +100,58 @@
     "intensity": 3,
     "summary": "Scroll-scrubbed canvas over numbered frames with progressive loading and HTML captions; poster fallback.",
     "bytes": 9783
+  },
+  {
+    "name": "photo-reveal",
+    "kind": "image",
+    "needs": [
+      "photos"
+    ],
+    "fits": [
+      "studio",
+      "shop",
+      "editorial",
+      "place",
+      "product",
+      "launch"
+    ],
+    "intensity": 1,
+    "bytes": 10152,
+    "summary": "Images open with a clip-path wipe while the picture settles inside a fixed frame; per-item direction, small stagger, optional gentle inner parallax, zero layout shift."
+  },
+  {
+    "name": "cursor-trail",
+    "kind": "cursor",
+    "needs": [
+      "photos",
+      "none"
+    ],
+    "fits": [
+      "studio",
+      "shop",
+      "editorial",
+      "place"
+    ],
+    "intensity": 2,
+    "bytes": 12985,
+    "summary": "Images or token shapes follow the pointer with spring lag in one area, or a list row's preview follows the pointer and docks beside the focused row; off on touch and reduced motion."
+  },
+  {
+    "name": "page-curtain",
+    "kind": "transition",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "product",
+      "studio",
+      "shop",
+      "editorial",
+      "place",
+      "launch"
+    ],
+    "intensity": 2,
+    "bytes": 9487,
+    "summary": "Page-to-page transition for multi-page static sites: cross-document View Transitions with a token-coloured curtain fallback, focus and title announcement handled."
   }
 ]

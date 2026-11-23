@@ -4,7 +4,7 @@ const MOUNTED = new WeakMap();
 const VS = `attribute vec2 p;attribute vec2 s;uniform vec2 R;uniform float Z;varying float v;
 void main(){v=s.x;gl_Position=vec4(p.x/R.x*2.-1.,1.-p.y/R.y*2.,0.,1.);gl_PointSize=Z*(.55+.9*s.y);}`;
 const FS = `precision mediump float;uniform vec3 P,A;uniform float O;varying float v;
-void main(){float d=length(gl_PointCoord-.5)*2.,a=pow(max(1.-d,0.),1.6)*O;gl_FragColor=vec4(mix(P,A,v)*a,a);}`;
+void main(){float d=length(gl_PointCoord-.5)*2.,a=smoothstep(1.,.25,d)*O;gl_FragColor=vec4(mix(P,A,v)*a,a);}`;
 const GR = [1, 0, -1, 0, 0, 1, 0, -1, 0.7071, 0.7071, -0.7071, 0.7071, 0.7071, -0.7071, -0.7071, -0.7071];
 
 function readColors(root, list) {
@@ -28,7 +28,7 @@ export default function mount(root, options = {}) {
   const ds = root.dataset;
   const opt = (k, d) => { const v = options[k] ?? ds[k]; return v == null || v === '' ? d : v; };
   const num = (k, d, lo, hi) => { const v = parseFloat(opt(k, d)); return Math.min(hi, Math.max(lo, isNaN(v) ? d : v)); };
-  const speed = num('speed', 1, 0, 4), density = num('density', 1, 0.1, 3), psize = num('size', 3, 1, 12), radius = num('radius', 120, 0, 600);
+  const speed = num('speed', 1, 0, 4), density = num('density', 1, 0.1, 3), psize = num('size', 3.5, 1, 12), radius = num('radius', 120, 0, 600);
   const still = String(opt('still', false)) === 'true';
   const wordEl = root.querySelector('[data-particle-word]');
   const word = String(opt('word', wordEl ? wordEl.textContent.trim() : ''));
@@ -225,7 +225,7 @@ export default function mount(root, options = {}) {
     gl.uniform1f(U.Z, psize * dpr);
     gl.uniform3fv(U.P, col.P);
     gl.uniform3fv(U.A, col.A);
-    gl.uniform1f(U.O, additive ? 0.55 : 0.8);
+    gl.uniform1f(U.O, additive ? 0.7 : 0.9);
     upload(false);
     gl.drawArrays(gl.POINTS, 0, active);
   }
