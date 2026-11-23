@@ -93,7 +93,8 @@ export default function mount(root, options = {}) {
         const src = r.getAttribute('data-preview');
         if (!src || src === 'none') return;
         const im = makeMedia(src, i); im.classList.add('ct-thumb'); im.loading = 'lazy';
-        r.insertBefore(im, r.firstChild); made.push(im);
+        const host = r.querySelector('a,button') || r;
+        host.insertBefore(im, host.firstChild); made.push(im);
       });
     }
     return () => made.forEach((n) => n.remove());

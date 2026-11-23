@@ -1,0 +1,42 @@
+/* page-curtain: cross-document View Transitions (supported browsers) plus the curtain fallback.
+   Link this file from EVERY page. Reduced motion gets no transition at all. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+
+  /* Named transitions. root = the page; pc-keep = anything marked data-pc-keep (header, nav) stays put. */
+  [data-moment="page-curtain"] [data-pc-keep], [data-pc-keep] { view-transition-name: pc-keep; }
+  ::view-transition-group(pc-keep) { animation-duration: 0s; }
+  ::view-transition-old(pc-keep), ::view-transition-new(pc-keep) { animation: none; mix-blend-mode: normal; }
+
+  ::view-transition-old(root) {
+    animation: pc-out calc(var(--dur-section, 700ms) * 0.8) cubic-bezier(0.4, 0, 1, 1) both;
+  }
+  ::view-transition-new(root) {
+    animation: pc-in var(--dur-section, 700ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)) both;
+  }
+  @keyframes pc-out { to { opacity: 0.4; transform: translateY(-3vh) scale(0.985); } }
+  @keyframes pc-in { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+}
+
+/* First-paint cover on the arriving page (needs the head snippet from the README). Self-removing failsafe. */
+html[data-pc-arriving]::before {
+  content: ""; position: fixed; inset: 0; z-index: 2147483000;
+  background: var(--pc-color, var(--primary, #111));
+  animation: pc-failsafe 0s linear 3s forwards;
+}
+@keyframes pc-failsafe { to { opacity: 0; visibility: hidden; } }
+
+.pc-curtain {
+  position: fixed; inset: 0; z-index: 2147483000; pointer-events: none;
+  background: var(--pc-color, var(--primary, #111));
+  transform: translate3d(0, 100%, 0); visibility: hidden;
+  transition: transform calc(var(--dur-section, 700ms) * 0.65) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.pc-curtain[data-state="covered"] { transform: translate3d(0, 0, 0); visibility: visible; pointer-events: auto; }
+.pc-curtain[data-state="leaving"] { transform: translate3d(0, -100%, 0); visibility: visible; }
+.pc-curtain[data-state="idle"] { transition: none; }
+.pc-live {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+@media (prefers-reduced-motion: reduce) { .pc-curtain { display: none; } }

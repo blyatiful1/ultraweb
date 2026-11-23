@@ -50,5 +50,55 @@
     "intensity": 2,
     "bytes": 6711,
     "summary": "Oversized looping line of text with scroll-velocity nudge, pause button, and static wrapped fallback."
+  },
+  {
+    "name": "pinned-chapters",
+    "kind": "scroll",
+    "needs": [
+      "none",
+      "photos"
+    ],
+    "fits": [
+      "product",
+      "studio",
+      "editorial",
+      "place",
+      "launch"
+    ],
+    "intensity": 2,
+    "summary": "Sticky media column cross-fades to the chapter crossing mid-screen, with a linked progress list; stacked on phones.",
+    "bytes": 11219
+  },
+  {
+    "name": "horizontal-rail",
+    "kind": "scroll",
+    "needs": [
+      "photos",
+      "none"
+    ],
+    "fits": [
+      "studio",
+      "shop",
+      "editorial",
+      "product"
+    ],
+    "intensity": 2,
+    "summary": "Row of cards moves sideways as the page scrolls down a tall section; keyboard reachable; native snap strip on phones.",
+    "bytes": 11296
+  },
+  {
+    "name": "image-sequence",
+    "kind": "canvas",
+    "needs": [
+      "sequence"
+    ],
+    "fits": [
+      "product",
+      "launch",
+      "shop"
+    ],
+    "intensity": 3,
+    "summary": "Scroll-scrubbed canvas over numbered frames with progressive loading and HTML captions; poster fallback.",
+    "bytes": 9783
   }
 ]

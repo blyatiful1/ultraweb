@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>page-curtain demo, page two</title>
+<script>try{var t=+sessionStorage.getItem('pc:curtain');if(t&&Date.now()-t<6000)document.documentElement.setAttribute('data-pc-arriving','')}catch(e){}</script>
+<link rel="stylesheet" href="../../system.css">
+<link rel="stylesheet" href="moment.css">
+<style>
+/* demo-only tokens */
+:root{--background:#1c1b19;--foreground:#f6f4ef;--muted:#dcd8cf;--muted-foreground:#8a867c;--primary:#2f5d50;--primary-foreground:#fff;--accent:#d9893b;--radius:6px;--dur-section:800ms;--ease-out:cubic-bezier(.22,1,.36,1);--font-sans:system-ui,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--background);color:var(--foreground);font:17px/1.55 var(--font-sans)}
+header{display:flex;gap:1.2rem;flex-wrap:wrap;align-items:center;padding:1rem 16px;border-bottom:1px solid var(--muted-foreground)}
+header a,main a{color:inherit;text-underline-offset:3px}
+header a:focus-visible,main a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+main{max-width:760px;margin:0 auto;padding:10vh 16px 40vh}
+main:focus{outline:none}
+h1{font-size:clamp(2.2rem,7vw,4.5rem);line-height:1.03;margin:0 0 .4em}
+.block{height:40vh;margin:8vh 0;background:var(--accent);border-radius:var(--radius)}
+</style>
+</head>
+<body>
+<header data-pc-keep><strong>page-curtain demo</strong><a href="demo.html" data-keep-search>Page one</a><a href="#details">Hash link (not intercepted)</a></header>
+<main id="main">
+<h1>Page two</h1>
+<p>You arrived here through the transition. Focus moved to the main content and the new title was announced politely to screen readers. Use the browser back button or the link below.</p>
+<p><a href="demo.html" data-keep-search>Back to page one</a></p>
+<div class="block"></div>
+<h2 id="details">Details</h2>
+<p>Under reduced motion this navigation is instant.</p>
+</main>
+<script type="module">
+import mount from './moment.js';
+const q = location.search;
+document.querySelectorAll('[data-keep-search]').forEach((a) => (a.href = a.getAttribute('href') + q));
+window.__cleanup = mount(document.body, { mode: new URLSearchParams(q).get('mode') || 'auto' });
+window.__mount = mount;
+</script>
+</body>
+</html>

@@ -46,7 +46,7 @@ float z=.9*S/y,fo=exp(-z*.05),ln=max(l.x,l.y)*fo;
 c=mix(c,mix(A,P,fo),I*ln*.95);
 c=mix(c,P,I*.12*fo*smoothstep(.0,.5,y));}
 #else
-vec2 w=p*1.7+.9*vec2(fbm(p*.4+t*.3),fbm(p*.4+5.-t*.3))-250.,i=w;float L=1.,tt=T*.12;
+vec2 w=p*3.4+.9*vec2(fbm(p*.4+t*.3),fbm(p*.4+5.-t*.3))-250.,i=w;float L=1.,tt=T*.12;
 for(int n=0;n<5;n++){float s=tt*(1.-3.5/float(n+1));i=w+vec2(cos(s-i.x)+sin(s+i.y),sin(s-i.y)+cos(s+i.x));
 L+=1./length(vec2(w.x/(sin(i.x+s)*200.),w.y/(cos(i.y+s)*200.)));}
 L=pow(abs(1.17-pow(L*.2,1.4)),8.);L=clamp(L,0.,1.);

@@ -8,7 +8,7 @@
 // Phase N also runs the checks of phases 1..N-1. Exit 0 ok, 1 incomplete (one line per
 // problem, naming the file and what is missing), 2 bad input.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
-import { join, resolve, dirname } from 'node:path';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { checkCss, ALL_TOKENS } from './palette.mjs';
 

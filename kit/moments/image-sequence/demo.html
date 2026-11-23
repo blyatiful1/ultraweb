@@ -20,7 +20,7 @@ body{margin:0;background:var(--background);color:var(--foreground);font-family:v
 <body>
 <header class="pad"><h1>Image sequence</h1><p>Scroll down. A canvas steps through 48 frames, drawn at run time in this demo, while the section stays in view.</p></header>
 
-<section data-moment="image-sequence" data-length="400" aria-label="A cube rotating as you scroll">
+<section data-moment="image-sequence" data-length="400" data-fit="contain" aria-label="A cube rotating as you scroll">
   <div data-is-sticky>
     <!-- poster = first frame; also the no-JS and reduced-motion picture. Demo uses an inline SVG still. -->
     <img data-is-poster alt="A tilted cube with blue, yellow and dark faces" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 960 600'%3E%3Crect width='960' height='600' fill='%23f6f5f1'/%3E%3Cpolygon points='480,150 640,240 640,420 480,330' fill='%232b4acb'/%3E%3Cpolygon points='480,150 320,240 320,420 480,330' fill='%23f0c94a'/%3E%3Cpolygon points='480,330 640,420 480,480 320,420' fill='%2316161a'/%3E%3C/svg%3E">
@@ -58,11 +58,11 @@ function makeFrames(n, W, H) {
     const g = c.getContext('2d');
     g.fillStyle = rgb(bg); g.fillRect(0, 0, W, H);
     g.strokeStyle = rgb(cols[3]); g.lineWidth = 2;
-    for (let r = 1; r <= 4; r++) { g.beginPath(); g.arc(W / 2, H / 2, r * H * 0.13 + t * 0, 0, 7); g.stroke(); }
+    for (let r = 1; r <= 4; r++) { g.beginPath(); g.arc(W / 2, H / 2, r * H * 0.11, 0, 7); g.stroke(); }
     const P = V.map(([x, y, z]) => {
       let X = x * Math.cos(ay) + z * Math.sin(ay), Z = -x * Math.sin(ay) + z * Math.cos(ay), Y = y;
       const Y2 = Y * Math.cos(ax) - Z * Math.sin(ax), Z2 = Y * Math.sin(ax) + Z * Math.cos(ax);
-      const s = (H * 0.2) * 4 / (4 + Z2);
+      const s = (H * 0.115) * 4 / (4 + Z2);
       return [W / 2 + X * s, H / 2 + Y2 * s, Z2];
     });
     const faces = F.map((f, k) => ({ f, k, z: f.reduce((a, j) => a + P[j][2], 0) / 4 })).sort((a, b) => b.z - a.z);
