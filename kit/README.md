@@ -61,7 +61,7 @@ node <plugin>/scripts/moments.mjs show <name>          # one moment's README
 Mobile menu: `<button data-nav-open="nav-dialog">` opens `<dialog id="nav-dialog">`;
 `[data-nav-close]` and any link inside close it.
 
-Cascade: restyle a kit class (`.btn`, `.skip-link`) with a rule on that class; a bare `a { … }` rule does not change it.
+Cascade: restyle a kit class with a rule on that class; a bare `a { … }` rule does not change it.
 
 ## Next path
 
