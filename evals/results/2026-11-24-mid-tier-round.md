@@ -12,7 +12,7 @@ One brief, three new builds, the middle Claude tier as the builder instead of th
 
 The failing checks were the same family in both other arms: axe, contrast, form labelling, target size at 24 and 44 px, text spacing and small body text; the plain build also overflowed at 375 px.
 
-None of the three builds used photographs. The ultraweb page opens on a 72 px-plus condensed headline over a measured drawing of a frame (top tube, seat tube, angles, wheelbase), which is the subject's own vernacular; the frontend-design page opens on a wide grotesque headline over a row of four drawn bikes with prices.
+None of the three builds used photographs. The ultraweb page opens on a large condensed headline over a measured drawing of a frame (top tube, seat tube, angles, wheelbase), which is the subject's own vernacular; the frontend-design page opens on a wide grotesque headline over a row of four drawn bikes with prices.
 
 ## Compared with the smallest tier on the same brief
 
