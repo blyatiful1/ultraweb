@@ -508,6 +508,8 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
             rec('content.placeholder', ctx1440, hits.length ? 'fail' : 'pass', hits.length ? `placeholder content: ${hits.join(', ')}` : 'no placeholder text or images', hits);
             const assumed = await page.evaluate(() => Array.from(document.querySelectorAll('[data-assumed]')).map((e) => (e.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60))).catch(() => []);
             rec('content.assumed', ctx1440, assumed.length ? 'review' : 'pass', assumed.length ? `${assumed.length} drafted fact(s) marked data-assumed: the owner must confirm each before production` : 'no drafted facts marked data-assumed', assumed);
+            const standins = await page.evaluate(() => Array.from(document.querySelectorAll('img[data-standin]')).map((e) => e.getAttribute('src') || '')).catch(() => []);
+            rec('content.standins', ctx1440, standins.length ? 'review' : 'pass', standins.length ? `${standins.length} stand-in photograph(s): the owner must replace or approve each before production` : 'no stand-in photographs', standins.map((x) => clip(x, 80)));
           } catch (e) {
             rec('content.metadata', ctx1440, 'error', `metadata read threw: ${clip(e.message)}`);
           }
@@ -731,6 +733,20 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
           await call('tells-census', o.page, { theme: 'light' }, ct, 'tells.census', (r) => {
             if (!r.flags.length) return rec('tells.census', ct, 'pass', `no tells flagged (${r.families.display || '?'} / ${r.families.body || '?'})`);
             rec('tells.census', ct, 'review', `${r.flags.length} tell(s): ${r.flags.map((f) => f.id).join(', ')}`, r.flags.map((f) => ({ detail: `${f.id}: ${f.evidence}` })));
+          });
+          await call('density', o.page, {}, ct, 'tells.empty-screens', (r) => {
+            const cov = (r.slices || []).map((x) => Math.round(x.coverage * 100)).join(' ');
+            // short pages (a 404, a legal stub) may be sparse; only an outright empty screen fails them
+            const judged = Math.max(1, (r.slices || []).length - 1);
+            if ((r.empty || []).length || (judged >= 3 && r.sparseShare > 0.5)) {
+              rec('tells.empty-screens', ct, 'fail', `${(r.empty || []).length} empty and ${(r.sparse || []).length} sparse of ${(r.slices || []).length} screens (percent of each screen carrying text or media: ${cov})`, (r.empty.length ? r.empty : r.sparse).map((i) => ({ detail: `screen ${i + 1}, about ${i * r.viewport.height}px down the page, is nearly bare ground` })));
+            } else rec('tells.empty-screens', ct, 'pass', `no empty screen (percent carrying text or media: ${cov})`);
+            const st = r.smallText || { share: 0, examples: [] };
+            if (st.share > 0.3) rec('tells.small-text', ct, 'fail', `${Math.round(st.share * 100)}% of body copy is set under 16px (median ${r.bodyPx}px)`, st.examples.map((e) => ({ selector: e.selector, detail: `${e.px}px: ${e.text}` })));
+            else rec('tells.small-text', ct, 'pass', `body copy median ${r.bodyPx ?? '?'}px, ${Math.round(st.share * 100)}% under 16px`);
+            const g = r.grounds || { sections: 0, distinct: 0 };
+            if (g.sections >= 5 && g.distinct <= 1) rec('tells.one-ground', ct, 'review', `${g.sections} sections share one ground: a second ground or one colour band gives the page rhythm`);
+            else rec('tells.one-ground', ct, 'pass', `${g.distinct} ground(s) across ${g.sections} section(s)`);
           });
         }
       } catch (e) {

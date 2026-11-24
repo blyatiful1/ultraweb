@@ -97,6 +97,13 @@ const production = mode === 'production';
   else pass('assumed-facts');
 }
 
+// ---- Stand-in photographs: somebody else's picture never ships as the client's.
+{
+  const hits = files.flatMap(p => /\bdata-standin\b/.test(read(p)) ? [rel(p)] : []);
+  if (hits.length && production) fail('standin-photos', `data-standin photographs on a production build: ${hits.join(', ')}`);
+  else pass('standin-photos');
+}
+
 // ---- Secrets: ship's greppable patterns; .env.example is the one placeholder-shaped file allowed.
 {
   const SECRET = /sk_live_[A-Za-z0-9]+|sk_test_[A-Za-z0-9]+|whsec_[A-Za-z0-9]+|re_[A-Za-z0-9]{16,}|-----BEGIN [A-Z ]*PRIVATE KEY|:\/\/[^/@\s"']+:[^@\s"']+@/;

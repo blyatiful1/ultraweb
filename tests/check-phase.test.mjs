@@ -329,3 +329,9 @@ test('phase 7: qa/judge-unavailable.md stands in for a judge round, with a warni
   assert.equal(r.status, 0);
   assert.match(r.stderr, /accepted because qa\/judge-unavailable\.md/);
 });
+
+test('phase 2: an autonomous build needs no mockups', () => {
+  const d = project({ tier: 'sketch', mode: 'autonomous' });
+  rmSync(join(d, 'design/mockups'), { recursive: true, force: true });
+  assert.equal(run(2, d).status, 0, run(2, d).stdout);
+});

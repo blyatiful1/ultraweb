@@ -125,8 +125,9 @@ gate('a site with planted defects exits 1 and names the failing checks', async (
     ]) {
       assert.ok(failing.has(id), `expected ${id} to fail; failing: ${[...failing].join(', ')}`);
     }
-    // tells is report-only: never a fail
-    assert.ok(!g.records.some((x) => x.gate === 'tells' && x.status === 'fail'), 'a tells check failed');
+    // the census is report-only: never a fail (the density checks beside it may fail)
+    assert.ok(!g.records.some((x) => x.id === 'tells.census' && x.status === 'fail'), 'the tells census failed');
+    assert.ok(g.records.some((x) => x.id === 'tells.empty-screens'), 'the density check did not run');
     assert.ok(g.records.some((x) => x.id === 'tells.census'), 'the tells census did not run');
     assert.ok(existsSync(join(proj, 'qa', 'GATES.md')));
     assert.ok(existsSync(join(proj, 'qa', 'shots', 'home-375.png')), 'no 375 screenshot');

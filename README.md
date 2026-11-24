@@ -73,6 +73,7 @@ Scripts do the rest of what is easy to get wrong:
 | `scripts/palette.mjs` | colour tokens in OKLCH with every text and UI pair verified for contrast |
 | `scripts/deal.mjs` | one mockup candidate dealt at random along eight axes, avoiding recent deals |
 | `scripts/moments.mjs` | choosing kit moments that fit the site and its assets |
+| `scripts/photos.mjs` | openly licensed stand-in photographs, with the credit each licence requires |
 | `scripts/check-phase.mjs` | whether a phase's artifacts are complete before the build moves on |
 | `scripts/gates.mjs` | the quality gates |
 
@@ -98,7 +99,7 @@ skills/                  iterate, retrofit, gates
 references/              per-phase instructions, loaded on demand
 agents/design-judge.md   the fresh-context critic
 kit/                     base stylesheet, auto-mounter, React wrapper and the moments
-scripts/                 gates.mjs, measure/*, palette.mjs, deal.mjs, moments.mjs, check-phase.mjs, site-check.mjs, verify-stack.mjs, lint-corpus.mjs
+scripts/                 gates.mjs, measure/*, palette.mjs, deal.mjs, moments.mjs, photos.mjs, check-phase.mjs, site-check.mjs, verify-stack.mjs, lint-corpus.mjs
 hooks/                   write-time placeholder check, gate Stop hook
 stack/versions.json      the only place package versions are pinned
 evals/                   briefs, capture and blind comparison

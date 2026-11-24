@@ -16,6 +16,7 @@ Reads: qa/gates.json, design/*.md, `.env.example`, `package.json`. Writes: a ver
 Each blocks shipping until fixed or the user confirms.
 
 - `rg -n "UNVERIFIED-PROOF" . -g '!design/**'` returns hits: a sample testimonial, logo, statistic or case study that is not real. Shipping it publishes fabricated proof under the client's name. Staging and demo builds may carry the tag; production may not.
+- `rg -n "data-standin" .` hits: a stand-in photograph the owner has not replaced or approved (`references/imagery.md`).
 - `rg -n "data-assumed" .` hits: a drafted price, hour or other fact the owner has not confirmed (`references/brief.md`).
 - `rg -n "UNVERIFIED-LEGAL" .` hits: an Impressum, privacy or accessibility value the client has not supplied (`references/legal-dach.md`).
 - Material claims in design/BRIEF.md still unconfirmed (hours, prices, guarantees, credentials).
