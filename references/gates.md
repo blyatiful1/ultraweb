@@ -47,7 +47,7 @@ Statuses: `pass`, `fail`, `review`, `skip`, `error`.
 | a11y | landmarks | one `main`; `nav`s distinguished; headings do not skip a level |
 | a11y | alt and labels | every image has `alt`; controls have accessible names; no filename alt |
 | a11y | targets | at least 24x24 CSS px (WCAG 2.2 target size) |
-| a11y | forms | labels, `aria-describedby` error binding, `aria-invalid`, `autocomplete` |
+| a11y | forms | labels, `aria-describedby` error binding, `aria-invalid`, `autocomplete`; a required field must say so in its label text ("required", "Pflicht" or an asterisk), not only in a hint |
 | a11y | text spacing | with the WCAG 1.4.12 override applied, nothing clips or overflows horizontally |
 | responsive | overflow | no horizontal scroll at 375, 768 and 1440 |
 | responsive | targets | at least 44x44 CSS px at 375; inline paragraph links exempt |

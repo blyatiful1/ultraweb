@@ -46,6 +46,23 @@ When the user points at a reference ("like this site"), work out which principle
 
 Motion 3 and 3D imagery are available only at flagship tier or when the user asks for them, and only when the brief records the assets (`references/brief.md`).
 
+### Ambition floor
+
+Restraint is for everything around the idea, not for the idea. Every candidate must clear the floor for the brief's `Site kind:`; the phase checker enforces the motion number.
+
+| Site kind | Motion at least | The first screen must hold |
+|---|---|---|
+| launch | 2 | the subject's world filling the whole first screen: a scene, a place, weather, light |
+| studio | 2 | the idea of the site working at full size, not a description of it |
+| product | 1 | the real product: its interface, its output or the thing itself, large |
+| shop | 1 | the goods, large |
+| editorial | 0 | the strongest headline or image of the piece |
+| place | 0 | the place, its hours and how to book or get there |
+
+- For `launch` and `studio`, the concept of candidate A is something seen: a place, an object, light, weather, movement. A document metaphor (the page as a log, ledger, dossier, newspaper or receipt) is a way of avoiding the picture, and it is allowed for candidate B only.
+- Having no client assets is not a reason for an empty first screen. Fill it with one of these, in this order of preference: a full-bleed scene drawn in SVG or CSS from the subject sheet (sky, far, middle and near layers, one light source); an asset-free kit moment as the ground or the object (`shader-ground`, `particle-field`, `shader-orb`: see `node <plugin>/scripts/moments.mjs list --needs none`); type set at a scale that is itself the picture.
+- A dark ground, a strong colour or a large effect is not a default to avoid when the subject is dark, colourful or spectacular. A night game gets a night page. `references/taste.md` asks for a reason from the brief, and that is one.
+
 ## 3. Mockups and the pick
 
 Hand the candidates to `references/mockup.md`. In guided mode the user picks, mixes or sends them back (CP1). In autonomous mode pick the candidate most specific to this brief; if two tie, the one whose signature move can be executed best within the tier's budget. Log the reason under Assumptions in `design/PROGRESS.md`.
@@ -55,6 +72,8 @@ After approval, record the approved axes so later builds are steered away from t
 ```bash
 node <plugin>/scripts/deal.mjs record --ground dark --type slab --colour one-accent --layout dense-index
 ```
+
+Record only the approved candidate, once. Dealing candidate C already logs the deal; do not `record` it as well unless C is the one approved.
 
 ## 4. The signature move
 
@@ -110,5 +129,6 @@ Two checks before moving on: a stranger reading the file could sketch the homepa
 - Style was chosen before the subject sheet was written.
 - Two candidates share ground and type class.
 - There are two signature moves, or none with a place and a budget.
+- The motion level is below the ambition floor, or the first screen of a launch or studio site is mostly empty ground.
 - A default cluster appears with no deriving sentence.
 - The type decision names a class but no family, or a family nobody checked exists and is licensed.

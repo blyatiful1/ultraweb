@@ -94,6 +94,10 @@ Also required for SHIP: no unargued default in the hero or the first screen, the
 
 The lead never scores its own screens, never argues a score down, and never edits the judge's report.
 
+## No agent tool
+
+Some sessions cannot launch an agent. Do not score the site yourself. Write `qa/judge-unavailable.md` with one line stating why, record it in PROGRESS.md, and in guided mode show the screenshots at the checkpoint and ask the user for their verdict. `check-phase.mjs 7` accepts that file with a warning.
+
 ## No browser
 
 Without a browser there are no screenshots and nothing to judge. The visual verdict is UNVERIFIED. Say so in PROGRESS.md and at CP3: "No page has been seen; the visual bar is unproven." Do not let the judge score source code as a substitute.

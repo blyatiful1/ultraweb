@@ -20,7 +20,7 @@ const HELP = `check-phase.mjs — has this build really finished phase N?
   --allow-unverified   phase 7: accept qa/gates.json verdict UNVERIFIED (prints a warning)
 
 Phase checks (each also runs all earlier phases):
-  1 design/BRIEF.md: Tier:/Mode:/Deployment mode: lines, every section of the brief.md format, no TODO or empty field
+  1 design/BRIEF.md: Tier:/Mode:/Deployment mode:/Site kind: lines, every section of the brief.md format, no TODO or empty field
   2 design/DIRECTION.md: every section of the direction.md format; Will not >= 5 entries; Approved
     ("autonomous" allowed only in autonomous mode); design/mockups/*.html: 2 (sketch) or 3 (otherwise)
   3 design/SYSTEM.md; token file (app/globals.css, src/app/globals.css or site/styles.css) defines every
@@ -70,6 +70,10 @@ const isAutonomous = (root) => briefOf(root).mode === 'autonomous';
 // ---------- phases ----------
 const BRIEF_SECTIONS = ['Site type', 'Audience', 'Conversion', 'Tone', 'Subject world', 'Pages', 'Content inventory', 'Material claims', 'Backend', 'Assets'];
 
+// Minimum motion level per kind of site (references/direction.md, Ambition floor).
+export const SITE_KINDS = ['product', 'studio', 'shop', 'editorial', 'place', 'launch'];
+export const MOTION_FLOOR = { launch: 2, studio: 2, product: 1, shop: 1, editorial: 0, place: 0 };
+
 function phase1(root, p) {
   const f = 'design/BRIEF.md';
   const md = read(join(root, f));
@@ -83,6 +87,9 @@ function phase1(root, p) {
   const dep = lineValue(md, 'Deployment mode');
   if (dep === null) p(f, 'missing line "Deployment mode: production|staging|demo"');
   else if (!/^(production|staging|demo)$/i.test(dep)) p(f, `"Deployment mode:" must be exactly production, staging or demo (got "${dep}")`);
+  const kind = lineValue(md, 'Site kind');
+  if (kind === null) p(f, 'missing line "Site kind: product|studio|shop|editorial|place|launch"');
+  else if (!SITE_KINDS.includes(kind.toLowerCase())) p(f, `"Site kind:" must be exactly one of ${SITE_KINDS.join(', ')} (got "${kind}")`);
   const secs = sections(md);
   for (const name of BRIEF_SECTIONS) {
     const body = secs.get(name.toLowerCase());
@@ -118,6 +125,14 @@ function phase2(root, p) {
       for (const [label, rx] of DECISION_LINES) {
         if (!new RegExp(`^\\s*(?:[-*]\\s*)?\\**${rx}\\**\\s*:\\s*\\S`, 'im').test(dec)) p(f, `## Decisions has no "${label}:" line with a value`);
       }
+    }
+    if (dec) {
+      const m = /^\s*(?:[-*]\s*)?\**Motion\**\s*:\s*\D{0,12}?([0-3])\b/im.exec(dec);
+      const brief = read(join(root, 'design/BRIEF.md')) ?? '';
+      const kind = (lineValue(brief, 'Site kind') ?? '').toLowerCase();
+      const floor = MOTION_FLOOR[kind];
+      if (!m) p(f, '## Decisions "Motion:" line must start with a level from 0 to 3');
+      else if (floor !== undefined && Number(m[1]) < floor) p(f, `Motion level ${m[1]} is below the floor of ${floor} for a ${kind} site (references/direction.md, Ambition floor)`);
     }
     const sig = need('Signature move');
     if (sig) for (const word of ['name', 'place', 'budget', 'fallback']) if (!new RegExp(`\\b${word}\\b`, 'i').test(sig)) p(f, `## Signature move does not state its ${word}`);
@@ -270,7 +285,11 @@ function phase7(root, p, opts) {
     }
   }
   const rounds = lsDir(join(root, 'qa')).map((e) => /^judge-round-(\d+)\.md$/.exec(e.name)).filter(Boolean).map((m) => ({ n: Number(m[1]), name: m[0] }));
-  if (!rounds.length) return p('qa/judge-round-N.md', 'no judge round file found');
+  if (!rounds.length) {
+    const why = (read(join(root, 'qa/judge-unavailable.md')) ?? '').trim();
+    if (why) return void process.stderr.write(`warning: no judge round; accepted because qa/judge-unavailable.md says: ${why.split('\n')[0].slice(0, 120)}\n`);
+    return p('qa/judge-round-N.md', 'no judge round file found (if no agent can be launched, write qa/judge-unavailable.md with the reason)');
+  }
   const top = rounds.sort((a, b) => b.n - a.n)[0];
   const lines = (read(join(root, 'qa', top.name)) ?? '').split('\n').map((l) => l.trim()).filter(Boolean);
   const last = lines[lines.length - 1] ?? '';

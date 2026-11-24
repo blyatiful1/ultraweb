@@ -19,7 +19,17 @@ export default function mount(root, options = {}) {
   const oldLabel = root.getAttribute('aria-label');
   const labelled = [];
   const text = root.textContent.replace(/\s+/g, ' ').trim();
-  root.setAttribute('aria-label', text);
+  // aria-label is not allowed on a paragraph or a generic element, so those get a visually
+  // hidden copy of the text instead of a label.
+  const noName = !root.hasAttribute('role') && /^(P|DIV|SPAN|EM|STRONG|I|B|CODE|SMALL)$/.test(root.nodeName);
+  let sr = null;
+  if (noName) {
+    sr = doc.createElement('span');
+    sr.setAttribute('data-uw-sr', '');
+    sr.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap';
+    sr.textContent = text;
+    root.insertBefore(sr, root.firstChild);
+  } else root.setAttribute('aria-label', text);
   root.querySelectorAll('a[href],button,[tabindex]').forEach((el) => {
     if (!el.hasAttribute('aria-label')) {
       el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
@@ -46,7 +56,7 @@ export default function mount(root, options = {}) {
   const nodes = [];
   while (walker.nextNode()) nodes.push(walker.currentNode);
   for (const n of nodes) {
-    if (!n.nodeValue.trim() || /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) continue;
+    if (!n.nodeValue.trim() || /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName) || n.parentNode === sr) continue;
     const frag = doc.createDocumentFragment();
     for (const part of n.nodeValue.split(/([ \t\n\r\f]+)/)) {
       if (!part) continue;
@@ -128,13 +138,14 @@ export default function mount(root, options = {}) {
     win.cancelAnimationFrame(raf);
     doc.fonts && doc.fonts.removeEventListener && doc.fonts.removeEventListener('loadingdone', onFonts);
     for (const m of words) m.replaceWith(doc.createTextNode(m.textContent));
+    if (sr) sr.remove();
     root.normalize();
     root.removeAttribute('data-moment-ready');
     root.removeAttribute('data-in');
     root.style.removeProperty('--tl-stagger');
     root.style.removeProperty('--tl-dur');
     if (!root.getAttribute('style')) root.removeAttribute('style');
-    if (oldLabel == null) root.removeAttribute('aria-label'); else root.setAttribute('aria-label', oldLabel);
+    if (!noName) { if (oldLabel == null) root.removeAttribute('aria-label'); else root.setAttribute('aria-label', oldLabel); }
     labelled.forEach((el) => el.removeAttribute('aria-label'));
     delete root[KEY];
   };

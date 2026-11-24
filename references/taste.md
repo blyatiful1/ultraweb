@@ -21,6 +21,12 @@ A site at that level has five things.
 4. Typographic care. Faces chosen for this subject, a clear scale, and type used as design material where the concept wants it. Scale contrast is a decision: a very large headline is one answer, a small headline beside a large image is another.
 5. Finish in the parts nobody demos: 404, empty and error states, focus rings, selection colour, favicon, share image, mobile menu, footer. These are held to the same level as the hero.
 
+## The first screen
+
+Within three seconds the first screen has to show one thing a visitor would describe to someone else: a scene, an image, a piece of type, something that moves when they do. A page of correct, quiet sections with nothing to remember fails on design and creativity however clean it is, and that is the commoner failure of a careful build. Restraint applies to everything around the signature move. It does not apply to the move.
+
+`references/direction.md` sets a floor per kind of site. Meet it before worrying about the list below.
+
 ## Defaults to steer away from
 
 The patterns below are what a model produces when no decision was made. Each is legitimate for some brief. Use one only when `design/DIRECTION.md` contains a sentence that derives it from this brief. The gates runner reports them in its tells census so the judge can check each against that sentence.
@@ -35,6 +41,7 @@ The patterns below are what a model produces when no decision was made. Each is 
 | Motion | Fade-and-rise on every section, hover lift on every card, stagger on everything |
 | Type | Reaching for Inter, Geist, Space Grotesk, Fraunces, Instrument Serif, Playfair Display, DM Sans, Manrope or Poppins without a reason from the subject |
 | Copy cadence | Fragment triplets ("Fast. Simple. Yours."), "Not X. Y.", imperative couplets, and the older vocabulary: welcome to, elevate, unlock, seamless, empower |
+| Document metaphor | The page styled as a log, ledger, dossier, newspaper or receipt when the subject is not a document |
 | Older tells | Purple-to-blue gradients, gradient headline text, emoji as icons, blur and glass on every surface |
 
 Apply two tests to any homepage before showing it.
@@ -76,4 +83,4 @@ Where effort goes depends on the kind of site.
 
 ## What award level takes
 
-Sites at site-of-the-day level and above are carried by an original concept and by authored assets (photography, film, illustration, 3D, sound) more than by code. This plugin supplies the concept discipline, the engineering and the finish. The assets come from the client, from generation tools available in the session, or from procedural work that needs none. When a brief has no assets and no way to get them, choose a typographic or interaction-led concept that needs none. Do not fake assets, and do not promise an award.
+Sites at site-of-the-day level and above are carried by an original concept and by authored assets (photography, film, illustration, 3D, sound) more than by code. This plugin supplies the concept discipline, the engineering and the finish. The assets come from the client, from generation tools available in the session, or from procedural work that needs none. When a brief has no assets and no way to get them, draw the subject's world yourself in SVG and CSS, or build the first screen on an asset-free kit moment, and leave honest slots for the media the client will supply. Do not pass off invented screenshots, photographs or footage as the client's, and do not promise an award.

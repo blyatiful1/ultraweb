@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,6 +19,7 @@ const BRIEF = (tier = 'standard', mode = 'guided') => `# Brief — Test
 Tier: ${tier}
 Mode: ${mode}
 Deployment mode: production
+Site kind: place
 ## Site type
 local business
 ## Audience
@@ -300,4 +301,31 @@ test('an earlier phase failure is reported when checking a later phase, one line
   const r = run(8, d);
   fails(r, 'phase 1: design/BRIEF.md', 'phase 8: README.md');
   assert.ok(r.stdout.split('\n').filter((l) => /^phase \d: \S/.test(l) && !l.includes('INCOMPLETE')).length >= 2);
+});
+
+test('phase 1: Site kind line is required and must be a known kind', () => {
+  let d = project();
+  put(d, 'design/BRIEF.md', get(d, 'design/BRIEF.md').replace(/^Site kind:.*\n/m, ''));
+  fails(run(1, d), 'Site kind:');
+  d = project();
+  put(d, 'design/BRIEF.md', get(d, 'design/BRIEF.md').replace(/^Site kind:.*$/m, 'Site kind: blog'));
+  fails(run(1, d), 'Site kind:');
+});
+
+test('phase 2: motion level must clear the floor for the site kind', () => {
+  const d = project();
+  put(d, 'design/BRIEF.md', get(d, 'design/BRIEF.md').replace(/^Site kind:.*$/m, 'Site kind: launch'));
+  fails(run(2, d), 'below the floor of 2 for a launch site');
+  put(d, 'design/DIRECTION.md', get(d, 'design/DIRECTION.md').replace(/^Motion:.*$/m, 'Motion: 2; the hero ground drifts, nothing else moves'));
+  assert.equal(run(2, d).status, 0);
+});
+
+test('phase 7: qa/judge-unavailable.md stands in for a judge round, with a warning', () => {
+  const d = project();
+  for (const f of readdirSync(join(d, 'qa'))) if (/^judge-round-/.test(f)) rmSync(join(d, 'qa', f));
+  fails(run(7, d), 'judge-unavailable.md');
+  put(d, 'qa/judge-unavailable.md', 'No agent tool in this session.\n');
+  const r = run(7, d);
+  assert.equal(r.status, 0);
+  assert.match(r.stderr, /accepted because qa\/judge-unavailable\.md/);
 });

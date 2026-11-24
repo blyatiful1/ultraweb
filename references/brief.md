@@ -80,6 +80,7 @@ A flagship site needs real assets to carry it. At flagship tier, §Assets must n
 Tier: sketch | standard | flagship
 Mode: guided | autonomous
 Deployment mode: production
+Site kind: product | studio | shop | editorial | place | launch
 ## Site type
 ## Audience
 ## Conversion
@@ -95,7 +96,7 @@ rejected: …
 ## Compliance
 ```
 
-Write exactly one value on each of the first three lines. `Deployment mode:` is machine-read by the hooks, the gates and ship: one line, value `production`, `staging` or `demo`. Use `production` when every material fact came from the user, and `demo` when any was drafted (see Invented facts) or the user asked for a demo. A missing, duplicated or misspelled line counts as production.
+Write exactly one value on each of the first four lines. `Site kind:` is machine-read by the phase checker and the kit picker; choose the closest: `product` (software, app, developer tool, service sold online), `studio` (agency, portfolio, personal site), `shop` (things bought on the page), `editorial` (articles, reports, documentation), `place` (somewhere people go: bakery, hotel, clinic, venue), `launch` (a game, a film, an event, a campaign, a product reveal). `Deployment mode:` is machine-read by the hooks, the gates and ship: one line, value `production`, `staging` or `demo`. Use `production` when every material fact came from the user, and `demo` when any was drafted (see Invented facts) or the user asked for a demo. A missing, duplicated or misspelled line counts as production.
 
 §Compliance is written only when the brief names a market: seller's country, target markets, B2C or B2B, whether contracts are concluded online, and whether each fact came from the user or is assumed. Ask for these in guided mode when an EU market is named; `references/legal-dach.md` consumes them.
 
