@@ -10,13 +10,14 @@ Read this before installing.
 
 - **Measured:** the gate scripts catch planted defects in CI (`tests/gates.test.mjs`, `tests/qa-scripts.test.mjs`), and the scaffold builds on the pinned stack (`scripts/scaffold-fixture.sh`, weekly).
 - **Graded, small scale:** seven briefs were built by the smallest Claude model three ways: plain, with Anthropic's `frontend-design` skill, and with ultraweb (`evals/results/`). ultraweb's pages passed the measured gates on 14 of 15 homepages; the other two arms passed none of 14. On looks the grader preferred ultraweb's page for two of the seven briefs and the `frontend-design` page for most of the rest, at roughly 60% of ultraweb's tokens. One grader, one build per cell.
-- **What that means:** ultraweb makes a small model's site correct, accessible and honest about what is drafted. It does not yet make it better looking than a short design skill does. For a one-page site, install `frontend-design` alongside; ultraweb's short path hands the visual design to it when it is present. That combination is untested.
+- **Graded, one brief on the middle tier:** the bike-workshop brief was rebuilt by the middle Claude model, three ways, and graded blind. The grader preferred ultraweb's page; it passed the gates and the other two failed eight checks each. On the smallest model the same brief went to `frontend-design`. One brief is not a trend.
+- **What that means:** ultraweb makes a small model's site correct, accessible and honest about what is drafted. On the smallest model it does not yet make it better looking than a short design skill does; on the middle model it did, once. For a one-page site, install `frontend-design` alongside; ultraweb's short path hands the visual design to it when it is present. That combination is untested.
 - **Cost:** the only full-build receipt is from version 1: 6 h 06 min, 4,753 API calls and 756 million tokens processed for one site. Version 2 loads far less instruction text, but its cost has not been measured. Treat a standard build as a multi-hour job.
 - **Award level:** the plugin aims at site-of-the-day quality and cannot promise it. Sites at that level depend on an original concept and on authored assets (photography, film, illustration, 3D). ultraweb supplies concept discipline, engineering and finish; the assets come from you or from generation tools in your session.
 
 ## Before and after
 
-First screens from the comparison builds: same brief, same model (the smallest Claude tier), same prompt. Nothing here is cherry-picked in ultraweb's favour; the caption under each row says which page the grader preferred.
+First screens from the comparison builds: same brief, same model, same prompt. The first four rows were built by the smallest Claude tier, the last by the middle tier. Nothing here is cherry-picked in ultraweb's favour; the caption under each row says which page the grader preferred.
 
 <table>
 <tr><th>Plain</th><th>frontend-design</th><th>ultraweb</th></tr>
@@ -44,6 +45,12 @@ First screens from the comparison builds: same brief, same model (the smallest C
 <td><img src="docs/compare/bikes-ultraweb.jpg" alt="Bike workshop, ultraweb build: a large serif headline on a teal ground with a frame drawing" width="260"></td>
 </tr>
 <tr><td colspan="3">Bike workshop. Grader preferred <b>frontend-design</b>. Gates: ultraweb pass; plain failed 10, frontend-design 7.</td></tr>
+<tr>
+<td><img src="docs/compare/bikes-mid-plain.jpg" alt="Bike workshop on the middle tier, plain build: a serif headline with a small drawn bike on a dark card" width="260"></td>
+<td><img src="docs/compare/bikes-mid-frontend-design.jpg" alt="Bike workshop on the middle tier, frontend-design build: a wide bold headline above a row of four drawn bikes with prices" width="260"></td>
+<td><img src="docs/compare/bikes-mid-ultraweb.jpg" alt="Bike workshop on the middle tier, ultraweb build: a condensed headline over a large measured drawing of a frame" width="260"></td>
+</tr>
+<tr><td colspan="3">Bike workshop, middle tier, graded blind. Grader preferred <b>ultraweb</b>. Gates: ultraweb pass; plain and frontend-design failed 8 each.</td></tr>
 </table>
 
 ## Install
