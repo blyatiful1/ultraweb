@@ -11,7 +11,8 @@ Read this before installing.
 - **Measured:** the gate scripts catch planted defects in CI (`tests/gates.test.mjs`, `tests/qa-scripts.test.mjs`), and the scaffold builds on the pinned stack (`scripts/scaffold-fixture.sh`, weekly).
 - **Graded, small scale:** seven briefs were built by the smallest Claude model three ways: plain, with Anthropic's `frontend-design` skill, and with ultraweb (`evals/results/`). ultraweb's pages passed the measured gates on 14 of 15 homepages; the other two arms passed none of 14. On looks the grader preferred ultraweb's page for two of the seven briefs and the `frontend-design` page for most of the rest, at roughly 60% of ultraweb's tokens. One grader, one build per cell.
 - **Graded, one brief on the middle tier:** the bike-workshop brief was rebuilt by the middle Claude model, three ways, and graded blind. The grader preferred ultraweb's page; it passed the gates and the other two failed eight checks each. On the smallest model the same brief went to `frontend-design`. One brief is not a trend.
-- **What that means:** ultraweb makes a small model's site correct, accessible and honest about what is drafted. On the smallest model it does not yet make it better looking than a short design skill does; on the middle model it did, once. For a one-page site, install `frontend-design` alongside; ultraweb's short path hands the visual design to it when it is present. That combination is untested.
+- **Graded, a shorter path:** a one-file version of ultraweb's one-page path was tried on the smallest model with a new brief, blind. It passed the gates at 163k tokens (the usual path: 210k to 270k) and the grader still preferred the `frontend-design` page. It was not adopted.
+- **What that means:** ultraweb makes a small model's site correct, accessible and honest about what is drafted. On the smallest model it does not yet make it better looking than a short design skill does; on the middle model it did, once. For a one-page site on a small model, install `frontend-design` alongside: it designs the page, and ultraweb finishes it (`references/finish.md`). Tested once: a `frontend-design` page that failed five checks passed all of them after the finish pass, with one visible change (the phone navigation wraps to two lines). The two steps together used about 290k tokens.
 - **Cost:** the only full-build receipt is from version 1: 6 h 06 min, 4,753 API calls and 756 million tokens processed for one site. Version 2 loads far less instruction text, but its cost has not been measured. Treat a standard build as a multi-hour job.
 - **Award level:** the plugin aims at site-of-the-day quality and cannot promise it. Sites at that level depend on an original concept and on authored assets (photography, film, illustration, 3D). ultraweb supplies concept discipline, engineering and finish; the assets come from you or from generation tools in your session.
 
@@ -71,6 +72,7 @@ Requirements: Node 22 or newer, npm and git. The gates need Playwright with a Ch
 | "make the hero quieter", "add a pricing page" | `ultraweb:iterate` | A targeted change to a site ultraweb built; only the affected checks re-run |
 | "audit the design of my site" | `ultraweb:retrofit` | A read-only audit of any site, written to `design/RETROFIT.md`; fixes only after you approve |
 | "check this site" | `ultraweb:gates` | The deterministic checks against any running site or URL |
+| "make this page pass without changing how it looks" | `ultraweb:gates` | The checks, then the smallest fixes that pass (`references/finish.md`) |
 | "continue" | `ultraweb` | Resumes an interrupted build from `design/PROGRESS.md` |
 
 **Modes.** `guided` (default) stops three times: you pick a mockup, you review the homepage, you accept the finished site. `autonomous` ("just build it") stops for nothing and logs every assumption.
@@ -113,6 +115,7 @@ Scripts do the rest of what is easy to get wrong:
 | `scripts/deal.mjs` | one mockup candidate dealt at random along eight axes, avoiding recent deals |
 | `scripts/moments.mjs` | choosing kit moments that fit the site and its assets |
 | `scripts/photos.mjs` | openly licensed stand-in photographs, with the credit each licence requires |
+| `scripts/fonts.mjs` | a font family fetched once and self-hosted, with its `@font-face` rules |
 | `scripts/check-phase.mjs` | whether a phase's artifacts are complete before the build moves on |
 | `scripts/gates.mjs` | the quality gates |
 
@@ -138,7 +141,7 @@ skills/                  iterate, retrofit, gates
 references/              per-phase instructions, loaded on demand
 agents/design-judge.md   the fresh-context critic
 kit/                     base stylesheet, auto-mounter, React wrapper and the moments
-scripts/                 gates.mjs, measure/*, palette.mjs, deal.mjs, moments.mjs, photos.mjs, check-phase.mjs, site-check.mjs, verify-stack.mjs, lint-corpus.mjs
+scripts/                 gates.mjs, measure/*, palette.mjs, deal.mjs, moments.mjs, photos.mjs, fonts.mjs, check-phase.mjs, site-check.mjs, verify-stack.mjs, lint-corpus.mjs
 hooks/                   write-time placeholder check, gate Stop hook
 stack/versions.json      the only place package versions are pinned
 evals/                   briefs, capture and blind comparison
