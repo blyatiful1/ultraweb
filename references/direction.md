@@ -21,15 +21,15 @@ End the sheet with at least five concrete visual hooks, each tied to a line abov
 
 ## 2. Build the candidates
 
-A candidate is a one-sentence concept plus a decision on each axis.
+A candidate is a one-sentence concept plus a decision on each axis. The values are spelled the way `deal.mjs` takes them (`node <plugin>/scripts/deal.mjs axes` prints the list).
 
 | Axis | Values |
 |---|---|
-| ground | light neutral, light tinted, dark, saturated colour, mid-tone, photographic |
-| type class | grotesque, humanist sans, geometric sans, old-style serif, transitional serif, didone, slab, mono, display |
-| colour | monochrome, one accent, two-colour pair, polychrome from a real source |
-| layout | centred stack, asymmetric grid, full-bleed image-led, dense index, long narrative, split screen, spatial or horizontal |
-| imagery | photography, illustration, type only, product UI, data or diagram, 3D render |
+| ground | light-neutral, light-tinted, dark, saturated-colour, mid-tone, photographic |
+| type | grotesque, humanist-sans, geometric-sans, old-style-serif, transitional-serif, didone, slab, mono, display |
+| colour | monochrome, one-accent, two-colour-pair, polychrome (from a real source) |
+| layout | centred-stack, asymmetric-grid, image-led-full-bleed, dense-index, long-narrative, split-screen, spatial-horizontal |
+| imagery | photography, illustration, type-only, product-ui, data-diagram, render-3d |
 | corners | square, slight, round |
 | density | airy, medium, dense |
 | motion | 0 still, 1 quiet, 2 expressive, 3 immersive |
@@ -38,7 +38,7 @@ Standard and flagship tiers build three candidates; sketch builds A and C.
 
 - **A** is the strongest concept from the subject sheet.
 - **B** is a second concept from the sheet that differs from A on ground and type class at least.
-- **C** is dealt. Run `node <plugin>/scripts/deal.mjs --exclude ground=<A's>,ground=<B's>,type=<A's>,type=<B's>,layout=<A's>,layout=<B's>`. It prints one value per axis and avoids combinations dealt or approved recently. Find the hook on the subject sheet that makes the deal fit this client. When one axis is impossible for the brief (the client has only photography, so imagery is fixed), re-run with `--fix imagery=photography` and note the fix. The dealt candidate exists because options chosen by judgment cluster around the same few looks.
+- **C** is dealt. Run `node <plugin>/scripts/deal.mjs --exclude ground=<A's>,ground=<B's>,type=<A's>,type=<B's>,layout=<A's>,layout=<B's>`. It prints one value per axis and avoids combinations dealt or approved recently. Find the hook on the subject sheet that makes the deal fit this client. When one axis is impossible for the brief (the client has only photography, so imagery is fixed), re-run with `--fix imagery=photography` and note the fix. Do the same when the dealt motion is under the ambition floor below: `--fix motion=2`. The dealt candidate exists because options chosen by judgment cluster around the same few looks.
 
 Any two candidates must differ on ground, type class and layout principle. At most one candidate may sit in a default cluster from `references/taste.md`, and it carries the sentence that derives it from the brief.
 

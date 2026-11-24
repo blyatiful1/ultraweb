@@ -9,7 +9,8 @@ Version 2 is a rewrite. Version 1 shipped 80 skills and about 1.2 MB of instruct
 Read this before installing.
 
 - **Measured:** the gate scripts catch planted defects in CI (`tests/gates.test.mjs`, `tests/qa-scripts.test.mjs`), and the scaffold builds on the pinned stack (`scripts/scaffold-fixture.sh`, weekly).
-- **Not measured yet:** whether a site built with ultraweb is better than one built with plain Claude Code or with another design skill. `evals/` contains the briefs, the capture script and a blind comparison page to find out. No results are published until they exist.
+- **Smoke-tested, not evaluated:** two briefs were built by the smallest Claude model with and without the plugin (`evals/results/2026-11-24-small-model-smoke.md`). The guided builds passed every measured check where the plain builds failed eight or nine, cost a little over twice the tokens, and after one round of fixes looked about level with the plain ones. Level, not better.
+- **Not measured yet:** whether a site built with ultraweb is better looking than one built with plain Claude Code or with another design skill, under blind grading. `evals/` contains the briefs, the capture script and a blind comparison page to find out.
 - **Cost:** the only full-build receipt is from version 1: 6 h 06 min, 4,753 API calls and 756 million tokens processed for one site. Version 2 loads far less instruction text, but its cost has not been measured. Treat a standard build as a multi-hour job.
 - **Award level:** the plugin aims at site-of-the-day quality and cannot promise it. Sites at that level depend on an original concept and on authored assets (photography, film, illustration, 3D). ultraweb supplies concept discipline, engineering and finish; the assets come from you or from generation tools in your session.
 

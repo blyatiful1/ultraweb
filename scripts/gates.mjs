@@ -503,7 +503,7 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
               [/\b(John|Jane) Doe\b/, 'John/Jane Doe'],
             ];
             const hits = PLACE.filter(([re]) => re.test(m.text)).map(([, label]) => label);
-            const imgs = await page.evaluate(() => Array.from(document.images).filter((i) => /placehold|placeholder\.com|picsum|dummyimage/i.test(i.src)).map((i) => i.src)).catch(() => []);
+            const imgs = await page.evaluate(() => Array.from(document.images).filter((i) => { try { return /(^|\.)(placehold\.(co|it)|placeholder\.com|picsum\.photos|dummyimage\.com|placekitten\.com|loremflickr\.com)$/i.test(new URL(i.src, location.href).hostname); } catch (e) { return false; } }).map((i) => i.src)).catch(() => []);
             for (const i of imgs) hits.push(`placeholder image ${clip(i, 80)}`);
             rec('content.placeholder', ctx1440, hits.length ? 'fail' : 'pass', hits.length ? `placeholder content: ${hits.join(', ')}` : 'no placeholder text or images', hits);
             const assumed = await page.evaluate(() => Array.from(document.querySelectorAll('[data-assumed]')).map((e) => (e.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60))).catch(() => []);
@@ -519,7 +519,7 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
             const ev = r.violations.map((v) => ({ selector: v.nodes[0] && v.nodes[0].target, detail: `${v.id} (${v.impact}): ${v.help}` }));
             if (ev.length) return rec('a11y.axe', ctx1440, 'fail', `${ev.length} axe violation type(s) [${r.source}]`, ev);
             const inc = (r.incompleteItems || []).map((v) => ({ selector: v.nodes[0] && v.nodes[0].target, detail: `needs review: ${v.id}: ${v.help}` }));
-            if (inc.length) return rec('a11y.axe', ctx1440, 'review', `${inc.length} axe item(s) need a human look [${r.source}]`, inc);
+            if (inc.length) return rec('a11y.axe', ctx1440, 'review', `${inc.length} axe item(s) need a human look, first: ${clip(inc[0].detail, 110)}${inc[0].selector ? ' at ' + clip(inc[0].selector, 60) : ''} [${r.source}]`, inc);
             rec('a11y.axe', ctx1440, 'pass', `axe clean [${r.source}]`);
           });
           const themes = ['light'];

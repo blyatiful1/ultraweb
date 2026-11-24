@@ -24,7 +24,7 @@ Record in SYSTEM.md: the tradition, faces, weights and axes, tracking and leadin
 - Request the axes you use (`axes: ["opsz"]` and similar). One variable file is smaller than several static cuts.
 - Export a CSS `variable` for each face from `lib/fonts.ts`, put the variables on `<html>`, and bridge them in the token file (`references/tokens.md`).
 - `next/font/local` does not do `next/font/google`'s automatic metric fallback. Set an explicit `fallback` and, if needed, `adjustFontFallback` or manual `size-adjust`/`ascent-override` values. Verify layout shift in the performance gate before shipping a local face.
-- No `fonts.googleapis.com` link in a Next site; next/font self-hosts. In static `site/`, self-host the files.
+- No `fonts.googleapis.com` link in a Next site; next/font self-hosts. In static `site/`, self-host the files: download the woff2 from the family's own source (for a Google Fonts family, the URLs in its CSS; a variable family is one file covering its whole weight range, declared once with `font-weight: <min> <max>`).
 - At most two families plus an optional functional third, about four weights.
 
 ## Fluid scale
