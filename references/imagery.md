@@ -5,6 +5,23 @@ Art direction for photographs, illustration and placeholders: one treatment, der
 Load when: a section needs an image or texture, photos do not match the brand, or no real photography exists.
 Reads: DIRECTION.md, BRIEF.md (assets), SYSTEM.md §color, SITEMAP.md. Writes: design/SYSTEM.md §imagery, treatment CSS in the token file, generated assets in `public/images/`.
 
+## Photographs
+
+Places, shops, food, hotels and portfolios are carried by photographs of the real thing. Type and drawing cannot stand in for bread, a room or a building. Use them when the site kind asks for them; a type-led or drawn page stays a legitimate direction.
+
+Sources, in order:
+
+1. The client's own photographs (the Assets section of the brief).
+2. An image-generation tool, when the session has one. Generated pictures follow the stand-in rules below and never depict a real person, product or place as if photographed.
+3. Openly licensed stand-ins: `node <plugin>/scripts/photos.mjs search "<subject>" --thumbs design/photo-previews`, look at the previews, then `get <id> --out site/img/<name>.jpg`. Queries describe the subject only, never the client.
+
+Stand-in rules:
+
+- Mark every one `data-standin` on its `<img>`, and print the credit line from `photos.mjs credits` in the footer; most licences require it.
+- A stand-in never claims to be the client's. A picture that stands for the client's own work, people or premises (`--role proof`) carries a small visible label, "Stand-in photo". For a portfolio this applies to every project image.
+- Stand-ins make the build a demo: `Deployment mode: demo`, each listed in the handoff with what the owner must supply. Ship blocks production while one remains.
+- Choose photographs that share light and colour temperature, crop them to the layout's ratios with `object-fit: cover`, give each `width`, `height` and real `alt` text, and lazy-load everything below the first screen.
+
 ## Stance
 
 DIRECTION.md says what the site leads with (photography, illustration, product shots, type). Record that, then inventory every image slot in SITEMAP.md and decide per slot: real asset, generated art, or no image. Real client or subject imagery beats everything below; flagship builds require it. Reject stock-cliche photos and redesign the slot.

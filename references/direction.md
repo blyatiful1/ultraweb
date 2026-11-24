@@ -65,7 +65,7 @@ Restraint is for everything around the idea, not for the idea. Every candidate m
 
 ## 3. Mockups and the pick
 
-Hand the candidates to `references/mockup.md`. In guided mode the user picks, mixes or sends them back (CP1). In autonomous mode pick the candidate most specific to this brief; if two tie, the one whose signature move can be executed best within the tier's budget. Log the reason under Assumptions in `design/PROGRESS.md`.
+In guided mode hand the candidates to `references/mockup.md`; the user picks, mixes or sends them back (CP1). In autonomous mode build no mockups: write each candidate as its concept sentence and axis values, and pick the one most specific to this brief; if two tie, the one whose signature move can be executed best within the tier's budget. Log the reason under Assumptions in `design/PROGRESS.md`.
 
 After approval, record the approved axes so later builds are steered away from them. The dealer keeps its history outside the project, in `~/.ultraweb/history.json` (set `ULTRAWEB_HOME` to move it); it holds axis names only, no project content:
 
@@ -73,7 +73,7 @@ After approval, record the approved axes so later builds are steered away from t
 node <plugin>/scripts/deal.mjs record --ground dark --type slab --colour one-accent --layout dense-index
 ```
 
-Record only the approved candidate, once. Dealing candidate C already logs the deal; do not `record` it as well unless C is the one approved.
+Record only the approved candidate, once. Add `--no-history` to any deal you run only to explore. Dealing candidate C already logs the deal; do not `record` it as well unless C is the one approved.
 
 ## 4. The signature move
 

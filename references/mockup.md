@@ -2,7 +2,7 @@
 
 Render the direction candidates as quick static pages so the user can point at a direction before the build spends anything.
 
-Load when: Phase 2, after `references/direction.md` has produced its candidates.
+Load when: Phase 2, after `references/direction.md` has produced its candidates. Guided mode only: an autonomous build has nobody to show candidates to and skips this file.
 Reads: design/BRIEF.md, the candidate sketches from direction. Writes: design/mockups/*.html, design/mockups/qa/shots/*.png, the round log under CP1 in design/PROGRESS.md.
 
 ## Candidates

@@ -125,8 +125,9 @@ gate('a site with planted defects exits 1 and names the failing checks', async (
     ]) {
       assert.ok(failing.has(id), `expected ${id} to fail; failing: ${[...failing].join(', ')}`);
     }
-    // tells is report-only: never a fail
-    assert.ok(!g.records.some((x) => x.gate === 'tells' && x.status === 'fail'), 'a tells check failed');
+    // the census is report-only: never a fail (the density checks beside it may fail)
+    assert.ok(!g.records.some((x) => x.id === 'tells.census' && x.status === 'fail'), 'the tells census failed');
+    assert.ok(g.records.some((x) => x.id === 'tells.empty-screens'), 'the density check did not run');
     assert.ok(g.records.some((x) => x.id === 'tells.census'), 'the tells census did not run');
     assert.ok(existsSync(join(proj, 'qa', 'GATES.md')));
     assert.ok(existsSync(join(proj, 'qa', 'shots', 'home-375.png')), 'no 375 screenshot');
@@ -144,8 +145,13 @@ gate('a site with planted defects exits 1 and names the failing checks', async (
     // ESCALATE at round >= 4 while failing
     writeFileSync(join(proj, 'qa', 'waivers.json'), '[]');
     let last;
-    for (let i = 0; i < 2; i++) last = await runGatesAsync(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive', '--quick'], root);
+    // the passing run above cleared the count, and a quick run is never counted
+    last = await runGatesAsync(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive', '--quick'], root);
+    assert.equal(JSON.parse(readFileSync(join(proj, 'qa', 'gates.json'), 'utf8')).round, 0);
+    assert.doesNotMatch(last.stdout, /^ESCALATE:/m);
+    for (let i = 0; i < 4; i++) last = await runGatesAsync(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive'], root);
     assert.equal(last.status, 1);
+    assert.equal(JSON.parse(readFileSync(join(proj, 'qa', 'gates.json'), 'utf8')).round, 4);
     assert.match(last.stdout, /^ESCALATE:/m);
   } finally {
     server.close();

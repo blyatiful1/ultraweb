@@ -151,7 +151,7 @@ function phase2(root, p) {
   const count = lsDir(dir).filter((e) => e.isFile() && /\.html$/i.test(e.name) && e.name.toLowerCase() !== 'index.html').length;
   const { tier } = briefOf(root);
   const want = tier === 'sketch' ? 2 : 3;
-  if (count < want) p('design/mockups/', `has ${count} candidate .html file(s) (index.html not counted), ${tier === 'sketch' ? 'sketch tier needs 2' : 'needs 3'}`);
+  if (count < want && !isAutonomous(root)) p('design/mockups/', `has ${count} candidate .html file(s) (index.html not counted), ${tier === 'sketch' ? 'sketch tier needs 2' : 'needs 3'}`);
 }
 
 const TOKEN_FILES = ['app/globals.css', 'src/app/globals.css', 'site/styles.css'];
@@ -255,7 +255,7 @@ function routesOnDisk(root) {
   walkStatic(join(root, 'site'), []);
   return found;
 }
-const normRoute = (r) => (r.replace(/:(\w+)/g, '[$1]').replace(/\/+$/, '') || '/');
+const normRoute = (r) => (r.replace(/:(\w+)/g, '[$1]').replace(/\.html$/, '').replace(/\/index$/, '').replace(/\/+$/, '') || '/');
 
 function phase6(root, p) {
   const md = read(join(root, 'design/SITEMAP.md'));

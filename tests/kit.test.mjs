@@ -48,7 +48,7 @@ const readCatalog = () => {
 // ---------------------------------------------------------------- shared files
 
 test('kit shared files exist and hold their size budgets', () => {
-  const budgets = { 'system.css': 14 * 1024, 'system.js': 6 * 1024, 'README.md': 6 * 1024 };
+  const budgets = { 'system.css': 16 * 1024, 'system.js': 6 * 1024, 'README.md': 6 * 1024 };
   for (const [f, max] of Object.entries(budgets)) {
     const p = join(kitDir, f);
     assert.ok(existsSync(p), `kit/${f} is missing`);

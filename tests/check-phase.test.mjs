@@ -329,3 +329,17 @@ test('phase 7: qa/judge-unavailable.md stands in for a judge round, with a warni
   assert.equal(r.status, 0);
   assert.match(r.stderr, /accepted because qa\/judge-unavailable\.md/);
 });
+
+test('phase 2: an autonomous build needs no mockups', () => {
+  const d = project({ tier: 'sketch', mode: 'autonomous' });
+  rmSync(join(d, 'design/mockups'), { recursive: true, force: true });
+  assert.equal(run(2, d).status, 0, run(2, d).stdout);
+});
+
+test('phase 6: a route written with .html matches its static file', () => {
+  const d = project();
+  put(d, 'design/SITEMAP.md', get(d, 'design/SITEMAP.md').replace(/^\|\s*\/\s*\|/m, '| /404.html | the not-found page | none |\n| / |'));
+  put(d, 'site/404.html', '<!doctype html><title>404</title>');
+  const r = run(6, d);
+  assert.doesNotMatch(r.stdout + r.stderr, /404\.html\.html/);
+});

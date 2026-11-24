@@ -40,6 +40,7 @@ const CONTRACT = [
   'font-requests',
   'axe',
   'tells-census',
+  'density',
 ];
 
 const files = readdirSync(measureDir).filter((f) => f.endsWith('.mjs')).sort();

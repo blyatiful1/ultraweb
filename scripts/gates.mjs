@@ -56,8 +56,8 @@ Options:
 Statuses: pass | fail | review | skip | error | waived. Verdict: FAIL when any unwaived fail,
 UNVERIFIED when no browser or any error, else PASS. review items never fail the run.
 Waivers: qa/waivers.json, at most ${THRESHOLDS.maxWaivers} entries {check, route?, selector?, reason}.
-Exit: 0 PASS, 1 FAIL, 3 UNVERIFIED or cannot run. At round >= ${THRESHOLDS.escalateRound} with FAIL an
-ESCALATE: line is printed.
+Exit: 0 PASS, 1 FAIL, 3 UNVERIFIED or cannot run. --quick runs are not counted as rounds and a
+PASS clears the count; at ${THRESHOLDS.escalateRound} counted failing rounds in a row an ESCALATE: line is printed.
 `;
 
 // ---- args ------------------------------------------------------------------------------
@@ -187,7 +187,11 @@ async function run(args) {
   mkdirSync(join(qa, 'raw'), { recursive: true });
 
   const previous = readJson(join(qa, 'gates.json'), null);
-  const round = (previous && Number.isFinite(previous.round) ? previous.round : 0) + 1;
+  // A round is one counted attempt at the gates. Quick runs are for looking and do not
+  // count; a PASS clears the count, so ESCALATE means four counted failures in a row.
+  const prevRound = previous && Number.isFinite(previous.round) ? previous.round : 0;
+  const base0 = previous && previous.verdict === 'PASS' ? 0 : prevRound;
+  const round = args.quick ? Math.max(base0, 0) : base0 + 1;
 
   const records = [];
   const rec = (id, ctx, status, summary, evidence = []) => {
@@ -452,7 +456,9 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
       }
       const { ctx, page, status } = opened;
       try {
-        if (status >= 400 || status === 0) {
+        // the 404 page itself is supposed to answer 404
+        const is404Page = status === 404 && /(^|\/)404(\.html)?\/?$/.test(route);
+        if ((status >= 400 || status === 0) && !is404Page) {
           rec('content.status', ctx1440, 'fail', `${route} answered HTTP ${status}`);
           await ctx.close();
           continue;
@@ -508,6 +514,8 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
             rec('content.placeholder', ctx1440, hits.length ? 'fail' : 'pass', hits.length ? `placeholder content: ${hits.join(', ')}` : 'no placeholder text or images', hits);
             const assumed = await page.evaluate(() => Array.from(document.querySelectorAll('[data-assumed]')).map((e) => (e.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60))).catch(() => []);
             rec('content.assumed', ctx1440, assumed.length ? 'review' : 'pass', assumed.length ? `${assumed.length} drafted fact(s) marked data-assumed: the owner must confirm each before production` : 'no drafted facts marked data-assumed', assumed);
+            const standins = await page.evaluate(() => Array.from(document.querySelectorAll('img[data-standin]')).map((e) => e.getAttribute('src') || '')).catch(() => []);
+            rec('content.standins', ctx1440, standins.length ? 'review' : 'pass', standins.length ? `${standins.length} stand-in photograph(s): the owner must replace or approve each before production` : 'no stand-in photographs', standins.map((x) => clip(x, 80)));
           } catch (e) {
             rec('content.metadata', ctx1440, 'error', `metadata read threw: ${clip(e.message)}`);
           }
@@ -540,11 +548,12 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
             if (r.count === 0) return rec('a11y.keyboard', ctx1440, 'review', 'no tab stops found (nothing focusable)');
             if (!r.skipLinkFirst) ev.push({ detail: 'the first tab stop is not a skip link' });
             if (r.trap) ev.push({ detail: 'keyboard focus is trapped on one element' });
-            for (const s of r.stops.filter((x) => !x.visibleFocusRing)) ev.push({ selector: s.selector, detail: 'no visible focus ring' });
+            for (const s of r.stops.filter((x) => x.visibleFocusRing === false)) ev.push({ selector: s.selector, detail: 'no visible focus ring' });
             rec('a11y.keyboard', ctx1440, ev.length ? 'fail' : 'pass', ev.length ? `${ev.length} keyboard issue(s) over ${r.count} stops` : `${r.count} stops, skip link first, rings visible`, ev);
           });
           await call('landmarks-headings', page, base, ctx1440, 'a11y.landmarks', (r) => {
-            const ev = r.issues.map((i) => ({ selector: i.selector, detail: `${i.kind}: ${i.detail}` }));
+            // a navigation landmark is expected on the home page; a 404 or a legal page may do without
+            const ev = r.issues.filter((i) => i.kind !== 'no-nav' || route === '/').map((i) => ({ selector: i.selector, detail: `${i.kind}: ${i.detail}` }));
             rec('a11y.landmarks', ctx1440, ev.length ? 'fail' : 'pass', ev.length ? `${ev.length} landmark or heading issue(s)` : 'landmarks and heading order fine', ev);
           });
           await call('alt-and-labels', page, base, ctx1440, 'a11y.alt-labels', (r) => {
@@ -731,6 +740,25 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
           await call('tells-census', o.page, { theme: 'light' }, ct, 'tells.census', (r) => {
             if (!r.flags.length) return rec('tells.census', ct, 'pass', `no tells flagged (${r.families.display || '?'} / ${r.families.body || '?'})`);
             rec('tells.census', ct, 'review', `${r.flags.length} tell(s): ${r.flags.map((f) => f.id).join(', ')}`, r.flags.map((f) => ({ detail: `${f.id}: ${f.evidence}` })));
+          });
+          await call('density', o.page, {}, ct, 'tells.empty-screens', (r) => {
+            const cov = (r.slices || []).map((x) => Math.round(x.coverage * 100)).join(' ');
+            // short pages (a 404, a legal stub) may be sparse; only an outright empty screen fails them
+            const judged = Math.max(1, (r.slices || []).length - 1);
+            if ((r.empty || []).length || (judged >= 3 && r.sparseShare > 0.5)) {
+              rec('tells.empty-screens', ct, 'fail', `${(r.empty || []).length} empty and ${(r.sparse || []).length} sparse of ${(r.slices || []).length} screens (percent of each screen carrying text or media: ${cov})`, (r.empty.length ? r.empty : r.sparse).map((i) => ({ detail: `screen ${i + 1}, about ${i * r.viewport.height}px down the page, is nearly bare ground` })));
+            } else rec('tells.empty-screens', ct, 'pass', `no empty screen (percent carrying text or media: ${cov})`);
+            if (route === '/' && r.first) {
+              const f = r.first;
+              if (f.headingPx < 72 && f.mediaShare < 0.4) rec('tells.first-screen', ct, 'fail', `the first screen is timid: its largest heading is ${f.headingPx}px and pictures cover ${Math.round(f.mediaShare * 100)}% of it. Set the headline at 72px or more, or let a picture or drawn scene fill at least 40% of the screen`, [{ detail: `largest heading: "${f.heading}"` }]);
+              else rec('tells.first-screen', ct, 'pass', `first screen carried by ${f.headingPx >= 72 ? `a ${f.headingPx}px headline` : `pictures over ${Math.round(f.mediaShare * 100)}% of it`}`);
+            }
+            const st = r.smallText || { share: 0, examples: [] };
+            if (st.share > 0.3) rec('tells.small-text', ct, 'fail', `${Math.round(st.share * 100)}% of body copy is set under 16px (median ${r.bodyPx}px)`, st.examples.map((e) => ({ selector: e.selector, detail: `${e.px}px: ${e.text}` })));
+            else rec('tells.small-text', ct, 'pass', `body copy median ${r.bodyPx ?? '?'}px, ${Math.round(st.share * 100)}% under 16px`);
+            const g = r.grounds || { sections: 0, distinct: 0 };
+            if (g.sections >= 5 && g.distinct <= 1) rec('tells.one-ground', ct, 'review', `${g.sections} sections share one ground: a second ground or one colour band gives the page rhythm`);
+            else rec('tells.one-ground', ct, 'pass', `${g.distinct} ground(s) across ${g.sections} section(s)`);
           });
         }
       } catch (e) {
