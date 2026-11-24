@@ -1,0 +1,38 @@
+/* cursor-trail: structure only. Colours come from tokens. */
+[data-moment="cursor-trail"] { position: relative; isolation: isolate; }
+[data-moment="cursor-trail"] .ct-layer {
+  position: absolute; inset: 0; overflow: clip; pointer-events: none; z-index: 5;
+}
+/* Trail shapes sit behind the area's text by default; data-layer="above" puts them on top. */
+[data-moment="cursor-trail"][data-mode="trail"] .ct-layer:not([data-above]) { z-index: -1; }
+[data-moment="cursor-trail"] .ct-ghost {
+  position: absolute; left: 0; top: 0; opacity: 0; pointer-events: none;
+  border-radius: var(--radius, 6px); overflow: clip; will-change: transform, opacity;
+}
+[data-moment="cursor-trail"] .ct-ghost > *, [data-moment="cursor-trail"] .ct-slot {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+}
+[data-moment="cursor-trail"] .ct-shape { border-radius: inherit; background: var(--primary, #2f5d50); }
+[data-moment="cursor-trail"] .ct-shape[data-i="1"] { background: var(--accent, #d9893b); border-radius: 999px; }
+[data-moment="cursor-trail"] .ct-shape[data-i="2"] { background: var(--muted-foreground, #5b5850); }
+
+[data-moment="cursor-trail"] .ct-preview {
+  position: absolute; left: 0; top: 0; aspect-ratio: 4 / 5; overflow: clip; pointer-events: none;
+  border-radius: var(--radius, 6px); opacity: 0; scale: 0.94; will-change: transform;
+  transition: opacity var(--dur-micro, 180ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+              scale var(--dur-micro, 180ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+[data-moment="cursor-trail"] .ct-preview.is-on { opacity: 1; scale: 1; }
+[data-moment="cursor-trail"] .ct-slot { position: absolute; inset: 0; opacity: 0; transition: opacity var(--dur-micro, 180ms) linear; }
+[data-moment="cursor-trail"] .ct-slot.is-on { opacity: 1; }
+[data-moment="cursor-trail"] .ct-slot.ct-shape { border-radius: 0; }
+
+/* Inline thumbnails when the effect is off (touch, reduced motion). */
+[data-moment="cursor-trail"] .ct-thumb {
+  width: 3rem; height: 3rem; object-fit: cover; flex: none; vertical-align: middle; margin-inline-end: 0.75rem;
+  border-radius: var(--radius, 6px);
+}
+[data-moment="cursor-trail"] span.ct-thumb { display: inline-block; }
+@media (prefers-reduced-motion: reduce) {
+  [data-moment="cursor-trail"] .ct-layer { display: none; }
+}

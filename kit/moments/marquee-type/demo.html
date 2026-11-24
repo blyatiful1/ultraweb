@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>marquee-type demo</title>
+<link rel="stylesheet" href="../../system.css">
+<link rel="stylesheet" href="./moment.css">
+<style>
+/* demo-only placeholder tokens: a real site supplies its own */
+:root{--background:#f6f4ef;--foreground:#16150f;--muted-foreground:#6b675c;--border:#cfcabb;--ring:#2a4bd7;--radius:.5rem;--dur-section:.9s;--ease-out:cubic-bezier(.16,1,.3,1);--font-display:Georgia,"Times New Roman",serif;--font-sans:system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--background:#13120e;--foreground:#f1eee4;--muted-foreground:#9a9585;--border:#3a372c;--ring:#8ea2ff}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--background);color:var(--foreground);font:1rem/1.6 var(--font-sans)}
+.pad{padding:12vh 16px}
+.wrap{max-width:70rem;margin-inline:auto;padding-inline:16px}
+.note{max-width:40rem;color:var(--muted-foreground)}
+a{color:inherit}
+a:focus-visible{outline:2px solid var(--ring);outline-offset:3px}
+.band{border-block:1px solid var(--border)}
+.small{--mq-size:clamp(1.5rem,5vw,3rem)}
+</style>
+</head>
+<body>
+<header class="pad wrap"><h1 style="font-family:var(--font-display);font-weight:400;font-size:clamp(2rem,6vw,4rem);margin:0">Travelling type</h1><p class="note">Scroll down and up: the line speeds up and reverses with your scroll. It pauses on hover, on focus and off screen, and the button stops it.</p></header>
+<section class="band" style="margin-block:20vh">
+  <p data-moment="marquee-type" data-speed="90" id="m1">Make the work worth reading <em>twice</em> &middot; <a href="#m2">Next band</a> &middot;</p>
+</section>
+<section class="band small" style="margin-block:20vh">
+  <p data-moment="marquee-type" data-direction="right" data-speed="50" data-gap="2rem" id="m2">Short &middot;</p>
+</section>
+<section class="band" style="margin-block:20vh" dir="rtl">
+  <p data-moment="marquee-type" id="m3" lang="ar">نص عربي يتحرك بسلاسة &middot;</p>
+</section>
+<div style="height:50vh"></div>
+<script type="module">
+import mount from './moment.js';
+window.mountAll = () => [...document.querySelectorAll('[data-moment]')].map((el) => mount(el));
+window.cleanups = window.mountAll();
+</script>
+</body>
+</html>

@@ -93,14 +93,19 @@ async (page) => {
           s: s.boxShadow,
           b: s.borderTopWidth + '|' + s.borderTopStyle + '|' + s.borderTopColor,
         });
+        // Date and time inputs hold several internal focus segments. Blurring and refocusing
+        // one resets it to its first segment, which would pin the walk there for good.
+        const segmented = el.tagName === 'INPUT' && /^(date|time|datetime-local|month|week)$/i.test(el.type || '');
         const on = pick(getComputedStyle(el));
         let off = null;
-        try {
-          el.blur();
-          off = pick(getComputedStyle(el));
-          el.focus({ preventScroll: true });
-        } catch (e) {
-          off = null;
+        if (!segmented) {
+          try {
+            el.blur();
+            off = pick(getComputedStyle(el));
+            el.focus({ preventScroll: true });
+          } catch (e) {
+            off = null;
+          }
         }
         const ring =
           (on.o.indexOf('none|') !== 0 && (on.o.indexOf('auto|') === 0 || parseFloat(on.o.split('|')[1]) > 0)) ||
@@ -113,6 +118,7 @@ async (page) => {
           name: nameOf(el),
           selector: sel(el),
           visibleFocusRing: !!ring,
+          segmented,
           inViewport: r.bottom > 0 && r.right > 0 && r.top < window.innerHeight && r.left < window.innerWidth,
         };
       })
@@ -137,7 +143,14 @@ async (page) => {
     if (!s) break;
     stops.push({ index: stops.length, ...s });
     const n = stops.length;
-    if (n >= 3 && stops[n - 1].selector === stops[n - 2].selector && stops[n - 2].selector === stops[n - 3].selector) {
+    // Three identical stops in a row is a trap, except inside a segmented date or time
+    // input, where each Tab moves one segment: allow those up to eight.
+    const run = (() => {
+      let k = 1;
+      while (k < n && stops[n - 1 - k].selector === s.selector) k++;
+      return k;
+    })();
+    if (run >= (s.segmented ? 8 : 3)) {
       trap = true;
       break;
     }

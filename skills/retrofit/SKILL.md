@@ -1,99 +1,64 @@
 ---
 name: retrofit
-description: Entry point for existing Next.js sites that ultraweb did not build — inventory the codebase and routes, sweep for banned-list patterns, boot the site, screenshot every page at 375/768/1440, score it against the taste constitution via the design-judge rubric, and write design/RETROFIT.md — scored gaps each mapped to the one ultraweb skill that fixes it, phased into quick wins → system fixes → direction change, each phase then executed via ultraweb:iterate. Invoke when the user points at an existing site and asks to "improve", "audit the design", "modernize", "redesign", or "bring it up to standard", or asks "how bad is my site". For building from scratch use the root ultraweb skill; for a scoped change to a site that already has design/* artifacts use ultraweb:iterate directly.
+description: "Audit, critique or improve the design of an existing website that ultraweb did not build: run the gates, screenshot it, score it with the design judge and write design/RETROFIT.md mapping each gap to its fix. Use only when the user explicitly asks to audit, critique or improve their existing site."
 ---
 
-# retrofit — diagnose before redesigning
+# retrofit
 
-**Stage:** Entry point — before any pipeline phase, for sites ultraweb did not build - **Reads:** existing codebase, running site, taste - **Writes:** design/RETROFIT.md, design/screenshots/retrofit/*, qa/visual/round-1/VERDICT.md, reconstructed design/BRIEF.md + DIRECTION.md
+Audit a site ultraweb did not build, report its gaps, and, if the user wants fixes, set it up so `iterate` can apply them.
 
-## Standard
+`<plugin>` is `${CLAUDE_PLUGIN_ROOT}`. References are in `<plugin>/references/`.
 
-A diagnosis a studio would charge for: every gap carries evidence (a screenshot path or a file:line grep hit), a score against the taste rubric, the ONE ultraweb skill that fixes it, and a phase. Scores come from looking at rendered pages — never from reading code alone. Retrofit is a **mutating audit** and says so up front: it writes the design record into the repo (design/RETROFIT.md, screenshots, a reconstructed BRIEF.md + DIRECTION.md) and touches app code only where required to boot the site — each boot fix named in RETROFIT.md. All treatment happens afterward, through ultraweb:iterate, one approved phase at a time.
+## 1. Qualify
 
-## Process
+- If `design/DIRECTION.md` already exists, stop. This is an ultraweb site: use `iterate` for a change, or the root skill's resume for an unfinished build.
+- Read `package.json` and the file tree. Record the framework, the styling setup and the routes. Any framework can be audited from a running URL; fixes through iterate assume a Next.js App Router site or a static site, so say so when the site is neither.
+- Collect any written design statement (style guide, brand page, README section) for step 4.
 
-1. **Qualify the patient.** First: if `design/DIRECTION.md` already exists, STOP — this is an ultraweb site, and retrofit against it would overwrite real recorded decisions with reconstructed guesses. A complete record is `ultraweb:iterate`'s case; a partial one is the root skill's §Resuming ladder. Then read package.json and the tree. Next.js App Router → proceed. Pages Router, CRA, or another framework → say so and stop; retrofit audits, it doesn't port. Offer a fresh `ultraweb` build as the alternative.
-2. **Inventory.** Routes (every `app/**/page.tsx`), components, styling entry (`@theme` in app/globals.css vs `tailwind.config.js` — the config file marks Tailwind v3), and deps of record: next major, `framer-motion` vs `motion`, zod major, `middleware.ts` (pre-Next-16 signal) vs `proxy.ts`. Collect any written direction statement too (style guide, brand page, README §design) — step 6 needs it.
-3. **Static anti-slop sweep** — grep the banned list before rendering anything:
-   - `lorem`, `href="#"`, `Feature 1`, `placeholder.com`
-   - `from-purple-|from-violet-|to-blue-` and headline `bg-clip-text` gradient text
-   - `✨|🚀|🎉` and emoji-as-icons in TSX
-   - counts of `rounded-xl` and `shadow-lg` — near-universal usage = depth without hierarchy
-   - `Elevate|Unlock the power|Seamlessly|Empower|Welcome to`
-   Every hit is a pre-scored gap with file:line evidence.
-4. **Boot it.** `npm install`, `npm run dev`. Won't start → hand the verbatim error to stack-doctor and apply the minimal fix that gets pixels on screen. No other code changes during the audit.
-5. **Screenshot everything.** pixel-qa drives Playwright MCP, `outputDir: design/screenshots/retrofit/`: viewport frames per route at 375/768/1440, light + dark when a toggle exists, plus 1440 sectionals. No full-page captures — the judge refuses frames >2500px. Console errors are recorded as gaps.
-6. **Score.** `mkdir -p qa`, then dispatch design-judge as round 1, pointed at `design/screenshots/retrofit/` as the round directory (frames + sectionals), the project and plugin roots. No `design/DIRECTION.md` exists — step 1 refused the site if it did — so hand it the step-2 direction statement as the stand-in and tell it to score against the taste constitution and the award-canon invariants alone. It scores its own fixed six axes, writes the full review to `qa/visual/round-1/VERDICT.md`, returns ≤700 tokens: scores, ranked defects, verdict, plus round-1's antislop/responsive lines — fold every violation into the gap table. Compute the mean and the worst axis yourself from that table — the judge returns neither.
-7. **Map every gap to one skill** (table below). A gap without a named fixing skill isn't finished — "improve the design" ships nothing.
-8. **Phase the plan** into design/RETROFIT.md: A quick wins → B system fixes → C direction change (only when triggered).
-9. **Bootstrap the artifacts iterate needs.** Reverse-engineer design/BRIEF.md from the evident site (audience, purpose, pages, backend surface) — including the machine-read fields every consumer expects: `Deployment mode: production` (an existing live site is production; never guess demo) and, when the site serves a named market, §Compliance facts reconstructed from the Impressum and shop surface (flag each entry `counsel-needed` — reconstructed facts are assumptions, not knowledge). Write design/DIRECTION.md as the TARGET direction — the existing aesthetic sharpened, or, when Phase C triggers, a fresh pick via ultraweb:direction.
-10. **Hand off.** Present RETROFIT.md. Each approved phase executes via `ultraweb:iterate` with this file as the change request. Phase C is the burn-it-down case: get explicit user confirmation of scope before starting it.
+## 2. Get it running, read-only
 
-## Scoring rubric
+The audit phase does not change the project. Before running anything that writes, tell the user what it is and wait for their approval:
 
-design-judge's six fixed axes, 1–10 per page — Motion folded into Craft (its contract has no Motion axis):
+- `npm install` (writes `node_modules` and may change the lockfile).
+- Any fix needed to make the site boot.
 
-| Axis | 8–10 looks like | ≤4 means |
-|---|---|---|
-| Hierarchy | the eye lands where the page intends | everything shouts equally |
-| Typography | real pairing, hero ≥3.5× body | default Inter at timid sizes |
-| Spacing | compression and release on a base unit | uniform py-24 wallpaper |
-| Color | one accent doing real work, AA verified | slate + purple gradient, or gray soup |
-| Distinctiveness | a point of view and a signature move | interchangeable template |
-| Craft | focus rings, favicon, optical alignment; purposeful motion, one easing family, reduced-motion path | defaults in the last 2%; everything fades up, or nothing moves |
+If the user gives a live URL, audit that instead and install nothing. Write audit outputs only to `qa/` and `design/RETROFIT.md`, and say so up front.
 
-Report the WORST axis alongside the mean — a 7.0 average hiding a 2/10 distinctiveness IS a distinctiveness problem. Triggers: any axis ≤4 → its system fix goes to Phase B. Distinctiveness ≤4, or no identifiable direction at all → Phase C candidate.
+## 3. Measure
 
-## Gap → skill map (canonical examples)
+Run `node <plugin>/scripts/gates.mjs --url <url> --project <dir>`, reading `references/gates.md` first. Use `--routes` when the crawl would miss pages. Exit code 3 means no browser: report the audit as UNVERIFIED and give the install line the runner printed. The runner writes `qa/gates.json`, `qa/GATES.md` and screenshots in `qa/shots/`.
 
-| Gap found | Fixing skill | Phase |
-|---|---|---|
-| Dead startup copy, lorem, "Feature 1" | copywriting | A |
-| Emoji as icons | icons | A |
-| Missing metadata / OG image / favicon | seo | A |
-| No focus-visible, contrast failures | micro-interactions + color (verify via gate-accessibility) | A |
-| Untouched shadcn look (Inter, slate, default radius) | tokens + color + typography | B |
-| Uniform section rhythm, everything centered | layout-grid | B |
-| Three identical icon-cards as "features" | feature-sections | B |
-| Dark mode absent, or an inversion filter | color + tokens | B |
-| Motion on everything, or none at all | motion-language + scroll-motion | B |
-| Tailwind v3 config / framer-motion / middleware.ts | stack migration first — prerequisite to all Phase B token work; verify steps against current migration docs | B-0 |
-| No point of view; template look | direction, then Phase 3 of the root pipeline | C |
+## 4. Score
 
-## RETROFIT.md format
+Read `references/taste.md` and `references/judge.md`. Send one round to the `design-judge` agent with the paths in `qa/shots/`, the project root, `<plugin>`, and the design statement from step 1 in place of a DIRECTION.md, telling it to score against `references/taste.md`. It writes `qa/judge-round-1.md`. Take the per-axis scores from that file and report the worst axis next to the mean.
 
-```markdown
+## 5. Write design/RETROFIT.md
+
+```md
 # Retrofit — <site> (<date>)
-Verdict: <one sentence>. Mean <n>/10, worst axis: <axis> <n>/10.
-
-## Scorecard
-| axis | score | evidence (screenshot / file:line) |
+Verdict: <one sentence>. Gates: <PASS|FAIL|UNVERIFIED>. Judge mean <n>/10, worst axis <axis> <n>/10.
 
 ## Gaps
-| # | gap | evidence | severity P0–P3 | skill | phase |
+| # | Gap | Evidence (shot or file:line) | Severity P0-P3 | Fixed by | Phase |
 
 ## Plan
-- Phase A — quick wins (hours, local, reversible): #3, #7, #9…
-- Phase B — system fixes (globals.css tokens + foundation skills): #1, #2… [B-0 stack migration first if flagged]
-- Phase C — direction change (only if triggered; confirm scope with the user): …
-Execute each phase via ultraweb:iterate, pointing it at this file and the phase id.
+- A, quick fixes: content, metadata, accessibility fails
+- B, system: tokens, type, color, layout rhythm
+- C, new direction: only when distinctiveness scores 4 or lower, or no direction is identifiable
 ```
 
-## Anti-patterns
+Every gap names one reference in the Fixed by column, for example `references/color.md` or `references/sections.md`. A gap without a named fix and evidence is not finished. Gate fails come first, from `qa/GATES.md`.
 
-- Fixing while auditing — the only permitted edit is whatever boots the dev server
-- Scores produced without screenshots — code reading is inventory, not judgment
-- "Improve visual hierarchy" with no skill, no evidence, no phase — that's a shrug, not a gap
-- Every gap mapped to "rebuild it" — Phase C is the exception; most sites need B
-- Reporting only the mean score — the worst axis is the headline
-- Treating `tailwind.config.js` as cosmetic — it blocks the entire token strategy; migration is B-0
-- Skipping the artifact bootstrap — iterate refuses sites without design/BRIEF.md and DIRECTION.md
+Present RETROFIT.md and stop. Change no code until the user approves a phase.
 
-## Worked example — Ledger & Lane, auditing the firm's inherited site
+## 6. Hand off to iterate
 
-Moved to `references/example.md` — read only when this build's case is genuinely ambiguous; the sections above are the decision material.
+When the user approves fixes, write the artifact set iterate requires, reverse-engineered from the site as it is:
 
-## Composes with
+- `design/BRIEF.md`: audience, purpose, pages, backend surface and market, following `references/brief.md`. Mark facts you inferred as inferred. An existing live site is in production mode.
+- `design/DIRECTION.md`: the target direction. For phases A and B, describe the current look sharpened; for phase C, run `references/direction.md` with the user.
+- `design/SYSTEM.md`: the current tokens (colors, type scale, spacing, radii, motion), with the planned changes marked.
+- `design/SITEMAP.md`: the current routes and sections per page, following `references/structure.md`.
+- `design/PROGRESS.md`: per `references/checkpoints.md`, with Mode, Tier, the RETROFIT.md plan as the phase list, and the audit's assumptions.
 
-Moved to `references/composes.md` — the handoff map; load it when orchestrating this skill against its neighbors.
+Then run each approved phase through `iterate` (`<plugin>/skills/iterate/SKILL.md`), one at a time, with RETROFIT.md as the change request. Get explicit confirmation of scope before phase C.

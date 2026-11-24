@@ -1,0 +1,146 @@
+<!doctype html>
+<!--
+  ultraweb kit — static starter page.
+  HOW TO USE
+  1. Copy this file to site/index.html and copy the plugin's kit/ folder to site/kit/.
+  2. site/styles.css holds the tokens (references/tokens.md). It loads first.
+  3. Replace every TODO-COPY with copy written for this brief (the copy deck in design/SITEMAP.md). The gates
+     fail the page while any TODO-COPY is left. Delete every instruction comment when done.
+  4. Keep the class names; style the page in styles.css after the tokens.
+  5. Never edit files under kit/.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- title: brand name and what it is, under 60 characters, unique per page -->
+  <title>TODO-COPY</title>
+  <!-- description: one sentence, 120-160 characters, says what the visitor gets -->
+  <meta name="description" content="TODO-COPY">
+  <!-- canonical: the final absolute URL of this page -->
+  <link rel="canonical" href="https://example.invalid/">
+  <!-- theme-color: the computed value of --background from styles.css, as hex -->
+  <meta name="theme-color" content="#808080">
+  <!-- Open Graph: same title and description; og:image is a 1200x630 image in assets/ -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TODO-COPY">
+  <meta property="og:description" content="TODO-COPY">
+  <meta property="og:url" content="https://example.invalid/">
+  <meta property="og:image" content="https://example.invalid/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- icon: an SVG favicon in assets/; add apple-touch-icon (180x180 PNG) too -->
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <!-- preload the one above-the-fold font face here, e.g.
+  <link rel="preload" href="fonts/display.woff2" as="font" type="font/woff2" crossorigin> -->
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="kit/system.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <!-- brand: the name or logo (an <img> or inline SVG with alt text) -->
+      <a class="site-brand" href="./">TODO-COPY</a>
+      <nav class="site-nav" aria-label="Main">
+        <!-- nav: one <li> per section id in main; same list again in the dialog below -->
+        <ul role="list">
+          <li><a href="#section-1">TODO-COPY</a></li>
+          <li><a href="#section-2">TODO-COPY</a></li>
+        </ul>
+      </nav>
+      <button class="btn btn--ghost nav-toggle" type="button" data-nav-open="nav-dialog">Menu</button>
+    </div>
+  </header>
+
+  <!-- mobile menu: system.js opens it from the Menu button; Escape, the Close button
+       and any link close it. Keep the same links as .site-nav. -->
+  <dialog class="nav-dialog" id="nav-dialog" aria-label="Menu">
+    <div class="nav-dialog__head">
+      <a class="site-brand" href="./">TODO-COPY</a>
+      <button class="btn btn--ghost" type="button" data-nav-close>Close</button>
+    </div>
+    <nav aria-label="Main">
+      <ul role="list">
+        <li><a href="#section-1">TODO-COPY</a></li>
+        <li><a href="#section-2">TODO-COPY</a></li>
+      </ul>
+    </nav>
+  </dialog>
+
+  <main id="main">
+    <section class="section" aria-labelledby="hero-title">
+      <div class="wrap grid">
+        <div class="span-8">
+          <!-- h1: the one headline of the page, from the copy deck in design/SITEMAP.md -->
+          <h1 id="hero-title" class="text-hero">TODO-COPY</h1>
+          <!-- lead: one or two sentences under the headline -->
+          <p class="text-lead mt-block">TODO-COPY</p>
+          <p class="mt-block">
+            <!-- primary action: a real URL or #id; secondary action is optional -->
+            <a class="btn btn--primary" href="#section-1">TODO-COPY</a>
+            <a class="btn" href="#section-2">TODO-COPY</a>
+          </p>
+        </div>
+        <!-- hero image (optional): <img class="span-4" src="assets/..." width=".." height=".."
+             alt="describe it" fetchpriority="high"> -->
+      </div>
+    </section>
+
+    <!-- KIT MOMENT (optional, at most two per page, at most one canvas/WebGL moment).
+         Choose:  node <plugin>/scripts/moments.mjs pick --fits <site-kind>
+         Then paste the markup from kit/moments/<name>/README.md here, exactly as written,
+         and set options with data-* attributes. system.js mounts it; nothing else to do.
+    <section class="section" data-moment="NAME">
+      ...markup from the moment's README...
+    </section>
+    -->
+
+    <section class="section" id="section-1" aria-labelledby="section-1-title">
+      <div class="wrap grid">
+        <!-- h2 + body copy: a 5/7 split; change the spans to suit the layout -->
+        <h2 id="section-1-title" class="span-5 text-h2">TODO-COPY</h2>
+        <div class="span-7 flow">
+          <p>TODO-COPY</p>
+          <p>TODO-COPY</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section surface-muted" id="section-2" aria-labelledby="section-2-title">
+      <div class="wrap">
+        <h2 id="section-2-title" class="text-h2">TODO-COPY</h2>
+        <!-- three items in a row from 48rem; use as many as the content has, not three by habit -->
+        <ul class="grid mt-block" role="list">
+          <li class="span-4 flow">
+            <h3 class="text-h3">TODO-COPY</h3>
+            <p>TODO-COPY</p>
+          </li>
+          <li class="span-4 flow">
+            <h3 class="text-h3">TODO-COPY</h3>
+            <p>TODO-COPY</p>
+          </li>
+          <li class="span-4 flow">
+            <h3 class="text-h3">TODO-COPY</h3>
+            <p>TODO-COPY</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="section section--tight">
+    <div class="wrap grid">
+      <!-- footer: name, contact, legal links (imprint and privacy where required) -->
+      <p class="span-6 text-small">TODO-COPY</p>
+      <nav class="span-6" aria-label="Footer">
+        <ul class="text-small" role="list">
+          <li><a href="#main">TODO-COPY</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+
+  <script type="module" src="kit/system.js"></script>
+</body>
+</html>

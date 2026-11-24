@@ -1,0 +1,5 @@
+# keep meta.json, results*.json and qa verdicts; ignore bulky captures
+shots/
+qa/shots/
+qa/raw/
+*.png

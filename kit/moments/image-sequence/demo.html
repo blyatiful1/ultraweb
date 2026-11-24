@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>image-sequence demo</title>
+<link rel="stylesheet" href="../../system.css">
+<style>
+/* demo-only placeholder tokens */
+:root{--background:#f6f5f1;--foreground:#16161a;--card:#fff;--card-foreground:#16161a;--primary:#2b4acb;--primary-foreground:#fff;--muted:#e6e4dc;--muted-foreground:#5b5b63;--accent:#f0c94a;--accent-foreground:#16161a;--border:#d6d3c8;--ring:#2b4acb;--radius:14px;--font-sans:system-ui,sans-serif;--font-display:Georgia,serif}
+body{margin:0;background:var(--background);color:var(--foreground);font-family:var(--font-sans);line-height:1.55}
+.pad{padding:clamp(3rem,10vw,7rem) max(1rem,5vw)}
+.pad h1,.pad h2{font-family:var(--font-display);font-weight:500;line-height:1.05;margin:0 0 1rem}
+.pad h1{font-size:clamp(2.2rem,6vw,4.5rem)}
+[data-is-caption] h2{font-family:var(--font-display);font-weight:500;font-size:clamp(1.6rem,4vw,3rem);line-height:1.1;margin:0 0 .4rem}
+[data-is-caption] p{margin:0;color:var(--foreground)}
+</style>
+<link rel="stylesheet" href="moment.css">
+</head>
+<body>
+<header class="pad"><h1>Image sequence</h1><p>Scroll down. A canvas steps through 48 frames, drawn at run time in this demo, while the section stays in view.</p></header>
+
+<section data-moment="image-sequence" data-length="400" data-fit="contain" aria-label="A cube rotating as you scroll">
+  <div data-is-sticky>
+    <!-- poster = first frame; also the no-JS and reduced-motion picture. Demo uses an inline SVG still. -->
+    <img data-is-poster alt="A tilted cube with blue, yellow and dark faces" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 960 600'%3E%3Crect width='960' height='600' fill='%23f6f5f1'/%3E%3Cpolygon points='480,150 640,240 640,420 480,330' fill='%232b4acb'/%3E%3Cpolygon points='480,150 320,240 320,420 480,330' fill='%23f0c94a'/%3E%3Cpolygon points='480,330 640,420 480,480 320,420' fill='%2316161a'/%3E%3C/svg%3E">
+    <div data-is-caption data-from="0.04" data-to="0.30"><h2>Frame zero</h2><p>The first frame is a real image in the page, so it shows before any script runs.</p></div>
+    <div data-is-caption data-from="0.38" data-to="0.62" data-align="center"><h2>Scroll sets the frame</h2><p>Position in the section maps to a frame number. Nothing is hijacked.</p></div>
+    <div data-is-caption data-from="0.70" data-to="0.97" data-align="right"><h2>Captions are HTML</h2><p>They are normal text that fades in over a range of progress.</p></div>
+  </div>
+</section>
+
+<footer class="pad"><h2>After the sequence</h2><p>Normal page flow resumes here, with no jump at the end of the sticky range.</p></footer>
+
+<script type="module">
+import mount from './moment.js';
+
+/* DEMO ONLY: build frames at run time through the options.frames hook.
+   A real site omits this and sets data-frames / data-count on the section instead. */
+const root = document.querySelector('[data-moment]');
+function colour(name, fallback) {               // any CSS colour (oklch too) -> [r,g,b]
+  const raw = getComputedStyle(root).getPropertyValue(name).trim() || fallback;
+  const c = document.createElement('canvas'); c.width = c.height = 1;
+  const x = c.getContext('2d', { willReadFrequently: true });
+  x.fillStyle = fallback; x.fillStyle = raw; x.fillRect(0, 0, 1, 1);
+  return [...x.getImageData(0, 0, 1, 1).data].slice(0, 3);
+}
+function makeFrames(n, W, H) {
+  const cols = [colour('--primary', '#2b4acb'), colour('--accent', '#f0c94a'), colour('--foreground', '#16161a'), colour('--muted', '#e6e4dc')];
+  const bg = colour('--background', '#f6f5f1');
+  const rgb = (c, k = 1) => `rgb(${c.map((v) => Math.round(v * k)).join(',')})`;
+  const V = []; for (const x of [-1, 1]) for (const y of [-1, 1]) for (const z of [-1, 1]) V.push([x, y, z]);
+  const F = [[0, 1, 3, 2], [4, 6, 7, 5], [0, 4, 5, 1], [2, 3, 7, 6], [0, 2, 6, 4], [1, 5, 7, 3]];
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    const t = i / n, ay = t * Math.PI * 2, ax = 0.55 + Math.sin(t * Math.PI * 2) * 0.18;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    g.fillStyle = rgb(bg); g.fillRect(0, 0, W, H);
+    g.strokeStyle = rgb(cols[3]); g.lineWidth = 2;
+    for (let r = 1; r <= 4; r++) { g.beginPath(); g.arc(W / 2, H / 2, r * H * 0.11, 0, 7); g.stroke(); }
+    const P = V.map(([x, y, z]) => {
+      let X = x * Math.cos(ay) + z * Math.sin(ay), Z = -x * Math.sin(ay) + z * Math.cos(ay), Y = y;
+      const Y2 = Y * Math.cos(ax) - Z * Math.sin(ax), Z2 = Y * Math.sin(ax) + Z * Math.cos(ax);
+      const s = (H * 0.115) * 4 / (4 + Z2);
+      return [W / 2 + X * s, H / 2 + Y2 * s, Z2];
+    });
+    const faces = F.map((f, k) => ({ f, k, z: f.reduce((a, j) => a + P[j][2], 0) / 4 })).sort((a, b) => b.z - a.z);
+    for (const { f, k } of faces) {
+      const [a, b, d] = [P[f[0]], P[f[1]], P[f[2]]];
+      if ((b[0] - a[0]) * (d[1] - a[1]) - (b[1] - a[1]) * (d[0] - a[0]) > 0) continue;   // back face
+      g.beginPath(); f.forEach((j, q) => g[q ? 'lineTo' : 'moveTo'](P[j][0], P[j][1])); g.closePath();
+      g.fillStyle = rgb(cols[k % 3], 0.72 + 0.28 * Math.abs(Math.cos(ay + k)));
+      g.fill(); g.strokeStyle = rgb(bg); g.lineWidth = 3; g.stroke();
+    }
+    out.push(c);
+  }
+  return out;
+}
+const frames = makeFrames(48, 960, 600);
+window.__mount = () => mount(root, { frames });
+window.__cleanup = mount(root, { frames });
+</script>
+</body>
+</html>

@@ -69,7 +69,8 @@ async (page) => {
         fonts,
         faces,
         totalTransfer: fonts.reduce((n, f) => n + f.transferSize, 0),
-        errored: faces.filter((f) => f.status === 'error').map((f) => f.family),
+        // next/font's synthetic "<Family> Fallback" faces point at local() fonts and report error on machines without them
+        errored: faces.filter((f) => f.status === 'error' && !/fallback/i.test(f.family)).map((f) => f.family),
         truncated,
       };
     })

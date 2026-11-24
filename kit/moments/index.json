@@ -1,0 +1,204 @@
+[
+  {
+    "name": "type-lines",
+    "kind": "type",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "product",
+      "studio",
+      "shop",
+      "editorial",
+      "place",
+      "launch"
+    ],
+    "intensity": 1,
+    "bytes": 6487,
+    "summary": "Headline or paragraph rises line by line from behind a mask, once, measured from the real layout."
+  },
+  {
+    "name": "type-scrub",
+    "kind": "scroll",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "studio",
+      "editorial",
+      "product",
+      "launch",
+      "place"
+    ],
+    "intensity": 2,
+    "bytes": 5452,
+    "summary": "Statement whose words go from muted to full colour in reading order as it scrolls through; reversible, no pinning."
+  },
+  {
+    "name": "marquee-type",
+    "kind": "type",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "studio",
+      "shop",
+      "editorial",
+      "launch",
+      "product"
+    ],
+    "intensity": 2,
+    "bytes": 6711,
+    "summary": "Oversized looping line of text with scroll-velocity nudge, pause button, and static wrapped fallback."
+  },
+  {
+    "name": "pinned-chapters",
+    "kind": "scroll",
+    "needs": [
+      "none",
+      "photos"
+    ],
+    "fits": [
+      "product",
+      "studio",
+      "editorial",
+      "place",
+      "launch"
+    ],
+    "intensity": 2,
+    "summary": "Sticky media column cross-fades to the chapter crossing mid-screen, with a linked progress list; stacked on phones.",
+    "bytes": 11219
+  },
+  {
+    "name": "horizontal-rail",
+    "kind": "scroll",
+    "needs": [
+      "photos",
+      "none"
+    ],
+    "fits": [
+      "studio",
+      "shop",
+      "editorial",
+      "product"
+    ],
+    "intensity": 2,
+    "summary": "Row of cards moves sideways as the page scrolls down a tall section; keyboard reachable; native snap strip on phones.",
+    "bytes": 11366
+  },
+  {
+    "name": "image-sequence",
+    "kind": "canvas",
+    "needs": [
+      "sequence"
+    ],
+    "fits": [
+      "product",
+      "launch",
+      "shop"
+    ],
+    "intensity": 3,
+    "summary": "Scroll-scrubbed canvas over numbered frames with progressive loading and HTML captions; poster fallback.",
+    "bytes": 9783
+  },
+  {
+    "name": "photo-reveal",
+    "kind": "image",
+    "needs": [
+      "photos"
+    ],
+    "fits": [
+      "studio",
+      "shop",
+      "editorial",
+      "place",
+      "product",
+      "launch"
+    ],
+    "intensity": 1,
+    "bytes": 10152,
+    "summary": "Images open with a clip-path wipe while the picture settles inside a fixed frame; per-item direction, small stagger, optional gentle inner parallax, zero layout shift."
+  },
+  {
+    "name": "cursor-trail",
+    "kind": "cursor",
+    "needs": [
+      "photos",
+      "none"
+    ],
+    "fits": [
+      "studio",
+      "shop",
+      "editorial",
+      "place"
+    ],
+    "intensity": 2,
+    "bytes": 12985,
+    "summary": "Images or token shapes follow the pointer with spring lag in one area, or a list row's preview follows the pointer and docks beside the focused row; off on touch and reduced motion."
+  },
+  {
+    "name": "page-curtain",
+    "kind": "transition",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "product",
+      "studio",
+      "shop",
+      "editorial",
+      "place",
+      "launch"
+    ],
+    "intensity": 2,
+    "bytes": 9487,
+    "summary": "Page-to-page transition for multi-page static sites: cross-document View Transitions with a token-coloured curtain fallback, focus and title announcement handled."
+  },
+  {
+    "name": "shader-ground",
+    "kind": "webgl",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "product",
+      "studio",
+      "launch",
+      "editorial"
+    ],
+    "intensity": 2,
+    "bytes": 13932,
+    "summary": "Animated WebGL ground behind a hero or band: slow noise between background, primary and accent tokens; variants flow, contour, grid, caustic; optional token scrim behind text; CSS gradient fallback."
+  },
+  {
+    "name": "shader-orb",
+    "kind": "webgl",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "product",
+      "studio",
+      "launch"
+    ],
+    "intensity": 3,
+    "bytes": 15207,
+    "summary": "Raymarched signed-distance object (blob, twisted torus, crystal, liquid) in one fragment shader, token-lit, turning with pointer and section scroll; adaptive resolution; CSS sphere fallback."
+  },
+  {
+    "name": "particle-field",
+    "kind": "webgl",
+    "needs": [
+      "none"
+    ],
+    "fits": [
+      "launch",
+      "studio",
+      "product",
+      "editorial"
+    ],
+    "intensity": 2,
+    "bytes": 16115,
+    "summary": "Thousands of soft points in a curl-noise flow that dodge the pointer and gather into a word from the page (or an SVG path) as the section crosses mid-screen; word stays as real text."
+  }
+]

@@ -71,6 +71,9 @@ async (page) => {
           if (!text) continue;
           const s = getComputedStyle(el);
           if (s.display === 'none' || s.visibility === 'hidden') continue;
+          // a visually hidden node (sr-only, a skip link parked off screen) is clipped by design
+          const box = el.getBoundingClientRect();
+          if (box.width <= 2 && box.height <= 2) continue;
           // a deliberate scroll container (overflow-x:auto on a wide table) is not clipped text
           const hidesX = /hidden|clip/.test(s.overflowX) || s.textOverflow === 'ellipsis';
           const hidesY = /hidden|clip/.test(s.overflowY);

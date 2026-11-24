@@ -1,0 +1,20 @@
+/* type-lines: line-by-line mask reveal. Hidden state only under [data-moment-ready]. */
+[data-moment="type-lines"] .tl-w {
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+  padding-block: 0.14em;
+  margin-block: -0.14em;
+}
+[data-moment="type-lines"] .tl-i { display: inline-block; }
+[data-moment="type-lines"][data-moment-ready]:not([data-in]) .tl-i {
+  transform: translate3d(0, 112%, 0);
+}
+[data-moment="type-lines"][data-in] .tl-i {
+  transform: translate3d(0, 0, 0);
+  transition: transform var(--tl-dur, var(--dur-section, 0.9s)) var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1))
+    calc(var(--l, 0) * var(--tl-stagger, 70ms));
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-moment="type-lines"] .tl-i { transform: none !important; transition: none !important; }
+}

@@ -71,12 +71,19 @@
     <p class="faint">This paragraph is deliberately too faint to reach 4.5:1 in either theme.</p>
     <!-- defect: skipped heading level (h1 followed by h3) -->
     <h3>Skipped straight from h1 to h3</h3>
+    <!-- review: text over a gradient cannot be measured from computed colors -->
+    <div id="hero-gradient" style="background:linear-gradient(90deg,#222,#999);color:#eee;padding:8px">Text over a gradient background</div>
     <!-- defect: empty heading -->
     <h2></h2>
   </section>
 
   <section id="media">
+    <!-- tells: tracked uppercase label above a heading, 01/02/03 markers, arrow link, middle-dot meta -->
+    <p id="eyebrow" style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;margin:0">Selected work</p>
     <h2>Artwork and controls</h2>
+    <p id="meta-dots">Berlin · 2024 · Branding</p>
+    <span class="marker">01</span> <span class="marker">02</span> <span class="marker">03</span>
+    <a href="index.html#signup" id="arrow-link">Read the case study →</a>
     <img src="ok.png" alt="A folded paper crane resting on a dark table">
     <!-- defect: image without alt -->
     <img src="missing.png">
@@ -96,6 +103,8 @@
       <!-- control: required AND visibly marked with "*" — must never read as required-unmarked -->
       <label for="name-ok">Full name *</label>
       <input id="name-ok" name="name" type="text" autocomplete="name" required aria-required="true">
+      <!-- defect: required, no label at all (earns unlabelled AND required-unmarked) -->
+      <input id="unlabelled-required" name="fax_number" type="text" required>
       <label for="company">Company</label>
       <!-- defect: required declared only in code (aria-required) with nothing visible on the label -->
       <input id="company" name="company" type="text" autocomplete="organization" aria-required="true">

@@ -1,0 +1,43 @@
+/* marquee-type: oversized travelling line. Static wrapped text until [data-moment-ready]. */
+[data-moment="marquee-type"] {
+  position: relative;
+  overflow: clip;
+  contain: paint;
+  margin: 0;
+  font-family: var(--font-display, inherit);
+  font-size: var(--mq-size, clamp(3rem, 13vw, 11rem));
+  line-height: var(--mq-leading, 1.2);
+  color: var(--foreground, inherit);
+}
+[data-moment="marquee-type"][data-moment-ready] { white-space: nowrap; min-block-size: 3.5rem; }
+[data-moment="marquee-type"] .mq-track {
+  display: flex;
+  width: max-content;
+  direction: ltr;
+  will-change: transform;
+}
+[data-moment="marquee-type"] .mq-group {
+  display: block;
+  flex: none;
+  padding-inline-end: var(--mq-gap, 0.6em);
+}
+[data-moment="marquee-type"] .mq-pause {
+  position: absolute;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  inset-inline-end: 0.5rem;
+  z-index: 1;
+  font: 500 0.875rem/1 var(--font-sans, system-ui, sans-serif);
+  padding: 0.5rem 0.875rem;
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+  color: var(--foreground, #111);
+  background: var(--background, #fff);
+  border: 1px solid var(--border, currentColor);
+  border-radius: var(--radius, 0.5rem);
+  cursor: pointer;
+}
+[data-moment="marquee-type"] .mq-pause:focus-visible {
+  outline: 2px solid var(--ring, currentColor);
+  outline-offset: -4px;
+}

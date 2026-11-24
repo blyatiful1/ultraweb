@@ -1,0 +1,48 @@
+/* horizontal-rail. Default (no JS, phones, reduced motion) = native scroll-snap strip. */
+[data-moment="horizontal-rail"] [data-hr-rail] {
+  overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-padding-inline: var(--hr-gutter, max(1rem, 4vw));
+  scrollbar-width: thin; scrollbar-color: var(--muted-foreground, #777) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+[data-moment="horizontal-rail"] [data-hr-rail]:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: -2px; }
+[data-moment="horizontal-rail"] [data-hr-track] {
+  display: flex; flex-wrap: nowrap; gap: var(--hr-gap, 1.25rem); align-items: stretch;
+  width: max-content; margin: 0; list-style: none;
+  padding: 0.5rem var(--hr-gutter, max(1rem, 4vw)) 1rem;
+}
+[data-moment="horizontal-rail"] [data-hr-item] {
+  flex: 0 0 var(--hr-item-w, clamp(15rem, 78vw, 30rem)); min-width: 0; scroll-snap-align: start;
+  border-radius: var(--radius, 0.75rem);
+}
+[data-moment="horizontal-rail"] [data-hr-item] img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: var(--radius, 0.75rem); }
+[data-moment="horizontal-rail"] [data-hr-item]:focus-visible,
+[data-moment="horizontal-rail"] [data-hr-item] :focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 3px; }
+
+[data-moment="horizontal-rail"] [data-hr-controls] { display: flex; gap: 0.5rem; justify-content: flex-end; padding: 0 var(--hr-gutter, max(1rem, 4vw)) 0.5rem; }
+[data-moment="horizontal-rail"] [data-hr-controls][hidden] { display: none; }
+[data-moment="horizontal-rail"] [data-hr-controls] button {
+  inline-size: 2.75rem; block-size: 2.75rem; display: grid; place-items: center; cursor: pointer;
+  border-radius: 999px; border: 1px solid var(--border, #ccc);
+  background: var(--card, #fff); color: var(--card-foreground, #111);
+  transition: opacity var(--dur-micro, 0.2s) ease;
+}
+[data-moment="horizontal-rail"] [data-hr-controls] button:disabled { opacity: 0.35; cursor: default; }
+[data-moment="horizontal-rail"] [data-hr-controls] button:focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 2px; }
+
+/* Pinned: tall wrapper made by mount; rail sticks while the page scrolls through it. */
+[data-moment="horizontal-rail"][data-hr-mode="pinned"] [data-hr-pin] { position: relative; }
+[data-moment="horizontal-rail"][data-hr-mode="pinned"] [data-hr-rail] {
+  position: sticky; top: 0; height: 100vh; height: 100svh;
+  display: flex; align-items: center;
+  overflow: hidden; overflow: clip; scroll-snap-type: none;
+}
+[data-moment="horizontal-rail"][data-hr-mode="pinned"] [data-hr-track] {
+  padding-block: 0; will-change: transform; align-items: center; flex: none;
+}
+[data-moment="horizontal-rail"][data-hr-mode="pinned"] [data-hr-item] { flex-basis: var(--hr-item-w, clamp(18rem, 32vw, 30rem)); }
+[data-moment="horizontal-rail"] [data-hr-bar] {
+  position: absolute; left: var(--hr-gutter, max(1rem, 4vw)); right: var(--hr-gutter, max(1rem, 4vw)); bottom: 6vh;
+  height: 2px; background: var(--border, #ccc); overflow: hidden;
+}
+[data-moment="horizontal-rail"] [data-hr-bar] span { display: block; height: 100%; background: var(--foreground, #111); transform: scaleX(0); transform-origin: left; }

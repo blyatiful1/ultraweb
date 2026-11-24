@@ -115,3 +115,44 @@ test('a live version below the pin is a DOWNGRADE anomaly, never auto-folded', (
   assert.match(r.out, /DOWNGRADE/);
   assert.equal(r.after.packages.alpha, '1.5.0');
 });
+
+test('a prerelease live version below the stable pin is a DOWNGRADE, not drift', () => {
+  const r = run({
+    packages: { alpha: '1.0.0' },
+    registry: { alpha: '1.0.0-rc.6', 'alpha@1.0.0': '1.0.0' },
+  });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /DOWNGRADE/);
+});
+
+test('a stable release above a prerelease pin is ordinary drift and folds with --write', () => {
+  const r = run({
+    packages: { alpha: '1.0.0-rc.6' },
+    registry: { alpha: '1.0.0', 'alpha@1.0.0-rc.6': '1.0.0-rc.6' },
+    args: ['--write'],
+  });
+  assert.equal(r.code, 0, r.out);
+  assert.equal(r.after.packages.alpha, '1.0.0');
+});
+
+test('prerelease numbers compare numerically (rc.10 is above rc.2)', () => {
+  const r = run({
+    packages: { alpha: '1.0.0-rc.2' },
+    registry: { alpha: '1.0.0-rc.10', 'alpha@1.0.0-rc.2': '1.0.0-rc.2' },
+    args: ['--write'],
+  });
+  assert.equal(r.code, 0, r.out);
+  assert.equal(r.after.packages.alpha, '1.0.0-rc.10');
+});
+
+test('--help prints usage and exits 0 without touching the registry', () => {
+  const out = execFileSync(process.execPath, [join(root, 'scripts', 'verify-stack.mjs'), '--help'], { encoding: 'utf8' });
+  assert.match(out, /Usage:/);
+  assert.match(out, /--allow-major/);
+});
+
+test('drift exits 1 in report mode', () => {
+  const r = run({ packages: { alpha: '1.2.3' }, registry: { alpha: '1.2.4', 'alpha@1.2.3': '1.2.3' } });
+  assert.equal(r.code, 1);
+  assert.match(r.out, /drift/);
+});

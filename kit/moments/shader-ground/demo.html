@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>shader-ground demo</title>
+<link rel="stylesheet" href="../../system.css">
+<link rel="stylesheet" href="./moment.css">
+<style>
+  /* DEMO-ONLY placeholder tokens. A real site supplies these from its own token file. */
+  :root {
+    --background: oklch(0.97 0.008 85); --foreground: oklch(0.2 0.02 270);
+    --primary: oklch(0.55 0.17 268); --accent: oklch(0.72 0.15 55);
+    --muted-foreground: oklch(0.45 0.02 270); --border: oklch(0.85 0.01 270); --ring: oklch(0.55 0.17 268);
+    --radius: 0.5rem; --font-sans: system-ui, sans-serif; --font-display: Georgia, serif;
+  }
+  :root[data-theme="dark"] {
+    --background: oklch(0.17 0.02 265); --foreground: oklch(0.95 0.01 265);
+    --primary: oklch(0.62 0.16 262); --accent: oklch(0.78 0.13 200);
+    --muted-foreground: oklch(0.72 0.02 265); --border: oklch(0.35 0.02 265); --ring: oklch(0.78 0.13 200);
+  }
+  :root[data-theme="saturated"] {
+    --background: oklch(0.42 0.2 300); --foreground: oklch(0.98 0.01 300);
+    --primary: oklch(0.65 0.25 350); --accent: oklch(0.88 0.16 95);
+    --muted-foreground: oklch(0.88 0.04 300); --border: oklch(0.6 0.15 300); --ring: oklch(0.88 0.16 95);
+  }
+  /* demo page layout */
+  body { margin: 0; background: var(--background); color: var(--foreground); font-family: var(--font-sans); line-height: 1.55; }
+  .demo-text { max-width: 40rem; margin: 0 auto; padding: 18vh 1.25rem; }
+  .demo-text h1, [data-moment] h2 { font-family: var(--font-display); font-weight: 600; line-height: 1.1; }
+  .demo-hero { min-height: 92vh; display: grid; place-items: center; padding: 4rem 1.25rem; }
+  .demo-hero [data-slot="content"] { max-width: 38rem; }
+  .demo-hero h2 { font-size: clamp(2.2rem, 6vw, 4.2rem); margin: 0 0 1rem; }
+  .demo-themes { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .demo-themes button { font: inherit; padding: 0.4rem 0.8rem; border: 1px solid var(--border); background: transparent; color: inherit; border-radius: var(--radius); cursor: pointer; }
+</style>
+</head>
+<body>
+<main>
+  <div class="demo-text">
+    <h1>shader-ground</h1>
+    <p>An animated ground for a hero or a band, drawn by one WebGL fragment shader from the page's colour tokens. Scroll down to see it; it pauses when it leaves the screen.</p>
+    <div class="demo-themes" aria-label="Demo ground">
+      <button type="button" data-set-theme="">Light ground</button>
+      <button type="button" data-set-theme="dark">Dark ground</button>
+      <button type="button" data-set-theme="saturated">Saturated ground</button>
+    </div>
+  </div>
+
+  <section class="demo-hero" data-moment="shader-ground" data-variant="flow" data-contrast="scrim">
+    <div data-slot="content">
+      <h2>A ground that moves slowly</h2>
+      <p>Domain-warped noise flows between the background, primary and accent tokens. Variants change the character: flow, contour, grid and caustic. Without WebGL, under reduced motion or with JavaScript off, a CSS gradient made from the same tokens stays in place.</p>
+    </div>
+  </section>
+
+  <div class="demo-text">
+    <p>Below the ground the page continues as normal. The render loop stops while the section is off screen or the tab is hidden, and the Pause motion button stops it at any time.</p>
+    <p>Text over the ground sits on a token-coloured scrim when <code>data-contrast="scrim"</code> is set.</p>
+  </div>
+</main>
+<script type="module">
+  import mount from './moment.js';
+  const q = new URLSearchParams(location.search);
+  const el = document.querySelector('[data-moment]');
+  if (q.get('variant')) el.dataset.variant = q.get('variant');
+  if (q.get('theme')) document.documentElement.dataset.theme = q.get('theme');
+  for (const b of document.querySelectorAll('[data-set-theme]')) b.addEventListener('click', () => { document.documentElement.dataset.theme = b.dataset.setTheme; });
+  mount(el);
+</script>
+</body>
+</html>

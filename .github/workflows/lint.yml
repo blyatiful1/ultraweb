@@ -12,10 +12,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Lint the skill corpus invariants
-        run: node scripts/lint-skills.mjs
-      - name: Context budget (what the Lead loads per phase stays under the ceiling)
-        run: node scripts/context-budget.mjs
+      - name: Corpus invariants (four skills, paths, sizes, no stale skill tokens, no version pins)
+        run: node scripts/lint-corpus.mjs
+      - name: Shellcheck every shell file
+        run: |
+          files=$(git ls-files '*.sh')
+          if [ -n "$files" ]; then shellcheck --severity=warning $files; fi
 
   tests:
     runs-on: ubuntu-latest
@@ -24,13 +26,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install Playwright + axe-core so the measurement-library test runs live (it refuses to skip under CI)
+      - name: Install Playwright + axe-core so the measurement-library test runs live
         run: npm install --no-save --no-package-lock playwright axe-core && npx playwright install --with-deps chromium
-      - name: Linter self-test + manifest/hook-wiring + policy + site-check + measurement-library tests
+      - name: Unit tests (lint-corpus, manifests, site-check, measurement library, scripts)
         run: node --test tests/*.test.mjs
-      - name: Hook fixture tests (antislop blocking behavior, studio-log JSONL)
-        run: bash tests/hook-antislop.test.sh
-      - name: Hook fixture tests (shell-write-guard blocks shell writes inside a build)
-        run: bash tests/hook-shell-write-guard.test.sh
-      - name: Shellcheck the hooks and recipe scripts (error severity)
-        run: shellcheck --severity=error hooks/*.sh scripts/*.sh
+      - name: Hook fixture tests (antislop, gate-stop)
+        run: for t in tests/hook-*.test.sh; do bash "$t" || exit 1; done
