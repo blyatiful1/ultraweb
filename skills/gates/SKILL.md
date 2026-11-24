@@ -20,7 +20,7 @@ node "${CLAUDE_PLUGIN_ROOT}/scripts/gates.mjs" --url http://localhost:3100 --pro
 5. Read `qa/GATES.md` (summary table) and `qa/gates.json` if you need detail.
 6. Report to the user, grouped by gate: each failing check, the route and selector or file, and the concrete fix. List `review` items separately as things a person should look at. State the verdict plainly: PASS, FAIL, or UNVERIFIED (browser missing or a check errored).
 7. Do not claim WCAG conformance from a green run. Automated checks cover part of WCAG.
-8. If the user wants fixes, apply them at the returned selectors, rebuild, and re-run. Stop at an `ESCALATE:` line and report to the user.
+8. If the user wants fixes, apply them at the returned selectors, rebuild, and re-run. Stop at an `ESCALATE:` line and report to the user. On a page whose look is already approved, or one that another design skill built, fix under `references/finish.md` in the plugin: the smallest change that passes, and nothing else a visitor would notice.
 9. Offer `ultraweb:retrofit` if the user wants a design audit beyond these checks.
 
 Full reference: `references/gates.md` in the plugin.

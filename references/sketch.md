@@ -9,12 +9,12 @@ Reads: design/BRIEF.md, design/DIRECTION.md, `<plugin>/kit/README.md`. Writes: d
 
 The usual failure of a careful build is a correct, pale page: one soft tint from top to bottom, a modest headline, small pictures. Decide the look once and push it.
 
-- The first screen is carried by type or by a picture. Either the headline is set at 72px or more on a desktop screen (96px and up is normal for a type-led page), or a photograph or drawn scene fills at least 40% of the screen, edge to edge. The gates check this.
+- The first screen is carried by type or by a picture. Either the headline is set at 72px or more on a desktop screen (96px and up is normal for a type-led page) and runs to three lines at most (shorten the words before shrinking the type), or a photograph or drawn scene fills at least 40% of the screen, edge to edge. The gates check this.
 - Use contrast between sections. `palette.mjs` gives a `--band` and `--band-foreground` pair, dark on a light page and light on a dark one. Put at least one full-width section on it (`class="section band"` in the kit), usually the one that matters most after the first screen.
 - Pictures are large or absent. A hero photograph is full-bleed or half the screen; a photograph in a section is at least 40% of the content width (`<figure class="cover">` in the kit keeps its ratio). No thumbnails floating in empty ground.
 - Give the display type a character: a weight, width or face a visitor would notice, chosen from the subject. A neutral mid-weight sans at a moderate size is the timid choice.
 - Before building, read your plan back. If it could be the plan for any similar business, change the part that is generic.
-- If the `frontend-design` skill is installed in this session, use it for the visual design of the page, and keep this file for the words, the pictures, honesty about drafts and stand-ins, and the gates.
+- If the `frontend-design` skill is installed in this session, let it design and build the page first, from the brief alone, before you read the rest of this file. Then finish the page with `references/finish.md`. On the smallest model the grader preferred that skill's page in most comparisons, and in the one test of the finish pass its page then passed the gates.
 
 ## Where the effort goes
 
@@ -47,7 +47,7 @@ List the routes (the page, a 404, legal pages where the market needs them), then
 About fifteen lines: the palette command you ran, the type families and why, the sizes, the spacing step, the radius, the grounds.
 
 - Colour: `node <plugin>/scripts/palette.mjs --ground … --hue … --format css --out site/styles.css` with the ground and hues from DIRECTION.md. Run it first: `--out` replaces the whole file, so everything else is added below its output afterwards with the Edit tool. Never work out contrast by hand.
-- Type: one family, or two that clearly differ, chosen from the subject's own world. Self-host the woff2 files in `site/fonts/` (for a Google Fonts family, take the URLs from its CSS; a variable family is one file declared once with a weight range). Body copy 17 to 19px on desktop and never under 16px; the largest size comes from the direction and is usually much larger than feels safe.
+- Type: one family, or two that clearly differ, chosen from the subject's own world. Self-host it: `node <plugin>/scripts/fonts.mjs get "<Family>" --weights 400,700 --out site/fonts` saves the woff2 files and prints the `@font-face` rules to paste. Body copy 17 to 19px on desktop and never under 16px; the largest size comes from the direction and is usually much larger than feels safe.
 - Add the type tokens the kit reads (`--font-display`, `--font-sans`, `--text-hero`, `--text-h1`, `--text-h2`, `--text-h3`, `--text-lead`) and `--space-section` below the palette in `styles.css`.
 - Grounds: plan at least two across the page, the page ground plus one contrasting band or colour block, unless the direction argues for one ground throughout.
 
