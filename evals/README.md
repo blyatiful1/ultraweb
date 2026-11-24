@@ -12,6 +12,8 @@ Blind comparison of what different setups produce from the same client brief.
 | `ultraweb-sketch` | ultraweb, tier `sketch`, autonomous mode. |
 | `ultraweb-standard` | ultraweb, tier `standard`, autonomous mode. |
 
+Run the set once with the strongest model you have and once with the smallest. The plugin is meant to lift a small model by giving it tested parts to assemble, so the small-model pair is the more informative one.
+
 Rules for every arm:
 
 - Same model, same effort setting, same prompt per brief. The prompt is the text under
