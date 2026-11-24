@@ -9,10 +9,42 @@ Version 2 is a rewrite. Version 1 shipped 80 skills and about 1.2 MB of instruct
 Read this before installing.
 
 - **Measured:** the gate scripts catch planted defects in CI (`tests/gates.test.mjs`, `tests/qa-scripts.test.mjs`), and the scaffold builds on the pinned stack (`scripts/scaffold-fixture.sh`, weekly).
-- **Smoke-tested, not evaluated:** two briefs were built by the smallest Claude model with and without the plugin (`evals/results/2026-11-24-small-model-smoke.md`). The guided builds passed every measured check where the plain builds failed eight or nine, cost a little over twice the tokens, and after one round of fixes looked about level with the plain ones. Level, not better.
-- **Not measured yet:** whether a site built with ultraweb is better looking than one built with plain Claude Code or with another design skill, under blind grading. `evals/` contains the briefs, the capture script and a blind comparison page to find out.
+- **Graded, small scale:** seven briefs were built by the smallest Claude model three ways: plain, with Anthropic's `frontend-design` skill, and with ultraweb (`evals/results/`). ultraweb's pages passed the measured gates on 14 of 15 homepages; the other two arms passed none of 13. On looks the grader preferred ultraweb's page twice across three rounds and the `frontend-design` page most of the time, at roughly 60% of ultraweb's tokens. One grader, one build per cell.
+- **What that means:** ultraweb makes a small model's site correct, accessible and honest about what is drafted. It does not yet make it better looking than a short design skill does. For a one-page site, install `frontend-design` alongside; ultraweb's short path hands the visual design to it when it is present. That combination is untested.
 - **Cost:** the only full-build receipt is from version 1: 6 h 06 min, 4,753 API calls and 756 million tokens processed for one site. Version 2 loads far less instruction text, but its cost has not been measured. Treat a standard build as a multi-hour job.
 - **Award level:** the plugin aims at site-of-the-day quality and cannot promise it. Sites at that level depend on an original concept and on authored assets (photography, film, illustration, 3D). ultraweb supplies concept discipline, engineering and finish; the assets come from you or from generation tools in your session.
+
+## Before and after
+
+First screens from the comparison builds: same brief, same model (the smallest Claude tier), same prompt. Nothing here is cherry-picked in ultraweb's favour; the caption under each row says which page the grader preferred.
+
+<table>
+<tr><th>Plain</th><th>frontend-design</th><th>ultraweb</th></tr>
+<tr>
+<td><img src="docs/compare/code-review-plain.jpg" alt="Code review tool, plain build: a cream page with a teal button and small interface cards" width="260"></td>
+<td><img src="docs/compare/code-review-frontend-design.jpg" alt="Code review tool, frontend-design build: a bold headline beside a large diff view" width="260"></td>
+<td><img src="docs/compare/code-review-ultraweb.jpg" alt="Code review tool, ultraweb build" width="260"></td>
+</tr>
+<tr><td colspan="3">Code review tool. Grader preferred <b>ultraweb</b>. Gates: ultraweb pass; plain failed 10 checks, frontend-design 7.</td></tr>
+<tr>
+<td><img src="docs/compare/game-plain.jpg" alt="Game launch page, plain build: an illustrated lighthouse at night" width="260"></td>
+<td><img src="docs/compare/game-frontend-design.jpg" alt="Game launch page, frontend-design build: a night coast with several lamps" width="260"></td>
+<td><img src="docs/compare/game-ultraweb.jpg" alt="Game launch page, ultraweb build" width="260"></td>
+</tr>
+<tr><td colspan="3">Game launch. Grader preferred <b>ultraweb</b> in round 2 (frontend-design in round 1). Gates: ultraweb pass; plain failed 8, frontend-design 4.</td></tr>
+<tr>
+<td><img src="docs/compare/hotel-plain.jpg" alt="Lake hotel, plain build: a cream page with a small illustration" width="260"></td>
+<td><img src="docs/compare/hotel-frontend-design.jpg" alt="Lake hotel, frontend-design build: a full-bleed dusk lake with a large serif headline" width="260"></td>
+<td><img src="docs/compare/hotel-ultraweb.jpg" alt="Lake hotel, ultraweb build with stand-in photographs" width="260"></td>
+</tr>
+<tr><td colspan="3">Lake hotel. Grader preferred <b>frontend-design</b> in every round. Gates: ultraweb pass; plain failed 9, frontend-design 5. ultraweb's photographs are openly licensed stand-ins.</td></tr>
+<tr>
+<td><img src="docs/compare/bikes-plain.jpg" alt="Bike workshop, plain build: cream cards with small bike drawings" width="260"></td>
+<td><img src="docs/compare/bikes-frontend-design.jpg" alt="Bike workshop, frontend-design build: a condensed bold headline beside a drawn green bike" width="260"></td>
+<td><img src="docs/compare/bikes-ultraweb.jpg" alt="Bike workshop, ultraweb build: a large serif headline on a teal ground with a frame drawing" width="260"></td>
+</tr>
+<tr><td colspan="3">Bike workshop. Grader preferred <b>frontend-design</b>. Gates: ultraweb pass; plain failed 10, frontend-design 7.</td></tr>
+</table>
 
 ## Install
 
