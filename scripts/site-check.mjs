@@ -90,6 +90,13 @@ const production = mode === 'production';
   else pass('material-claims');
 }
 
+// ---- Drafted facts: values marked data-assumed are drafts the owner has not confirmed.
+{
+  const hits = files.flatMap(p => /\bdata-assumed\b/.test(read(p)) ? [rel(p)] : []);
+  if (hits.length && production) fail('assumed-facts', `data-assumed drafts on a production build: ${hits.join(', ')}`);
+  else pass('assumed-facts');
+}
+
 // ---- Secrets: ship's greppable patterns; .env.example is the one placeholder-shaped file allowed.
 {
   const SECRET = /sk_live_[A-Za-z0-9]+|sk_test_[A-Za-z0-9]+|whsec_[A-Za-z0-9]+|re_[A-Za-z0-9]{16,}|-----BEGIN [A-Z ]*PRIVATE KEY|:\/\/[^/@\s"']+:[^@\s"']+@/;

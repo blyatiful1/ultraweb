@@ -49,7 +49,7 @@ Fork starters by site type:
 ### Invented facts
 
 - **Creative assumptions** (names of demo products, page structure, copy angles) are fine. Log them in PROGRESS.md.
-- **Material claims** (hours, prices, addresses, delivery times, refund terms, credentials, measured statistics) may be drafted, but each one gets a line in §Material claims ending with `— material, unconfirmed`. Ship blocks production while the marker exists.
+- **Material claims** (hours, prices, weights, addresses, delivery times, refund terms, credentials, measured statistics): when the client has not supplied one, draft a realistic value instead of leaving the page thin. A site with real-looking detail can be judged; an empty one cannot. Each drafted value gets three marks: a line in §Material claims ending with `— material, unconfirmed`; the attribute `data-assumed` on its element in the markup; and, because drafts exist, `Deployment mode: demo` at the top of the brief. The gates list every `data-assumed` element for review, and ship blocks production until the owner has confirmed each one and the marks are removed. Never draft a street address, phone number, registration number or bank detail: leave those out and list them as missing.
 - **Third-party proof** (testimonials, reviews, press, customer logos, usage numbers) is never invented. An empty proof inventory is recorded as empty. On a build whose deployment mode is `demo` or `staging`, labeled samples carrying the literal tag `UNVERIFIED-PROOF` are allowed; production rejects the tag.
 
 ## Client-asset intake
@@ -95,7 +95,7 @@ rejected: …
 ## Compliance
 ```
 
-Write exactly one value on each of the first three lines. `Deployment mode:` is machine-read by the hooks and by ship: one line, value `production`, `staging` or `demo`, default `production`, changed only on the user's explicit request. A missing, duplicated or misspelled line counts as production.
+Write exactly one value on each of the first three lines. `Deployment mode:` is machine-read by the hooks, the gates and ship: one line, value `production`, `staging` or `demo`. Use `production` when every material fact came from the user, and `demo` when any was drafted (see Invented facts) or the user asked for a demo. A missing, duplicated or misspelled line counts as production.
 
 §Compliance is written only when the brief names a market: seller's country, target markets, B2C or B2B, whether contracts are concluded online, and whether each fact came from the user or is assumed. Ask for these in guided mode when an EU market is named; `references/legal-dach.md` consumes them.
 

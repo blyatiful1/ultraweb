@@ -30,7 +30,7 @@ Set the tier once from the request and record it in PROGRESS.md.
 
 | Tier | Set by | What changes |
 |---|---|---|
-| `sketch` | "landing page", "one-pager", "quick", "rough" | One page. Static HTML/CSS in `site/` by default; Next.js only when the user asks or the folder already holds a Next project. 2 mockups. 1 judge round. Phase 6 is skipped unless the brief adds legal pages. `design/SITEMAP.md` is still written, with one page. |
+| `sketch` | "landing page", "one-pager", "quick", "rough" | One page. Static HTML/CSS in `site/` by default; Next.js only when the user asks or the folder already holds a Next project. 2 mockups. 1 judge round. Phase 6 builds only what the brief or the market requires beyond the one page (for a German site that is the Impressum and Datenschutz pages, `references/legal-dach.md`); otherwise it is skipped. `design/SITEMAP.md` is still written. |
 | `standard` (default) | saying nothing | Multi-page Next.js site. 3 mockups. Up to 2 judge rounds. |
 | `flagship` | "award-worthy", "go all out", "best possible" | Standard plus a commissioned showpiece (`references/showpiece.md`), real assets required for hero media, supplied by the client or generated in the session and recorded in BRIEF.md (settle this in Phase 1; placeholders block CP3), up to 4 judge rounds against `references/award/invariants.md`. |
 
@@ -42,7 +42,7 @@ Run the phases in order. At each phase boundary update `design/PROGRESS.md` (for
 
 | Phase | Name | Read at phase start | Writes |
 |---|---|---|---|
-| 0 | Preflight | `scaffold.md` §Preflight | capability report in PROGRESS.md |
+| 0 | Preflight | `scaffold.md` §Preflight, `checkpoints.md` (the PROGRESS.md format) | capability report in PROGRESS.md |
 | 1 | Brief | `brief.md` | `design/BRIEF.md` |
 | 2 | Direction | `taste.md`, `direction.md`, `mockup.md`, `checkpoints.md` (+ `award/patterns.md` at flagship) | `design/mockups/*.html`, CP1, `design/DIRECTION.md` |
 | 3 | System | `tokens.md`, `color.md`, `typography.md`, `layout.md`, `form.md`, `imagery.md`, `identity.md` (when there is no client mark), `motion.md` §Vocabulary | `design/SYSTEM.md`, token CSS from `palette.mjs` |
@@ -60,7 +60,8 @@ Phase notes that are not in the references:
 - **Phase 2.** Nothing from Phase 3 onward starts in guided mode until CP1 has a logged pick. Three rounds without a pick means the shortlist is wrong: re-derive the candidates from the brief instead of revising the same ones.
 - **Phase 3.** Generate the colour tokens with `node <plugin>/scripts/palette.mjs` from the ground and hues in DIRECTION.md (`--help` lists the options); it prints a contrast table and exits 1 when a pair cannot pass. Do not work out contrast by hand. After any manual edit to the token file run `node <plugin>/scripts/palette.mjs check <file>`.
 - **Phase 5.** Build the homepage completely before any other page. It exercises the tokens, header, footer and section rhythm, so system defects are fixed once. Run `node <plugin>/scripts/gates.mjs --url <prod-url> --quick` against a production build (never `next dev`), fix every fail, run one judge round, then open CP2.
-- **Phase 5 and 6, motion.** The signature move and any other effect come from the kit when the kit has one that fits: `node <plugin>/scripts/moments.mjs pick --fits <site kind> --max-intensity <motion level in DIRECTION.md>`, then mount it exactly as its README says. Write an effect by hand only when DIRECTION.md commissions something the kit does not have.
+- **Phase 5 and 6, motion.** The signature move and any other effect come from the kit when the kit has one that fits: `node <plugin>/scripts/moments.mjs pick --fits <site kind> --max-intensity <motion level in DIRECTION.md>`, then mount it exactly as its README says. Decline a pick that would compete with the signature move or that the site kind does not want (a local shop or a reading page usually wants none), and log that in PROGRESS.md. Write an effect by hand only when DIRECTION.md commissions something the kit does not have.
+- **Static path.** On a site built in `site/`, `<plugin>/kit/README.md` is the build guide: `kit/system.css` supplies the layout, buttons, fields and mobile menu, and the kit moments supply motion. Read `sections.md`, `primitives.md`, `form.md` and `motion.md` for their design rules, tables and traps, and skip their code samples, which are written for React, Next and Tailwind.
 - **Phase 6.** Inner pages inherit the fixes made at CP2. Build them from SITEMAP.md, one route at a time.
 - **Phase 7.** Run `node <plugin>/scripts/gates.mjs --url <prod-url>` against a production build (`npm run build && npm start` for Next, a static server for `site/`). Fix fails, rebuild, re-run with `--only` and `--routes` limited to what the fix touched, then one full run at the end. Then run the judge rounds the tier allows. When the runner prints a line starting `ESCALATE:`, stop fixing and report the failing checks to the user.
 
@@ -73,7 +74,7 @@ Phase notes that are not in the references:
 5. **The judge runs in a fresh context.** Visual critique goes to the `design-judge` agent. Never score your own screenshots, and never mark a judge round SHIP yourself.
 6. **Never fabricate proof.** No invented testimonials, client logos, ratings, press quotes, awards or statistics presented as real. When the brief has none, design the page without them or use visibly labeled sample content that `ship.md` blocks from production.
 7. **Commit at every phase boundary** with the message `ultraweb: phase N — <name>`. Local commits only; never push or add remotes unless asked.
-8. **A phase is done when the checker says so.** Before marking phase N complete in PROGRESS.md, run `node <plugin>/scripts/check-phase.mjs N` and fix everything it lists. It checks that the artifacts exist and are complete; it does not judge quality.
+8. **A phase is done when the checker says so.** Before marking phase N (1 to 8; Phase 0 has no check) complete in PROGRESS.md, run `node <plugin>/scripts/check-phase.mjs N` and fix everything it lists. It checks that the artifacts exist and are complete; it does not judge quality.
 9. **Assemble before you invent.** Use the scripts and the kit for colour, dealing, effects and checks. They are tested; a hand-written replacement is not. Follow each reference and README literally, and when a step is unclear do the listed step rather than improvising a different one.
 10. **Be honest about cost.** A standard build is a multi-hour job with a large token bill, and a flagship build costs more. Say this once when the build starts, and suggest the sketch tier when the request is a single page.
 

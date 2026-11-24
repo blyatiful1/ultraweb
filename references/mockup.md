@@ -3,7 +3,7 @@
 Render the direction candidates as quick static pages so the user can point at a direction before the build spends anything.
 
 Load when: Phase 2, after `references/direction.md` has produced its candidates.
-Reads: design/BRIEF.md, the candidate sketches from direction. Writes: design/mockups/*.html, design/mockups/shots/*.png, the round log under CP1 in design/PROGRESS.md.
+Reads: design/BRIEF.md, the candidate sketches from direction. Writes: design/mockups/*.html, design/mockups/qa/shots/*.png, the round log under CP1 in design/PROGRESS.md.
 
 ## Candidates
 
@@ -40,7 +40,7 @@ At standard and flagship tiers, when the Agent tool is available and the user ha
 ## Look before you show
 
 1. Serve the folder: `python3 -m http.server 4173 --directory design/mockups` (run in the background).
-2. Capture each candidate at 1440 and 375 with the gates runner: `node <plugin>/scripts/gates.mjs --url http://localhost:4173 --routes /a-<slug>.html,/b-<slug>.html,/c-<slug>.html --only responsive --out design/mockups/shots`. With no browser available, say so and show the files unseen.
+2. Capture each candidate at 1440 and 375 with the gates runner: `node <plugin>/scripts/gates.mjs --url http://localhost:4173 --routes /a-<slug>.html,/b-<slug>.html,/c-<slug>.html --only responsive --out design/mockups/qa`. The screenshots land in `design/mockups/qa/shots/`. With no browser available, say so and show the files unseen.
 3. Look at every capture. Fix any candidate that is broken, illegible, collides with another candidate, or uses a default look without the brief arguing for it. Recapture after a fix.
 4. Write `design/mockups/index.html`: a contact sheet with each candidate in an `<iframe>` at roughly 1440 and 390 px wide, labeled with its letter and a one-line identity, so the user compares in one tab.
 

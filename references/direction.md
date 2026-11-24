@@ -50,7 +50,7 @@ Motion 3 and 3D imagery are available only at flagship tier or when the user ask
 
 Hand the candidates to `references/mockup.md`. In guided mode the user picks, mixes or sends them back (CP1). In autonomous mode pick the candidate most specific to this brief; if two tie, the one whose signature move can be executed best within the tier's budget. Log the reason under Assumptions in `design/PROGRESS.md`.
 
-After approval, record the approved axes so later builds are steered away from them:
+After approval, record the approved axes so later builds are steered away from them. The dealer keeps its history outside the project, in `~/.ultraweb/history.json` (set `ULTRAWEB_HOME` to move it); it holds axis names only, no project content:
 
 ```bash
 node <plugin>/scripts/deal.mjs record --ground dark --type slab --colour one-accent --layout dense-index

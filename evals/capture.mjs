@@ -89,8 +89,8 @@ if (existsSync(gates)) {
   let verdict = { 0: 'PASS', 1: 'FAIL', 3: 'UNVERIFIED' }[r.status] || 'UNVERIFIED';
   const gj = join(out, 'gates.json');
   let summary = null;
-  try { const g = JSON.parse(readFileSync(gj, 'utf8')); verdict = g.verdict || verdict; summary = g.checks ? Object.fromEntries(Object.entries(g.checks).map(([k, c]) => [k, c.status || c])) : null; } catch {}
-  meta.qa = { verdict, exit: r.status, ...(summary ? { checks: summary } : {}) };
+  try { const g = JSON.parse(readFileSync(gj, 'utf8')); verdict = g.verdict || verdict; summary = g.totals || (Array.isArray(g.checks) ? g.checks.reduce((acc, c) => { acc[c.status] = (acc[c.status] || 0) + 1; return acc; }, {}) : null); } catch {}
+  meta.qa = { verdict, exit: r.status, ...(summary ? { totals: summary } : {}) };
 }
 writeFileSync(metaPath, JSON.stringify(meta, null, 2) + '\n');
 console.log(`captured ${made.desktop.length} desktop + ${made.mobile.length} mobile step shots -> ${shotDir}${meta.qa ? ` · gates ${meta.qa.verdict}` : ''}`);

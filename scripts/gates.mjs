@@ -506,6 +506,8 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
             const imgs = await page.evaluate(() => Array.from(document.images).filter((i) => /placehold|placeholder\.com|picsum|dummyimage/i.test(i.src)).map((i) => i.src)).catch(() => []);
             for (const i of imgs) hits.push(`placeholder image ${clip(i, 80)}`);
             rec('content.placeholder', ctx1440, hits.length ? 'fail' : 'pass', hits.length ? `placeholder content: ${hits.join(', ')}` : 'no placeholder text or images', hits);
+            const assumed = await page.evaluate(() => Array.from(document.querySelectorAll('[data-assumed]')).map((e) => (e.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60))).catch(() => []);
+            rec('content.assumed', ctx1440, assumed.length ? 'review' : 'pass', assumed.length ? `${assumed.length} drafted fact(s) marked data-assumed: the owner must confirm each before production` : 'no drafted facts marked data-assumed', assumed);
           } catch (e) {
             rec('content.metadata', ctx1440, 'error', `metadata read threw: ${clip(e.message)}`);
           }
@@ -586,7 +588,7 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
               await applyTheme(page, 'light', themeStrategy);
               if (themeStrategy === 'media') await page.emulateMedia({ colorScheme: null });
             }
-            rec('responsive.shots', ctx1440, 'pass', `screenshot written to qa/shots/${slug(route)}-1440-light.png`);
+            rec('responsive.shots', ctx1440, 'pass', `screenshot written to ${join(qa, 'shots', `${slug(route)}-1440-light.png`)}`);
           } catch (e) {
             rec('responsive.shots', ctx1440, 'error', `screenshot failed: ${clip(e.message)}`);
           }
@@ -624,7 +626,7 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
           }
           try {
             await shoot(o.page, route, width, null);
-            rec('responsive.shots', cv, 'pass', `screenshot written to qa/shots/${slug(route)}-${width}.png`);
+            rec('responsive.shots', cv, 'pass', `screenshot written to ${join(qa, 'shots', `${slug(route)}-${width}.png`)}`);
           } catch (e) {
             rec('responsive.shots', cv, 'error', `screenshot failed: ${clip(e.message)}`);
           }

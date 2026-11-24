@@ -2,9 +2,10 @@
    Sound page, no look: every visual value comes from the tokens in site/styles.css.
    Load order: styles.css -> kit/system.css -> page CSS. Never edit this file.
    FALLBACKS: each var() has a neutral fallback (system colours/fonts) used only when a
-   token is missing. They are not design decisions. */
+   token is missing. They are not design decisions.
+   CASCADE: only reset and element defaults are layered; classes are plain CSS. */
 
-@layer kit.reset, kit.base, kit.layout, kit.components, kit.utilities;
+@layer kit.reset, kit.base;
 
 /* ---------------------------------------------------------------- reset */
 @layer kit.reset {
@@ -83,7 +84,7 @@
 }
 
 /* ---------------------------------------------------------------- layout */
-@layer kit.layout {
+@media all {
   .wrap { width: 100%; max-width: calc(var(--wrap-max) + 2 * var(--gutter)); margin-inline: auto; padding-inline: var(--gutter); }
   .wrap--narrow { --wrap-max: calc(var(--measure) + 4rem); }
   .wrap--wide { --wrap-max: 100rem; }
@@ -117,7 +118,7 @@
 
 /* ---------------------------------------------------------------- type scale */
 /* Classes read --text-* tokens from styles.css; the clamp() values are fallbacks only. */
-@layer kit.utilities {
+@media all {
   .text-hero {
     font-size: var(--text-hero, clamp(2.5rem, 1.6rem + 4vw, 5rem));
     line-height: var(--text-hero--line-height, 1);
@@ -146,7 +147,7 @@
 }
 
 /* ---------------------------------------------------------------- components */
-@layer kit.components {
+@media all {
   /* skip link: first element in <body>, target is <main id="main"> */
   .skip-link {
     position: absolute; inset-inline-start: var(--gutter); inset-block-start: 0.75rem; z-index: 100;

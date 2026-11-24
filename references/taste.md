@@ -64,7 +64,7 @@ Where effort goes depends on the kind of site.
 | Studio, agency, portfolio | The concept; the site is the work sample | Convention for its own sake |
 | Shop | Product photography; quiet chrome | Anything experimental in cart or checkout |
 | Editorial, report | The reading experience | Motion while someone is reading |
-| Place or local service | Real photographs, then address, hours, booking | Effects of any kind |
+| Place or local service | Real photographs; address, hours and the booking action on the first screen, also on a phone | Effects of any kind |
 | Launch, campaign, game | One world the whole page lives in | A second idea |
 
 - When two options tie, take the one that would only make sense for this client.

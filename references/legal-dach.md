@@ -64,7 +64,7 @@ Verify on a fresh load with the network tab open: no third-party request before 
 ## Impressum and Datenschutz pages
 
 - `/impressum` and `/datenschutz` exist, link from the footer on every page and work without JavaScript; add `/agb` and `/widerruf` for shops.
-- Required Impressum content depends on business form and profession. Take every value (legal name, address, registry, VAT id, supervisory authority) from the client. A missing value is a placeholder tagged `UNVERIFIED-LEGAL`; ship blocks on it (`references/ship.md`). Never invent registry or tax ids.
+- Required Impressum content depends on business form and profession. Take every value (legal name, address, registry, VAT id, supervisory authority) from the client. A missing value (this includes the contact email or phone a form sends to) is a placeholder tagged `UNVERIFIED-LEGAL`; ship blocks on it (`references/ship.md`). Never invent registry or tax ids.
 - The privacy policy lists what the site actually does: hosting, analytics and retention, mail provider, form data, embeds, fonts. Derive the tool list from `package.json` and the code, then give it to the client for review. A policy naming absent tools or omitting installed ones is a defect.
 
 ## Print path for legal and document pages

@@ -61,7 +61,9 @@ Generate:
   --chroma <c>        low | medium | high   accent strength; default medium
   --destructive-hue <n>  hue of the error colour; default 25, shifted automatically (and noted in the
                       table) when the ground or accent hue is within 30 degrees of it
-  --colour <m>        monochrome | one-accent | two-colour-pair; default one-accent
+  --colour <m>        monochrome | one-accent | two-colour-pair | polychrome; default one-accent.
+                      polychrome emits the one-accent set: add the colours of your real source
+                      (product range, artwork) as extra tokens yourself, then run the check command
   --second-hue <n>    hue of the second colour (the --accent token) for two-colour-pair;
                       default accent hue + 150
   --dual              also emit .dark, a re-decided dark theme (elevation by lightness, not inversion)
@@ -620,7 +622,7 @@ function parseArgs(argv) {
     else if (a === '--destructive-hue') o.destructiveHue = num(a, next(), 0, 360);
     else if (a === '--second-hue') o.secondHue = num(a, next(), 0, 360);
     else if (a === '--chroma') { o.chroma = next(); if (!['low', 'medium', 'high'].includes(o.chroma)) die('--chroma must be low, medium or high'); }
-    else if (a === '--colour' || a === '--color') { o.colour = next(); if (!['monochrome', 'one-accent', 'two-colour-pair'].includes(o.colour)) die('--colour must be monochrome, one-accent or two-colour-pair'); }
+    else if (a === '--colour' || a === '--color') { o.colour = next(); if (!['monochrome', 'one-accent', 'two-colour-pair', 'polychrome'].includes(o.colour)) die('--colour must be monochrome, one-accent, two-colour-pair or polychrome'); if (o.colour === 'polychrome') { o.polychrome = true; o.colour = 'one-accent'; } }
     else if (a === '--dual') o.dual = true;
     else if (a === '--radius') o.radius = num(a, String(next()).replace(/rem$/, ''), 0, 10);
     else if (a === '--format') { o.format = next(); if (!['css', 'tailwind', 'json'].includes(o.format)) die('--format must be css, tailwind or json'); }

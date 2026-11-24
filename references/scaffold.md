@@ -11,7 +11,7 @@ Run before any design work and report the result as the capability report.
 
 1. **Node.** `node -v` must be 20.9 or newer (Next's minimum); 22 is what CI uses.
 2. **git.** `git --version`. A missing git is a warning, not a stop.
-3. **Browser for the gates.** `scripts/gates.mjs` drives Playwright. Check with `npx playwright --version` inside the project, and install a browser with `npx playwright install chromium`. If the download is blocked, say so in the capability report; gates will return `UNVERIFIED` and the build continues without a verified pass.
+3. **Browser for the gates.** `scripts/gates.mjs` drives Playwright. Check from the project folder with `node -e "require('playwright')"` (it also resolves a global install; a static site has no `package.json`), or `npx playwright --version` in a Next project. Install a browser with `npx playwright install chromium`. If the download is blocked, say so in the capability report; gates will return `UNVERIFIED` and the build continues without a verified pass.
 4. **Stack freshness.** `node <plugin>/scripts/verify-stack.mjs`. It compares `stack/versions.json` with the live npm registry and exits 1 on drift.
    - Manifest `verified` date older than 30 days, or drift reported: the scaffold still installs the exact pinned versions, so the build is reproducible. Record the drift in `design/PROGRESS.md` and continue, unless a package listed as MAJOR DRIFT is one the brief uses. In that case read that package's changelog or its bundled docs before using any API from `STACK.md` for it.
    - A pinned version that no longer exists (NONEXISTENT PIN) or a failed install: install the live version of that package, note it in `design/PROGRESS.md`, and continue.
