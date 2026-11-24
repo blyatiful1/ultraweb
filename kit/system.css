@@ -263,6 +263,20 @@
 
 }
 
+/* ---------------------------------------------------------------- bold blocks */
+/* <section class="section band">: one full-width contrasting section */
+.band { background-color: var(--band, CanvasText); color: var(--band-foreground, Canvas); }
+.band a { color: inherit; }
+.band .muted { color: color-mix(in oklab, var(--band-foreground, Canvas) 80%, var(--band, CanvasText)); }
+.band .btn--primary { background-color: var(--band-foreground, Canvas); color: var(--band, CanvasText); border-color: transparent; }
+.band .btn--ghost { color: inherit; border-color: currentColor; }
+.band :focus-visible { outline-color: var(--band-foreground, Canvas); }
+/* <figure class="cover" style="aspect-ratio:3/2"><img …></figure>: media fills its box */
+.cover { position: relative; overflow: clip; margin: 0; }
+.cover > img, .cover > video, .cover > svg { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+/* <section class="first-screen">: fills the first screen, content at the foot */
+.first-screen { min-block-size: calc(100svh - var(--header-h, 4rem)); display: grid; align-content: end; }
+
 /* ---------------------------------------------------------------- forced colours */
 @media (forced-colors: active) {
   .btn, .input, .textarea, .select { border: 1px solid ButtonText; }

@@ -57,6 +57,8 @@ Statuses: `pass`, `fail`, `review`, `skip`, `error`.
 | perf | observed LCP and CLS | per route on the local production server: LCP above 2,500 ms fails; CLS above 0.05 fails |
 | perf | Lighthouse | only with `--lighthouse` and only when Lighthouse is installed; report-only, it never fails the run |
 | tells | census of AI-default patterns, section rhythm | report-only: every item is `review` |
+| tells | first screen | on the home page the largest heading is 72px or more, or pictures cover at least 40% of the first screen; otherwise it fails |
+| tells | empty screens, small text | no screen under 2% covered by text or media; at most 30% of body copy under 16px |
 
 ### What `review` means
 

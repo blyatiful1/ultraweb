@@ -748,6 +748,11 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
             if ((r.empty || []).length || (judged >= 3 && r.sparseShare > 0.5)) {
               rec('tells.empty-screens', ct, 'fail', `${(r.empty || []).length} empty and ${(r.sparse || []).length} sparse of ${(r.slices || []).length} screens (percent of each screen carrying text or media: ${cov})`, (r.empty.length ? r.empty : r.sparse).map((i) => ({ detail: `screen ${i + 1}, about ${i * r.viewport.height}px down the page, is nearly bare ground` })));
             } else rec('tells.empty-screens', ct, 'pass', `no empty screen (percent carrying text or media: ${cov})`);
+            if (route === '/' && r.first) {
+              const f = r.first;
+              if (f.headingPx < 72 && f.mediaShare < 0.4) rec('tells.first-screen', ct, 'fail', `the first screen is timid: its largest heading is ${f.headingPx}px and pictures cover ${Math.round(f.mediaShare * 100)}% of it. Set the headline at 72px or more, or let a picture or drawn scene fill at least 40% of the screen`, [{ detail: `largest heading: "${f.heading}"` }]);
+              else rec('tells.first-screen', ct, 'pass', `first screen carried by ${f.headingPx >= 72 ? `a ${f.headingPx}px headline` : `pictures over ${Math.round(f.mediaShare * 100)}% of it`}`);
+            }
             const st = r.smallText || { share: 0, examples: [] };
             if (st.share > 0.3) rec('tells.small-text', ct, 'fail', `${Math.round(st.share * 100)}% of body copy is set under 16px (median ${r.bodyPx}px)`, st.examples.map((e) => ({ selector: e.selector, detail: `${e.px}px: ${e.text}` })));
             else rec('tells.small-text', ct, 'pass', `body copy median ${r.bodyPx ?? '?'}px, ${Math.round(st.share * 100)}% under 16px`);

@@ -19,6 +19,7 @@ export const TOKENS = [
 export const EXT_TOKENS = [
   'popover', 'popover-foreground', 'secondary', 'secondary-foreground', 'destructive', 'destructive-foreground',
   'input', 'success', 'success-foreground', 'warning', 'warning-foreground',
+  'band', 'band-foreground',
 ];
 export const EXTRA_TOKENS = ['shadow-color', 'shadow-k', 'radius'];
 export const COLOUR_TOKENS = [...TOKENS, ...EXT_TOKENS];
@@ -37,6 +38,7 @@ export const PAIRS = [
   // extended shadcn set: verified when present, optional in `check`
   ['popover-foreground', 'popover', 4.5, null, true],
   ['secondary-foreground', 'secondary', 4.5, null, true],
+  ['band-foreground', 'band', 4.5, null, true],
   ['destructive-foreground', 'destructive', 4.5, null, true],
   ['destructive', 'background', 3, null, true],
   ['input', 'background', 3, null, true],
@@ -371,6 +373,11 @@ function buildTheme(themeName, ground, o, dark, flip = false) {
   const sr = seek({ L0: side === 'dark' ? 0.28 : 0.95, dir, C: fgC, H, bgs: [secondary], target: 4.5 + MARGIN });
   if (!sr.ok) throw new PaletteError(themeName, 'secondary-foreground', 'secondary', sr.r, 4.5);
   const secondaryFg = sr.c;
+  // band: a strongly contrasting ground for one full-width section, dark on a light page and
+  // light on a dark one, so a page is not one tint from top to bottom
+  const band = mk(side === 'dark' ? 0.24 : 0.94, Math.min(0.06, Math.max(bg.C, 0.02) * 1.5), H);
+  const br = seek({ L0: side === 'dark' ? 0.9 : 0.3, dir: -dir, C: fgC, H, bgs: [band], target: 7 });
+  if (!br.ok) throw new PaletteError(themeName, 'band-foreground', 'band', br.r, 4.5);
   const ir = seek({ L0: bg.L + bdir * 0.3, dir: bdir, C: bg.C, H, bgs: [bg], target: 3 + MARGIN });
   if (!ir.ok) throw new PaletteError(themeName, 'input', 'background', ir.r, 3);
   const input = ir.c;
@@ -401,6 +408,7 @@ function buildTheme(themeName, ground, o, dark, flip = false) {
     accent, 'accent-foreground': accentFg, border, ring,
     'shadow-color': sh.color,
     popover, 'popover-foreground': foreground, secondary, 'secondary-foreground': secondaryFg,
+    band, 'band-foreground': br.c,
     destructive: dest.c, 'destructive-foreground': dest.on, input,
     success: succ.c, 'success-foreground': succ.on, warning: warn.c, 'warning-foreground': warn.on,
   };

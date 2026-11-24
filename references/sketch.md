@@ -5,6 +5,17 @@ The whole path for a one-page static site, in one file.
 Load when: the tier is sketch and the site is built in `site/`. It replaces the Phase 3 to 6 reading list.
 Reads: design/BRIEF.md, design/DIRECTION.md, `<plugin>/kit/README.md`. Writes: design/SYSTEM.md, design/SITEMAP.md, `site/`.
 
+## Commit
+
+The usual failure of a careful build is a correct, pale page: one soft tint from top to bottom, a modest headline, small pictures. Decide the look once and push it.
+
+- The first screen is carried by type or by a picture. Either the headline is set at 72px or more on a desktop screen (96px and up is normal for a type-led page), or a photograph or drawn scene fills at least 40% of the screen, edge to edge. The gates check this.
+- Use contrast between sections. `palette.mjs` gives a `--band` and `--band-foreground` pair, dark on a light page and light on a dark one. Put at least one full-width section on it (`class="section band"` in the kit), usually the one that matters most after the first screen.
+- Pictures are large or absent. A hero photograph is full-bleed or half the screen; a photograph in a section is at least 40% of the content width (`<figure class="cover">` in the kit keeps its ratio). No thumbnails floating in empty ground.
+- Give the display type a character: a weight, width or face a visitor would notice, chosen from the subject. A neutral mid-weight sans at a moderate size is the timid choice.
+- Before building, read your plan back. If it could be the plan for any similar business, change the part that is generic.
+- If the `frontend-design` skill is installed in this session, use it for the visual design of the page, and keep this file for the words, the pictures, honesty about drafts and stand-ins, and the gates.
+
 ## Where the effort goes
 
 The page is the work. The artifacts below are short; write each in a few minutes and spend the rest on what a visitor sees. Read another reference only when a line here names it for a need this page really has: `legal-dach.md` for a German, Austrian or Swiss site, `commerce.md` for things sold on the page, `showpiece.md` for a commissioned 3D scene, `motion.md` for motion the kit does not cover.

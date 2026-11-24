@@ -7,8 +7,13 @@
 // Config keys read: sparse (default 0.07), empty (default 0.02), minFont (default 16).
 // Returns: { url, viewport, slices:[{index, coverage}], sparse:[index], empty:[index],
 //            sparseShare, smallText:{share, examples:[{selector, px, text}]}, bodyPx,
-//            grounds:{sections, distinct}, error? }.
-// The gate asserts: empty.length === 0 and sparseShare <= 0.5 and smallText.share <= 0.3;
+//            grounds:{sections, distinct},
+//            first:{headingPx, heading, mediaShare, wordsOnScreen}, error? }.
+//            first describes the first screen: the largest heading set on it, and the share of
+//            the screen covered by pictures, drawings, video or canvas.
+// The gate asserts: empty.length === 0 and sparseShare <= 0.5 and smallText.share <= 0.3,
+// and that the first screen is carried by something: first.headingPx >= 56 or
+// first.mediaShare >= 0.3;
 // grounds is advisory. The last screen (usually the footer) is left out of the verdict.
 async (page) => {
   const config =
@@ -91,6 +96,61 @@ async (page) => {
       return Math.min(1, Math.round((ink / (vw * vh)) * 1000) / 1000);
     });
 
+  const first = await page
+    .evaluate(() => {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const shown = (el) => {
+        for (let e = el; e && e.nodeType === 1; e = e.parentElement) {
+          const cs = getComputedStyle(e);
+          if (cs.display === 'none' || cs.visibility === 'hidden') return false;
+        }
+        return true;
+      };
+      let headingPx = 0;
+      let heading = '';
+      for (const el of document.querySelectorAll('h1, h2, [role="heading"], .text-hero, [class*="hero"] *, [class*="display"]')) {
+        const r = el.getBoundingClientRect();
+        if (r.bottom <= 0 || r.top >= vh || r.width < 40 || !shown(el)) continue;
+        const text = [...el.childNodes].filter((n) => n.nodeType === 3).map((n) => n.nodeValue).join('').replace(/\s+/g, ' ').trim() || (el.children.length <= 3 ? (el.textContent || '').replace(/\s+/g, ' ').trim() : '');
+        if (text.length < 2 || text.length > 160) continue;
+        const px = parseFloat(getComputedStyle(el).fontSize);
+        if (px > headingPx) {
+          headingPx = px;
+          heading = text.slice(0, 60);
+        }
+      }
+      // union area of media boxes on the first screen, on a coarse grid so overlaps count once
+      const cell = 20;
+      const cols = Math.ceil(vw / cell);
+      const rows = Math.ceil(vh / cell);
+      const grid = new Uint8Array(cols * rows);
+      const mark = (r) => {
+        const x1 = Math.max(0, Math.floor(r.left / cell));
+        const x2 = Math.min(cols, Math.ceil(r.right / cell));
+        const y1 = Math.max(0, Math.floor(r.top / cell));
+        const y2 = Math.min(rows, Math.ceil(r.bottom / cell));
+        for (let y = y1; y < y2; y++) for (let x = x1; x < x2; x++) grid[y * cols + x] = 1;
+      };
+      for (const el of document.querySelectorAll('img, svg, canvas, video, picture')) {
+        if (el.tagName.toLowerCase() !== 'svg' && el.closest('svg')) continue;
+        const r = el.getBoundingClientRect();
+        if (r.bottom <= 0 || r.top >= vh || r.width < 120 || r.height < 120 || !shown(el)) continue;
+        mark(r);
+      }
+      for (const el of document.querySelectorAll('body *')) {
+        const r = el.getBoundingClientRect();
+        if (r.bottom <= 0 || r.top >= vh || r.width < 200 || r.height < 200) continue;
+        const bg = getComputedStyle(el).backgroundImage;
+        if (bg && bg !== 'none' && /url\(/.test(bg) && shown(el)) mark(r);
+      }
+      let on = 0;
+      for (let i = 0; i < grid.length; i++) on += grid[i];
+      const words = (document.body.innerText || '').length;
+      return { headingPx: Math.round(headingPx * 10) / 10, heading, mediaShare: Math.round((on / grid.length) * 100) / 100, wordsOnScreen: words };
+    })
+    .catch(fail);
+
   const slices = [];
   for (let i = 0; i < count; i++) {
     const ok = await page
@@ -172,6 +232,7 @@ async (page) => {
     sparse,
     empty,
     sparseShare: judged.length ? Math.round((sparse.length / judged.length) * 100) / 100 : 0,
+    first: first || null,
     ...(rest || {}),
   };
 
