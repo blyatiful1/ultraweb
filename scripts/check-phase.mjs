@@ -255,7 +255,7 @@ function routesOnDisk(root) {
   walkStatic(join(root, 'site'), []);
   return found;
 }
-const normRoute = (r) => (r.replace(/:(\w+)/g, '[$1]').replace(/\/+$/, '') || '/');
+const normRoute = (r) => (r.replace(/:(\w+)/g, '[$1]').replace(/\.html$/, '').replace(/\/index$/, '').replace(/\/+$/, '') || '/');
 
 function phase6(root, p) {
   const md = read(join(root, 'design/SITEMAP.md'));

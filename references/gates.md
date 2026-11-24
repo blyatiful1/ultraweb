@@ -67,7 +67,7 @@ A `review` item never fails the run. It is something a script can count but not 
 1. Run the gates. Read the failing checks; each carries a selector or file and a one-line measurement.
 2. Fix at the returned selector or file. Fix the cause (a token, a component), not one element, when the same pair fails on several surfaces.
 3. Rebuild and restart the server, then re-run. Use `--only` for the affected gates, and the full run before closing the phase.
-4. `qa/gates.json` carries a `round` that increments per full run. At round 4 with FAIL the script prints a line starting `ESCALATE:`. Stop fixing and report to the user: the failing checks, what was tried, and the likely cause.
+4. `qa/gates.json` carries a `round`. Every run except a `--quick` one counts, and a PASS clears the count. At four counted failing rounds in a row the script prints a line starting `ESCALATE:`. Stop fixing and report to the user: the failing checks, what was tried, and the likely cause.
 
 Do not weaken a check, raise a budget, or add `eslint-disable`, `@ts-ignore` or `as any` to turn a run green.
 

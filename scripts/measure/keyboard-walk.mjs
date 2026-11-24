@@ -117,7 +117,9 @@ async (page) => {
           href: el.getAttribute ? el.getAttribute('href') : null,
           name: nameOf(el),
           selector: sel(el),
-          visibleFocusRing: !!ring,
+          // a segmented date or time input cannot be blurred for comparison without resetting it:
+          // when no outline is found its ring is unknown (null), not missing
+          visibleFocusRing: segmented && !ring ? null : !!ring,
           segmented,
           inViewport: r.bottom > 0 && r.right > 0 && r.top < window.innerHeight && r.left < window.innerWidth,
         };

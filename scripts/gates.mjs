@@ -56,8 +56,8 @@ Options:
 Statuses: pass | fail | review | skip | error | waived. Verdict: FAIL when any unwaived fail,
 UNVERIFIED when no browser or any error, else PASS. review items never fail the run.
 Waivers: qa/waivers.json, at most ${THRESHOLDS.maxWaivers} entries {check, route?, selector?, reason}.
-Exit: 0 PASS, 1 FAIL, 3 UNVERIFIED or cannot run. At round >= ${THRESHOLDS.escalateRound} with FAIL an
-ESCALATE: line is printed.
+Exit: 0 PASS, 1 FAIL, 3 UNVERIFIED or cannot run. --quick runs are not counted as rounds and a
+PASS clears the count; at ${THRESHOLDS.escalateRound} counted failing rounds in a row an ESCALATE: line is printed.
 `;
 
 // ---- args ------------------------------------------------------------------------------
@@ -187,7 +187,11 @@ async function run(args) {
   mkdirSync(join(qa, 'raw'), { recursive: true });
 
   const previous = readJson(join(qa, 'gates.json'), null);
-  const round = (previous && Number.isFinite(previous.round) ? previous.round : 0) + 1;
+  // A round is one counted attempt at the gates. Quick runs are for looking and do not
+  // count; a PASS clears the count, so ESCALATE means four counted failures in a row.
+  const prevRound = previous && Number.isFinite(previous.round) ? previous.round : 0;
+  const base0 = previous && previous.verdict === 'PASS' ? 0 : prevRound;
+  const round = args.quick ? Math.max(base0, 0) : base0 + 1;
 
   const records = [];
   const rec = (id, ctx, status, summary, evidence = []) => {
@@ -452,7 +456,9 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
       }
       const { ctx, page, status } = opened;
       try {
-        if (status >= 400 || status === 0) {
+        // the 404 page itself is supposed to answer 404
+        const is404Page = status === 404 && /(^|\/)404(\.html)?\/?$/.test(route);
+        if ((status >= 400 || status === 0) && !is404Page) {
           rec('content.status', ctx1440, 'fail', `${route} answered HTTP ${status}`);
           await ctx.close();
           continue;
@@ -542,11 +548,12 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
             if (r.count === 0) return rec('a11y.keyboard', ctx1440, 'review', 'no tab stops found (nothing focusable)');
             if (!r.skipLinkFirst) ev.push({ detail: 'the first tab stop is not a skip link' });
             if (r.trap) ev.push({ detail: 'keyboard focus is trapped on one element' });
-            for (const s of r.stops.filter((x) => !x.visibleFocusRing)) ev.push({ selector: s.selector, detail: 'no visible focus ring' });
+            for (const s of r.stops.filter((x) => x.visibleFocusRing === false)) ev.push({ selector: s.selector, detail: 'no visible focus ring' });
             rec('a11y.keyboard', ctx1440, ev.length ? 'fail' : 'pass', ev.length ? `${ev.length} keyboard issue(s) over ${r.count} stops` : `${r.count} stops, skip link first, rings visible`, ev);
           });
           await call('landmarks-headings', page, base, ctx1440, 'a11y.landmarks', (r) => {
-            const ev = r.issues.map((i) => ({ selector: i.selector, detail: `${i.kind}: ${i.detail}` }));
+            // a navigation landmark is expected on the home page; a 404 or a legal page may do without
+            const ev = r.issues.filter((i) => i.kind !== 'no-nav' || route === '/').map((i) => ({ selector: i.selector, detail: `${i.kind}: ${i.detail}` }));
             rec('a11y.landmarks', ctx1440, ev.length ? 'fail' : 'pass', ev.length ? `${ev.length} landmark or heading issue(s)` : 'landmarks and heading order fine', ev);
           });
           await call('alt-and-labels', page, base, ctx1440, 'a11y.alt-labels', (r) => {

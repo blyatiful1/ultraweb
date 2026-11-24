@@ -2,7 +2,7 @@
 // photos.mjs — find and fetch openly licensed photographs as STAND-INS for a demo build,
 // with the credit each licence requires. Search runs against the Openverse API (no key).
 //
-//   node photos.mjs search "<subject>" [--count 8] [--shape wide|tall|square] [--min-width 1000]
+//   node photos.mjs search "<subject>" [--count 8] [--shape wide|tall|square] [--min-width 800]
 //                                      [--thumbs <dir>]
 //   node photos.mjs get <id> --out <file.jpg> [--role atmosphere|proof]
 //   node photos.mjs credits [--dir <dir>] [--format html|md|json]
@@ -26,7 +26,7 @@ const LICENCE_NAMES = { cc0: 'CC0', pdm: 'Public Domain Mark', by: 'CC BY', 'by-
 
 const HELP = `photos.mjs — openly licensed stand-in photographs for a demo build
 
-  node photos.mjs search "<subject>" [--count 8] [--shape wide|tall|square] [--min-width 1000] [--thumbs <dir>]
+  node photos.mjs search "<subject>" [--count 8] [--shape wide|tall|square] [--min-width 800] [--thumbs <dir>]
   node photos.mjs get <id> --out <file.jpg> [--role atmosphere|proof]
   node photos.mjs credits [--dir <dir>] [--format html|md|json]
   node photos.mjs list [--dir <dir>]
@@ -62,14 +62,19 @@ function parse(argv) {
   return out;
 }
 
-async function getJson(url) {
+async function getJson(url, retried = false) {
   let res;
   try {
     res = await fetch(url, { headers: { 'user-agent': UA, accept: 'application/json' }, signal: AbortSignal.timeout(25000) });
   } catch (e) {
     die(`photo search unavailable (${(e.cause && e.cause.code) || e.name || 'network error'}): continue without photographs`, 3);
   }
-  if (res.status === 429) die('photo search is rate limited right now: wait a minute or continue without photographs', 3);
+  if ((res.status === 429 || res.status === 401) && !retried) {
+    // the anonymous quota is per minute: wait once, then try again
+    await new Promise((r) => setTimeout(r, Number(process.env.ULTRAWEB_PHOTOS_RETRY_MS ?? 20000)));
+    return getJson(url, true);
+  }
+  if (res.status === 429 || res.status === 401) die('photo search has run out of its anonymous quota for now: wait a few minutes, or continue without photographs', 3);
   if (!res.ok) die(`photo search answered ${res.status}: continue without photographs`, 3);
   try {
     return await res.json();
@@ -101,7 +106,7 @@ async function search(args) {
   if (!q) die('search needs a subject in quotes');
   if (q.length > 80) die('keep the query under 80 characters: a subject, not a sentence');
   const count = Math.max(1, Math.min(20, Number.parseInt(args.count ?? '8', 10) || 8));
-  const minWidth = Math.max(0, Number.parseInt(args['min-width'] ?? '1000', 10) || 0);
+  const minWidth = Math.max(0, Number.parseInt(args['min-width'] ?? '800', 10) || 0);
   const params = new URLSearchParams({ q, license_type: 'commercial,modification', page_size: String(Math.min(40, count * 3)), mature: 'false', category: 'photograph' });
   if (args.shape) {
     if (!['wide', 'tall', 'square'].includes(args.shape)) die('--shape must be wide, tall or square');
@@ -110,7 +115,8 @@ async function search(args) {
   const data = await getJson(`${API}/images/?${params}`);
   const rows = (data.results || []).filter((r) => r && r.id && r.url && (!minWidth || !r.width || r.width >= minWidth)).slice(0, count);
   if (!rows.length) {
-    process.stdout.write(`no photographs found for "${q}" (try a plainer subject, or --min-width 0)\n`);
+    const all = (data.results || []).length;
+    process.stdout.write(all ? `${all} photograph(s) found for "${q}" but none at least ${minWidth}px wide: add --min-width 0 to see them\n` : `no photographs found for "${q}": try a plainer subject of two or three words\n`);
     return;
   }
   let dir = null;

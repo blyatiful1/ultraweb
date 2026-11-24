@@ -73,7 +73,7 @@ After approval, record the approved axes so later builds are steered away from t
 node <plugin>/scripts/deal.mjs record --ground dark --type slab --colour one-accent --layout dense-index
 ```
 
-Record only the approved candidate, once. Dealing candidate C already logs the deal; do not `record` it as well unless C is the one approved.
+Record only the approved candidate, once. Add `--no-history` to any deal you run only to explore. Dealing candidate C already logs the deal; do not `record` it as well unless C is the one approved.
 
 ## 4. The signature move
 

@@ -34,7 +34,7 @@ function fakeApi() {
 
 // async spawn: the fake API lives in this process, so a sync spawn would deadlock it
 const run = (args, base) => new Promise((ok) => {
-  const child = spawn('node', [script, ...args], { env: { ...process.env, ULTRAWEB_PHOTOS_API: base, HTTPS_PROXY: '', https_proxy: '', HTTP_PROXY: '', http_proxy: '', NODE_USE_ENV_PROXY: '' } });
+  const child = spawn('node', [script, ...args], { env: { ...process.env, ULTRAWEB_PHOTOS_API: base, ULTRAWEB_PHOTOS_RETRY_MS: '10', HTTPS_PROXY: '', https_proxy: '', HTTP_PROXY: '', http_proxy: '', NODE_USE_ENV_PROXY: '' } });
   let stdout = '', stderr = '';
   child.stdout.on('data', (d) => (stdout += d));
   child.stderr.on('data', (d) => (stderr += d));

@@ -11,7 +11,20 @@ The page is the work. The artifacts below are short; write each in a few minutes
 
 ## 1. Words first: design/SITEMAP.md
 
-List the routes (the page, a 404, legal pages where the market needs them), then the sections in order with one idea each, then every heading, paragraph and button label.
+List the routes (the page, a 404, legal pages where the market needs them), then the sections in order with one idea each, then every heading, paragraph and button label. The phase checker reads two tables, so use exactly these headings and columns:
+
+```md
+## Routes
+| Route | Purpose | Goal | Nav |
+|---|---|---|---|
+| / | the whole offer on one page | pre-order | yes |
+| /404.html | not found | back to / | no |
+
+## Copy deck
+| Slot | Limit | Text |
+|---|---|---|
+| /.hero.h1 | 8 words | … |
+```
 
 - A one-page site usually needs six to nine sections. Each one holds something a visitor came for: what is offered, prices, hours, steps, specifications, people, where and how.
 - Use the facts in the brief. Where a fact is missing, draft a realistic one and mark it as `references/brief.md` says. A page with real-looking detail can be judged; a thin one cannot.
@@ -22,7 +35,7 @@ List the routes (the page, a 404, legal pages where the market needs them), then
 
 About fifteen lines: the palette command you ran, the type families and why, the sizes, the spacing step, the radius, the grounds.
 
-- Colour: `node <plugin>/scripts/palette.mjs --ground … --hue … --format css --out site/styles.css` with the ground and hues from DIRECTION.md. Never work out contrast by hand.
+- Colour: `node <plugin>/scripts/palette.mjs --ground … --hue … --format css --out site/styles.css` with the ground and hues from DIRECTION.md. Run it first: `--out` replaces the whole file, so everything else is added below its output afterwards with the Edit tool. Never work out contrast by hand.
 - Type: one family, or two that clearly differ, chosen from the subject's own world. Self-host the woff2 files in `site/fonts/` (for a Google Fonts family, take the URLs from its CSS; a variable family is one file declared once with a weight range). Body copy 17 to 19px on desktop and never under 16px; the largest size comes from the direction and is usually much larger than feels safe.
 - Add the type tokens the kit reads (`--font-display`, `--font-sans`, `--text-hero`, `--text-h1`, `--text-h2`, `--text-h3`, `--text-lead`) and `--space-section` below the palette in `styles.css`.
 - Grounds: plan at least two across the page, the page ground plus one contrasting band or colour block, unless the direction argues for one ground throughout.
@@ -54,7 +67,8 @@ node <plugin>/scripts/photos.mjs credits --dir site/img                       # 
 - Every stand-in `<img>` carries `data-standin`, real `alt` text, `width` and `height`, and `loading="lazy"` below the first screen. The credit line goes in the footer.
 - A stand-in never claims to be the client's. No caption such as "our bakery". A picture that stands for the client's own work, people or premises (`--role proof`) shows a small visible label, "Stand-in photo".
 - Stand-ins make the build a demo: set `Deployment mode: demo` in the brief and list each one in the handoff. Ship blocks production while one remains.
-- If the search is unavailable (exit 3), build without photographs and say so in PROGRESS.md.
+- Reject a photograph that does not clearly show the named subject; two that fit beat six that do not. When the ones that fit differ in light or colour, give them one shared treatment in CSS (for example `filter: grayscale(1)` with a tint from the palette) so they read as a set.
+- If the search is unavailable or out of quota (exit 3), build without photographs and say so in PROGRESS.md.
 
 **A drawn scene.** One `<svg>` with a `viewBox`, `preserveAspectRatio="xMidYMid slice"` when it fills a screen, four depth layers (sky, far, middle, near) from light to dark or dark to light, one light source that everything agrees with, colours from the tokens, no text inside the drawing, and `aria-hidden="true"` unless it carries meaning (then `role="img"` and a `<title>`).
 
@@ -90,4 +104,4 @@ Fix what you see and run the quick gates again. This is looking, which is always
 
 ## 6. Finish
 
-Run the full gates and the fix loop in `references/gates.md`. Add the 404, a favicon, a share image, and the legal pages the market needs. Write the handoff README (`references/ship.md`): how to run it, every `data-assumed` fact and every stand-in photograph with what the owner must supply, and what is not connected.
+Run the full gates and the fix loop in `references/gates.md`. Add the 404, a favicon, a share image, and the legal pages the market needs. Write the handoff README in the project root. For a static site it has five parts: how to view it (`python3 -m http.server -d site`), what is in `site/`, every `data-assumed` fact the owner must confirm, every stand-in photograph with what the owner must supply, and what is not connected yet (form endpoint, domain, legal details).

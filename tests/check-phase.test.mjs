@@ -335,3 +335,11 @@ test('phase 2: an autonomous build needs no mockups', () => {
   rmSync(join(d, 'design/mockups'), { recursive: true, force: true });
   assert.equal(run(2, d).status, 0, run(2, d).stdout);
 });
+
+test('phase 6: a route written with .html matches its static file', () => {
+  const d = project();
+  put(d, 'design/SITEMAP.md', get(d, 'design/SITEMAP.md').replace(/^\|\s*\/\s*\|/m, '| /404.html | the not-found page | none |\n| / |'));
+  put(d, 'site/404.html', '<!doctype html><title>404</title>');
+  const r = run(6, d);
+  assert.doesNotMatch(r.stdout + r.stderr, /404\.html\.html/);
+});
