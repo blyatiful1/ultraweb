@@ -397,6 +397,10 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
     await sleep(500);
   };
   const seed = (page, cfg) => page.evaluate((c) => { window.__ultraweb = c; }, cfg);
+  const overlapRec = (ctx, r) => {
+    const ev = (r.collisions || []).slice(0, 8).map((c) => ({ selector: c.a.selector, detail: `"${c.a.text}" runs into "${c.b.text}" (${c.b.selector}) by ${c.overlap.w}x${c.overlap.h}px at y=${c.at.y}` }));
+    rec('responsive.text-overlap', ctx, r.count ? 'fail' : 'pass', r.count ? `${r.count} place(s) where text runs into other text` : `${r.checked} lines of text, none overlapping`, ev);
+  };
   const call = async (name, page, cfg, ctx, id, fn) => {
     try {
       await seed(page, cfg);
@@ -589,6 +593,7 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
             const bad = r.overflowX === true;
             rec('responsive.overflow', ctx1440, bad ? 'fail' : 'pass', bad ? `scrolls sideways: scrollWidth ${r.scrollWidth} > ${r.clientWidth}` : 'no horizontal overflow', r.culprits.slice(0, 5).map((c) => ({ selector: c.selector, detail: `right edge ${c.right}px` })));
           });
+          await call('text-overlap', page, base, ctx1440, 'responsive.text-overlap', (r) => overlapRec(ctx1440, r));
           try {
             await shoot(page, route, 1440, 'light');
             if (themeStrategy && !args.quick) {
@@ -627,6 +632,7 @@ async function runBrowserGates(browser, args, project, qa, gates, routes, budget
             const bad = r.overflowX === true;
             rec('responsive.overflow', cv, bad ? 'fail' : 'pass', bad ? `scrolls sideways: scrollWidth ${r.scrollWidth} > ${r.clientWidth}` : 'no horizontal overflow', r.culprits.slice(0, 5).map((c) => ({ selector: c.selector, detail: `right edge ${c.right}px` })));
           });
+          await call('text-overlap', o.page, base, cv, 'responsive.text-overlap', (r) => overlapRec(cv, r));
           if (width === 375) {
             await call('targets', o.page, { ...base, threshold: T.targetMinMobilePx }, cv, 'responsive.targets-44', (r) => {
               const ev = r.small.map((s) => ({ selector: s.selector, detail: `${s.w}x${s.h}px "${s.text}"` }));

@@ -14,6 +14,7 @@ Change nothing a visitor would notice, unless a check requires it. When a check 
 - A form field without a label: add a `<label>`. If the design shows none, hide it visually with a `.visually-hidden` class, never with `display: none`.
 - No visible focus ring: add `:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }` for the controls that lack one.
 - Text that is cut off or overlaps when spacing is increased: remove the fixed `height` or `overflow: hidden` that causes it.
+- Text that runs into other text at one width: give it room at that width (fewer columns, a smaller gap, or let the row wrap). Shrink the type only when nothing else works.
 - A keyboard trap or an unreachable control: fix the markup (a real `<button>`, a real `<a href>`) and keep the styling.
 
 Never delete a section, shorten the copy, change a font or redesign anything to make a check pass. Do not correct content that no check names, such as a date, a name or a figure: list what looks wrong in the handoff and leave it to the owner.
