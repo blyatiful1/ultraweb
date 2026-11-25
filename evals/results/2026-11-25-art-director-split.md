@@ -33,7 +33,7 @@ Two things follow for the idea of ready-made design systems that a small model p
 
 ## The break the gates missed
 
-At 1440 px the row of crossing times under the chart is set too large for its columns, and three pairs of times run into each other. That is the most important information on the page. The fault is in the art director's own first screen; its self-check looked at a scaled-down full-page screenshot and missed it, and none of the gate checks looked for text overlapping text.
+At 1440 px the row of crossing times under the chart is set too large for its columns, and three pairs of times run into each other. That is the most important information on the page. The fault is in the art director's own first screen. It was told to check its work on the full-page screenshots and did not report the fault, and none of the gate checks looked for text overlapping text.
 
 `scripts/measure/text-overlap.mjs` and the check `responsive.text-overlap` are the response. Run against ten pages from these rounds at 375, 768 and 1440 px, the check reports that fault and one other (a button lying over a note in an earlier hotel page), and nothing else. With it, the split page fails the gates and the single page still passes that check.
 
