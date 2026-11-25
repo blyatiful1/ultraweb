@@ -12,6 +12,8 @@
   .faint { color: #bbbbbb; }
   .wide { width: 1400px; height: 40px; background: #ddd; }
   .tiny { width: 14px; height: 14px; padding: 0; border: 0; background: #444; }
+  .clash { display: grid; grid-template-columns: 110px 110px; }
+  .clash span { font-size: 36px; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -26,6 +28,7 @@
   <a href="#">Dead link</a>
   <a href="/missing-page">Missing page</a>
   <div class="wide"></div>
+  <div class="clash"><span>08:16 to 14:20</span><span>20:16 to 24:00</span></div>
 </main>
 <footer><p>Footer</p></footer>
 <script src="/big.js"></script>

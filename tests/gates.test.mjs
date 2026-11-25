@@ -119,7 +119,7 @@ gate('a site with planted defects exits 1 and names the failing checks', async (
     assert.equal(g.round, 1);
     const failing = new Set(g.records.filter((x) => x.status === 'fail').map((x) => x.id));
     for (const id of [
-      'a11y.contrast', 'a11y.alt-labels', 'a11y.targets-24', 'responsive.overflow', 'content.links',
+      'a11y.contrast', 'a11y.alt-labels', 'a11y.targets-24', 'responsive.overflow', 'responsive.text-overlap', 'content.links',
       'content.headings', 'content.placeholder', 'content.metadata', 'content.title-unique',
       'perf.js-budget', 'perf.cls',
     ]) {
@@ -137,7 +137,7 @@ gate('a site with planted defects exits 1 and names the failing checks', async (
     assert.equal(JSON.parse(readFileSync(join(proj, 'qa', 'gates.json'), 'utf8')).round, 2);
     // waivers turn a fail into waived
     mkdirSync(join(proj, 'qa'), { recursive: true });
-    writeFileSync(join(proj, 'qa', 'waivers.json'), JSON.stringify([{ check: 'responsive.overflow', reason: 'intentional wide block' }, { check: 'responsive.targets-44', reason: 'fixture icon button' }]));
+    writeFileSync(join(proj, 'qa', 'waivers.json'), JSON.stringify([{ check: 'responsive.overflow', reason: 'intentional wide block' }, { check: 'responsive.targets-44', reason: 'fixture icon button' }, { check: 'responsive.text-overlap', reason: 'planted clash' }]));
     const r3 = await runGatesAsync(['--url', origin, '--routes', '/', '--project', proj, '--only', 'responsive'], root);
     assert.equal(r3.status, 0, r3.stdout);
     const g3 = JSON.parse(readFileSync(join(proj, 'qa', 'gates.json'), 'utf8'));

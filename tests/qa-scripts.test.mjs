@@ -1,8 +1,8 @@
 // Contract tests for the measurement library (scripts/measure/*.mjs) — the files the gate
 // skills name and gate-runner loads through the Playwright MCP tool browser_run_code_unsafe
 // with `filename:`. That tool evaluates the file as `await (<file contents>)(page)`, so the
-// static tests below hold every file to exactly that shape, and the live block drives all
-// fifteen against tests/fixtures/measure-page/index.html, whose planted defects must show up
+// static tests below hold every file to exactly that shape, and the live block drives the
+// library against tests/fixtures/measure-page/index.html, whose planted defects must show up
 // in the returned data. The live block serves that fixture from a node:http static server on
 // 127.0.0.1: the MCP server refuses file:// origins, and file:// hides the three network paths
 // (links-collect fetches nothing, cold-load-js weighs nothing, fonts never load), so the test
@@ -41,6 +41,7 @@ const CONTRACT = [
   'axe',
   'tells-census',
   'density',
+  'text-overlap',
 ];
 
 const files = readdirSync(measureDir).filter((f) => f.endsWith('.mjs')).sort();
@@ -460,6 +461,28 @@ test('the library measures the fixture and its planted defects', { timeout: 1800
       'a cycledWithin selector sits outside the dialog'
     );
     await modal.close();
+
+    // text-overlap: one real collision; tight leading, a closed <details> and a badge inside its own heading are not
+    const clash = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+    await clash.setContent(`<!doctype html><style>
+      body{margin:40px;font:16px/1.5 sans-serif}
+      .board{display:grid;grid-template-columns:120px 120px;gap:0}
+      .board span{font-size:40px;white-space:nowrap}
+      h1{font-size:96px;line-height:.9;margin:0}
+      h1 span{display:block}
+      h2{position:relative} h2 sup{position:absolute;left:0;top:0}
+    </style>
+    <h1><span>Tight</span><span>leading</span></h1>
+    <div class="board"><span id="one">08:16 to 14:20</span><span id="two">20:16 to 24:00</span></div>
+    <h2>Heading <sup>new</sup></h2>
+    <details><summary>Question one</summary><p>Hidden answer text that is long enough to matter.</p></details>
+    <details><summary>Question two</summary><p>Another hidden answer of similar length here.</p></details>
+    <p>Ordinary paragraph.</p>`);
+    const overlap = await load('text-overlap.mjs')(clash);
+    assert.equal('error' in overlap, false, `text-overlap reported error "${overlap.error}"`);
+    assert.equal(overlap.count, 1, `text-overlap found ${overlap.count} collisions, expected exactly the board: ${JSON.stringify(overlap.collisions)}`);
+    assert.deepEqual([overlap.collisions[0].a.selector, overlap.collisions[0].b.selector].sort(), ['#one', '#two']);
+    await clash.close();
 
     // an empty page must produce data, never a throw
     const blank = await browser.newPage({ viewport: { width: 800, height: 600 } });

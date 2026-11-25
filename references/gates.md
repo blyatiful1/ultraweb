@@ -50,6 +50,7 @@ Statuses: `pass`, `fail`, `review`, `skip`, `error`.
 | a11y | forms | labels, `aria-describedby` error binding, `aria-invalid`, `autocomplete`; a required field must say so in its label text ("required", "Pflicht" or an asterisk), not only in a hint |
 | a11y | text spacing | with the WCAG 1.4.12 override applied, nothing clips or overflows horizontally |
 | responsive | overflow | no horizontal scroll at 375, 768 and 1440 |
+| responsive | text-overlap | no text running into other text at any of those widths (text in SVG, in fixed or sticky bars and in `aria-hidden` subtrees is not checked) |
 | responsive | targets | at least 44x44 CSS px at 375; inline paragraph links exempt |
 | responsive | screenshots | one per route and width in `qa/shots/` |
 | perf | cold-load JS | transferred bytes on a cold load against the budget: 140 kB by default; pass `--js-budget <kB>` for an app-like route or a budget set in `design/DIRECTION.md` |
