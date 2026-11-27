@@ -13,7 +13,7 @@ Read this before installing.
 - **Graded, one brief on the middle tier:** the bike-workshop brief was rebuilt by the middle Claude model, three ways, and graded blind. The grader preferred ultraweb's page; it passed the gates and the other two failed eight checks each. On the smallest model the same brief went to `frontend-design`. One brief is not a trend.
 - **Graded, a shorter path:** a one-file version of ultraweb's one-page path was tried on the smallest model with a new brief, blind. It passed the gates at 163k tokens (the usual path: 210k to 270k) and the grader still preferred the `frontend-design` page. It was not adopted.
 - **Graded, one brief with the models split:** the top Claude model designed a page (plan, stylesheet, first screen) and the smallest filled it in; the grader preferred it, blind, to the middle model with `frontend-design`. It cost 5.2 times as much at list prices ($2.76 against $0.53), and one row of figures overlapped at desktop width, which the gates of that day did not catch. They do now (`responsive.text-overlap`).
-- **Graded, a reusable design pack:** the top model authored one design pack without knowing any client ($4.57, once); the smallest model then built two different sites from it at about half the cost of the middle model with `frontend-design`, passing the gates both times. Blind, the grader preferred the pack page for one brief and the other page for the second. Packs are a prototype and are not in the plugin yet.
+- **Graded, a reusable design pack:** the top model authored one design pack without knowing any client ($4.57, once); the smallest model then built two different sites from it at about half the cost of the middle model with `frontend-design`, passing the gates both times. Blind, the grader preferred the pack page for one brief and the other page for the second. Six packs now ship in `packs/`; only the first has been through a graded comparison.
 - **What that means:** ultraweb makes a small model's site correct, accessible and honest about what is drafted. On the smallest model it does not yet make it better looking than a short design skill does; on the middle model it did, once. For a one-page site on a small model, install `frontend-design` alongside: it designs the page, and ultraweb finishes it (`references/finish.md`). Tested once: a `frontend-design` page that failed five checks passed all of them after the finish pass, with one visible change (the phone navigation wraps to two lines). The two steps together used about 290k tokens.
 - **Cost:** the only full-build receipt is from version 1: 6 h 06 min, 4,753 API calls and 756 million tokens processed for one site. Version 2 loads far less instruction text, but its cost has not been measured. Treat a standard build as a multi-hour job.
 - **Award level:** the plugin aims at site-of-the-day quality and cannot promise it. Sites at that level depend on an original concept and on authored assets (photography, film, illustration, 3D). ultraweb supplies concept discipline, engineering and finish; the assets come from you or from generation tools in your session.
@@ -75,6 +75,7 @@ Requirements: Node 22 or newer, npm and git. The gates need Playwright with a Ch
 | "audit the design of my site" | `ultraweb:retrofit` | A read-only audit of any site, written to `design/RETROFIT.md`; fixes only after you approve |
 | "check this site" | `ultraweb:gates` | The deterministic checks against any running site or URL |
 | "make this page pass without changing how it looks" | `ultraweb:gates` | The checks, then the smallest fixes that pass (`references/finish.md`) |
+| "a quick one-pager for my barber shop", "build it from the shopfront pack" | `ultraweb` | A one-page site built from a ready-made design pack (see Design packs) |
 | "continue" | `ultraweb` | Resumes an interrupted build from `design/PROGRESS.md` |
 
 **Modes.** `guided` (default) stops three times: you pick a mockup, you review the homepage, you accept the finished site. `autonomous` ("just build it") stops for nothing and logs every assumption.
@@ -118,8 +119,13 @@ Scripts do the rest of what is easy to get wrong:
 | `scripts/moments.mjs` | choosing kit moments that fit the site and its assets |
 | `scripts/photos.mjs` | openly licensed stand-in photographs, with the credit each licence requires |
 | `scripts/fonts.mjs` | a font family fetched once and self-hosted, with its `@font-face` rules |
+| `scripts/packs.mjs` | listing the design packs by the clients they suit, and installing one |
 | `scripts/check-phase.mjs` | whether a phase's artifacts are complete before the build moves on |
 | `scripts/gates.mjs` | the quality gates |
+
+### Design packs
+
+A design pack is a complete look for one-page sites, authored once by a strong model and then reused: a stylesheet, a catalogue of every pattern and interface element, fonts and a small script. A small model chooses a pack by the client's subject (`node <plugin>/scripts/packs.mjs list`), fills its patterns with the client's content, adds no CSS of its own and runs the finish pass. Six packs ship in `packs/`: `fieldbook`, `nocturne`, `periodical`, `shopfront`, `vitrine` and `console`. `packs/README.md` says what each is for and what has and has not been tested.
 
 ### Gates
 
@@ -143,7 +149,8 @@ skills/                  iterate, retrofit, gates
 references/              per-phase instructions, loaded on demand
 agents/design-judge.md   the fresh-context critic
 kit/                     base stylesheet, auto-mounter, React wrapper and the moments
-scripts/                 gates.mjs, measure/*, palette.mjs, deal.mjs, moments.mjs, photos.mjs, fonts.mjs, check-phase.mjs, site-check.mjs, verify-stack.mjs, lint-corpus.mjs
+packs/                   design packs: ready-made looks a small model builds a one-page site from
+scripts/                 gates.mjs, measure/*, palette.mjs, deal.mjs, moments.mjs, photos.mjs, fonts.mjs, packs.mjs, check-phase.mjs, site-check.mjs, verify-stack.mjs, lint-corpus.mjs
 hooks/                   write-time placeholder check, gate Stop hook
 stack/versions.json      the only place package versions are pinned
 evals/                   briefs, capture and blind comparison
