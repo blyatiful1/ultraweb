@@ -1,0 +1,36 @@
+{
+  "name": "fieldbook",
+  "title": "Fieldbook",
+  "character": "A site set like a surveyor's field book or a workshop drawing: narrow tall headlines, mono figures, hard rules, dimension lines carrying real figures.",
+  "suits": [
+    "makers",
+    "trades and workshops",
+    "boatyards and bike shops",
+    "studios",
+    "clubs",
+    "guides",
+    "anyone with dimensions, times, prices or a place on a map"
+  ],
+  "notFor": [
+    "soft wellness",
+    "luxury fashion",
+    "children's parties",
+    "anything that sells mood without figures"
+  ],
+  "colourways": [
+    "paper",
+    "blueprint",
+    "survey"
+  ],
+  "firstScreens": [
+    "drawing",
+    "timetable",
+    "type"
+  ],
+  "signature": "The dimension line: a rule with slashed end ticks that carries a real figure, under every heading; and dimensioned drawings with numbered callouts.",
+  "fonts": [
+    "Archivo Narrow",
+    "Archivo",
+    "IBM Plex Mono"
+  ]
+}
