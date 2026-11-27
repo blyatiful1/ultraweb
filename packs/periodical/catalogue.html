@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en" data-colourway="paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quarterly pack catalogue: The Ferry House</title>
+<meta name="description" content="Catalogue of the Quarterly design pack: every pattern and element once, filled for an invented client, The Ferry House, an inn on a river crossing.">
+<link rel="preload" href="fonts/newsreader-latin-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/libre-franklin-latin-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="pack.css">
+<script src="pack.js" defer></script>
+<style>
+  /* Catalogue only: the banner and colourway switch. Not part of a client site. */
+  .cat-bar { background: var(--text); color: var(--ground); }
+  .cat-bar__in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1.5rem; padding-block: 0.6rem; font: 400 1rem/1.45 var(--sans); }
+  .cat-bar p { margin: 0; }
+  .cat-bar__switch { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .cat-bar button { min-height: 44px; padding: 0 0.9rem; border: 1px solid var(--ground); background: transparent; color: var(--ground); font: 600 1rem/1 var(--sans); cursor: pointer; }
+  .cat-bar button[aria-pressed="true"] { background: var(--ground); color: var(--text); }
+  .cat-bar :focus-visible { outline-color: var(--ground); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the cover story</a>
+
+<!-- Sprite of ready-made drawing parts. Copy this block once, straight after <body>, and place parts with <svg><use href="#q-…"/></svg>. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="q-scissors" viewBox="0 0 40 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="6" r="4.5"/><circle cx="7" cy="18" r="4.5"/><path d="M11 8 L38 20 M11 16 L38 4"/></g></symbol>
+  <symbol id="q-portrait" viewBox="0 0 100 125"><g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="50" cy="52" r="19"/><path d="M12 125 C16 94 32 82 50 82 C68 82 84 94 88 125"/><path d="M33 47 C38 34 62 32 68 46"/></g></symbol>
+  <symbol id="q-info" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 10.5 V17 M12 7 V7.5" stroke-linecap="round"/></g></symbol>
+  <symbol id="q-warn" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2.5 L22.5 21 H1.5 Z"/><path d="M12 9.5 V14.5 M12 17.5 V18" stroke-linecap="round"/></g></symbol>
+</svg>
+
+<div class="cat-bar">
+  <div class="wrap cat-bar__in">
+    <p><strong>Catalogue</strong> of the Quarterly design pack. Every pattern and element once, in page order, for an invented client.</p>
+    <div class="cat-bar__switch" role="group" aria-label="Colourway">
+      <button type="button" data-cw="paper" aria-pressed="true">Paper</button>
+      <button type="button" data-cw="night" aria-pressed="false">Night edition</button>
+      <button type="button" data-cw="special" aria-pressed="false">Special issue</button>
+    </div>
+  </div>
+</div>
+
+<!-- PATTERN: masthead (header with navigation). For: every page, first thing. Builder supplies: client name, issue line (number, season, one live status), 4–7 section links with their section numbers. Limits: name up to 4 words; nav labels 1–2 words; on phones the nav folds into the "Contents" disclosure. -->
+<header class="masthead">
+  <div class="wrap">
+    <div class="masthead__issue">
+      <p class="masthead__line" style="margin:0"><b>No. 31</b><span>Winter 2026–27</span><span>Polwenna, on the Fal</span></p>
+      <span class="status" data-hours="mon closed; tue-sat 12:00-15:00 18:00-23:00; sun 12:00-17:00">Open Tuesday to Sunday</span>
+    </div>
+    <div class="masthead__bar">
+      <a class="nameplate" href="#main">The Ferry House</a>
+      <nav class="nav-strip" aria-label="Contents">
+        <ol>
+          <li><a href="#story"><span>04</span> The story</a></li>
+          <li><a href="#rooms"><span>05</span> Rooms</a></li>
+          <li><a href="#kitchen"><span>08</span> Kitchen</a></li>
+          <li><a href="#almanac"><span>10</span> Almanac</a></li>
+          <li><a href="#reply"><span>13</span> Book</a></li>
+          <li><a href="#finding"><span>14</span> Finding us</a></li>
+        </ol>
+      </nav>
+      <details class="nav-menu">
+        <summary>Contents</summary>
+        <nav aria-label="Contents, compact">
+          <ol>
+            <li><a href="#story"><span>04</span> The story</a></li>
+            <li><a href="#rooms"><span>05</span> Rooms</a></li>
+            <li><a href="#kitchen"><span>08</span> Kitchen</a></li>
+            <li><a href="#almanac"><span>10</span> Almanac</a></li>
+            <li><a href="#reply"><span>13</span> Book</a></li>
+            <li><a href="#finding"><span>14</span> Finding us</a></li>
+          </ol>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- PATTERN: first screen A, "cover story". For: a subject with an obvious picture (a building, a place, a bottle, a person). Slots: kicker (2–4 words), h1 headline (3–9 words; add class is-long over 9), standfirst (20–45 words), byline facts (3–5 short facts), 1–2 actions, one figure (4:5, numbered Fig. 1, caption), cover lines (3 links to sections, optional). -->
+<section class="cover" aria-labelledby="cover-title">
+  <div class="wrap">
+    <div class="cover__grid">
+      <div>
+        <p class="cover__kicker">The cover story</p>
+        <h1 class="cover__title" id="cover-title">Two hundred and forty winters at the crossing</h1>
+        <p class="cover__standfirst">A slate-roofed inn on the slipway at Polwenna, twelve rooms over the water, a kitchen that cooks what the river brings, and a ferry that has never once missed the last boat home.</p>
+        <p class="byline"><span><b>Since 1782</b></span><span>12 rooms</span><span>Kitchen open Tue–Sun</span><span>Ferry every 20 min</span></p>
+        <div class="actions">
+          <a class="btn" href="#reply">Ask for a room</a>
+          <a class="link-quiet" href="#kitchen">Read about the kitchen</a>
+        </div>
+      </div>
+      <figure class="fig">
+        <div class="frame frame--4x5">
+          <span class="frame__label">Stand-in photo</span>
+          <svg class="drawing" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Drawing of the Ferry House: a slate-roofed inn on a slipway, one window lit, a boat moored below">
+            <circle cx="320" cy="82" r="22"/>
+            <path d="M44 214 L200 120 L356 214 Z"/>
+            <path d="M98 184 V138 H122 V170 M280 168 V132 H304 V182"/>
+            <rect x="64" y="214" width="272" height="186"/>
+            <rect x="90" y="240" width="30" height="46"/><rect x="152" y="240" width="30" height="46"/><rect class="lit" x="218" y="240" width="30" height="46"/><rect x="280" y="240" width="30" height="46"/>
+            <rect x="90" y="318" width="30" height="46"/><rect x="280" y="318" width="30" height="46"/>
+            <path d="M182 400 V346 A18 18 0 0 1 218 346 V400"/>
+            <path d="M150 312 H250 M160 312 V300 M240 312 V300"/>
+            <path d="M0 400 H400 M120 400 L70 456 M300 400 L350 456"/>
+            <path d="M0 436 q25 -9 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0"/>
+            <path d="M-20 462 q25 -9 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0"/>
+            <path d="M0 488 q25 -9 50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0 t50 0"/>
+            <path d="M236 448 H336 L322 470 H252 Z M286 448 V398 L312 430 H286"/>
+          </svg>
+        </div>
+        <figcaption><span class="fig__no">Fig. 1</span>The inn from the south slip at dusk, the lamp lit in the window of room four.</figcaption>
+      </figure>
+    </div>
+    <ol class="cover__lines">
+      <li><a href="#rooms"><span class="cover__page">05</span><span class="cover__line-title">Twelve rooms over the water</span><span class="cover__line-desc">From £125 a night, breakfast on the quay</span></a></li>
+      <li><a href="#kitchen"><span class="cover__page">08</span><span class="cover__line-title">What the river brings</span><span class="cover__line-desc">Oysters, sea trout and the winter menu</span></a></li>
+      <li><a href="#almanac"><span class="cover__page">10</span><span class="cover__line-title">The winter almanac</span><span class="cover__line-desc">Suppers, a carol boat and the oyster weekend</span></a></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PATTERN: first screen B, "contents page". For: a client whose main attraction is a list with figures (a menu, a wine list, a price list, an annual report's results). Slots: issue line, title (h1 on a real site; 1–6 words, class is-long over 6), standfirst, contents list (4–8 of the page's own sections, number + title + one line), centrepiece table (Table 1: 5–14 rows with real figures, group rows allowed, footnote). -->
+<section class="contents" id="contents" aria-labelledby="contents-title">
+  <div class="wrap contents__grid">
+    <div>
+      <p class="contents__issue"><span>Contents</span><span>No. 31 · Winter 2026–27</span></p>
+      <h2 class="contents__title" id="contents-title">In this issue of the Ferry House</h2>
+      <p class="standfirst">Rooms, the winter menu, the boat, and the dates worth crossing the river for.</p>
+      <ol class="toc">
+        <li><a href="#letter"><span class="toc__no">03</span><span class="toc__title">A letter from the innkeeper</span><span class="toc__desc">Maud Penhallow on keeping the lamp lit</span></a></li>
+        <li><a href="#story"><span class="toc__no">04</span><span class="toc__title">The last boat home</span><span class="toc__desc">A history of the crossing, with notes</span></a></li>
+        <li><a href="#rooms"><span class="toc__no">05</span><span class="toc__title">Rooms and the larder</span><span class="toc__desc">Twelve rooms, nightly prices</span></a></li>
+        <li><a href="#boat"><span class="toc__no">06</span><span class="toc__title">The Jenny Wren</span><span class="toc__desc">Fact file of the ferry</span></a></li>
+        <li><a href="#almanac"><span class="toc__no">10</span><span class="toc__title">The winter almanac</span><span class="toc__desc">Five dates to the end of February</span></a></li>
+        <li><a href="#finding"><span class="toc__no">14</span><span class="toc__title">Finding us</span><span class="toc__desc">By train, by ferry, by road</span></a></li>
+      </ol>
+    </div>
+    <figure class="centrepiece">
+      <figcaption class="centrepiece__cap"><span class="centrepiece__no">Table 1</span><span class="centrepiece__title">The winter menu</span></figcaption>
+      <table class="ledger">
+        <thead><tr><th scope="col">Dish</th><th scope="col" class="num">Price</th></tr></thead>
+        <tbody>
+          <tr class="ledger__group"><th scope="rowgroup" colspan="2">From the river</th></tr>
+          <tr><td>Helford oysters, shallot vinegar<span class="ledger__note">by the half dozen</span></td><td class="num">£16.50</td></tr>
+          <tr><td>Smoked sea trout, soda bread</td><td class="num">£11.00</td></tr>
+          <tr><td>Mussels in cider, chips</td><td class="num">£18.00</td></tr>
+          <tr class="ledger__group"><th scope="rowgroup" colspan="2">From the land</th></tr>
+          <tr><td>Roskilly's beef shin, mash, greens<span class="ledger__note">for two, Sundays</span></td><td class="num">£42.00</td></tr>
+          <tr><td>Leek and Cornish Yarg tart</td><td class="num">£15.50</td></tr>
+          <tr class="ledger__group"><th scope="rowgroup" colspan="2">To finish</th></tr>
+          <tr><td>Saffron bun pudding, clotted cream</td><td class="num">£8.50</td></tr>
+        </tbody>
+      </table>
+      <p class="centrepiece__foot">Prices include VAT. The river decides the first course; ask what landed this morning.</p>
+    </figure>
+  </div>
+</section>
+
+<!-- PATTERN: first screen C, "letter from the owner". For: a client led by a person's voice (a family business, a founder, a campaign, an annual report's chair). Type is the picture: no photo. Slots: dateline (place + date), opening line (h1 on a real site; 8–22 words; is-long over 16), salutation, 3–6 paragraphs (first gets dropcap), signoff (name + role), aside (2–4 short facts or a P.S.). -->
+<section class="letter" id="letter" aria-labelledby="letter-title">
+  <div class="wrap letter__grid">
+    <p class="letter__date"><span>From the innkeeper</span><span>Ferry Lane, Polwenna · 1 December 2026</span></p>
+    <h2 class="letter__opening" id="letter-title">“We have kept a lamp in the window for two hundred and forty winters, and we are not about to stop.”</h2>
+    <div class="letter__body">
+      <p class="letter__salute">Dear reader,</p>
+      <p class="dropcap">My great-great-grandmother ran this house with a rowing boat and a bell. When the bell rang at the far slip, somebody put down their pint and rowed. We have an engine now, and a timetable, but the arrangement is the same: if you are on the other side, we will come and fetch you.</p>
+      <p>This winter we have redone four rooms under the eaves, let the kitchen cook less and cook it better, and moved the oyster weekend to February, when the water is coldest and the oysters are at their best.</p>
+      <p>Come for one night or for a week. Bring boots. The fire in the snug is lit by four.</p>
+      <p class="signoff"><span class="signoff__name">Maud Penhallow</span><span class="signoff__role">Innkeeper, the fifth Penhallow to hold the licence</span></p>
+    </div>
+    <div class="letter__aside">
+      <p><b>Written from</b><br>the snug, table by the fire</p>
+      <p><b>P.S.</b> Dogs are welcome in the bar and in rooms 1, 2 and 9.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: feature (the long read, with marginal notes). For: the client's story, history or method, told at length. Builder supplies: folio, h2 (3–10 words), standfirst, byline, 4–12 paragraphs (first with dropcap), 1–4 marginal notes (span.note inside the paragraph, straight after its sup.ref), optional pull quote, optional sidebar, last paragraph with endmark. Notes sit in the margin from 1024px and fold into the text below that. -->
+<section class="section" id="story" aria-labelledby="story-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">04</span><span class="folio__title">The story</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <article class="article">
+      <header class="article__head">
+        <h2 class="h2" id="story-title">The last boat home</h2>
+        <p class="standfirst">How a rowing boat, a bell and one stubborn family kept a river crossing open since the reign of George III.</p>
+        <p class="byline"><span>Words by Tamsin Rowe</span><span>Drawings by Jory Kemp</span><span>9 minutes to read</span></p>
+      </header>
+      <div class="prose prose--margined">
+        <p class="dropcap">The crossing at Polwenna is older than the inn. Drovers walked cattle down to the water here long before anyone thought to sell them beer, and the first ferry was simply whoever owned a boat and could be woken. The licence came in 1782, granted to one Jacob Penhallow on condition that he keep “a sound boat and a light”.<sup class="ref">1</sup><span class="note" role="note"><span class="note__no">1</span>The licence hangs behind the bar. The light it mentions was a tallow lamp; the window it stood in is now room four.</span></p>
+        <p>He kept both. The house grew around the slip a room at a time: a taproom first, then a kitchen, then bedrooms for the travellers who missed the tide and had nowhere else to go. By 1850 the inn had twelve rooms and the boat had a name.</p>
+        <blockquote class="pull"><p>“If the bell rang, you went. It didn’t matter who it was or what the weather was doing.”</p><cite>Bill Penhallow, ferryman 1961–1998</cite></blockquote>
+        <p>The engine came in 1924 and the timetable in 1951, but the rule about the bell never changed. It still hangs on the far slip, and it is still answered, even after the last scheduled boat.<sup class="ref">2</sup><span class="note" role="note"><span class="note__no">2</span>Ring before 23:30 and the crossing is free. After that, it is still free, but expect a look.</span></p>
+        <aside class="sidebar" aria-labelledby="sb-title">
+          <h3 class="sidebar__head" id="sb-title">Five Penhallows, one licence</h3>
+          <ul>
+            <li>Jacob, 1782–1819: built the taproom</li>
+            <li>Grace, 1819–1866: added the rooms</li>
+            <li>Thomas, 1866–1921: named the boat</li>
+            <li>Bill, 1961–1998: the last to row</li>
+            <li>Maud, since 2009: the kitchen as it is now</li>
+          </ul>
+        </aside>
+        <p class="endmark">Today the Jenny Wren makes the crossing forty times a day in summer and twenty-six in winter. The bell is bronze, slightly cracked, and louder than it looks.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- PATTERN: listing (index of offerings with figures). For: rooms, a menu section, a wine list, membership rates. Builder supplies: folio, h2, standfirst, 1–4 groups (heading + unit), 3–9 items each: name (1–6 words), price, optional description (up to 18 words) and tag. Two columns from 800px. -->
+<section class="section" id="rooms" aria-labelledby="rooms-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">05</span><span class="folio__title">Rooms and the larder</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <header class="head head--split">
+      <h2 class="h2" id="rooms-title">Twelve rooms, every one over the water</h2>
+      <p class="standfirst">Prices are per room per night, with breakfast on the quay. Winter rates run from November to the end of February.</p>
+    </header>
+    <div class="listing">
+      <div class="listing__group">
+        <h3 class="listing__head">Rooms <span>per night</span></h3>
+        <ul class="listing__items">
+          <li class="item"><span class="item__name">The Lamp Room <span class="tag">Room 4</span></span><span class="item__leader"></span><span class="item__price">£165</span><p class="item__desc">The window from the licence; a deep bath facing the slip.</p></li>
+          <li class="item"><span class="item__name">Under the Eaves</span><span class="item__leader"></span><span class="item__price">£145</span><p class="item__desc">Four new rooms in the roof, beams and skylights over the river.</p></li>
+          <li class="item"><span class="item__name">Quayside doubles</span><span class="item__leader"></span><span class="item__price">£135</span><p class="item__desc">Step out of the door onto the quay. Dogs welcome.</p></li>
+          <li class="item"><span class="item__name">The Ferryman’s Cottage</span><span class="item__leader"></span><span class="item__price">£240</span><p class="item__desc">Sleeps four, with its own kitchen and a boat at the bottom of the garden.</p></li>
+        </ul>
+      </div>
+      <div class="listing__group">
+        <h3 class="listing__head">From the larder <span>to take home</span></h3>
+        <ul class="listing__items">
+          <li class="item"><span class="item__name">Smoked sea trout</span><span class="item__leader"></span><span class="item__price">£12.00</span><p class="item__desc">200 g side, smoked over oak in the yard.</p></li>
+          <li class="item"><span class="item__name">Saffron buns <span class="tag">Saturdays</span></span><span class="item__leader"></span><span class="item__price">£2.40</span></li>
+          <li class="item"><span class="item__name">Ferry House cider, 75 cl</span><span class="item__leader"></span><span class="item__price">£9.50</span><p class="item__desc">Pressed at Trelissick from the orchard across the water.</p></li>
+          <li class="item"><span class="item__name">Hedgerow chutney</span><span class="item__leader"></span><span class="item__price"><span class="status status--out">Sold out</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: fact file (specification list beside a drawing). For: the particulars of one thing: a boat, a building, a vintage, a programme. Builder supplies: folio, h2, one sentence, a figure (drawing or photo, 3:2 or 5:4), 4–10 rows of term + value. Terms up to 3 words; values up to 25 words. -->
+<section class="section" id="boat" aria-labelledby="boat-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">06</span><span class="folio__title">Fact file</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <div class="factfile">
+      <figure class="fig">
+        <div class="frame frame--5x4">
+          <svg class="drawing" viewBox="0 0 480 384" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Side view of the ferry Jenny Wren: a small open launch with a wheelhouse and a mast">
+            <path class="wash" d="M40 230 H440 L408 282 H84 Z"/>
+            <path d="M40 230 H440 L408 282 H84 Z"/>
+            <path d="M60 212 H420 M80 212 V230 M140 212 V230 M200 212 V230 M330 212 V230 M390 212 V230"/>
+            <path d="M232 230 V160 H322 V230 M246 176 H272 V200 H246 Z M282 176 H308 V200 H282 Z M224 160 H330"/>
+            <path d="M276 160 V84 M276 92 L318 104 L276 116"/>
+            <path class="lit" d="M300 138 h10 v10 h-10 z"/>
+            <path d="M0 300 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0"/>
+            <path d="M-30 330 q30 -10 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0"/>
+          </svg>
+        </div>
+        <figcaption><span class="fig__no">Fig. 2</span>The Jenny Wren, third of the name, built at Mylor in 1987.</figcaption>
+      </figure>
+      <div>
+        <h2 class="h2" id="boat-title">The Jenny Wren</h2>
+        <p class="standfirst">Six minutes across, twenty-six crossings a winter’s day, and a bell on the far side.</p>
+        <dl class="facts">
+          <div class="facts__row"><dt>Built</dt><dd>1987, Mylor Bridge boatyard, larch on oak</dd></div>
+          <div class="facts__row"><dt>Length</dt><dd>9.4 metres</dd></div>
+          <div class="facts__row"><dt>Passengers</dt><dd>24, with room for bicycles and one dog per person</dd></div>
+          <div class="facts__row"><dt>Crossing</dt><dd>6 minutes, slip to slip</dd></div>
+          <div class="facts__row"><dt>First and last</dt><dd>07:40 and 23:20, every day but Christmas Day</dd></div>
+          <div class="facts__row"><dt>Fare</dt><dd>£2.50 each way; free for guests of the inn</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: steps (in order). For: how something is made, how a booking works, a programme's stages. Builder supplies: folio, h2, 3–9 steps: title (2–6 words), 1–3 sentences, optional meta line (a time, a quantity). Numbers are drawn by CSS. -->
+<section class="section" id="method" aria-labelledby="method-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">07</span><span class="folio__title">Method</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <header class="head">
+      <h2 class="h2" id="method-title">From the oyster bed to the plate</h2>
+    </header>
+    <ol class="steps">
+      <li class="step"><h3 class="step__title">Picked at low water</h3><p>The Helford beds are worked by hand on the spring tides, a mile downstream.</p><span class="step__meta">Before 07:00</span></li>
+      <li class="step"><h3 class="step__title">Rested in the river</h3><p>A day in our own cages off the slip, to clean and settle.</p><span class="step__meta">24 hours</span></li>
+      <li class="step"><h3 class="step__title">Opened to order</h3><p>Never before you ask. A knife, a cloth, and someone who has done it ten thousand times.</p><span class="step__meta">40 seconds</span></li>
+      <li class="step"><h3 class="step__title">Eaten by the fire</h3><p>With shallot vinegar, brown bread and a glass of something cold.</p><span class="step__meta">From £16.50</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PATTERN: spread (text beside a picture). For: one part of the client told with one picture: the kitchen, the vineyard, the studio. Builder supplies: folio, h2, 2–4 paragraphs, optional short quote, one figure (4:5 or 3:4) with caption. Add spread--flip to put the picture right. Never twice in a row. -->
+<section class="section" id="kitchen" aria-labelledby="kitchen-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">08</span><span class="folio__title">The kitchen</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <div class="spread">
+      <figure class="fig spread__fig">
+        <div class="frame frame--4x5">
+          <span class="frame__label">Stand-in photo</span>
+          <svg class="drawing" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Drawing of a plate of opened oysters with half a lemon, a knife beside it">
+            <ellipse class="wash" cx="200" cy="300" rx="170" ry="86"/>
+            <ellipse cx="200" cy="300" rx="170" ry="86"/><ellipse cx="200" cy="300" rx="132" ry="62"/>
+            <path d="M122 284 c10 -26 54 -30 66 -6 c8 18 -14 34 -38 32 c-20 -2 -34 -10 -28 -26 Z"/>
+            <path d="M214 262 c18 -20 62 -12 64 12 c2 22 -30 30 -50 24 c-18 -6 -24 -22 -14 -36 Z"/>
+            <path d="M176 328 c14 -22 58 -20 66 4 c6 20 -24 32 -46 28 c-18 -4 -28 -18 -20 -32 Z"/>
+            <path class="lit" d="M270 318 a26 26 0 0 1 52 0 Z"/>
+            <path d="M52 430 L330 412 M330 412 l40 -4"/>
+            <path d="M0 150 H400"/>
+          </svg>
+        </div>
+        <figcaption><span class="fig__no">Fig. 3</span>A half dozen from the Helford, opened at the bar.</figcaption>
+      </figure>
+      <div class="spread__text">
+        <h2 class="h2" id="kitchen-title">What the river brings</h2>
+        <p>The menu is written at eleven, after the boats come in, and it is short on purpose: three things from the river, two from the land, and a pudding Maud’s grandmother would recognise.</p>
+        <p>Lunch is served in the bar and on the quay. Supper is in the long room upstairs, by candle, with the river going past the windows in the dark.</p>
+        <blockquote class="spread__quote">“We cook less, and we cook it better.”<cite>Ollie Tregear, head cook</cite></blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: band (full-width statement). For: one sentence the client stands by: a promise, a motto, a line from a guest. Builder supplies: a statement of 8–30 words (class is-long over 20), an attribution. At most two bands a page, never next to each other, never first or last. -->
+<section class="band" aria-label="A promise">
+  <div class="wrap">
+    <blockquote class="band__statement">
+      <p>If you are on the other side of the river and the bell rings, somebody will come and fetch you.</p>
+      <footer class="band__by">The rule of the house, since 1782</footer>
+    </blockquote>
+  </div>
+</section>
+
+<!-- PATTERN: numbers (a row of real figures). For: an annual report's results, a farm's year, a campaign's progress. Builder supplies: folio, h2, 3–8 figures: value (up to 7 characters; use units such as "1.2m"), optional unit, label (up to 14 words), a source line. -->
+<section class="section" id="figures" aria-labelledby="figures-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">09</span><span class="folio__title">By the numbers</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <header class="head"><h2 class="h2" id="figures-title">The year at the crossing</h2></header>
+    <ul class="numbers">
+      <li class="numbers__item"><p class="numbers__value">240</p><p class="numbers__label">winters with a lamp in the window</p></li>
+      <li class="numbers__item"><p class="numbers__value">11,380</p><p class="numbers__label">crossings made by the Jenny Wren</p></li>
+      <li class="numbers__item"><p class="numbers__value">6<span class="numbers__unit">min</span></p><p class="numbers__label">slip to slip, in any weather we sail in</p></li>
+      <li class="numbers__item"><p class="numbers__value">52k</p><p class="numbers__label">oysters opened at the bar</p></li>
+    </ul>
+    <p class="numbers__source">Figures for the twelve months to 31 October 2026, from the ferry log and the kitchen books.</p>
+  </div>
+</section>
+
+<!-- PATTERN: almanac (schedule or calendar). For: events, seasons, opening days, a course timetable. Builder supplies: folio, h2, 3–12 dated items: data-date (YYYY-MM-DD, data-date-end for ranges), weekday + day + month, title (2–8 words), one sentence, meta (time, price), a hidden "Next" flag. pack.js marks past items and the next one. -->
+<section class="section" id="almanac" aria-labelledby="almanac-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">10</span><span class="folio__title">Almanac</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <header class="head head--split">
+      <h2 class="h2" id="almanac-title">The winter almanac</h2>
+      <p class="standfirst">Next on the list: <span data-next-for="winter-dates">see the dates below</span>.</p>
+    </header>
+    <ol class="almanac" id="winter-dates" data-dates>
+      <li class="almanac__item" data-date="2026-11-21" data-label="the cider pressing supper">
+        <p class="almanac__date"><span>Sat</span><span class="almanac__day">21</span><span class="almanac__month">November</span></p>
+        <h3 class="almanac__title">Cider pressing supper <span class="tag almanac__flag">Next</span></h3>
+        <p class="almanac__desc">The last of the Trelissick apples, pressed in the yard and drunk at dinner.</p>
+        <p class="almanac__meta">19:00 · £55</p>
+      </li>
+      <li class="almanac__item" data-date="2026-12-12" data-label="the carol boat on 12 December">
+        <p class="almanac__date"><span>Sat</span><span class="almanac__day">12</span><span class="almanac__month">December</span></p>
+        <h3 class="almanac__title">The carol boat <span class="tag almanac__flag">Next</span></h3>
+        <p class="almanac__desc">The Jenny Wren, lit end to end, with the Polwenna choir aboard. Mince pies on the quay.</p>
+        <p class="almanac__meta">17:30 · free</p>
+      </li>
+      <li class="almanac__item" data-date="2026-12-31" data-label="New Year’s Eve on the quay">
+        <p class="almanac__date"><span>Thu</span><span class="almanac__day">31</span><span class="almanac__month">December</span></p>
+        <h3 class="almanac__title">New Year’s Eve on the quay <span class="tag almanac__flag">Next</span></h3>
+        <p class="almanac__desc">Supper upstairs, then the last boat at midnight and a bonfire on the far slip.</p>
+        <p class="almanac__meta">19:30 · £85 <span class="status status--closed">Fully booked</span></p>
+      </li>
+      <li class="almanac__item" data-date="2027-02-13" data-date-end="2027-02-14" data-label="the oyster weekend in February">
+        <p class="almanac__date"><span>Sat–Sun</span><span class="almanac__day">13</span><span class="almanac__month">February</span></p>
+        <h3 class="almanac__title">The oyster weekend <span class="tag almanac__flag">Next</span></h3>
+        <p class="almanac__desc">Two days of oysters from four estuaries, with the people who grow them.</p>
+        <p class="almanac__meta">From 12:00 · free entry</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- PATTERN: people (contributors). For: the staff, the board, the growers, the teachers. Builder supplies: folio, h2, 2–9 people: portrait (photo or the q-portrait stand-in), name, role (up to 5 words), bio (15–40 words). -->
+<section class="section" id="people" aria-labelledby="people-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">11</span><span class="folio__title">Contributors</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <header class="head"><h2 class="h2" id="people-title">The people in this issue</h2></header>
+    <ul class="people">
+      <li class="person">
+        <figure class="person__portrait"><svg role="img" aria-label="Stand-in portrait of Maud Penhallow"><use href="#q-portrait"/></svg></figure>
+        <div><h3 class="person__name">Maud Penhallow</h3><p class="person__role">Innkeeper</p></div>
+        <p class="person__bio">The fifth of her family to hold the licence. Before that, eleven years cooking in Bristol, which she says was practice.</p>
+      </li>
+      <li class="person">
+        <figure class="person__portrait"><svg role="img" aria-label="Stand-in portrait of Ollie Tregear"><use href="#q-portrait"/></svg></figure>
+        <div><h3 class="person__name">Ollie Tregear</h3><p class="person__role">Head cook</p></div>
+        <p class="person__bio">Writes the menu at eleven every morning, after the boats. Grew up two creeks away and has opened more oysters than anyone alive in Polwenna.</p>
+      </li>
+      <li class="person">
+        <figure class="person__portrait"><svg role="img" aria-label="Stand-in portrait of Kit Angove"><use href="#q-portrait"/></svg></figure>
+        <div><h3 class="person__name">Kit Angove</h3><p class="person__role">Ferryman, since 2015</p></div>
+        <p class="person__bio">Skipper of the Jenny Wren and keeper of the bell. Answers it after midnight with a look, but answers it.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- PATTERN: letters (questions). For: the questions guests, buyers or members really ask, as letters to the editor. Builder supplies: folio, h2, a short intro with a contact action, 3–10 questions: question (up to 20 words), who asked (optional), answer (1–4 sentences). -->
+<section class="section" id="letters" aria-labelledby="letters-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">12</span><span class="folio__title">Letters</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <div class="letters">
+      <div>
+        <h2 class="h2" id="letters-title">You asked</h2>
+        <p class="standfirst">The questions that arrive most often, with our answers.</p>
+        <a class="link-quiet" href="mailto:rooms@ferryhouse.example">Write to us</a>
+      </div>
+      <div>
+        <details class="qa" open><summary><span class="qa__q">Can we arrive by boat of our own?<span class="qa__from">From a reader in Falmouth</span></span></summary><div class="qa__a"><p><span class="qa__mark">A.</span>Yes. There are four visitor moorings off the quay, free for guests. Call the bar on VHF 12 when you are in the river.</p></div></details>
+        <details class="qa"><summary><span class="qa__q">Is there parking at the inn?</span></summary><div class="qa__a"><p><span class="qa__mark">A.</span>Eight spaces on the lane, first come. The station car park across the river is larger, and the ferry is free for guests.</p></div></details>
+        <details class="qa"><summary><span class="qa__q">Do you cater for vegetarians, and for allergies?<span class="qa__from">From a reader in Truro</span></span></summary><div class="qa__a"><p><span class="qa__mark">A.</span>Always one dish from the land without meat, and the kitchen will adapt most others. Tell us when you book.</p></div></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: reply card (request form). For: a booking request, an enquiry, a membership or volunteer form. Builder supplies: folio, h2, 1–3 lines on what happens next, the card's address line, 3–10 fields (each with label, hint where useful, "required" in the label text), submit. No backend: the form opens the visitor's mail program, and the foot says so. -->
+<section class="section" id="reply" aria-labelledby="reply-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">13</span><span class="folio__title">Reply card</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <div class="reply-wrap">
+      <div>
+        <h2 class="h2" id="reply-title">Ask for a room</h2>
+        <p class="standfirst">Fill in the card and we will write back within a day with dates, prices and the times of the boat.</p>
+      </div>
+      <form class="reply" action="mailto:rooms@ferryhouse.example" method="post" enctype="text/plain">
+        <svg class="reply__cut" aria-hidden="true" focusable="false"><use href="#q-scissors"/></svg>
+        <p class="reply__to">To: The Ferry House, Ferry Lane, Polwenna, Cornwall</p>
+        <div class="reply__grid">
+          <div class="field"><label for="r-name">Your name (required)</label><input id="r-name" name="name" type="text" autocomplete="name" required></div>
+          <div class="field"><label for="r-email">Email (required)</label><input id="r-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="r-tel">Telephone</label><p class="hint" id="r-tel-hint">Only if you would like us to ring.</p><input id="r-tel" name="telephone" type="tel" autocomplete="tel" aria-describedby="r-tel-hint"></div>
+          <div class="field"><label for="r-date">Arriving on (required)</label><input id="r-date" name="arrival" type="date" required></div>
+          <div class="field"><label for="r-room">Room</label><select id="r-room" name="room"><option>No preference</option><option>The Lamp Room</option><option>Under the Eaves</option><option>Quayside double</option><option>The Ferryman’s Cottage</option></select></div>
+          <div class="stepper" data-stepper><label for="r-nights">Nights (required)</label><div class="stepper__row"><button type="button" class="stepper__btn" data-step="-1" aria-label="One night fewer" hidden>−</button><input id="r-nights" name="nights" type="number" min="1" max="14" value="2" inputmode="numeric" required><button type="button" class="stepper__btn" data-step="1" aria-label="One night more" hidden>+</button></div></div>
+          <fieldset class="field field--full"><legend>Supper on the first night</legend><div class="choices--row"><label class="choice"><input type="radio" name="supper" value="19:00" checked><span>At 19:00</span></label><label class="choice"><input type="radio" name="supper" value="20:30"><span>At 20:30</span></label><label class="choice"><input type="radio" name="supper" value="none"><span>No, thank you</span></label></div></fieldset>
+          <div class="field field--full"><label for="r-note">Anything we should know</label><textarea id="r-note" name="note"></textarea></div>
+          <label class="choice field--full"><input type="checkbox" name="dog"><span>We are bringing a dog</span></label>
+        </div>
+        <div class="reply__foot"><p>Sending opens your own mail program with the card filled in; nothing is sent until you press send there.</p><button class="btn" type="submit">Send the card</button></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: finding us (getting there). For: every client with a door. Builder supplies: folio, h2, a map drawing or photo (5:4) with caption, address, 2–5 routes (mode, time, one sentence), contact links. -->
+<section class="section" id="finding" aria-labelledby="finding-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">14</span><span class="folio__title">Finding us</span><span class="folio__run">No. 31 · Winter 2026–27</span></p>
+    <div class="directions">
+      <figure class="fig">
+        <div class="frame frame--5x4">
+          <svg class="drawing" viewBox="0 0 480 384" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Map: the Ferry House on the north bank of the river, the ferry crossing to the south slip, and the road to Polwenna Road station">
+            <path class="wash" d="M0 150 C120 118 210 196 480 156 V236 C300 270 150 206 0 232 Z"/>
+            <path d="M0 150 C120 118 210 196 480 156 M0 232 C150 206 300 270 480 236"/>
+            <path d="M262 150 L292 236" stroke-dasharray="6 7"/>
+            <circle class="lit" cx="262" cy="136" r="10"/>
+            <path d="M262 126 V60 M262 60 C300 50 360 52 470 40"/>
+            <path d="M292 250 C250 290 200 300 140 318"/>
+            <rect x="112" y="306" width="28" height="22"/>
+            <path d="M0 352 L480 334" stroke-dasharray="2 10" stroke-width="6"/>
+            <path d="M40 92 V52 M30 66 L40 50 L50 66"/>
+            <text x="280" y="122" font-size="24">The Ferry House</text>
+            <text x="30" y="296" font-size="24">Station</text>
+            <text x="320" y="210" font-size="24">Ferry, 6 min</text>
+            <text x="32" y="118" font-size="24">N</text>
+          </svg>
+        </div>
+        <figcaption><span class="fig__no">Fig. 4</span>The crossing, not to scale. The bell is on the south slip.</figcaption>
+      </figure>
+      <div>
+        <h2 class="h2" id="finding-title">Finding us</h2>
+        <address class="address">Ferry Lane, Polwenna<br>Cornwall TR3 6XX</address>
+        <dl class="routes">
+          <div class="routes__row"><dt>By train</dt><dd class="routes__time">2 h 40 from Exeter</dd><dd class="routes__how">To Polwenna Road, then ten minutes’ walk down to the south slip.</dd></div>
+          <div class="routes__row"><dt>By ferry</dt><dd class="routes__time">6 min</dd><dd class="routes__how">Every 20 minutes from 07:40; ring the bell after the last boat.</dd></div>
+          <div class="routes__row"><dt>By road</dt><dd class="routes__time">25 min from Truro</dd><dd class="routes__how">Follow the signs for King Harry, then the lane to the water.</dd></div>
+        </dl>
+        <p class="contact-links"><a class="link-quiet" href="tel:+441872555014">01872 555 014</a><a class="link-quiet" href="mailto:rooms@ferryhouse.example">rooms@ferryhouse.example</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: erratum (404 layout). For: the site's not-found page, as its own file 404.html with header and colophon. Builder supplies: an h1 (here h2, since the catalogue has one h1), the correction slip text, a link to the first screen. -->
+<section class="erratum" id="erratum" aria-labelledby="erratum-title">
+  <div class="wrap erratum__grid">
+    <p class="erratum__folio" aria-hidden="true"><small>p.</small>404</p>
+    <div>
+      <h2 class="erratum__title" id="erratum-title">This page was left out of the issue</h2>
+      <p class="erratum__slip"><b>Erratum.</b> For <del>page 404</del>, read: the contents, on the first page.</p>
+      <div class="actions"><a class="btn btn--secondary" href="#contents">Back to the contents</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ELEMENTS: each element once, in its states. -->
+<section class="section" id="elements" aria-labelledby="elements-title">
+  <div class="wrap">
+    <p class="folio"><span class="folio__mark">15</span><span class="folio__title">Elements</span><span class="folio__run">Catalogue only</span></p>
+    <header class="head"><h2 class="h2" id="elements-title">Elements</h2></header>
+    <div class="specimens">
+
+      <!-- ELEMENT: buttons. For: one primary action per section at most; secondary beside it; quiet link for "read more". Builder supplies: a verb-led label, 1–4 words. States: default, focus (is-focus shows the ring here only), disabled. -->
+      <div class="specimen"><h3 class="specimen__name">Buttons and links</h3>
+        <div class="specimen__row">
+          <a class="btn" href="#reply">Ask for a room</a>
+          <a class="btn btn--secondary" href="#rooms">See the rooms</a>
+          <a class="link-quiet" href="#story">Read the story</a>
+          <a class="btn is-focus" href="#reply">Focused</a>
+          <button class="btn" type="button" disabled>Fully booked</button>
+          <span class="link-quiet is-disabled">Not yet published</span>
+        </div>
+      </div>
+
+      <!-- ELEMENT: form controls. For: inside the reply card. Builder supplies: label (with "(required)" where required), optional hint, an error sentence that says how to fix it. States: default, focus, disabled, error. -->
+      <div class="specimen"><h3 class="specimen__name">Form controls</h3>
+        <div class="specimen__grid">
+          <div class="field"><label for="e-text">Your name (required)</label><p class="hint" id="e-text-h">As it should appear on the booking.</p><input id="e-text" type="text" autocomplete="name" aria-describedby="e-text-h" value="Ada Lovell"></div>
+          <div class="field is-invalid"><label for="e-email">Email (required)</label><input id="e-email" type="email" autocomplete="email" value="ada@" aria-invalid="true" aria-describedby="e-email-err"><p class="error" id="e-email-err">Add the part after the @, for example ada@example.com.</p></div>
+          <div class="field"><label for="e-tel">Telephone</label><input id="e-tel" type="tel" autocomplete="tel" disabled value="Not needed for this date"></div>
+          <div class="field"><label for="e-date">Date</label><input id="e-date" type="date" class="is-focus"></div>
+          <div class="field"><label for="e-sel">Room</label><select id="e-sel"><option>The Lamp Room</option><option>Under the Eaves</option></select></div>
+          <div class="field"><label for="e-area">Message</label><textarea id="e-area" rows="3"></textarea></div>
+          <fieldset class="field"><legend>Choices</legend><label class="choice"><input type="checkbox" checked><span>Breakfast on the quay</span></label><label class="choice"><input type="checkbox" disabled><span>Late checkout (sold out)</span></label><label class="choice"><input type="radio" name="e-r" checked><span>One night</span></label><label class="choice"><input type="radio" name="e-r"><span>Two nights</span></label></fieldset>
+          <div class="stepper" data-stepper><label for="e-qty">Cases of cider</label><div class="stepper__row"><button type="button" class="stepper__btn" data-step="-1" aria-label="One case fewer" hidden>−</button><input id="e-qty" type="number" min="0" max="6" value="0" inputmode="numeric"><button type="button" class="stepper__btn" data-step="1" aria-label="One case more" hidden>+</button></div><p class="hint">Six bottles a case, up to six.</p></div>
+        </div>
+      </div>
+
+      <!-- ELEMENT: status, tag, notices. For: live state (status, or data-hours), a short qualifier (tag, 1–2 words), a message (notice, info or warn; title up to 6 words, body up to 40). -->
+      <div class="specimen"><h3 class="specimen__name">Status, tag, notice</h3>
+        <div>
+          <div class="specimen__row" style="margin-bottom:1.5rem">
+            <span class="status" data-state="open">Open now</span>
+            <span class="status status--closed">Closed on Mondays</span>
+            <span class="status">Rooms available</span>
+            <span class="status status--out">Sold out</span>
+            <span class="tag">New</span><span class="tag tag--solid">Room 4</span>
+          </div>
+          <div class="notice notice--info" role="note"><svg aria-hidden="true"><use href="#q-info"/></svg><p class="notice__title">Christmas Day</p><p>The kitchen is closed and the ferry does not run. The bar opens from 12:00 to 14:00 for residents.</p></div>
+          <div class="notice notice--warn" role="note" style="margin-top:1rem"><svg aria-hidden="true"><use href="#q-warn"/></svg><p class="notice__title">Spring tides on 14 and 15 December</p><p>The quay floods for an hour either side of high water. Park on the lane.</p></div>
+        </div>
+      </div>
+
+      <!-- ELEMENT: table with views. For: timetables, prices by season, results by year. Builder supplies: 2–5 views (radio label 1–2 words, unique name per switch), each with a table of 3–4 columns and 3–12 rows. Without :has every view shows in turn. -->
+      <div class="specimen"><h3 class="specimen__name">Table and views</h3>
+        <div class="views">
+          <fieldset class="views__tabs"><legend>Ferry timetable</legend>
+            <input type="radio" name="ferry-view" id="fv-1" checked><label for="fv-1">Weekdays</label>
+            <input type="radio" name="ferry-view" id="fv-2"><label for="fv-2">Saturday</label>
+            <input type="radio" name="ferry-view" id="fv-3"><label for="fv-3">Sunday</label>
+          </fieldset>
+          <div class="views__panels">
+            <div class="views__panel"><table class="ledger"><caption>Table 2. Weekday crossings, winter</caption><thead><tr><th scope="col">From</th><th scope="col" class="num">First</th><th scope="col" class="num">Last</th><th scope="col" class="num">Every</th></tr></thead><tbody><tr><th scope="row">North slip</th><td class="num">07:40</td><td class="num">23:20</td><td class="num">20 min</td></tr><tr><th scope="row">South slip</th><td class="num">07:50</td><td class="num">23:30</td><td class="num">20 min</td></tr></tbody></table></div>
+            <div class="views__panel"><table class="ledger"><caption>Table 2. Saturday crossings, winter</caption><thead><tr><th scope="col">From</th><th scope="col" class="num">First</th><th scope="col" class="num">Last</th><th scope="col" class="num">Every</th></tr></thead><tbody><tr><th scope="row">North slip</th><td class="num">08:20</td><td class="num">23:40</td><td class="num">20 min</td></tr><tr><th scope="row">South slip</th><td class="num">08:30</td><td class="num">23:50</td><td class="num">20 min</td></tr></tbody></table></div>
+            <div class="views__panel"><table class="ledger"><caption>Table 2. Sunday crossings, winter</caption><thead><tr><th scope="col">From</th><th scope="col" class="num">First</th><th scope="col" class="num">Last</th><th scope="col" class="num">Every</th></tr></thead><tbody><tr><th scope="row">North slip</th><td class="num">09:00</td><td class="num">18:00</td><td class="num">30 min</td></tr><tr><th scope="row">South slip</th><td class="num">09:10</td><td class="num">18:10</td><td class="num">30 min</td></tr></tbody></table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ELEMENT: disclosure. For: small print (terms, allergens, cancellation). Builder supplies: summary up to 8 words, body up to 80 words. -->
+      <div class="specimen"><h3 class="specimen__name">Disclosure</h3>
+        <div>
+          <details class="disclosure"><summary>Cancellation terms</summary><div class="disclosure__body"><p>Cancel up to seven days before arrival for a full refund. After that we keep the first night, unless we can let the room again.</p></div></details>
+          <details class="disclosure"><summary>Allergens in the winter menu</summary><div class="disclosure__body"><p>Every dish is listed with its allergens on a card at the bar. Ask and we will bring it to the table.</p></div></details>
+        </div>
+      </div>
+
+      <!-- ELEMENT: picture slot. For: any photo or drawing. Builder supplies: an img (or inline SVG drawing) inside .frame with a ratio class (4x5, 3x4, 1x1, 5x4, 3x2, 16x9), alt text, a numbered caption. Add .frame__label "Stand-in photo" to any picture that is not the client's own. -->
+      <div class="specimen"><h3 class="specimen__name">Picture slot</h3>
+        <div class="specimen__grid">
+          <figure class="fig"><div class="frame frame--3x2"><span class="frame__label">Stand-in photo</span><svg class="drawing" viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Drawing of the river at low tide with moored boats"><path class="wash" d="M0 120 H300 V200 H0 Z"/><path d="M0 120 H300 M40 140 h60 l-8 10 h-44 Z M70 140 V104 M180 156 h70 l-10 12 h-50 Z M214 156 V112"/><path d="M0 90 C60 70 110 96 160 80 C210 64 250 84 300 72"/></svg></div><figcaption><span class="fig__no">Fig. 5</span>Low water at the north slip.</figcaption></figure>
+          <figure class="fig"><div class="frame frame--1x1"><svg class="drawing" viewBox="0 0 200 200" role="img" aria-label="Drawing of the ferry bell on its post"><path d="M100 30 V50 M70 120 C70 70 130 70 130 120 L140 134 H60 Z M94 140 a6 6 0 0 0 12 0 M40 180 H160 M100 134 V180"/></svg></div><figcaption><span class="fig__no">Fig. 6</span>The bell, drawn: a drawing needs no stand-in label.</figcaption></figure>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- PATTERN: colophon (footer). For: the end of every page. Builder supplies: name, issue line, 3–4 columns (about/colophon text, address, hours, elsewhere links), an end line. -->
+<footer class="colophon">
+  <div class="wrap">
+    <div class="colophon__top"><p class="colophon__name">The Ferry House</p><span class="status" data-hours="mon closed; tue-sat 12:00-15:00 18:00-23:00; sun 12:00-17:00">Open Tuesday to Sunday</span></div>
+    <div class="colophon__grid">
+      <div><h2 class="colophon__head">Colophon</h2><p class="colophon__set">Published each season by the Ferry House, Polwenna. Set in Newsreader and Libre Franklin. Drawings by Jory Kemp.</p></div>
+      <div><h2 class="colophon__head">Address</h2><p>Ferry Lane, Polwenna<br>Cornwall TR3 6XX</p><ul><li><a href="tel:+441872555014">01872 555 014</a></li></ul></div>
+      <div><h2 class="colophon__head">Hours</h2><dl class="hours"><dt>Mon</dt><dd>Closed</dd><dt>Tue–Sat</dt><dd>12:00–15:00<br>18:00–23:00</dd><dt>Sun</dt><dd>12:00–17:00</dd></dl></div>
+      <div><h2 class="colophon__head">Elsewhere</h2><ul><li><a href="mailto:rooms@ferryhouse.example">rooms@ferryhouse.example</a></li><li><a href="#letter">Back issues: the letter</a></li></ul></div>
+    </div>
+    <p class="colophon__end"><span>No. 31 · Winter 2026–27</span><span class="endmark">End of issue</span></p>
+  </div>
+</footer>
+
+<script>
+  /* Catalogue only: colourway switch. */
+  document.querySelectorAll("[data-cw]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.documentElement.setAttribute("data-colourway", b.dataset.cw);
+      document.querySelectorAll("[data-cw]").forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="en" data-colourway="paper">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fieldbook pattern catalogue — Kestrel Lane Woodshop (sample)</title>
+<meta name="description" content="The Fieldbook design pack catalogue: every pattern once, filled with sample content for an invented joinery workshop.">
+<link rel="preload" href="fonts/archivo-narrow-latin-600-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/archivo-latin-400-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="pack.css">
+<script src="pack.js" defer></script>
+</head>
+<body>
+<a class="fb-skip" href="#main">Skip to content</a>
+
+<!-- Catalogue notice: not a pattern. Remove on real sites. -->
+<div class="fb-cat-note">
+  <div class="fb-wrap fb-cat-note__in">
+    <div>
+      <h1>Fieldbook — pattern catalogue</h1>
+      <p>This page is the catalogue of the Fieldbook design pack. Every pattern appears once, filled with sample content for an invented client, Kestrel Lane Woodshop.</p>
+    </div>
+    <div class="fb-swatches" role="group" aria-label="Colourway">
+      <button type="button" data-colourway-set="paper" aria-pressed="true">Paper</button>
+      <button type="button" data-colourway-set="blueprint" aria-pressed="false">Blueprint</button>
+      <button type="button" data-colourway-set="survey" aria-pressed="false">Survey</button>
+    </div>
+  </div>
+</div>
+
+<!-- PATTERN: header
+     For: the title strip at the top of every site. Brand name, a one-line descriptor, navigation.
+     Builder supplies: business name (1–4 words), descriptor (2–6 words, e.g. trade + place), 3–6 nav links to section ids.
+     Limits: nav labels 1–2 words each; at most 6 links. The last link is the main action (booking/request). -->
+<header class="fb-header">
+  <div class="fb-wrap fb-header__in">
+    <a class="fb-brand" href="#main"><b>Kestrel Lane Woodshop</b><span>Joinery school · Ashby Wharf</span></a>
+    <nav class="fb-nav" aria-label="Main">
+      <ul>
+        <li><a href="#courses">Courses</a></li>
+        <li><a href="#commission">Commissions</a></li>
+        <li><a href="#calendar">Calendar</a></li>
+        <li><a href="#visit">Visit</a></li>
+        <li><a href="#book">Book</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- PATTERN: first-screen-drawing  (first screen a)
+     For: clients whose main attraction is a made thing, a building, a machine or a place that can be drawn.
+     Slots: [title] 2–9 words · [lede] 15–45 words · [actions] 1–2 links · [legend] 3–5 numbered callouts, each name + figure ·
+            [drawing] inline SVG, viewBox about 660×540, class="fb-svg", role="img" + aria-label; callout numbers in the SVG match the legend.
+     Limits: title at most 9 words; legend 3–5 rows. On a real site the title is the page's only h1. -->
+<p class="fb-wrap fb-cat-label">First screen (a) — the drawing</p>
+<section class="fb-hero-draw" aria-labelledby="hero-a">
+  <div class="fb-wrap fb-hero-draw__grid">
+    <div>
+      <!-- slot: title -->
+      <h2 class="fb-hero-draw__title" id="hero-a">Build a stool that outlives you</h2>
+      <!-- slot: lede -->
+      <p class="fb-hero-draw__lede">A two-day course at our bench in Ashby Wharf. You arrive with nothing and leave with a wedged-tenon stool in green oak, made by your own hands.</p>
+      <!-- slot: actions -->
+      <div class="fb-actions">
+        <a class="fb-btn" href="#book">Book a place</a>
+        <a class="fb-link" href="#courses">See all courses</a>
+      </div>
+      <!-- slot: legend (numbers match the drawing) -->
+      <ol class="fb-legend">
+        <li><span>01</span><span>Dished seat, adzed by hand</span><span>340 mm</span></li>
+        <li><span>02</span><span>Wedged through-tenon</span><span>Ø 28 mm</span></li>
+        <li><span>03</span><span>Ash stretcher</span><span>308 mm</span></li>
+      </ol>
+    </div>
+    <!-- slot: drawing -->
+    <figure class="fb-plate">
+      <svg class="fb-svg" viewBox="0 0 660 540" role="img" aria-label="Elevation drawing of a three-legged green oak stool: seat 340 mm wide, 450 mm high, legs splayed to 404 mm at the floor, with callouts for the dished seat, the wedged tenons and the stretcher.">
+        <!-- floor -->
+        <line x1="60" y1="450" x2="560" y2="450"/>
+        <g class="hatch"><line x1="80" y1="450" x2="64" y2="466"/><line x1="120" y1="450" x2="104" y2="466"/><line x1="160" y1="450" x2="144" y2="466"/><line x1="200" y1="450" x2="184" y2="466"/><line x1="240" y1="450" x2="224" y2="466"/><line x1="280" y1="450" x2="264" y2="466"/><line x1="320" y1="450" x2="304" y2="466"/><line x1="360" y1="450" x2="344" y2="466"/><line x1="400" y1="450" x2="384" y2="466"/><line x1="440" y1="450" x2="424" y2="466"/><line x1="480" y1="450" x2="464" y2="466"/><line x1="520" y1="450" x2="504" y2="466"/><line x1="560" y1="450" x2="544" y2="466"/></g>
+        <!-- back leg (hidden line) -->
+        <path class="dash" d="M308 150 L300 450 M332 150 L340 450"/>
+        <!-- legs -->
+        <path class="fill" d="M180 150 L204 150 L144 450 L118 450 Z"/>
+        <path class="fill" d="M436 150 L460 150 L522 450 L496 450 Z"/>
+        <!-- stretcher -->
+        <rect class="fill" x="166" y="330" width="308" height="16"/>
+        <!-- seat -->
+        <path class="fill" d="M150 150 L150 126 Q320 108 490 126 L490 150 Z"/>
+        <path class="thin" d="M170 136 Q320 122 470 136"/>
+        <!-- wedges -->
+        <path class="acc" d="M192 120 L192 150 M448 120 L448 150" stroke-width="3"/>
+        <!-- dimension: seat width -->
+        <g class="thin"><line x1="150" y1="118" x2="150" y2="66"/><line x1="490" y1="118" x2="490" y2="66"/><line x1="150" y1="78" x2="290" y2="78"/><line x1="350" y1="78" x2="490" y2="78"/><line x1="144" y1="84" x2="156" y2="72"/><line x1="484" y1="84" x2="496" y2="72"/></g>
+        <text x="320" y="84" text-anchor="middle">340</text>
+        <!-- dimension: height -->
+        <g class="thin"><line x1="500" y1="126" x2="618" y2="126"/><line x1="530" y1="450" x2="618" y2="450"/><line x1="606" y1="126" x2="606" y2="270"/><line x1="606" y1="306" x2="606" y2="450"/><line x1="600" y1="132" x2="612" y2="120"/><line x1="600" y1="456" x2="612" y2="444"/></g>
+        <text x="606" y="294" text-anchor="middle">450</text>
+        <!-- dimension: splay at floor -->
+        <g class="thin"><line x1="118" y1="456" x2="118" y2="512"/><line x1="522" y1="456" x2="522" y2="512"/><line x1="118" y1="500" x2="290" y2="500"/><line x1="350" y1="500" x2="522" y2="500"/><line x1="112" y1="506" x2="124" y2="494"/><line x1="516" y1="506" x2="528" y2="494"/></g>
+        <text x="320" y="506" text-anchor="middle">404</text>
+        <!-- callouts -->
+        <g class="acc thin"><line x1="88" y1="110" x2="160" y2="132"/><line x1="560" y1="200" x2="452" y2="140"/><line x1="88" y1="300" x2="170" y2="336"/></g>
+        <circle cx="70" cy="104" r="18" class="acc"/><text x="70" y="110" text-anchor="middle" class="acc">1</text>
+        <circle cx="560" cy="218" r="18" class="acc"/><text x="560" y="224" text-anchor="middle" class="acc">2</text>
+        <circle cx="70" cy="296" r="18" class="acc"/><text x="70" y="302" text-anchor="middle" class="acc">3</text>
+      </svg>
+      <figcaption>Fig. 1 — Kestrel stool, front elevation. Dimensions in millimetres.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- PATTERN: first-screen-timetable  (first screen b)
+     For: clients whose main attraction is when and how much: classes, sailings, tastings, menus by day, fixtures.
+     Slots: [title] 2–8 words · [lede] 15–40 words · [status] filled by pack.js from the table ·
+            [board] 3–8 rows; each <tr data-when="YYYY-MM-DDTHH:MM"> with date, name, time, places left, price.
+     Limits: names up to 6 words; prices up to 7 characters. Rows must be in date order. pack.js strikes past rows and marks the next one. -->
+<p class="fb-wrap fb-cat-label">First screen (b) — the timetable</p>
+<section class="fb-hero-table" aria-labelledby="hero-b">
+  <div class="fb-wrap">
+    <div class="fb-hero-table__top">
+      <!-- slot: title -->
+      <h2 class="fb-hero-table__title" id="hero-b">Bench time this winter</h2>
+      <!-- slot: lede -->
+      <p class="fb-hero-table__lede">Six places at each bench, tools and timber included. Book a date below; we hold your place for three days while you pay.</p>
+    </div>
+    <!-- slot: status (pack.js writes the live line) -->
+    <p class="fb-status"><span class="fb-status__dot" aria-hidden="true"></span><strong data-fb-next>Courses run Tuesday to Saturday</strong></p>
+    <!-- slot: board -->
+    <table class="fb-board" data-fb-board>
+      <caption>Prices include timber, tools, lunch and VAT. Gift vouchers for any date.</caption>
+      <thead><tr><th scope="col">Date</th><th scope="col">Course</th><th scope="col">Time</th><th scope="col">Places</th><th scope="col">Price</th></tr></thead>
+      <tbody>
+        <tr data-when="2026-11-21T09:30"><td class="fb-board__when">Sat 21 Nov</td><td class="fb-board__what">Sharpening, properly</td><td class="fb-board__time">09:30–13:00</td><td class="fb-board__left">Finished</td><td class="fb-board__price">£65</td></tr>
+        <tr data-when="2026-12-05T09:30"><td class="fb-board__when">Sat 5 Dec</td><td class="fb-board__what">The Kestrel stool, two days</td><td class="fb-board__time">09:30–17:00</td><td class="fb-board__left">2 of 6 left</td><td class="fb-board__price">£295</td></tr>
+        <tr data-when="2026-12-10T18:30"><td class="fb-board__when">Thu 10 Dec</td><td class="fb-board__what">Evening: hand-cut dovetails</td><td class="fb-board__time">18:30–21:30</td><td class="fb-board__left">4 of 6 left</td><td class="fb-board__price">£55</td></tr>
+        <tr data-when="2026-12-19T10:00"><td class="fb-board__when">Sat 19 Dec</td><td class="fb-board__what">Spoon and bowl carving</td><td class="fb-board__time">10:00–16:00</td><td class="fb-board__left">6 of 6 left</td><td class="fb-board__price">£120</td></tr>
+        <tr data-when="2027-01-09T09:30"><td class="fb-board__when">Sat 9 Jan</td><td class="fb-board__what">Build a workbench, four Saturdays</td><td class="fb-board__time">09:30–17:00</td><td class="fb-board__left">3 of 6 left</td><td class="fb-board__price">£1,180</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PATTERN: first-screen-type  (first screen c)
+     For: clients with no single object to draw: services, trades, a promise. The type is the picture; dimension lines measure it.
+     Slots: [line 1–3] the title split into three lines of 1–3 short words each (longest word at most 11 letters) ·
+            [dims] a dimension span inside lines 1 and 2, measuring the line's width; each a real figure (a tolerance, a year, a distance), at most 22 characters ·
+            [lede] 15–40 words · [actions] 1–2 links · [facts] 2–4 short facts (label + value).
+     Limits: 3 lines only, 9 words in all. Dims are aria-hidden: repeat their figures in the facts. -->
+<p class="fb-wrap fb-cat-label">First screen (c) — type as the picture</p>
+<section class="fb-hero-type" aria-labelledby="hero-c">
+  <div class="fb-wrap">
+    <h2 class="fb-hero-type__title" id="hero-c">
+      <span class="fb-hero-type__line">Made to<span class="fb-dim" aria-hidden="true"><span>tolerance ± 0.5 mm</span></span></span>
+      <span class="fb-hero-type__line fb-hero-type__line--2">measure,<span class="fb-dim" aria-hidden="true"><span>guaranteed 40 years</span></span></span>
+      <span class="fb-hero-type__line fb-hero-type__line--3">built to last.</span>
+    </h2>
+    <div class="fb-hero-type__foot">
+      <div>
+        <p class="fb-hero-type__lede">Tables, benches and kitchen fittings, drawn with you and made in our workshop by the river. Every piece leaves with its drawing and a signed guarantee.</p>
+        <div class="fb-actions" style="margin-top:1.5rem">
+          <a class="fb-btn" href="#commission">Start a commission</a>
+          <a class="fb-btn fb-btn--line" href="#calendar">Visit an open day</a>
+        </div>
+      </div>
+      <dl class="fb-facts">
+        <div><dt>Tolerance</dt><dd>± 0.5 mm</dd></div>
+        <div><dt>Guarantee</dt><dd>40 years</dd></div>
+        <div><dt>Lead time</dt><dd>9–14 weeks</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: index
+     For: the list of what the client sells or offers, each with a figure (price, duration, size).
+     Builder supplies: head (bubble no./count, h2 2–8 words, dimension figure, intro ≤ 35 words); 3–9 items, each: name (2–6 words),
+     price or figure (≤ 7 characters), description (10–30 words), 1–3 meta figures.
+     Limits: 3–9 items. Add class fb-index--two for 7–9 items to set two columns on wide screens. -->
+<section class="fb-sheet" id="courses" aria-labelledby="s-courses">
+  <div class="fb-wrap">
+    <header class="fb-head">
+      <p class="fb-bubble" aria-hidden="true"><span>01</span><span>09</span></p>
+      <h2 id="s-courses">Courses at the bench</h2>
+      <p class="fb-dim fb-dim--start"><span>6 courses · £55–£1,180</span></p>
+      <p class="fb-head__intro">Every course runs at one of six oak benches, with a maker beside you the whole time. Beginners welcome on all but the workbench course.</p>
+    </header>
+    <ol class="fb-index fb-indent">
+      <li><span class="fb-index__no">01</span><div><div class="fb-index__line"><h3>The Kestrel stool</h3><span class="fb-index__price">£295</span></div><p class="fb-index__desc">Two days. Split, shave and wedge a three-legged stool in green oak. You take it home on Sunday.</p><p class="fb-index__meta"><span>2 days</span><span>6 places</span><span>Beginners</span></p></div></li>
+      <li><span class="fb-index__no">02</span><div><div class="fb-index__line"><h3>Hand-cut dovetails</h3><span class="fb-index__price">£55</span></div><p class="fb-index__desc">One evening, one joint, cut until it closes without a gap. Saw, chisel, marking gauge, nothing else.</p><p class="fb-index__meta"><span>3 hours</span><span>6 places</span></p></div></li>
+      <li><span class="fb-index__no">03</span><div><div class="fb-index__line"><h3>Spoon and bowl carving</h3><span class="fb-index__price">£120</span></div><p class="fb-index__desc">Axe, knife and hook knife on fresh birch. Two spoons and the start of a bowl.</p><p class="fb-index__meta"><span>1 day</span><span>8 places</span><span>Age 14+</span></p></div></li>
+      <li><span class="fb-index__no">04</span><div><div class="fb-index__line"><h3>Sharpening, properly</h3><span class="fb-index__price">£65</span></div><p class="fb-index__desc">Bring your own chisels and plane irons. Leave with them sharper than they were new, and a method that lasts.</p><p class="fb-index__meta"><span>Half day</span><span>8 places</span></p></div></li>
+      <li><span class="fb-index__no">05</span><div><div class="fb-index__line"><h3>Build a workbench, over four Saturdays</h3><span class="fb-index__price">£1,180</span></div><p class="fb-index__desc">A full-size laminated beech bench with a leg vice. We deliver it within 40 miles.</p><p class="fb-index__meta"><span>4 days</span><span>4 places</span><span>Some experience</span></p></div></li>
+      <li><span class="fb-index__no">06</span><div><div class="fb-index__line"><h3>Private bench day</h3><span class="fb-index__price">£340</span></div><p class="fb-index__desc">One maker, one or two of you, any project you bring. Most people finish what they started at home.</p><p class="fb-index__meta"><span>1 day</span><span>1–2 people</span></p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PATTERN: text-figure
+     For: explaining one thing closely: a technique, a detail, an ingredient, a room. Figure on graph paper beside the text.
+     Builder supplies: h2 (2–8 words), dimension figure, 1–3 paragraphs (40–140 words in all), 2–4 notes (short figure + 3–14 words),
+     inline SVG drawing (class fb-svg, role="img", aria-label), caption.
+     Limits: add fb-detail--flip to put the figure on the left; never use the same side twice in a row. -->
+<section class="fb-sheet" aria-labelledby="s-joint">
+  <div class="fb-wrap">
+    <div class="fb-detail">
+      <div class="fb-detail__text">
+        <p class="fb-bubble" aria-hidden="true"><span>02</span><span>09</span></p>
+        <h2 id="s-joint">Why we cut every joint by hand</h2>
+        <p class="fb-dim fb-dim--start"><span>slope 1 : 7 in hardwood</span></p>
+        <p>A machine-cut dovetail is uniform and a little loose, because the cutter has to clear its own path. A hand-cut joint can be fitted to the thousandth of the board it is in, and it closes tighter every winter as the wood moves.</p>
+        <p>It takes us about forty minutes a corner. We think the drawer you open twice a day for fifty years is worth it.</p>
+        <ul class="fb-notes">
+          <li><span>1 : 7</span><span>Tail slope for oak, ash and walnut</span></li>
+          <li><span>20 mm</span><span>Tail length, the thickness of the pin board</span></li>
+          <li><span>40 min</span><span>Time to saw, chop and pare one corner</span></li>
+        </ul>
+      </div>
+      <figure class="fb-detail__figure">
+        <div class="fb-graph">
+          <svg class="fb-svg" viewBox="0 90 580 300" role="img" aria-label="Plan drawing of a dovetailed board end: two tails flaring at a slope of one in seven beyond a dashed baseline, board width 160 millimetres, tail length 20 millimetres.">
+            <path class="fill" d="M60 140 H420 V165 L500 155 V215 L420 205 V235 L500 225 V285 L420 275 V300 H60 Z"/>
+            <g class="hatch"><path d="M70 172 Q200 166 400 174 M70 196 Q220 202 400 192 M70 222 Q240 216 400 226 M70 250 Q200 256 400 246 M70 276 Q230 270 400 280"/></g>
+            <line class="acc" x1="420" y1="120" x2="420" y2="320" stroke-dasharray="8 6"/>
+            <text x="428" y="108" class="acc">baseline</text>
+            <!-- width dim -->
+            <g class="thin"><line x1="56" y1="140" x2="20" y2="140"/><line x1="56" y1="300" x2="20" y2="300"/><line x1="32" y1="140" x2="32" y2="204"/><line x1="32" y1="236" x2="32" y2="300"/><line x1="26" y1="146" x2="38" y2="134"/><line x1="26" y1="306" x2="38" y2="294"/></g>
+            <text x="32" y="226" text-anchor="middle">160</text>
+            <!-- tail length dim -->
+            <g class="thin"><line x1="420" y1="324" x2="420" y2="352"/><line x1="500" y1="290" x2="500" y2="352"/><line x1="420" y1="342" x2="500" y2="342"/><line x1="414" y1="348" x2="426" y2="336"/><line x1="494" y1="348" x2="506" y2="336"/></g>
+            <text x="460" y="372" text-anchor="middle">20</text>
+            <!-- slope -->
+            <path class="acc thin" d="M500 155 L548 148"/>
+            <text x="578" y="140" text-anchor="end" class="acc">1 : 7</text>
+          </svg>
+        </div>
+        <figcaption class="fb-caption">Fig. 2 — Tail board, plan. Millimetres.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: spec
+     For: the facts of one product, room, vehicle or service, set like a drawing's title block.
+     Builder supplies: head (bubble, h2 2–8 words, dimension figure); 4–12 cells, each a label (1–3 words) and a value (1–5 words),
+     optional <small> note (≤ 12 words). Add fb-spec__wide to a cell for a value of 6–12 words.
+     Limits: 4–12 cells. Values are short facts, not sentences. -->
+<section class="fb-sheet" aria-labelledby="s-spec">
+  <div class="fb-wrap">
+    <header class="fb-head">
+      <p class="fb-bubble" aria-hidden="true"><span>03</span><span>09</span></p>
+      <h2 id="s-spec">The Kestrel stool, specified</h2>
+      <p class="fb-dim fb-dim--start"><span>drawing KL-014 rev. C</span></p>
+    </header>
+    <dl class="fb-spec fb-indent">
+      <div><dt>Timber</dt><dd>Green English oak<small>Felled within 30 miles</small></dd></div>
+      <div><dt>Height</dt><dd>450 mm</dd></div>
+      <div><dt>Seat</dt><dd>Ø 340 × 48 mm<small>Dished 9 mm</small></dd></div>
+      <div><dt>Legs</dt><dd>3, splay 11°</dd></div>
+      <div><dt>Joints</dt><dd>Wedged through-tenon</dd></div>
+      <div><dt>Finish</dt><dd>Raw linseed, 3 coats</dd></div>
+      <div><dt>Weight</dt><dd>4.2 kg</dd></div>
+      <div><dt>Glue, screws, nails</dt><dd>None</dd></div>
+      <div class="fb-spec__wide"><dt>Guarantee</dt><dd>Forty years against joint failure, transferable to whoever owns it next</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- PATTERN: steps
+     For: how a process runs, in order: a commission, a booking, a treatment, a build.
+     Builder supplies: head (bubble, h2 2–8 words, dimension figure for the whole process); 3–7 steps, each: time figure (1–3 words),
+     h3 (2–5 words), text (10–35 words). Numbers are automatic.
+     Limits: 3–7 steps. The last step's connector is dashed: it is the open end (delivery, the result). -->
+<section class="fb-sheet" id="commission" aria-labelledby="s-steps">
+  <div class="fb-wrap">
+    <header class="fb-head">
+      <p class="fb-bubble" aria-hidden="true"><span>04</span><span>09</span></p>
+      <h2 id="s-steps">From a sketch to your kitchen</h2>
+      <p class="fb-dim fb-dim--start"><span>9–14 weeks in all</span></p>
+    </header>
+    <ol class="fb-steps fb-indent">
+      <li><span class="fb-steps__mark" aria-hidden="true"></span><span class="fb-steps__time">Week 1</span><h3>We visit and measure</h3><p>An hour in the room it is for, with a tape, a level and your questions. No charge within 30 miles.</p></li>
+      <li><span class="fb-steps__mark" aria-hidden="true"></span><span class="fb-steps__time">Weeks 2–3</span><h3>Drawings and a price</h3><p>Scale drawings, a timber sample and a fixed price. Change anything until it is right.</p></li>
+      <li><span class="fb-steps__mark" aria-hidden="true"></span><span class="fb-steps__time">Weeks 4–12</span><h3>We make it</h3><p>Photographs from the bench every Friday. Visit the workshop whenever you like.</p></li>
+      <li><span class="fb-steps__mark" aria-hidden="true"></span><span class="fb-steps__time">One day</span><h3>Delivery and fitting</h3><p>Two of us fit it, oil it and leave the drawing and the guarantee in the drawer.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PATTERN: band
+     For: one statement the client stands behind: a promise, a customer's words, a founding line. The only band-ground section on the page.
+     Builder supplies: statement (6–24 words), dimension figure (a year, a count, a distance), attribution (2–8 words).
+     Limits: one per page; at most 24 words. -->
+<section class="fb-band fb-on-band" aria-label="Our promise">
+  <div class="fb-wrap">
+    <blockquote>
+      <p class="fb-band__statement">If a joint we cut ever opens, we will come and make it again. That has happened twice since 1988.</p>
+      <p class="fb-dim fb-dim--start"><span>38 years · 2 returns</span></p>
+      <p class="fb-band__by">Ruth Okafor, founder</p>
+    </blockquote>
+  </div>
+</section>
+
+<!-- PATTERN: readings
+     For: a row of true numbers about the client, each drawn to scale against the largest.
+     Builder supplies: 2–4 readings, each: value (≤ 6 characters) + unit (≤ 10 characters), label (2–5 words), note (≤ 14 words),
+     and --v on the bar: value ÷ the largest comparable value (0.05–1). Use real, checkable figures only.
+     Limits: 2–4 readings. No head needed; it follows a section that sets the context. -->
+<section class="fb-sheet fb-sheet--tight" aria-labelledby="s-readings">
+  <div class="fb-wrap">
+    <h2 id="s-readings" class="visually-hidden">The workshop in numbers</h2>
+    <div class="fb-readings fb-indent">
+      <div class="fb-reading"><p class="fb-reading__value">1,240<small>students</small></p><div class="fb-reading__bar" style="--v:1" aria-hidden="true"></div><p class="fb-reading__label">Taught at our benches</p><p class="fb-reading__note">Since the school opened in 2009.</p></div>
+      <div class="fb-reading"><p class="fb-reading__value">38<small>years</small></p><div class="fb-reading__bar" style="--v:0.38" aria-hidden="true"></div><p class="fb-reading__label">Making furniture</p><p class="fb-reading__note">Bar drawn against our 100-year oak.</p></div>
+      <div class="fb-reading"><p class="fb-reading__value">6<small>benches</small></p><div class="fb-reading__bar" style="--v:0.5" aria-hidden="true"></div><p class="fb-reading__label">Places on every course</p><p class="fb-reading__note">Of 12 we could fit. We chose fewer.</p></div>
+      <div class="fb-reading"><p class="fb-reading__value">0<small>screws</small></p><div class="fb-reading__bar" style="--v:0.02" aria-hidden="true"></div><p class="fb-reading__label">In a Kestrel stool</p><p class="fb-reading__note">Or glue, or nails. Only wedges.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: calendar
+     For: when things happen across a month: courses, events, open days, closures.
+     Builder supplies: head (bubble, h2 2–8 words, dimension figure); month name + year; the month grid (Monday first: blank cells
+     before day 1; each day a .fb-cal__day with data-date="YYYY-MM-DD"; add is-on + a one-letter .fb-cal__mark for an event,
+     is-off for closed days); key; agenda of 2–8 events (date, h3 2–6 words, one line ≤ 14 words).
+     Limits: one month per pattern. Marks are one letter, explained in the key. -->
+<section class="fb-sheet" id="calendar" aria-labelledby="s-cal">
+  <div class="fb-wrap">
+    <header class="fb-head">
+      <p class="fb-bubble" aria-hidden="true"><span>05</span><span>09</span></p>
+      <h2 id="s-cal">December at the workshop</h2>
+      <p class="fb-dim fb-dim--start"><span>4 dates · shut 24–31 Dec</span></p>
+    </header>
+    <div class="fb-cal-wrap fb-indent">
+      <div>
+        <div class="fb-cal__month"><h3>December 2026</h3><span>Tue–Sat</span></div>
+        <div class="fb-cal" role="group" aria-label="December 2026 calendar">
+          <span class="fb-cal__dow">M</span><span class="fb-cal__dow">T</span><span class="fb-cal__dow">W</span><span class="fb-cal__dow">T</span><span class="fb-cal__dow">F</span><span class="fb-cal__dow">S</span><span class="fb-cal__dow">S</span>
+          <span class="fb-cal__blank"></span>
+          <span class="fb-cal__day" data-date="2026-12-01">1</span>
+          <span class="fb-cal__day" data-date="2026-12-02">2</span>
+          <span class="fb-cal__day" data-date="2026-12-03">3</span>
+          <span class="fb-cal__day" data-date="2026-12-04">4</span>
+          <span class="fb-cal__day is-on" data-date="2026-12-05">5<span class="fb-cal__mark" aria-hidden="true">C</span><span class="visually-hidden">: course</span></span>
+          <span class="fb-cal__day is-off" data-date="2026-12-06">6</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-07">7</span>
+          <span class="fb-cal__day" data-date="2026-12-08">8</span>
+          <span class="fb-cal__day" data-date="2026-12-09">9</span>
+          <span class="fb-cal__day is-on" data-date="2026-12-10">10<span class="fb-cal__mark" aria-hidden="true">C</span><span class="visually-hidden">: course</span></span>
+          <span class="fb-cal__day" data-date="2026-12-11">11</span>
+          <span class="fb-cal__day is-on" data-date="2026-12-12">12<span class="fb-cal__mark" aria-hidden="true">O</span><span class="visually-hidden">: open day</span></span>
+          <span class="fb-cal__day is-off" data-date="2026-12-13">13</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-14">14</span>
+          <span class="fb-cal__day" data-date="2026-12-15">15</span>
+          <span class="fb-cal__day" data-date="2026-12-16">16</span>
+          <span class="fb-cal__day" data-date="2026-12-17">17</span>
+          <span class="fb-cal__day" data-date="2026-12-18">18</span>
+          <span class="fb-cal__day is-on" data-date="2026-12-19">19<span class="fb-cal__mark" aria-hidden="true">C</span><span class="visually-hidden">: course</span></span>
+          <span class="fb-cal__day is-off" data-date="2026-12-20">20</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-21">21</span>
+          <span class="fb-cal__day" data-date="2026-12-22">22</span>
+          <span class="fb-cal__day" data-date="2026-12-23">23</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-24">24</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-25">25</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-26">26</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-27">27</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-28">28</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-29">29</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-30">30</span>
+          <span class="fb-cal__day is-off" data-date="2026-12-31">31</span>
+        </div>
+        <p class="fb-cal__key"><span class="k-on">C course · O open day</span><span class="k-off">Closed</span></p>
+      </div>
+      <ol class="fb-agenda">
+        <li><p class="fb-agenda__date"><b>5</b>Sat</p><div><h3>The Kestrel stool, two days</h3><p>Two places left. Ends Sunday 17:00.</p></div></li>
+        <li><p class="fb-agenda__date"><b>10</b>Thu</p><div><h3>Evening: hand-cut dovetails</h3><p>18:30 start. Bring a pencil.</p></div></li>
+        <li><p class="fb-agenda__date"><b>12</b>Sat</p><div><h3>Open workshop day</h3><p>Free, 10:00–15:00. Mulled apple and offcuts.</p></div></li>
+        <li><p class="fb-agenda__date"><b>19</b>Sat</p><div><h3>Spoon and bowl carving</h3><p>All eight places open.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: people
+     For: the people a visitor will meet. Each gets a drawn monogram plate, never a photograph placeholder.
+     Builder supplies: head (bubble, h2 2–8 words, dimension figure); 1–6 people, each: initials (1–2 letters), name, role (1–4 words),
+     text (15–45 words), 1–3 record rows (label + short figure).
+     Limits: 1–6 people. -->
+<section class="fb-sheet" aria-labelledby="s-people">
+  <div class="fb-wrap">
+    <header class="fb-head">
+      <p class="fb-bubble" aria-hidden="true"><span>06</span><span>09</span></p>
+      <h2 id="s-people">Who stands at the bench with you</h2>
+      <p class="fb-dim fb-dim--start"><span>3 makers · 71 years</span></p>
+    </header>
+    <div class="fb-people fb-indent">
+      <article class="fb-person">
+        <div class="fb-person__plate" aria-hidden="true"><span>RO</span></div>
+        <h3>Ruth Okafor</h3>
+        <p class="fb-person__role">Founder, cabinetmaker</p>
+        <p>Trained in Copenhagen, opened the workshop in a former rope store in 1988. Teaches the stool and the workbench courses.</p>
+        <dl><div><dt>At the bench</dt><dd>38 yrs</dd></div><div><dt>Favourite timber</dt><dd>Ash</dd></div></dl>
+      </article>
+      <article class="fb-person">
+        <div class="fb-person__plate" aria-hidden="true"><span>TH</span></div>
+        <h3>Tomasz Hrabal</h3>
+        <p class="fb-person__role">Joiner, kitchens</p>
+        <p>Builds and fits every commissioned kitchen. Fastest dovetail in the building, as he will tell you.</p>
+        <dl><div><dt>At the bench</dt><dd>21 yrs</dd></div><div><dt>Favourite timber</dt><dd>Walnut</dd></div></dl>
+      </article>
+      <article class="fb-person">
+        <div class="fb-person__plate" aria-hidden="true"><span>M</span></div>
+        <h3>Mags Leverett-Featherstonehaugh</h3>
+        <p class="fb-person__role">Green woodworker</p>
+        <p>Runs the carving days and the spoon club. Arrives on a bicycle with a hook knife in each pannier.</p>
+        <dl><div><dt>At the bench</dt><dd>12 yrs</dd></div><div><dt>Favourite timber</dt><dd>Birch</dd></div></dl>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: questions
+     For: the questions people actually ask before booking or buying. Built on details/summary; no script.
+     Builder supplies: head (bubble, h2 2–8 words, dimension figure); 3–9 questions (4–16 words each) with answers (15–80 words).
+     Limits: 3–9 questions. Q numbers are automatic. -->
+<section class="fb-sheet" aria-labelledby="s-faq">
+  <div class="fb-wrap">
+    <div class="fb-faq">
+      <header class="fb-head">
+        <p class="fb-bubble" aria-hidden="true"><span>07</span><span>09</span></p>
+        <h2 id="s-faq">Before you book</h2>
+        <p class="fb-dim fb-dim--start"><span>5 questions</span></p>
+      </header>
+      <div class="fb-qa">
+        <details open><summary>I have never used a chisel. Is that a problem?</summary><div class="fb-qa__a"><p>No. Most people on the stool course have not. We start with how to hold a tool and how to sharpen it, and a maker stays at your bench all day.</p></div></details>
+        <details><summary>What should I wear?</summary><div class="fb-qa__a"><p>Closed shoes and clothes you do not mind getting oily. We lend aprons, ear defenders and safety glasses.</p></div></details>
+        <details><summary>Can I change my date after booking?</summary><div class="fb-qa__a"><p>Yes, free of charge up to 14 days before the course. After that we will try to fill your place and move you if we can.</p></div></details>
+        <details><summary>Is the workshop step-free and accessible for wheelchair users?</summary><div class="fb-qa__a"><p>The ground floor is step-free, with a level entrance from the lane and an accessible toilet. Two benches are height-adjustable; tell us when you book.</p></div></details>
+        <details><summary>Do you sell gift vouchers?</summary><div class="fb-qa__a"><p>Yes, for any amount or any course, valid for two years. Use the form below and choose “Gift voucher”.</p></div></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: request-form
+     For: the one thing a visitor asks for: a booking, a quote, a table, a callback. Laid out like a printed order form.
+     Builder supplies: head (bubble, h2 2–6 words, dimension figure, intro ≤ 30 words); the client's email in action="mailto:…";
+     3–8 fields. Name, email and phone always carry autocomplete. Every required field says "(required)" in its label.
+     Limits: 3–8 fields. Without a backend the form opens the visitor's mail program: keep the note that says so. -->
+<section class="fb-sheet" id="book" aria-labelledby="s-form">
+  <div class="fb-wrap">
+    <div class="fb-form-wrap">
+      <header class="fb-head">
+        <p class="fb-bubble" aria-hidden="true"><span>08</span><span>09</span></p>
+        <h2 id="s-form">Ask for a place</h2>
+        <p class="fb-dim fb-dim--start"><span>reply in 1 working day</span></p>
+        <p class="fb-head__intro">Tell us the course and the date. We hold the place for three days and send payment details.</p>
+      </header>
+      <form class="fb-form" action="mailto:bench@kestrellane.example" method="post" enctype="text/plain">
+        <div class="fb-form__grid">
+          <div class="fb-field"><label for="f-name">Your name (required)</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+          <div class="fb-field"><label for="f-email">Email (required)</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="fb-field"><label for="f-tel">Phone</label><input id="f-tel" name="phone" type="tel" autocomplete="tel"></div>
+          <div class="fb-field"><label for="f-course">Course (required)</label>
+            <select id="f-course" name="course" required>
+              <option value="">Choose a course</option>
+              <option>The Kestrel stool</option><option>Hand-cut dovetails</option><option>Spoon and bowl carving</option>
+              <option>Sharpening, properly</option><option>Build a workbench</option><option>Private bench day</option><option>Gift voucher</option>
+            </select></div>
+          <div class="fb-field"><label for="f-date">Preferred date</label><input id="f-date" name="date" type="date"></div>
+          <fieldset class="fb-field fb-choice"><legend>Experience</legend>
+            <label><input type="radio" name="experience" value="none" checked> None yet</label>
+            <label><input type="radio" name="experience" value="some"> Some</label>
+          </fieldset>
+          <div class="fb-field fb-field--wide"><label for="f-msg">Anything we should know</label><textarea id="f-msg" name="message" rows="4"></textarea></div>
+        </div>
+        <div class="fb-form__foot">
+          <p class="fb-form__note">Sending opens your email program with this form filled in. Nothing is stored on this site.</p>
+          <button class="fb-btn" type="submit">Send request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: getting-there
+     For: where the client is and how to arrive; with opening hours that say live whether it is open.
+     Builder supplies: head (bubble, h2 2–6 words, dimension figure for the last leg, e.g. "400 m from the station");
+     a drawn schematic map (inline SVG, class fb-svg, role="img", aria-label naming the route; roads, a landmark, the marker, a scale);
+     address; 2–4 ways to arrive (mode, figure, one line ≤ 20 words); hours as JSON in data-fb-hours ("09:00-17:00" or "" when closed)
+     and a matching table with tr data-day="mon"…"sun".
+     Limits: 2–4 ways. Map labels: 6 at most, one or two words each. -->
+<section class="fb-sheet" id="visit" aria-labelledby="s-visit">
+  <div class="fb-wrap">
+    <header class="fb-head">
+      <p class="fb-bubble" aria-hidden="true"><span>09</span><span>09</span></p>
+      <h2 id="s-visit">Finding the workshop</h2>
+      <p class="fb-dim fb-dim--start"><span>400 m · 6 min walk</span></p>
+    </header>
+    <div class="fb-route fb-indent">
+      <figure class="fb-map">
+        <svg class="fb-svg" viewBox="0 0 640 420" role="img" aria-label="Map: from Ashby Wharf station walk south down Station Road, turn left along Wharf Road, then right into Kestrel Lane. The workshop is the second building on the right, 400 metres in all. Car park beside the river.">
+          <!-- river -->
+          <path class="acc thin" d="M0 372 C140 352 260 396 400 376 S600 350 640 362"/>
+          <path class="acc thin" d="M0 392 C140 372 260 416 400 396 S600 370 640 382"/>
+          <!-- railway -->
+          <line x1="0" y1="70" x2="640" y2="70"/>
+          <path class="thin" d="M20 62 V78 M60 62 V78 M100 62 V78 M220 62 V78 M260 62 V78 M300 62 V78 M340 62 V78 M380 62 V78 M420 62 V78 M460 62 V78 M500 62 V78 M540 62 V78 M580 62 V78 M620 62 V78"/>
+          <rect class="fill" x="120" y="54" width="80" height="32"/>
+          <!-- roads -->
+          <path d="M150 86 V240 M146 86 V240" class="thin"/>
+          <path d="M0 236 H640 M0 252 H640" class="thin"/>
+          <path d="M438 252 V340 M454 252 V340" class="thin"/>
+          <!-- buildings -->
+                    <rect class="fill" x="470" y="306" width="56" height="34"/>
+          <rect class="fill thin" x="370" y="270" width="54" height="40"/>
+          <!-- car park -->
+          <rect class="thin" x="190" y="276" width="56" height="44"/>
+          <text x="218" y="304" text-anchor="middle">P</text>
+          <!-- route -->
+          <path class="acc" d="M160 92 V244 H446 V318 H468" stroke-width="3" stroke-dasharray="2 8"/>
+          <rect class="solid-acc" x="482" y="314" width="32" height="18"/>
+          <!-- labels -->
+          <text x="160" y="40" text-anchor="middle">Station</text>
+          <text x="214" y="226">Wharf Road</text>
+          <text x="636" y="296" text-anchor="end">Workshop</text>
+          <text x="430" y="334" text-anchor="end">Kestrel Lane</text>
+          <text x="20" y="352">River Ash</text>
+          <!-- north arrow -->
+          <path d="M590 140 L604 108 L618 140 L604 132 Z" class="solid"/>
+          <text x="604" y="164" text-anchor="middle">N</text>
+          <!-- scale -->
+          <g class="thin"><line x1="40" y1="160" x2="40" y2="172"/><line x1="140" y1="166" x2="40" y2="166"/><line x1="140" y1="160" x2="140" y2="172"/></g>
+          <text x="40" y="196">100 m</text>
+        </svg>
+      </figure>
+      <div>
+        <address class="fb-address">Kestrel Lane Woodshop<br>The Rope Store, Kestrel Lane<br>Ashby Wharf AW4 7RL</address>
+        <ul class="fb-ways">
+          <li><h3>By train</h3><span class="fb-fig">6 min walk</span><p>Ashby Wharf station, then south on Station Road and left along the river.</p></li>
+          <li><h3>By car</h3><span class="fb-fig">14 spaces</span><p>Free riverside car park on Wharf Road. Loading bay at the door for collections.</p></li>
+          <li><h3>By bicycle</h3><span class="fb-fig">8 stands</span><p>Covered stands inside the gate.</p></li>
+        </ul>
+        <div class="fb-hours" data-fb-hours='{"mon":"","tue":"09:00-17:30","wed":"09:00-17:30","thu":"09:00-21:30","fri":"09:00-17:30","sat":"09:30-17:00","sun":""}'>
+          <p class="fb-hours__now">Open Tuesday to Saturday</p>
+          <table>
+            <caption class="visually-hidden">Opening hours</caption>
+            <tbody>
+              <tr data-day="tue wed"><th scope="row">Tue–Wed</th><td>09:00–17:30</td></tr>
+              <tr data-day="thu"><th scope="row">Thu</th><td>09:00–21:30</td></tr>
+              <tr data-day="fri"><th scope="row">Fri</th><td>09:00–17:30</td></tr>
+              <tr data-day="sat"><th scope="row">Sat</th><td>09:30–17:00</td></tr>
+              <tr data-day="sun mon"><th scope="row">Sun–Mon</th><td>Closed</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: 404
+     For: the not-found page (404.html). The dimension line under the number says what is missing.
+     Builder supplies: heading (3–8 words), one sentence (≤ 25 words), 1–2 links back (home and the main action).
+     Limits: on 404.html the heading is the h1 and the page keeps the header and footer. Shown here inside the catalogue. -->
+<p class="fb-wrap fb-cat-label">404 layout — use on 404.html</p>
+<section class="fb-404" aria-labelledby="s-404">
+  <div class="fb-wrap"><div class="fb-indent">
+    <p class="fb-404__code" aria-hidden="true">404</p>
+    <p class="fb-dim fb-dim--start"><span>measurement not found</span></p>
+    <h2 class="fb-404__title" id="s-404">This page is not on the drawing</h2>
+    <p class="fb-404__text">The address may be mistyped, or the page has moved since we last measured up.</p>
+    <div class="fb-actions"><a class="fb-btn" href="#main">Back to the front page</a><a class="fb-link" href="#book">Ask for a place</a></div>
+  </div></div>
+</section>
+
+</main>
+
+<!-- PATTERN: footer
+     For: the closing title block on every page: name, address, hours, contact, and the sheet line.
+     Builder supplies: business name, 2–4 blocks (label + 1–4 lines or links), the base line (year, small print).
+     Limits: 3–5 blocks in all, including the name. Block labels are h2 in mono (the footer is its own landmark). -->
+<footer class="fb-footer">
+  <div class="fb-wrap">
+    <div class="fb-titleblock">
+      <div><p class="fb-tb-label">Workshop</p><p class="fb-tb-name">Kestrel Lane Woodshop</p></div>
+      <div><h2>Address</h2><p>The Rope Store, Kestrel Lane<br>Ashby Wharf AW4 7RL</p></div>
+      <div><h2>Contact</h2><ul><li><a href="mailto:bench@kestrellane.example">bench@kestrellane.example</a></li><li><a href="tel:+441632960118">01632 960118</a></li></ul></div>
+      <div><h2>Hours</h2><p>Tue–Sat from 09:00<br>Thu until 21:30</p></div>
+    </div>
+    <div class="fb-footer__base"><p>Sheet 09 of 09 · © 2026 Kestrel Lane Woodshop</p><p>Drawn and made in Ashby Wharf</p></div>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en" data-colourway="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nocturne pack catalogue: Hollow Fell Observatory</title>
+<meta name="description" content="The catalogue of the Nocturne design pack: every pattern and element once, filled for an invented dark-sky observatory on a northern moor.">
+<link rel="preload" href="fonts/gloock-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/hanken-grotesk-latin-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="pack.css">
+<script src="pack.js" defer></script>
+</head>
+<body>
+<a class="nc-skip" href="#main">Skip to content</a>
+
+<!-- ELEMENT: Scene kit sprite. For: every drawing. Builder supplies: nothing; copy this <svg class="nc-sprite"> once after <body> and delete unused symbols; never display:none. Names, viewBoxes and placement rules are in PACK.md. -->
+<svg class="nc-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+<symbol id="nc-hz-ridge" viewBox="0 0 1600 300" preserveAspectRatio="none"><path fill="currentColor" d="M0 120C120 100 220 60 330 70S520 140 640 128S860 40 980 52S1220 150 1340 132S1520 80 1600 90V300H0Z"/></symbol>
+<symbol id="nc-hz-hills" viewBox="0 0 1600 300" preserveAspectRatio="none"><path fill="currentColor" d="M0 150C180 96 340 84 520 118S860 212 1040 156S1380 58 1600 104V300H0Z"/></symbol>
+<symbol id="nc-hz-sea" viewBox="0 0 1600 300" preserveAspectRatio="none"><path fill="currentColor" d="M0 40H1600V300H0Z"/><path style="fill:var(--rim)" opacity=".22" d="M100 80h260v2H100ZM520 120h340v2H520ZM980 96h200v2H980ZM1240 150h280v2h-280ZM260 190h380v2H260ZM760 230h300v2H760Z"/></symbol>
+<symbol id="nc-hz-trees" viewBox="0 0 1600 300" preserveAspectRatio="none"><path fill="currentColor" d="M0 300V178L0 176L9 135L13 95L17 135L19 177L31 150L36 124L42 150L44 178L62 139L70 99L78 139L81 180L96 139L102 97L109 139L111 182L125 147L131 112L138 147L140 183L151 133L157 83L162 133L164 184L174 146L179 107L184 146L185 185L200 131L207 77L214 131L217 186L230 158L236 130L242 158L244 187L255 136L260 86L265 136L267 188L282 144L289 99L296 144L299 189L313 156L319 123L325 156L328 189L340 136L346 83L351 136L353 190L362 158L366 126L371 158L372 190L387 140L394 90L401 140L403 190L412 152L417 113L421 152L422 190L440 147L449 103L457 147L460 190L470 144L475 97L479 144L481 189L500 153L508 117L517 153L521 189L539 163L547 138L556 163L559 188L575 135L582 81L590 135L593 187L611 152L620 117L629 152L632 185L643 132L648 79L653 132L654 184L673 133L682 83L690 133L694 182L713 129L722 76L731 129L734 180L747 146L753 112L760 146L762 179L777 153L784 127L791 153L794 177L813 123L821 69L830 123L833 175L846 119L852 64L857 119L860 174L869 126L873 77L877 126L878 173L897 129L906 85L914 129L918 171L933 128L941 85L948 128L951 169L969 129L977 89L985 129L988 167L1007 107L1015 47L1024 107L1027 166L1040 113L1046 59L1053 113L1055 165L1069 132L1075 99L1082 132L1085 164L1094 137L1098 110L1103 137L1104 163L1122 134L1130 105L1138 134L1141 163L1153 119L1159 74L1165 119L1167 162L1180 120L1186 79L1192 120L1194 162L1204 124L1209 85L1213 124L1215 162L1226 117L1231 72L1236 117L1238 162L1252 105L1259 47L1266 105L1268 162L1278 103L1283 43L1287 103L1289 162L1308 110L1317 58L1326 110L1329 163L1344 125L1351 87L1358 125L1360 164L1378 116L1386 69L1394 116L1397 165L1411 129L1418 94L1425 129L1427 166L1441 132L1448 98L1455 132L1457 167L1476 122L1485 77L1493 122L1497 169L1515 139L1523 109L1532 139L1535 171L1546 112L1551 54L1555 112L1557 172L1573 137L1581 102L1588 137L1591 174L1608 136L1616 99L1624 136L1600 180V300Z"/></symbol>
+<symbol id="nc-hz-roofs" viewBox="0 0 1600 300" preserveAspectRatio="none"><path fill="currentColor" d="M0 300V210H0V151H35V133H40V151H50H50V201L98 158L146 201H146V156L204 105L261 156H261V152L295 121L329 152H329V180L387 129L444 180H444V153H490V135H497V153H510H510V164H549V146H554V164H565H565V160H627H627V177L661 147L695 177H695V175L749 126L803 175H803V166H859V148H867V166H883H883V163H944V145H953V163H970H970V169H1021V151H1029V169H1043H1043V159H1097V141H1105V159H1120H1120V147L1170 37L1219 147H1219V197H1271V179H1279V197H1293H1293V162H1336V144H1343V162H1355H1355V191L1382 167L1409 191H1409V179L1458 135L1507 179H1507V166H1575V148H1585V166H1604V300Z"/><path style="fill:var(--lamp)" d="M89 206h9v12h-9zM425 198h9v12h-9zM530 183h9v12h-9zM541 193h9v12h-9zM584 198h9v12h-9zM598 190h9v12h-9zM653 192h9v12h-9zM772 199h9v12h-9zM952 188h9v12h-9zM1005 200h9v12h-9zM1141 201h9v12h-9zM1136 201h9v12h-9zM1279 206h9v12h-9zM1339 181h9v12h-9zM1476 201h9v12h-9zM1420 193h9v12h-9zM1574 189h9v12h-9zM1526 183h9v12h-9z"/></symbol>
+<symbol id="nc-sj-dome" viewBox="0 0 240 220"><path fill="currentColor" d="M40 220V116H200V220ZM34 120A86 86 0 0 1 206 120Z"/><path style="fill:var(--rim)" opacity=".35" d="M150 40A86 86 0 0 1 206 120H192Q186 66 150 40Z"/><path style="fill:var(--lamp)" d="M112 38Q120 32 128 38V120H112ZM110 168h20v52h-20Z"/><path fill="currentColor" opacity=".6" d="M118 46h4v66h-4Z"/></symbol>
+<symbol id="nc-sj-house" viewBox="0 0 260 220"><path fill="currentColor" d="M172 44h22v50h-22ZM24 220V112L130 36L236 112V220Z"/><path style="fill:var(--rim)" opacity=".3" d="M130 36L236 112L228 118L130 48Z"/><path style="fill:var(--lamp)" d="M56 130h32v36H56ZM172 130h32v36h-32ZM116 76h28v24h-28Z"/><path fill="currentColor" d="M71 130h2v36h-2ZM56 147h32v2H56ZM187 130h2v36h-2ZM172 147h32v2h-32Z"/></symbol>
+<symbol id="nc-sj-tower" viewBox="0 0 120 360"><path fill="currentColor" d="M36 360L46 96H74L84 360ZM30 88h60v10H30ZM40 52L60 22L80 52ZM58 6h4v18h-4Z"/><path style="fill:var(--lamp)" d="M44 52h32v36H44Z"/><path style="fill:var(--rim)" opacity=".3" d="M64 98h10l10 262H72Z"/><path style="fill:var(--lamp)" opacity=".16" d="M76 58L120 40V100L76 82Z"/></symbol>
+<symbol id="nc-sj-tent" viewBox="0 0 300 200"><path fill="currentColor" d="M8 200L36 122Q150 30 264 122L292 200ZM146 14h6v50h-6Z"/><path style="fill:var(--lamp)" d="M152 14l28 8l-28 8ZM124 200L150 128L176 200Z"/><path style="fill:var(--rim)" opacity=".3" d="M150 62Q232 72 264 122L292 200H280L254 128Q220 86 150 72Z"/><g style="fill:var(--lamp)"><circle cx="50" cy="108" r="3"/><circle cx="78" cy="86" r="3"/><circle cx="108" cy="70" r="3"/><circle cx="192" cy="70" r="3"/><circle cx="222" cy="86" r="3"/><circle cx="250" cy="108" r="3"/></g></symbol>
+<symbol id="nc-sj-boat" viewBox="0 0 220 160"><path fill="currentColor" d="M6 112H214L186 150H34ZM108 10h4v102h-4ZM58 92h44v20H58Z"/><path style="fill:var(--rim)" opacity=".45" d="M114 18L172 102H114Z"/><path style="fill:var(--lamp)" d="M68 98h10v8H68Z"/><circle cx="104" cy="64" r="5" style="fill:var(--lamp)"/></symbol>
+<symbol id="nc-sk-moon" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" style="fill:var(--moon)"/><g style="fill:var(--sky-mid)" opacity=".13"><circle cx="36" cy="38" r="12"/><circle cx="62" cy="60" r="9"/><circle cx="58" cy="28" r="6"/><circle cx="34" cy="68" r="5"/></g></symbol>
+<symbol id="nc-sk-crescent" viewBox="0 0 100 100"><path style="fill:var(--moon)" d="M64 4A48 48 0 1 0 96 70A40 40 0 1 1 64 4Z"/></symbol>
+<symbol id="nc-sk-sun" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" style="fill:var(--glow)" opacity=".22"/><circle cx="100" cy="100" r="66" style="fill:var(--glow)" opacity=".32"/><circle cx="100" cy="100" r="42" style="fill:var(--moon)"/></symbol>
+<symbol id="nc-sk-glow" viewBox="0 0 200 200"><g fill="currentColor" fill-opacity=".055"><circle cx="100" cy="100" r="100"/><circle cx="100" cy="100" r="86"/><circle cx="100" cy="100" r="73"/><circle cx="100" cy="100" r="62"/><circle cx="100" cy="100" r="52"/><circle cx="100" cy="100" r="43"/><circle cx="100" cy="100" r="35"/></g></symbol>
+<symbol id="nc-sk-clouds" viewBox="0 0 1600 90" preserveAspectRatio="none"><path fill="currentColor" d="M60 10h380a10 10 0 0 1 0 20H60a10 10 0 0 1 0-20ZM300 44h520a8 8 0 0 1 0 16H300a8 8 0 0 1 0-16ZM900 18h460a9 9 0 0 1 0 18H900a9 9 0 0 1 0-18ZM1100 62h420a7 7 0 0 1 0 14h-420a7 7 0 0 1 0-14ZM80 70h240a6 6 0 0 1 0 12H80a6 6 0 0 1 0-12Z"/></symbol>
+<symbol id="nc-sk-glint" viewBox="0 0 80 240" preserveAspectRatio="none"><path style="fill:var(--moon)" opacity=".7" d="M0 0h80v5H0ZM8 26h64v4H8ZM4 50h72v4H4ZM16 78h48v3H16ZM12 106h56v3H12ZM24 138h32v3H24ZM20 170h40v2H20ZM30 204h20v2H30Z"/></symbol>
+</svg>
+
+<div class="nc-cat"><div class="nc-wrap"><p><strong>This is the Nocturne pack catalogue.</strong> Every pattern and element appears once, filled for an invented client: Hollow Fell Observatory.</p></div></div>
+
+<!-- PATTERN: Header. For: brand and navigation on every page. Builder supplies: place name (1 to 4 words), 3 to 5 links to section ids, one booking link as the last item. Limits: link labels 1 or 2 words. Sits on --sky-top so it runs straight into any first screen. -->
+<header class="nc-head">
+<div class="nc-wrap nc-head__in">
+<a class="nc-brand" href="catalogue.html"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#nc-sk-crescent"/></svg>Hollow Fell</a>
+<nav class="nc-nav" aria-label="Main">
+<ul>
+<li><a href="#nights">Nights</a></li>
+<li><a href="#programme">What you see</a></li>
+<li><a href="#questions">Questions</a></li>
+<li><a href="#way">Getting here</a></li>
+<li><a class="nc-btn nc-btn--primary" href="#book">Book a night</a></li>
+</ul>
+</nav>
+</div>
+</header>
+
+<main id="main">
+
+<!-- PATTERN: First screen, the scene (signature: fs-scene). For: any client whose subject is a place or a building. Builder supplies: h1 (2 to 8 words), lede (15 to 40 words), the tonight line (see behaviour 2), 1 or 2 buttons, and the scene: sky layers (stars g, nc-sk-glow, nc-sk-moon or nc-sk-sun, optional nc-sk-clouds), far (nc-hz-ridge), middle (nc-hz-hills or nc-hz-sea), the subject (one nc-sj-*), near (nc-hz-trees, nc-hz-roofs or nc-hz-hills) and an optional second subject. Limits: keep subjects and the light source between x 700 and 1600 (phones show only that part); the glow and the moon share one centre; the left half above y 560 stays empty sky for the text. role="img" and an aria-label that describes the place. -->
+<section class="nc-scene" aria-labelledby="scene-title">
+<div class="nc-wrap nc-scene__copy">
+<h1 id="scene-title">The dark is the main attraction</h1>
+<p class="nc-scene__lede">A small public observatory on Coldside Moor, eleven kilometres from the nearest street light. Friday and Saturday nights through the winter, we open the dome and point the half-metre telescope wherever the sky is best.</p>
+<!-- slot: tonight line -->
+<p class="nc-tonight" data-nc-tonight data-dates="2026-11-27 2026-11-28 2026-12-04 2026-12-05 2026-12-11 2026-12-12 2026-12-18 2026-12-19 2027-01-08 2027-01-09" data-time="21:30" data-decide="16:00" data-ends="23:30" data-off="2026-12-12" data-tz="Europe/London">
+<span class="nc-status" data-state="next" data-nc-t="mark"><span class="nc-vh">Status</span></span>
+<span data-nc-t="line">Open-dome nights every Friday and Saturday until March, from 21:30. We decide at 16:00 whether the sky allows.</span>
+</p>
+<div class="nc-actions">
+<a class="nc-btn nc-btn--primary" href="#book">Book a night</a>
+<a class="nc-quiet" href="#nights">See every date</a>
+</div>
+</div>
+<!-- slot: scene. Layers in this order: stars, glow, light source, clouds, far, middle, subject, near, second subject. -->
+<svg class="nc-scene__art" viewBox="0 0 1600 900" preserveAspectRatio="xMaxYMax slice" role="img" aria-label="Night over Coldside Moor: the observatory dome on the ridge under a rising moon, and the warden's cottage lit below the trees">
+<g class="nc-stars" data-nc-stars="150" data-seed="11" data-area="0 0 1600 600"></g>
+<use href="#nc-sk-glow" class="nc-l-glow" x="1150" y="270" width="320" height="320"/>
+<use href="#nc-sk-moon" x="1272" y="392" width="76" height="76"/>
+<use href="#nc-sk-clouds" class="nc-l-cloud nc-drift" x="760" y="490" width="900" height="70" opacity=".45"/>
+<use href="#nc-hz-ridge" class="nc-l-far" x="0" y="560" width="1600" height="340"/>
+<use href="#nc-hz-hills" class="nc-l-mid" x="0" y="640" width="1600" height="260"/>
+<use href="#nc-sj-dome" class="nc-l-mid" x="1130" y="566" width="190" height="174"/>
+<use href="#nc-hz-trees" class="nc-l-near" x="0" y="690" width="1600" height="210"/>
+<use href="#nc-sj-house" class="nc-l-near" x="1370" y="722" width="150" height="127"/>
+</svg>
+</section>
+
+<!-- PATTERN: Index of offerings (nc-index). For: what a visitor can choose, each with a figure. Builder supplies: h2 (2 to 8 words), lede, 3 to 9 items, each with a figure and unit (a duration, a time, a distance), h3 (1 to 6 words), 1 or 2 sentences, a price or "Free" with a small line under it, and 0 to 3 tags. Limits: figure 1 to 5 characters. -->
+<section class="nc-sec" id="programme" aria-labelledby="programme-title">
+<div class="nc-wrap">
+<div class="nc-sec__head">
+<h2 id="programme-title">What a night holds</h2>
+<p class="nc-lede">Every visit starts in the warm room and ends under the dome. Choose the length of night that suits you.</p>
+</div>
+<ul class="nc-index">
+<li class="nc-item">
+<div class="nc-item__fig"><span class="nc-item__n">90</span><span class="nc-item__u">minutes</span></div>
+<div class="nc-item__body"><h3>Open-dome night</h3><p>A short talk on what is up tonight, then the telescope: a planet, a cluster and a galaxy, as the sky allows.</p><div class="nc-item__tags"><span class="nc-tag">Fridays and Saturdays</span><span class="nc-tag">Age 8 and up</span></div></div>
+<div class="nc-item__price">£14<small>under-16s £8</small></div>
+</li>
+<li class="nc-item">
+<div class="nc-item__fig"><span class="nc-item__n">3</span><span class="nc-item__u">hours</span></div>
+<div class="nc-item__body"><h3>Long night for photographers</h3><p>Bring your own camera and tripod; we bring the dark, a guide to the moor's best foregrounds and a flask of something hot.</p><div class="nc-item__tags"><span class="nc-tag">Moonless weekends</span></div></div>
+<div class="nc-item__price">£38<small>12 places</small></div>
+</li>
+<li class="nc-item">
+<div class="nc-item__fig"><span class="nc-item__n">45</span><span class="nc-item__u">minutes</span></div>
+<div class="nc-item__body"><h3>Sun through the scope</h3><p>Safe, filtered views of sunspots and flares on winter afternoons, for schools and anyone who cannot stay up late.</p></div>
+<div class="nc-item__price">£6<small>schools free</small></div>
+</li>
+</ul>
+</div>
+</section>
+
+<div class="nc-wrap" aria-hidden="true"><span class="nc-ridge"></span></div>
+
+<!-- PATTERN: Text beside a picture (nc-split). For: the place itself, a room, a view. Builder supplies: one picture slot (photo or drawing, arch or 4:3), h2 (2 to 8 words), 1 to 3 paragraphs, an optional list of 2 to 6 short points. Add nc-split--flip to put the picture on the right. -->
+<section class="nc-sec" aria-labelledby="dome-title">
+<div class="nc-wrap nc-split">
+<figure class="nc-pic nc-pic--arch">
+<div class="nc-pic__frame"><img src="img/standin-dome.jpg" alt="The observatory dome open at dusk, the slit lit from inside" width="800" height="1000" loading="lazy"><span class="nc-standin">Stand-in photo</span></div>
+<figcaption>The dome turns on a ring of old railway wheels; the slit opens in under a minute.</figcaption>
+</figure>
+<div class="nc-split__text">
+<h2 id="dome-title">A warm room, then the cold dome</h2>
+<p>The night starts by the stove in the old shepherd's bothy, where your eyes have twenty minutes to adjust while we show you tonight's sky on paper.</p>
+<p>Then up the iron stair. The dome is unheated on purpose: warm air shimmers and spoils the view, so we lend coats and keep the cocoa coming.</p>
+<ul class="nc-ticks"><li>Red lights only after 21:00</li><li>Step-free warm room; the dome has twelve steps</li><li>Coats, blankets and gloves to borrow</li></ul>
+</div>
+</div>
+</section>
+
+<!-- PATTERN: Steps in order (nc-steps). For: how a visit runs, how to book, what happens when. Builder supplies: h2, 3 to 9 steps, each with h3 (1 to 6 words, often with a time) and 1 or 2 sentences. The moon marker waxes with each step on its own. -->
+<section class="nc-sec" aria-labelledby="steps-title">
+<div class="nc-wrap">
+<div class="nc-sec__head"><h2 id="steps-title">How the evening runs</h2></div>
+<ol class="nc-steps">
+<li class="nc-step"><span class="nc-step__moon" aria-hidden="true"></span><h3>16:00, the decision</h3><p>We look at the cloud and email everyone booked. No email means the dome opens.</p></li>
+<li class="nc-step"><span class="nc-step__moon" aria-hidden="true"></span><h3>21:15, arrive</h3><p>Park by the gate and dip your headlights past the cattle grid.</p></li>
+<li class="nc-step"><span class="nc-step__moon" aria-hidden="true"></span><h3>21:30, the warm room</h3><p>Twenty minutes of tonight's sky, while your eyes get used to the dark.</p></li>
+<li class="nc-step"><span class="nc-step__moon" aria-hidden="true"></span><h3>22:00, the dome</h3><p>Three objects through the telescope, chosen on the night.</p></li>
+</ol>
+</div>
+</section>
+
+<!-- PATTERN: Band statement (nc-band). For: one sentence the client stands behind; once per page. Builder supplies: a statement of 8 to 28 words, an optional attribution, and the horizon at its foot (one nc-hz-* in nc-l-ground so the band melts into the next section). Limits: one per page, never next to a first screen or the footer. -->
+<section class="nc-band" aria-label="Our promise">
+<svg class="nc-band__moon" viewBox="0 0 100 100" aria-hidden="true"><use href="#nc-sk-crescent"/></svg>
+<div class="nc-wrap">
+<p class="nc-band__text">If the sky closes over, your ticket moves to any night you like. We would rather lose a booking than show you a cloud.</p>
+<p class="nc-band__by">Ruth Alder, warden since 2011</p>
+</div>
+<svg class="nc-band__hz" viewBox="0 0 1600 130" preserveAspectRatio="none" aria-hidden="true"><use href="#nc-hz-trees" class="nc-l-ground" x="0" y="0" width="1600" height="130"/></svg>
+</section>
+
+<!-- PATTERN: A row of real numbers (nc-figs). For: facts that prove the place. Builder supplies: h2, 3 to 6 figures, each a number (1 to 7 characters), a unit (1 to 3 words) and a label (3 to 12 words). Limits: real figures only, never invented round numbers. -->
+<section class="nc-sec" aria-labelledby="figs-title">
+<div class="nc-wrap">
+<div class="nc-sec__head"><h2 id="figs-title">Why here</h2></div>
+<dl class="nc-figs">
+<div class="nc-fig"><dt>Sky brightness on a moonless night, among the darkest in England</dt><dd><span class="nc-fig__n">21.6</span><span class="nc-fig__u">mag per arcsec²</span></dd></div>
+<div class="nc-fig"><dt>To the nearest street light</dt><dd><span class="nc-fig__n">11</span><span class="nc-fig__u">km</span></dd></div>
+<div class="nc-fig"><dt>Height of the dome above the sea</dt><dd><span class="nc-fig__n">312</span><span class="nc-fig__u">m</span></dd></div>
+<div class="nc-fig"><dt>Clear nights we opened last winter</dt><dd><span class="nc-fig__n">41</span><span class="nc-fig__u">of 52</span></dd></div>
+</dl>
+</div>
+</section>
+
+<!-- PATTERN: Specification list with porthole (nc-spec). For: the facts of a room, an instrument, a boat, a venue. Builder supplies: a porthole drawing (a small scene, viewBox 400x400, built from the kit) or a square photo, h2, 4 to 10 term and value pairs. Limits: terms 1 to 4 words, values up to 12 words. -->
+<section class="nc-sec" aria-labelledby="spec-title">
+<div class="nc-wrap nc-spec">
+<div class="nc-porthole">
+<svg viewBox="0 0 400 400" role="img" aria-label="Drawing of the dome on the ridge under the moon">
+<g class="nc-stars" data-nc-stars="40" data-seed="5" data-area="0 0 400 260"></g>
+<use href="#nc-sk-glow" class="nc-l-glow" x="170" y="20" width="220" height="220"/>
+<use href="#nc-sk-moon" x="258" y="108" width="44" height="44"/>
+<use href="#nc-hz-ridge" class="nc-l-far" x="-200" y="250" width="800" height="150"/>
+<use href="#nc-sj-dome" class="nc-l-mid" x="110" y="190" width="170" height="156"/>
+<use href="#nc-hz-hills" class="nc-l-mid" x="-100" y="320" width="600" height="80"/>
+<use href="#nc-hz-trees" class="nc-l-near" x="-300" y="330" width="1000" height="70"/>
+</svg>
+</div>
+<div>
+<div class="nc-sec__head"><h2 id="spec-title">The telescope</h2></div>
+<dl class="nc-specs">
+<div><dt>Mirror</dt><dd><span class="nc-num">0.5</span> m, made in Bromley in 1974</dd></div>
+<div><dt>Mount</dt><dd>Fork mount, driven at the speed of the sky</dd></div>
+<div><dt>Dome</dt><dd><span class="nc-num">5.2</span> m across, turned by hand</dd></div>
+<div><dt>Seats</dt><dd>16 in the warm room, 8 under the dome at a time</dd></div>
+<div><dt>Eyepiece height</dt><dd>Steps and a stool for any height, from age 8</dd></div>
+<div><dt>Light</dt><dd>Red only, after 21:00</dd></div>
+</dl>
+</div>
+</div>
+</section>
+
+<!-- PATTERN: Schedule of nights (nc-nights, inside nc-views). For: dated nights, performances, sailings, festival days. Builder supplies: h2, 2 to 5 view labels (1 to 3 words), then one nc-view per label, each a list of 3 to 24 nights with weekday, day number, month, time and a status mark. Give every night data-nc-date="YYYY-MM-DD" so the tonight behaviour hides past nights and marks the next one. Limits: views in the same order as their labels; radio name unique on the page. -->
+<section class="nc-sec" id="nights" aria-labelledby="nights-title">
+<div class="nc-wrap">
+<div class="nc-sec__head"><h2 id="nights-title">Open-dome nights this winter</h2><p class="nc-lede">Doors at 21:15. Past nights drop off the list on their own.</p></div>
+<div class="nc-views">
+<fieldset class="nc-switch" aria-label="Show nights">
+<label><input type="radio" name="nights-view" checked> All nights</label>
+<label><input type="radio" name="nights-view"> Fridays only</label>
+</fieldset>
+<div class="nc-view">
+<ul class="nc-nights">
+<li class="nc-night" data-nc-date="2026-11-27"><span class="nc-night__wd">Friday</span><span class="nc-night__d">27</span><span>November</span><span class="nc-night__t">21:30</span><span class="nc-status" data-state="few">4 places left</span></li>
+<li class="nc-night" data-nc-date="2026-11-28"><span class="nc-night__wd">Saturday</span><span class="nc-night__d">28</span><span>November</span><span class="nc-night__t">21:30</span><span class="nc-status" data-state="soldout">Sold out</span></li>
+<li class="nc-night" data-nc-date="2026-12-04"><span class="nc-night__wd">Friday</span><span class="nc-night__d">4</span><span>December</span><span class="nc-night__t">21:30</span><span class="nc-status" data-state="available">Places</span></li>
+<li class="nc-night" data-nc-date="2026-12-05"><span class="nc-night__wd">Saturday</span><span class="nc-night__d">5</span><span>December</span><span class="nc-night__t">21:30</span><span class="nc-status" data-state="few">2 places left</span></li>
+<li class="nc-night" data-nc-date="2026-12-11"><span class="nc-night__wd">Friday</span><span class="nc-night__d">11</span><span>December</span><span class="nc-night__t">21:30</span><span class="nc-status" data-state="available">Places</span></li>
+<li class="nc-night" data-nc-date="2026-12-12"><span class="nc-night__wd">Saturday</span><span class="nc-night__d">12</span><span>December</span><span class="nc-night__t">Closed</span><span class="nc-status" data-state="closed">Private booking</span></li>
+</ul>
+</div>
+<div class="nc-view">
+<ul class="nc-nights">
+<li class="nc-night" data-nc-date="2026-11-27"><span class="nc-night__wd">Friday</span><span class="nc-night__d">27</span><span>November</span><span class="nc-night__t">21:30</span><span class="nc-status" data-state="few">4 places left</span></li>
+<li class="nc-night" data-nc-date="2026-12-04"><span class="nc-night__wd">Friday</span><span class="nc-night__d">4</span><span>December</span><span class="nc-night__t">21:30</span><span class="nc-status" data-state="available">Places</span></li>
+<li class="nc-night" data-nc-date="2026-12-11"><span class="nc-night__wd">Friday</span><span class="nc-night__d">11</span><span>December</span><span class="nc-night__t">21:30</span><span class="nc-status" data-state="available">Places</span></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+
+<!-- PATTERN: People (nc-people). For: guides, hosts, crew, the cook. Builder supplies: h2, 2 to 9 people, each a square photo or 1 to 3 initials, name (h3), role (1 to 4 words), one sentence. Limits: photos are cropped to a circle; put faces in the centre. -->
+<section class="nc-sec" aria-labelledby="people-title">
+<div class="nc-wrap">
+<div class="nc-sec__head"><h2 id="people-title">Who keeps the lights off</h2></div>
+<ul class="nc-people">
+<li class="nc-person"><div class="nc-person__moon"><span aria-hidden="true">RA</span></div><h3>Ruth Alder</h3><p class="nc-person__role">Warden</p><p>Rebuilt the mount by hand in 2012 and still knows every bolt by its sound.</p></li>
+<li class="nc-person"><div class="nc-person__moon"><span aria-hidden="true">TO</span></div><h3>Tomasz Olek</h3><p class="nc-person__role">Night guide</p><p>Finds Andromeda for you in under a minute and explains it in under two.</p></li>
+<li class="nc-person"><div class="nc-person__moon"><span aria-hidden="true">BH</span></div><h3>Bea Hindmarsh</h3><p class="nc-person__role">Warm room and cocoa</p><p>Keeps the stove lit and the first-timers laughing while their eyes adjust.</p></li>
+</ul>
+</div>
+</section>
+
+<div class="nc-wrap" aria-hidden="true"><span class="nc-ridge"></span></div>
+
+<!-- PATTERN: Questions (nc-faq). For: what people ask before they come. Builder supplies: h2, a one-sentence lede, a small side drawing from the kit (or none), 3 to 12 questions (each up to 14 words) with answers of 1 to 3 sentences. -->
+<section class="nc-sec" id="questions" aria-labelledby="faq-title">
+<div class="nc-wrap nc-faq">
+<div class="nc-faq__side">
+<h2 id="faq-title">Before you come</h2>
+<p class="nc-lede">What first-time visitors ask us most.</p>
+<svg viewBox="0 0 300 220" aria-hidden="true"><use href="#nc-sk-crescent" x="210" y="10" width="44" height="44"/><use href="#nc-hz-hills" class="nc-l-far" x="0" y="140" width="300" height="80"/><use href="#nc-sj-tent" class="nc-l-mid" x="50" y="80" width="170" height="114"/><use href="#nc-hz-trees" class="nc-l-near" x="-200" y="170" width="700" height="50"/></svg>
+</div>
+<div class="nc-faq__list">
+<details class="nc-q"><summary>What happens if it is cloudy?</summary><div class="nc-q__a"><p>We decide at 16:00 and email you. Your ticket moves to any other night this season, or we refund it.</p></div></details>
+<details class="nc-q"><summary>How cold is it under the dome?</summary><div class="nc-q__a"><p>As cold as outside, often below zero in January. Dress for a winter walk; we lend coats and gloves.</p></div></details>
+<details class="nc-q"><summary>Is there anywhere to stay nearby?</summary><div class="nc-q__a"><p>The Black Bull at Coldside has six rooms and leaves a lamp on for stargazers until 01:00.</p></div></details>
+</div>
+</div>
+</section>
+
+<!-- PATTERN: Request form, the ticket (nc-ticket). For: booking a night, a table, a room or a place on a tour. Builder supplies: the stub (a date or headline figure, 2 to 4 short lines, a status mark, an optional small drawing), h2, the form fields from the Elements section, and where the form goes. Limits: 3 to 9 fields. With no backend, keep action="mailto:…" and the notice that says sending opens the visitor's mail program. -->
+<section class="nc-sec" id="book" aria-labelledby="book-title">
+<div class="nc-wrap">
+<div class="nc-ticket">
+<div class="nc-ticket__stub">
+<p class="nc-muted" style="color:inherit">Next open night</p>
+<p class="nc-num">Fri 4 Dec</p>
+<p>Doors 21:15 &middot; dome 22:00</p>
+<p><span class="nc-status" data-state="available">Places</span></p>
+<svg viewBox="0 0 300 120" aria-hidden="true"><g class="nc-stars" data-nc-stars="24" data-seed="3" data-area="0 0 300 70"></g><use href="#nc-sk-moon" x="230" y="18" width="26" height="26"/><use href="#nc-hz-ridge" class="nc-l-far" x="0" y="70" width="300" height="50"/><use href="#nc-sj-dome" class="nc-l-mid" x="120" y="48" width="60" height="55"/><use href="#nc-hz-hills" class="nc-l-mid" x="0" y="96" width="300" height="24"/></svg>
+</div>
+<div class="nc-ticket__main">
+<h2 id="book-title">Book a night</h2>
+<p class="nc-muted">Tell us which night and how many. We confirm by email within a day.</p>
+<form class="nc-form" action="mailto:nights@hollowfell.example" method="post" enctype="text/plain">
+<div class="nc-field"><label for="b-name">Your name (required)</label><input class="nc-input" id="b-name" name="name" type="text" autocomplete="name" required></div>
+<div class="nc-field"><label for="b-email">Email (required)</label><input class="nc-input" id="b-email" name="email" type="email" autocomplete="email" required aria-describedby="b-email-h"><p class="nc-hint" id="b-email-h">The 16:00 weather email goes here.</p></div>
+<div class="nc-field"><label for="b-night">Night (required)</label><div class="nc-select"><select class="nc-input" id="b-night" name="night" required><option>Friday 4 December</option><option>Saturday 5 December</option><option>Friday 11 December</option><option>Friday 18 December</option></select></div></div>
+<div class="nc-field"><label for="b-qty">Tickets (required)</label><div class="nc-stepper" data-nc-stepper><button type="button" data-step="-1" aria-label="One ticket fewer" hidden>&minus;</button><input id="b-qty" name="tickets" type="number" inputmode="numeric" min="1" max="8" value="2" required><button type="button" data-step="1" aria-label="One ticket more" hidden>+</button></div></div>
+<div class="nc-note"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 10h2v7h-2zM11 6h2v2h-2z" fill="currentColor"/></svg><p>Sending opens your own mail program with the details filled in. Nothing is sent from this page.</p></div>
+<div class="nc-actions"><button class="nc-btn nc-btn--primary" type="submit">Write to book</button></div>
+</form>
+</div>
+</div>
+</div>
+</section>
+
+<!-- PATTERN: Getting there (nc-way). For: the last mile, especially after dark. Builder supplies: a map drawing (inline SVG, 600x420, no text inside it; the key goes in the caption), address, 2 to 5 ways to arrive, each with an icon, a heading (1 to 4 words) and one or two sentences with times. Limits: the map has role="img" and an aria-label saying where the place is. -->
+<section class="nc-sec" id="way" aria-labelledby="way-title">
+<div class="nc-wrap">
+<div class="nc-sec__head"><h2 id="way-title">Finding us in the dark</h2></div>
+<div class="nc-way">
+<figure class="nc-map">
+<svg viewBox="0 0 600 420" role="img" aria-label="Sketch map: the observatory sits on the ridge 2 km north of Coldside village, up a single-track lane that leaves the B6318 at the cattle grid">
+<g fill="none" stroke="currentColor" opacity=".55"><path d="M-10 90C90 60 200 70 300 50S520 20 610 40"/><path d="M60 210C160 170 260 190 360 150S520 140 610 160"/><path d="M380 90c40-20 110-20 120 10s-40 50-90 40-60-35-30-50Z"/></g>
+<path d="M-10 330C120 310 220 350 340 320S520 270 610 290" fill="none" style="stroke:var(--muted)" stroke-width="7" opacity=".5"/>
+<path d="M-10 380L610 250" fill="none" style="stroke:var(--text)" stroke-width="4"/>
+<path d="M300 316C310 260 380 220 440 150" fill="none" style="stroke:var(--text)" stroke-width="2.5" stroke-dasharray="8 6"/>
+<path d="M292 306h16v20h-16z" style="fill:var(--accent)"/>
+<g style="fill:var(--muted)"><rect x="150" y="332" width="14" height="12"/><rect x="170" y="340" width="12" height="10"/><rect x="186" y="328" width="16" height="14"/><rect x="160" y="352" width="12" height="10"/></g>
+<circle cx="440" cy="132" r="44" style="fill:var(--accent)" opacity=".18"/><use href="#nc-sj-dome" x="420" y="110" width="40" height="37" style="color:var(--text)"/>
+<path d="M548 92l12-36 12 36-12-8z" style="fill:var(--text)"/>
+</svg>
+<figcaption>Key: the dome is the observatory; the dashed lane leaves the main road at the cattle grid (the gold square); the grey blocks are Coldside village; the arrow points north.</figcaption>
+</figure>
+<div>
+<address>Hollow Fell Observatory<br>Coldside Moor, near Bellingham<br>Northumberland NE48 9ZZ</address>
+<dl class="nc-routes">
+<div><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 20l3-8h16l3 8v5h-3v-2H8v2H5zM9 18h14l-2-4H11z" fill="currentColor"/></svg><dt>By car</dt><dd>25 minutes from Hexham. Dip your headlights after the cattle grid; parking for 14 cars by the gate.</dd></div>
+<div><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 5h18a2 2 0 0 1 2 2v17h-2v3h-3v-3H10v3H7v-3H5V7a2 2 0 0 1 2-2zm0 4v6h18V9zM9 19a1.5 1.5 0 1 0 .1 0zm14 0a1.5 1.5 0 1 0 .1 0z" fill="currentColor"/></svg><dt>By bus</dt><dd>The 880 to Coldside, then a 30-minute walk up the lane. The last bus back leaves at 22:40, so we run a lift for bus visitors.</dd></div>
+<div><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="17" cy="5" r="2.5" fill="currentColor"/><path d="M14 10l5-1 3 6 4 1-1 2-5-1-2-3-1 5 4 4 1 7h-3l-1-6-4-3-2 9H9l3-13-2 2-1 5H7l1-6z" fill="currentColor"/></svg><dt>On foot</dt><dd>Bring a torch with a red filter. The lane is unlit and the last half kilometre is gravel.</dd></div>
+</dl>
+</div>
+</div>
+</div>
+</section>
+
+<p class="nc-wrap nc-cat-label">Alternative first screens: each replaces the scene and holds the page's h1 (h2 here, to keep one h1).</p>
+
+<!-- PATTERN: First screen, status-led (fs-tonight). For: clients whose news is the date: tonight's show, the next sailing, an opening night, a launch. Builder supplies: h1 (2 to 10 words; in a real page use <h1 class="nc-h1">), the data-nc-tonight attributes on the section, a fallback day word and time, a one-sentence line, 3 to 6 next dates (each with data-nc-date), 1 or 2 buttons, and a quiet ground strip (one far horizon and at most one small subject near x 800). Limits: the big day word must be a weekday or "Tonight"; the time is 5 characters. -->
+<section class="nc-tn" aria-labelledby="tn-title" data-nc-tonight data-dates="2026-11-27 2026-11-28 2026-12-04 2026-12-05 2026-12-11 2026-12-12 2026-12-18 2026-12-19T20:00 2027-01-08 2027-01-09" data-time="21:30" data-decide="16:00" data-ends="23:30" data-off="2026-12-12" data-tz="Europe/London">
+<svg class="nc-tn__sky" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g class="nc-stars" data-nc-stars="110" data-seed="23" data-area="0 0 1600 900"></g></svg>
+<div class="nc-wrap nc-tn__in">
+<h2 class="nc-h1" id="tn-title">Hollow Fell Observatory, open-dome nights</h2>
+<div class="nc-tn__status">
+<p class="nc-status" data-state="next" data-nc-t="mark state">Next night</p>
+<p class="nc-tn__big"><span class="nc-tn__day" data-nc-t="day">Friday</span><span class="nc-tn__time" data-nc-t="time">21:30</span></p>
+<p class="nc-tn__line" data-nc-t="line">Every Friday and Saturday until March. We decide at 16:00 whether the sky allows, and email everyone booked.</p>
+<div class="nc-actions"><a class="nc-btn nc-btn--primary" href="#book">Book this night</a><a class="nc-btn nc-btn--secondary" href="#nights">Other nights</a></div>
+</div>
+<ol class="nc-tn__list" aria-label="Coming nights">
+<li data-nc-date="2026-11-27"><span>Friday <span class="nc-num">27</span> November</span><span class="nc-status" data-state="few">4 left</span></li>
+<li data-nc-date="2026-11-28"><span>Saturday <span class="nc-num">28</span> November</span><span class="nc-status" data-state="soldout">Sold out</span></li>
+<li data-nc-date="2026-12-04"><span>Friday <span class="nc-num">4</span> December</span><span class="nc-status" data-state="available">Places</span></li>
+<li data-nc-date="2026-12-05"><span>Saturday <span class="nc-num">5</span> December</span><span class="nc-status" data-state="few">2 left</span></li>
+<li data-nc-date="2026-12-11"><span>Friday <span class="nc-num">11</span> December</span><span class="nc-status" data-state="available">Places</span></li>
+</ol>
+</div>
+<svg class="nc-tn__ground" viewBox="0 0 1600 130" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#nc-hz-ridge" class="nc-l-far" x="0" y="40" width="1600" height="90"/><use href="#nc-sj-dome" class="nc-l-far" x="762" y="6" width="80" height="73"/><use href="#nc-hz-hills" class="nc-l-near" x="0" y="86" width="1600" height="44"/></svg>
+</section>
+
+<!-- PATTERN: First screen, type over sky (fs-sky). For: festivals, launches, a book or game, any client whose name or phrase is the draw and whose picture is abstract. Builder supplies: title (1 to 5 words; in a real page <h1 class="nc-sky__title">), a sub-line (10 to 30 words), 2 to 4 meta facts (a figure and a word), 1 or 2 buttons, and the ground strip: glow and a rising moon or sun at x 800, then one near horizon. Limits: title words up to 11 letters at full size; longer words add nc-h-long. -->
+<section class="nc-sky" aria-labelledby="sky-title">
+<svg class="nc-sky__art" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g class="nc-stars" data-nc-stars="160" data-seed="41" data-area="0 0 1600 900"></g></svg>
+<div class="nc-wrap nc-sky__in">
+<h2 class="nc-h1 nc-sky__title" id="sky-title">Come and see the dark</h2>
+<p class="nc-sky__sub">The winter season at Hollow Fell: forty nights under the darkest sky in England, with a telescope, a stove and someone who knows the way.</p>
+<ul class="nc-sky__meta">
+<li><span class="nc-num">40</span><span>open nights</span></li>
+<li><span class="nc-num">21.6</span><span>sky darkness</span></li>
+<li><span class="nc-num">£14</span><span>a ticket</span></li>
+</ul>
+<div class="nc-actions"><a class="nc-btn nc-btn--primary" href="#book">Book a night</a><a class="nc-quiet" href="#programme">What you will see</a></div>
+</div>
+<svg class="nc-sky__ground" viewBox="0 0 1600 240" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#nc-sk-glow" class="nc-l-glow" x="580" y="20" width="440" height="440"/><use href="#nc-sk-moon" x="740" y="132" width="120" height="120"/><use href="#nc-hz-ridge" class="nc-l-far" x="0" y="150" width="1600" height="90"/><use href="#nc-hz-trees" class="nc-l-near" x="0" y="118" width="1600" height="122"/></svg>
+</section>
+
+<!-- PATTERN: 404 (nc-lost). For: the not-found page. Builder supplies: a one-line h1 (2 to 9 words; in a real page <h1>), one sentence, a link home and 1 to 3 other links, and the strip: fog (nc-sk-clouds), a far horizon, a lone subject (a tent or a boat) at x 740, a near horizon. -->
+<section class="nc-lost" aria-labelledby="lost-title">
+<div class="nc-wrap nc-lost__in">
+<p class="nc-lost__code">Page not found</p>
+<h2 class="nc-h1 nc-h-long" id="lost-title">You have walked off the map</h2>
+<p>This page is not here, but the lamps are still lit back at the start.</p>
+<div class="nc-actions"><a class="nc-btn nc-btn--primary" href="catalogue.html">Back to the start</a><a class="nc-quiet" href="#nights">See the nights</a></div>
+</div>
+<svg class="nc-lost__art" viewBox="0 0 1600 260" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#nc-hz-ridge" class="nc-l-far" x="0" y="120" width="1600" height="140"/><use href="#nc-sk-clouds" class="nc-l-cloud" x="-100" y="150" width="1800" height="60" opacity=".55"/><use href="#nc-sj-tent" class="nc-l-mid" x="700" y="128" width="150" height="100"/><use href="#nc-hz-hills" class="nc-l-near" x="0" y="200" width="1600" height="60"/></svg>
+</section>
+
+<!-- ======================= ELEMENTS ======================= -->
+<section class="nc-sec" id="elements" aria-labelledby="els-title">
+<div class="nc-wrap">
+<div class="nc-sec__head"><h2 id="els-title">Elements</h2><p class="nc-lede">Every control in its states. Focus is shown here with the class is-focus; real focus looks the same.</p></div>
+<div class="nc-els">
+
+<!-- ELEMENT: Buttons. For: actions. Builder supplies: a label of 1 to 4 words. Primary once per screen; secondary beside it; quiet link for "more". Shape: the arched doorway (--arch). States: default, focus, disabled (disabled attribute, or aria-disabled="true" on a link). -->
+<section aria-labelledby="el-btn"><h3 id="el-btn">Buttons</h3>
+<div class="nc-stack">
+<div class="nc-row"><a class="nc-btn nc-btn--primary" href="#book">Book a night</a><a class="nc-btn nc-btn--primary is-focus" href="#book">Focused</a><button class="nc-btn nc-btn--primary" type="button" disabled>Sold out</button></div>
+<div class="nc-row"><a class="nc-btn nc-btn--secondary" href="#nights">Other nights</a><a class="nc-btn nc-btn--secondary is-focus" href="#nights">Focused</a><button class="nc-btn nc-btn--secondary" type="button" disabled>Unavailable</button></div>
+<div class="nc-row"><a class="nc-quiet" href="#way">How to find us</a><a class="nc-quiet is-focus" href="#way">Focused</a><a class="nc-quiet" aria-disabled="true">Not yet open</a></div>
+</div>
+</section>
+
+<!-- ELEMENT: Status mark, tag, notice. For: open or closed, places left, sold out; short facts; messages. Status: <span class="nc-status" data-state="on|open|available|pending|few|off|closed|soldout|next">words</span>; the mark is a moon: full, half, ring. Always write the words; the mark alone is not enough. Tag: 1 to 4 words. Notice: nc-note (information) or nc-note nc-note--warn, a bold first line and one sentence. -->
+<section aria-labelledby="el-status"><h3 id="el-status">Status, tags, notices</h3>
+<div class="nc-stack">
+<div class="nc-row"><span class="nc-status" data-state="open">Open tonight</span><span class="nc-status" data-state="few">3 places left</span><span class="nc-status" data-state="soldout">Sold out</span><span class="nc-status" data-state="closed">Closed</span><span class="nc-status" data-state="next">Next: Friday</span></div>
+<div class="nc-row"><span class="nc-tag">Age 8 and up</span><span class="nc-tag">Step-free warm room</span><span class="nc-tag">Moonless</span></div>
+<div class="nc-note"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 10h2v7h-2zM11 6h2v2h-2z" fill="currentColor"/></svg><p><strong>Full moon on 24 December</strong>The sky is bright that week: fine for the Moon itself, poor for galaxies.</p></div>
+<div class="nc-note nc-note--warn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l10 19H2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M11 9h2v6h-2zM11 16.5h2v2h-2z" fill="currentColor"/></svg><p><strong>Ice on the lane</strong>From December, drive the last kilometre at walking pace.</p></div>
+</div>
+</section>
+
+<!-- ELEMENT: Text, email and telephone fields. For: forms. Builder supplies: label (with "(required)" when required), optional hint, error text. Name, email and phone fields always carry autocomplete. Error state: add is-error to nc-field, aria-invalid="true" to the input, and point aria-describedby at the error. -->
+<section aria-labelledby="el-text"><h3 id="el-text">Text fields</h3>
+<div class="nc-stack">
+<div class="nc-field"><label for="e-name">Full name (required)</label><input class="nc-input" id="e-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name-h"><p class="nc-hint" id="e-name-h">As it should appear on the list at the gate.</p></div>
+<div class="nc-field is-error"><label for="e-email">Email (required)</label><input class="nc-input" id="e-email" name="email" type="email" autocomplete="email" required value="ruth@hollowfell" aria-invalid="true" aria-describedby="e-email-e"><p class="nc-error" id="e-email-e">Add the end of the address, such as .co.uk</p></div>
+<div class="nc-field"><label for="e-tel">Telephone</label><input class="nc-input is-focus" id="e-tel" name="tel" type="tel" autocomplete="tel" aria-describedby="e-tel-h"><p class="nc-hint" id="e-tel-h">Only used if the lane is closed.</p></div>
+<div class="nc-field"><label for="e-code">Member number</label><input class="nc-input" id="e-code" name="member" type="text" disabled value="Members open in spring"></div>
+</div>
+</section>
+
+<!-- ELEMENT: Date, select and textarea. Same rules as text fields. Wrap each select in <div class="nc-select">. -->
+<section aria-labelledby="el-more"><h3 id="el-more">Date, select, message</h3>
+<div class="nc-stack">
+<div class="nc-field"><label for="e-date">Preferred night (required)</label><input class="nc-input" id="e-date" name="date" type="date" min="2026-11-27" max="2027-03-27" required aria-describedby="e-date-h"><p class="nc-hint" id="e-date-h">Fridays and Saturdays only.</p></div>
+<div class="nc-field is-error"><label for="e-group">Group size (required)</label><div class="nc-select"><select class="nc-input" id="e-group" name="group" required aria-invalid="true" aria-describedby="e-group-e"><option value="">Choose one</option><option>1 to 4</option><option>5 to 8</option><option>School group</option></select></div><p class="nc-error" id="e-group-e">Choose a group size.</p></div>
+<div class="nc-field"><label for="e-msg">Message</label><textarea class="nc-input" id="e-msg" name="message" rows="3" aria-describedby="e-msg-h"></textarea><p class="nc-hint" id="e-msg-h">Wheelchair, birthdays, a proposal under the stars.</p></div>
+</div>
+</section>
+
+<!-- ELEMENT: Checkbox and radio. For: choices. Builder supplies: a legend, 2 to 6 options of up to 8 words. Error: is-error on the fieldset and an nc-error inside it. -->
+<section aria-labelledby="el-choice"><h3 id="el-choice">Checkbox and radio</h3>
+<div class="nc-stack">
+<fieldset class="nc-choices"><legend>Extras</legend>
+<label class="nc-check"><input type="checkbox" name="extra" checked> Borrow a winter coat</label>
+<label class="nc-check"><input type="checkbox" name="extra"> Red-light torch to keep, £4</label>
+<label class="nc-check"><input type="checkbox" name="extra" disabled> Night in the bothy (full)</label>
+</fieldset>
+<fieldset class="nc-choices is-error" aria-describedby="e-seat-e"><legend>Where would you like to start? (required)</legend>
+<label class="nc-check"><input type="radio" name="seat"> In the warm room</label>
+<label class="nc-check"><input type="radio" name="seat"> Straight to the dome</label>
+<p class="nc-error" id="e-seat-e">Choose where to start.</p>
+</fieldset>
+</div>
+</section>
+
+<!-- ELEMENT: Quantity stepper. For: tickets, places, rooms. Builder supplies: label, min, max, value. The minus and plus buttons stay hidden until pack.js runs; the number field works on its own. -->
+<section aria-labelledby="el-step"><h3 id="el-step">Quantity stepper</h3>
+<div class="nc-field"><label for="e-qty">Under-16 tickets</label><div class="nc-stepper" data-nc-stepper><button type="button" data-step="-1" aria-label="One fewer" hidden>&minus;</button><input id="e-qty" name="child" type="number" inputmode="numeric" min="0" max="6" value="0" aria-describedby="e-qty-h"><button type="button" data-step="1" aria-label="One more" hidden>+</button></div><p class="nc-hint" id="e-qty-h">Up to 6 with each adult ticket.</p></div>
+</section>
+
+<!-- ELEMENT: Disclosure. For: extra detail that most people skip. <details class="nc-q"><summary>…</summary><div class="nc-q__a">…</div></details>. The marker is a moon that fills when open. Summary up to 14 words. -->
+<section aria-labelledby="el-disc"><h3 id="el-disc">Disclosure</h3>
+<details class="nc-q" open><summary>What should I bring?</summary><div class="nc-q__a"><p>Warm boots, a hat and patience. Leave your phone in the car or turn it to red.</p></div></details>
+<details class="nc-q"><summary>Is there a café?</summary><div class="nc-q__a"><p>Cocoa, tea and flapjack in the warm room, by donation.</p></div></details>
+</section>
+</div>
+
+<!-- ELEMENT: Table with figures and a view switch. For: prices, timetables, tide or moon tables. Builder supplies: a caption, 2 to 6 columns, 2 to 12 rows; figures in cells with class is-fig. The switch: <div class="nc-views"><fieldset class="nc-switch"> with 2 to 5 labelled radios sharing one name, then one <div class="nc-view"> per radio in the same order. It works with no script. Wrap the table in nc-table-wrap with tabindex="0", role="region" and an aria-label. -->
+<h3 style="margin-top:3.5rem;margin-bottom:1rem">Table with figures, and a view switch</h3>
+<div class="nc-views">
+<fieldset class="nc-switch" aria-label="Show prices for">
+<label><input type="radio" name="price-view" checked> Night visits</label>
+<label><input type="radio" name="price-view"> Daytime</label>
+</fieldset>
+<div class="nc-view">
+<div class="nc-table-wrap" tabindex="0" role="region" aria-label="Night visit prices">
+<table class="nc-table"><caption>Night visits, winter season</caption>
+<thead><tr><th scope="col">Ticket</th><th scope="col" class="is-fig">Length</th><th scope="col" class="is-fig">Price</th></tr></thead>
+<tbody>
+<tr><th scope="row">Adult</th><td class="is-fig">90 min</td><td class="is-fig">£14.00</td></tr>
+<tr><th scope="row">Under 16</th><td class="is-fig">90 min</td><td class="is-fig">£8.00</td></tr>
+<tr><th scope="row">Family of four</th><td class="is-fig">90 min</td><td class="is-fig">£36.00</td></tr>
+<tr><th scope="row">Photographers' long night</th><td class="is-fig">3 h</td><td class="is-fig">£38.00</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="nc-view">
+<div class="nc-table-wrap" tabindex="0" role="region" aria-label="Daytime prices">
+<table class="nc-table"><caption>Sun afternoons</caption>
+<thead><tr><th scope="col">Ticket</th><th scope="col" class="is-fig">Length</th><th scope="col" class="is-fig">Price</th></tr></thead>
+<tbody>
+<tr><th scope="row">Anyone</th><td class="is-fig">45 min</td><td class="is-fig">£6.00</td></tr>
+<tr><th scope="row">School class</th><td class="is-fig">60 min</td><td class="is-fig">Free</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- ELEMENT: Picture slot. For: a photograph or a drawing at fixed proportions. <figure class="nc-pic [nc-pic--arch | nc-pic--wide | nc-pic--square]"><div class="nc-pic__frame"><img …> or <svg …></div><figcaption>…</figcaption></figure>. Default 4:3; arch 4:5 with an arched top; wide 16:9; square 1:1. Any photo that is not the client's own carries <span class="nc-standin">Stand-in photo</span> inside the frame. Caption up to 30 words. -->
+<h3 style="margin-top:3.5rem;margin-bottom:1rem">Picture slot</h3>
+<div class="nc-els">
+<figure class="nc-pic nc-pic--wide">
+<div class="nc-pic__frame"><img src="img/standin-dome.jpg" alt="Dusk over the moor with the dome on the skyline" width="800" height="1000" loading="lazy"><span class="nc-standin">Stand-in photo</span></div>
+<figcaption>Wide 16:9, a stand-in photograph until the client sends their own.</figcaption>
+</figure>
+<figure class="nc-pic">
+<div class="nc-pic__frame"><svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Drawing of the warden's cottage with lit windows under the moon" style="background:linear-gradient(180deg,var(--sky-top),var(--sky-low))"><g class="nc-stars" data-nc-stars="40" data-seed="9" data-area="0 0 400 200"></g><use href="#nc-sk-moon" x="300" y="44" width="40" height="40"/><use href="#nc-hz-ridge" class="nc-l-far" x="-200" y="180" width="800" height="120"/><use href="#nc-sj-house" class="nc-l-near" x="120" y="140" width="180" height="152"/><use href="#nc-hz-hills" class="nc-l-near" x="-100" y="270" width="600" height="30"/></svg></div>
+<figcaption>Default 4:3, holding a drawing built from the scene kit.</figcaption>
+</figure>
+</div>
+
+<!-- ELEMENT: Colourways. For: choosing the hour. Set data-colourway="night|dusk|day" on <html>. These swatches set it on a box only to show all three at once. -->
+<h3 style="margin-top:3.5rem;margin-bottom:1rem">Colourways</h3>
+<div class="nc-swatches">
+<div class="nc-swatch" data-colourway="night"><svg viewBox="0 0 400 180" aria-hidden="true"><use href="#nc-sk-glow" class="nc-l-glow" x="230" y="0" width="140" height="140"/><use href="#nc-sk-moon" x="286" y="56" width="28" height="28"/><use href="#nc-hz-ridge" class="nc-l-far" x="0" y="110" width="400" height="70"/><use href="#nc-sj-dome" class="nc-l-mid" x="230" y="96" width="60" height="55"/><use href="#nc-hz-trees" class="nc-l-near" x="-200" y="140" width="800" height="40"/></svg><h3>Night</h3><p>The default: moonlight and lamplight.</p><a class="nc-btn nc-btn--primary" href="#book">Book a night</a></div>
+<div class="nc-swatch" data-colourway="dusk"><svg viewBox="0 0 400 180" aria-hidden="true"><use href="#nc-sk-sun" x="250" y="70" width="100" height="100"/><use href="#nc-hz-ridge" class="nc-l-far" x="0" y="110" width="400" height="70"/><use href="#nc-sj-house" class="nc-l-mid" x="110" y="96" width="70" height="59"/><use href="#nc-hz-hills" class="nc-l-near" x="0" y="146" width="400" height="34"/></svg><h3>Dusk</h3><p>Plum and ember, the first lamps.</p><a class="nc-btn nc-btn--primary" href="#book">Book a table</a></div>
+<div class="nc-swatch" data-colourway="day"><svg viewBox="0 0 400 180" aria-hidden="true"><use href="#nc-sk-sun" x="60" y="10" width="90" height="90"/><use href="#nc-sk-clouds" class="nc-l-cloud" x="0" y="60" width="400" height="30" opacity=".8"/><use href="#nc-hz-sea" class="nc-l-far" x="0" y="120" width="400" height="60"/><use href="#nc-sj-boat" class="nc-l-near" x="220" y="96" width="80" height="58"/></svg><h3>Day</h3><p>Pale sky and sunlit ochre.</p><a class="nc-btn nc-btn--primary" href="#book">Book a trip</a></div>
+</div>
+
+</div>
+</section>
+
+</main>
+
+<!-- PATTERN: Footer (nc-foot). For: every page. Builder supplies: a horizon at the top (one nc-hz-*), the place name and one line, address, opening nights or hours, 3 to 6 links, small print. Limits: 2 to 4 columns. -->
+<footer class="nc-foot">
+<svg class="nc-foot__hz" viewBox="0 0 1600 140" preserveAspectRatio="none" aria-hidden="true"><use href="#nc-hz-hills" x="0" y="0" width="1600" height="140"/></svg>
+<div class="nc-wrap nc-foot__in">
+<div><h2>Hollow Fell</h2><p class="nc-muted">A public observatory on Coldside Moor, run by volunteers since 1979.</p></div>
+<div><h2>Find us</h2><address>Coldside Moor, near Bellingham<br>Northumberland NE48 9ZZ<br><a href="mailto:nights@hollowfell.example">nights@hollowfell.example</a></address></div>
+<div><h2>Nights</h2><p>Fridays and Saturdays, October to March, from 21:30. Decision at 16:00.</p></div>
+<div><h2>More</h2><ul><li><a href="#nights">Dates</a></li><li><a href="#questions">Questions</a></li><li><a href="#way">Getting here</a></li></ul></div>
+</div>
+<div class="nc-wrap nc-foot__small"><span>Registered charity 1180001</span><span>No cookies, no street lights.</span></div>
+</footer>
+</body>
+</html>
