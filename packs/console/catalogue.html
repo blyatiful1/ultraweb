@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en" data-colourway="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Console pack catalogue</title>
+<meta name="description" content="The Console design pack catalogue: every first screen, section pattern and element, filled for an invented client, Runnel, background jobs on Postgres.">
+<link rel="preload" href="fonts/sora-latin-400-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="pack.css">
+<script src="pack.js" defer></script>
+</head>
+<body>
+<!-- ELEMENT: icon sprite. Ready-made drawing parts placed with <svg><use href="#i-check"/></svg>. All use currentColor. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 32 32"><rect x="2.5" y="4.5" width="27" height="23" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.5 10.5h27" stroke="currentColor" stroke-width="2"/><path d="M8 16l4 3.5L8 23M15 23h9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="M4 10.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-dash" viewBox="0 0 20 20"><path d="M5 10h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 9v5.5M10 5.6v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 20 20"><path d="M10 2.5l8.2 14.5H1.8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 8v4.2M10 14.6v.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 16 16"><path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="cat-note"><div class="wrap"><span>Console pack · catalogue</span><span>Sample client: Runnel (invented)</span><span>data-colourway: light | dark | signal</span></div></div>
+
+<!-- PATTERN: header. Wordmark, 3–5 nav links, one primary button. Under 900px the links fold into a Menu disclosure (no JS). Supply: product name, version or star count, links to page sections. Limits: link labels 1–2 words; at most 5 links. -->
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#main"><svg aria-hidden="true"><use href="#i-logo"/></svg>Runnel <span class="mono">v2.14</span></a>
+    <nav class="nav" aria-label="Main">
+      <ul class="nav-list">
+        <li><a href="#docs">Docs</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#changelog">Changelog</a></li>
+        <li><a href="#people"><svg width="16" height="16" aria-hidden="true"><use href="#i-star"/></svg><span class="mono">12.4k</span></a></li>
+      </ul>
+      <a class="btn" href="#quickstart">Start free</a>
+      <details class="menu">
+        <summary>Menu <span class="kbd" aria-hidden="true">M</span></summary>
+        <div class="menu-panel win">
+          <a href="#docs">Docs</a><a href="#pricing">Pricing</a><a href="#changelog">Changelog</a><a href="#people">Maintainers</a><a href="#quickstart">Start free</a>
+        </div>
+      </details>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<!-- PATTERN: first-screen window (SIGNATURE). The product's own interface, large, under a short claim. Slots: h1 claim (3–9 words); lede (1–2 sentences); primary + secondary button; the window: title (file or URL), 2–4 tabs, sidebar 3–8 items with counts, toolbar, a table of 4–8 real rows; 2–4 inline .pin marks; legend with one line per pin. Swap the table for .code, .chat or a chart when that is the product. -->
+<section class="hero canvas" aria-labelledby="h-hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <h1 id="h-hero" class="t-hero">Background jobs that live in your Postgres.</h1>
+      <div class="stack">
+        <p class="lede">Runnel turns a table into a queue. Retries, schedules and a live dashboard, with no Redis and no new service to run.</p>
+        <div class="row"><a class="btn" href="#quickstart">Start free</a><a class="btn btn--secondary" href="#docs">Read the docs</a></div>
+      </div>
+    </div>
+    <div class="hero-shot">
+      <div class="win">
+        <div class="win-bar"><div class="win-dots" aria-hidden="true"><i></i><i></i><i></i></div><div class="win-title">app.runnel.dev / acme-prod / queues</div><div class="win-end"><span class="kbd">⌘K</span></div></div>
+        <div class="win-tabs"><span class="win-tab is-on">Jobs <span class="count">1,307</span></span><span class="win-tab">Schedules</span><span class="win-tab">Workers</span><span class="win-tab">Settings</span></div>
+        <div class="app">
+          <div class="side">
+            <p class="side-head">Queues <span class="pin">1</span></p>
+            <span class="side-item is-on">emails <span class="mono">1,204</span></span>
+            <span class="side-item">webhooks <span class="mono">88</span></span>
+            <span class="side-item">billing <span class="mono">12</span></span>
+            <span class="side-item">exports <span class="mono">3</span></span>
+            <span class="side-item">thumbnails <span class="mono">0</span></span>
+          </div>
+          <div class="main">
+            <div class="toolbar">
+              <div class="search"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Filter jobs</span><span class="kbd">/</span></div>
+              <span class="tag">status: any</span><span class="tag tag--warn">2 retrying <span class="pin">2</span></span>
+            </div>
+            <table class="dt" aria-label="Recent jobs in the emails queue">
+              <thead><tr><th scope="col">Job</th><th scope="col">Task</th><th scope="col">Status</th><th scope="col" class="num">Tries</th><th scope="col" class="num">Time <span class="pin">3</span></th></tr></thead>
+              <tbody>
+                <tr><td class="id" data-label="Job">j_8f21c</td><td data-label="Task">welcome-email</td><td data-label="Status"><span class="status" data-state="up">Done</span></td><td class="num" data-label="Tries">1</td><td class="num" data-label="Time">38 ms</td></tr>
+                <tr><td class="id" data-label="Job">j_8f21b</td><td data-label="Task">receipt-email</td><td data-label="Status"><span class="status" data-state="degraded">Retrying</span></td><td class="num" data-label="Tries">3 / 5</td><td class="num" data-label="Time">2.4 s</td></tr>
+                <tr><td class="id" data-label="Job">j_8f219</td><td data-label="Task">digest-weekly</td><td data-label="Status"><span class="status" data-state="up">Done</span></td><td class="num" data-label="Tries">1</td><td class="num" data-label="Time">212 ms</td></tr>
+                <tr><td class="id" data-label="Job">j_8f214</td><td data-label="Task">password-reset</td><td data-label="Status"><span class="status" data-state="up">Done</span></td><td class="num" data-label="Tries">1</td><td class="num" data-label="Time">41 ms</td></tr>
+                <tr><td class="id" data-label="Job">j_8f20e</td><td data-label="Task">invoice-email</td><td data-label="Status"><span class="status" data-state="down">Failed</span></td><td class="num" data-label="Tries">5 / 5</td><td class="num" data-label="Time">9.0 s</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="win-foot"><span class="ok">● 6 workers</span><span>p95 44 ms</span><span>synced 2 s ago</span></div>
+      </div>
+      <ol class="legend">
+        <li><span><strong>Queues are tables.</strong> Each one is a row set you can query with plain SQL.</span></li>
+        <li><span><strong>Retries back off.</strong> Exponential, capped, and visible per job.</span></li>
+        <li><span><strong>Every run is timed.</strong> Durations land in your own database.</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<div class="cat-div"><div class="wrap"><p>Catalogue: alternative first screens. A site uses exactly one of the three.</p></div></div>
+
+<!-- PATTERN: first-screen quick start. The install command and its real output are the centrepiece. Slots: h2 (or h1 on a real site) 4–10 words; lede; terminal with 2–4 views (package managers or languages), each 3–10 lines: .cmd lines are the commands (click selects all), .o output, .ok success; side notes 2–4 items, each naming the output line it explains. -->
+<section class="hero" id="quickstart" aria-labelledby="h-qs">
+  <div class="wrap">
+    <div class="qs-head">
+      <h2 id="h-qs" class="t-hero">Queue your first job in under a minute.</h2>
+      <p class="lede">Three commands against the database you already have. Nothing to host.</p>
+    </div>
+    <div class="qs">
+      <div class="win term" data-views="npm">
+        <div class="win-bar"><div class="win-dots" aria-hidden="true"><i></i><i></i><i></i></div><div class="win-title">~/acme-api — zsh</div></div>
+        <div class="win-tabs" data-view-tabs aria-label="Package manager"><button class="win-tab" data-view-tab="npm">npm</button><button class="win-tab" data-view-tab="pnpm">pnpm</button><button class="win-tab" data-view-tab="bun">bun</button></div>
+        <pre class="shell shell--num" data-view="npm" data-label="npm"><span class="cmd">npm install runnel</span><span class="o">added 1 package in 2.1s</span><span class="cmd">npx runnel init --db $DATABASE_URL</span><span class="ok">✓ connected to postgres 16.4</span><span class="ok">✓ created schema runnel (4 tables)</span><span class="ok">✓ wrote runnel.config.ts</span><span class="cmd">npx runnel dev</span><span class="ac">▸ worker ready · concurrency 4</span><span class="o">  welcome-email  j_8f21c  done  38 ms</span><span><span class="cursor" aria-hidden="true"></span></span></pre>
+        <pre class="shell" data-view="pnpm" data-label="pnpm"><span class="cmd">pnpm add runnel</span><span class="o">+ runnel 2.14.0 in 1.4s</span><span class="cmd">pnpm runnel init --db $DATABASE_URL</span><span class="ok">✓ connected to postgres 16.4</span><span class="ok">✓ created schema runnel (4 tables)</span><span class="cmd">pnpm runnel dev</span><span class="ac">▸ worker ready · concurrency 4</span></pre>
+        <pre class="shell" data-view="bun" data-label="bun"><span class="cmd">bun add runnel</span><span class="o">installed runnel@2.14.0 in 0.6s</span><span class="cmd">bunx runnel init --db $DATABASE_URL</span><span class="ok">✓ connected to postgres 16.4</span><span class="cmd">bunx runnel dev</span><span class="ac">▸ worker ready · concurrency 4</span></pre>
+      </div>
+      <ol class="qs-notes">
+        <li><span class="ln">L2</span><p><strong>One dependency.</strong> No native builds, no daemon.</p></li>
+        <li><span class="ln">L4–6</span><p><strong>Your schema, your data.</strong> Four tables you can read and back up like any other.</p></li>
+        <li><span class="ln">L8</span><p><strong>A worker in dev mode.</strong> Reloads when a file in ./jobs changes.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: first-screen claim. A claim in type with one small live widget. Slots: h2/h1 claim 3–8 words (use .t-hero--long when a word exceeds 12 letters); lede; 1–2 buttons; widget window: one status mark, one figure (data-since counts days), 30 uptime bars (.w warn, .d down), one mono line of source. Use when the product's interface is not yet the selling point. -->
+<section class="hero canvas" aria-labelledby="h-claim">
+  <div class="wrap claim">
+    <div>
+      <h2 id="h-claim" class="t-hero t-hero--xl">Retries are a feature, not a fire drill.</h2>
+      <p class="lede">Every job is a row with a history. When a provider times out at 3 a.m., Runnel waits, tries again and writes down what happened.</p>
+      <div class="row"><a class="btn" href="#quickstart">Start free</a><a class="link link--arrow" href="#changelog">What changed in 2.14</a></div>
+    </div>
+    <div class="win live">
+      <div class="win-bar"><div class="win-title">status.runnel.dev</div></div>
+      <div class="win-body">
+        <span class="status status--live" data-state="up">All queues processing</span>
+        <p><span class="live-fig" data-since="2026-10-17">41</span> <span class="meta">days since a dropped job</span></p>
+        <div class="uptime" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="w"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="d"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <p class="meta">99.99% delivered · last 30 days</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="cat-div"><div class="wrap"><p>Catalogue: section patterns, in a plausible page order.</p></div></div>
+
+<!-- PATTERN: metrics. A row of real numbers in hairline tiles. Supply: 3–6 tiles, each label (2–5 words), figure (number + unit in <small>), optional delta, optional sparkline polyline; one source line saying where and when it was measured. Limits: figures up to 8 characters. Never invent numbers. -->
+<section class="sec" aria-labelledby="h-metrics">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-metrics" class="t-sec">Measured on our own production.</h2><p class="lede">Numbers from the hosted dashboard, all customers, November 2026.</p></div>
+    <div class="tiles">
+      <div class="tile"><p class="tile-label">Jobs run per day</p><p class="tile-fig">412M</p><p class="delta">↑ 18% on October</p><svg class="spark" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,32 15,30 30,31 45,24 60,26 75,18 90,16 105,10 120,8" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
+      <div class="tile"><p class="tile-label">Pick-up latency, p95</p><p class="tile-fig">44<small>ms</small></p><p class="delta">↓ 6 ms</p><svg class="spark" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,12 15,14 30,11 45,18 60,20 75,22 90,21 105,26 120,27" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
+      <div class="tile"><p class="tile-label">Delivered on first try</p><p class="tile-fig">97.2<small>%</small></p><p class="delta delta--down">↓ 0.3 pt</p><svg class="spark" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,14 15,13 30,15 45,12 60,14 75,16 90,15 105,17 120,18" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
+      <div class="tile"><p class="tile-label">Teams in production</p><p class="tile-fig">3,180</p><p class="delta">↑ 240</p><svg class="spark" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,34 15,33 30,30 45,29 60,25 75,22 90,19 105,15 120,11" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/></svg></div>
+    </div>
+    <p class="meta metrics-note">Source: app.runnel.dev, 1–30 Nov 2026, 14 regions.</p>
+  </div>
+</section>
+
+<!-- PATTERN: index of offerings. A reference list: kind, name, one line, figure. Use for API endpoints, modules, plans of service, data sets. Supply: 3–12 rows; kind is a mono word (GET, SDK, CLI); name 1–4 words, linked; line under 20 words; figure with a small unit line. -->
+<section class="sec" id="docs" aria-labelledby="h-idx">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-idx" class="t-sec">Six primitives. That is the whole API.</h2><p class="lede">Each one is a function in the client and a row in your database.</p></div>
+    <ul class="idx">
+      <li><span class="kind">enqueue()</span><div><h3><a href="#steps">Enqueue a job</a></h3><p>Insert a job in the same transaction as the data it depends on.</p></div><p class="fig">0.9 ms<small>median insert</small></p></li>
+      <li><span class="kind">schedule()</span><div><h3><a href="#schedule">Schedules</a></h3><p>Cron syntax, time zones, and no double runs when two workers wake at once.</p></div><p class="fig">1 s<small>resolution</small></p></li>
+      <li><span class="kind">retry</span><div><h3><a href="#spec">Retry policies</a></h3><p>Exponential backoff with jitter, a cap, and a dead-letter table.</p></div><p class="fig">25<small>max attempts</small></p></li>
+      <li><span class="kind">batch()</span><div><h3><a href="#steps">Batches</a></h3><p>Fan out ten thousand jobs and get one callback when the last finishes.</p></div><p class="fig">10k<small>jobs per batch</small></p></li>
+      <li><span class="kind">CLI</span><div><h3><a href="#quickstart">runnel dev</a></h3><p>A local worker that reloads on save and prints every run.</p></div><p class="fig">4<small>default concurrency</small></p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- PATTERN: split. Text beside a picture; the picture is a window (diff, code, chat) or a .pic slot. Supply: h2 4–10 words; 1 paragraph; 3–5 ticks; the window. .split--rev puts the picture first. Limits: diff 6–16 lines. -->
+<section class="sec" aria-labelledby="h-split">
+  <div class="wrap split">
+    <div>
+      <h2 id="h-split" class="t-sec">Migrating from a Redis queue is a small diff.</h2>
+      <p class="body-copy" style="margin-top:20px">The client keeps the shape you know. What changes is where the job lives: in the same transaction as the order that caused it.</p>
+      <ul class="ticks"><li>No job without its row, no row without its job</li><li>Drop one service from your stack</li><li>Keep your existing worker code</li></ul>
+    </div>
+    <div class="win">
+      <div class="win-bar"><div class="win-dots" aria-hidden="true"><i></i><i></i><i></i></div><div class="win-title">PR #412 · move checkout jobs to runnel</div></div>
+      <div class="diff-head"><span>src/checkout.ts</span><span class="plus">+5</span><span class="minus">−4</span></div>
+      <pre class="code" style="counter-reset: ln 11"><span class="l"><span class="k">import</span> { db } <span class="k">from</span> <span class="s">"./db"</span>;</span><span class="l del"><span class="k">import</span> { Queue } <span class="k">from</span> <span class="s">"bullmq"</span>;</span><span class="l add"><span class="k">import</span> { runnel } <span class="k">from</span> <span class="s">"runnel"</span>;</span><span class="l"> </span><span class="l del"><span class="k">const</span> emails = <span class="k">new</span> <span class="f">Queue</span>(<span class="s">"emails"</span>, { connection });</span><span class="l"><span class="k">export async function</span> <span class="f">checkout</span>(cart) {</span><span class="l del">  <span class="k">const</span> order = <span class="k">await</span> db.orders.<span class="f">create</span>(cart);</span><span class="l del">  <span class="k">await</span> emails.<span class="f">add</span>(<span class="s">"receipt"</span>, { id: order.id });</span><span class="l add">  <span class="k">return</span> db.<span class="f">transaction</span>(<span class="k">async</span> (tx) =&gt; {</span><span class="l add">    <span class="k">const</span> order = <span class="k">await</span> tx.orders.<span class="f">create</span>(cart);</span><span class="l add">    <span class="k">await</span> runnel.<span class="f">enqueue</span>(tx, <span class="s">"receipt"</span>, { id: order.id });</span><span class="l add hl">  }); <span class="c">// both commit, or neither</span></span><span class="l">}</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: steps. Steps in order, each with its code. Supply: 3–6 steps; title 2–7 words; one paragraph under 40 words; a .code block of 1–8 lines (or none). -->
+<section class="sec" id="steps" aria-labelledby="h-steps">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-steps" class="t-sec">From install to production in three steps.</h2></div>
+    <ol class="steps">
+      <li><div><h3>Define a job</h3><p>A job is an exported function in ./jobs. Its file name is its name.</p></div><div class="win"><pre class="code"><span class="l"><span class="k">export default async function</span> <span class="f">receipt</span>({ id }) {</span><span class="l">  <span class="k">await</span> mail.<span class="f">send</span>(<span class="s">"receipt"</span>, id);</span><span class="l">}</span></pre></div></li>
+      <li><div><h3>Enqueue it in a transaction</h3><p>Pass the transaction you already have. If it rolls back, the job never existed.</p></div><div class="win"><pre class="code"><span class="l"><span class="k">await</span> runnel.<span class="f">enqueue</span>(tx, <span class="s">"receipt"</span>, { id });</span></pre></div></li>
+      <li><div><h3>Run workers where your app runs</h3><p>Same container, a separate process, or our hosted workers. They coordinate through Postgres advisory locks.</p></div><div class="win term"><pre class="shell"><span class="cmd">runnel work --concurrency 16</span><span class="ok">✓ 16 slots · 5 queues</span></pre></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PATTERN: band. One full-width statement on the band ground, with a keyboard shortcut drawn large. Supply: statement 4–12 words; one sentence; 1–3 keycaps; one mono line saying what the keys do. One band per page. -->
+<section class="band" aria-labelledby="h-band">
+  <div class="wrap band-grid">
+    <div>
+      <h2 id="h-band" class="band-say">Find any job, from anywhere in the dashboard.</h2>
+      <p class="lede">Search by id, payload field or error message across every queue and the last 90 days.</p>
+    </div>
+    <div class="band-keys"><span class="keys"><span class="kbd kbd--xl" aria-hidden="true">⌘</span><span class="kbd kbd--xl" aria-hidden="true">K</span><span class="vh">Command K</span></span><p class="meta">Ctrl K on Windows and Linux</p></div>
+  </div>
+</section>
+
+<!-- PATTERN: benchmark. Horizontal bars with figures, the client's row highlighted. Supply: 3–6 rows (name, version line, value as --v percent of the largest, figure); one method line. Only real, reproducible numbers. -->
+<section class="sec" aria-labelledby="h-bench">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-bench" class="t-sec">Throughput on one Postgres instance.</h2><p class="lede">Jobs completed per second, no-op handler, 32 workers.</p></div>
+    <ul class="bench">
+      <li class="is-us"><span class="who">Runnel <span class="mono">2.14 · SKIP LOCKED</span></span><span class="track"><i style="--v:100%"></i></span><span class="fig">41,200 /s</span></li>
+      <li><span class="who">pg-boss <span class="mono">10.1</span></span><span class="track"><i style="--v:58%"></i></span><span class="fig">23,900 /s</span></li>
+      <li><span class="who">Graphile Worker <span class="mono">0.16</span></span><span class="track"><i style="--v:71%"></i></span><span class="fig">29,300 /s</span></li>
+      <li><span class="who">Polling table <span class="mono">baseline</span></span><span class="track"><i style="--v:9%"></i></span><span class="fig">3,700 /s</span></li>
+    </ul>
+    <p class="meta metrics-note">db.r6g.2xlarge, Postgres 16.4, 3 runs, median. Script: bench/throughput.ts</p>
+  </div>
+</section>
+
+<!-- PATTERN: spec. A specification list as inspector panels. Supply: 2–4 groups, each a mono title and 3–8 rows of label and value (value may hold a .tag). Limits: labels under 5 words; values under 40 characters. -->
+<section class="sec" id="spec" aria-labelledby="h-spec">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-spec" class="t-sec">The fine print, in full.</h2><p class="lede">Defaults you can override per queue or per job.</p></div>
+    <div class="spec">
+      <div class="spec-group surface"><h3>retry.policy</h3><dl>
+        <div><dt>Backoff</dt><dd>exponential, base 2 s</dd></div>
+        <div><dt>Jitter</dt><dd>±20%</dd></div>
+        <div><dt>Max attempts</dt><dd>5 <span class="tag">up to 25</span></dd></div>
+        <div><dt>After the last try</dt><dd>runnel.dead_jobs</dd></div>
+      </dl></div>
+      <div class="spec-group surface"><h3>runtime</h3><dl>
+        <div><dt>Postgres</dt><dd>13 or later</dd></div>
+        <div><dt>Node.js</dt><dd>20, 22, 24</dd></div>
+        <div><dt>Payload size</dt><dd>1 MB jsonb</dd></div>
+        <div><dt>Licence</dt><dd>MIT <span class="tag tag--add">open source</span></dd></div>
+      </dl></div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: integrations. A tight grid of hairline cells, one per integration. Supply: 6–24 items; glyph is 1–3 letters (no third-party logos unless the client may use them); name; category; optional tag (beta, new). -->
+<section class="sec" aria-labelledby="h-intg">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-intg" class="t-sec">Works with what you run.</h2><p class="lede">First-party adapters, maintained in the main repository.</p></div>
+    <ul class="intg">
+      <li><span class="glyph" aria-hidden="true">Pg</span><span class="name">Postgres</span><span class="meta">database · required</span></li>
+      <li><span class="glyph" aria-hidden="true">Pr</span><span class="name">Prisma</span><span class="meta">ORM</span></li>
+      <li><span class="glyph" aria-hidden="true">Dz</span><span class="name">Drizzle</span><span class="meta">ORM</span></li>
+      <li><span class="glyph" aria-hidden="true">Kn</span><span class="name">Knex</span><span class="meta">query builder</span></li>
+      <li><span class="glyph" aria-hidden="true">OT</span><span class="name">OpenTelemetry</span><span class="meta">tracing</span></li>
+      <li><span class="glyph" aria-hidden="true">Sn</span><span class="name">Sentry</span><span class="meta">errors</span></li>
+      <li><span class="glyph" aria-hidden="true">Sl</span><span class="name">Slack <span class="tag">beta</span></span><span class="meta">alerts</span></li>
+      <li><span class="glyph" aria-hidden="true">Nx</span><span class="name">Next.js</span><span class="meta">framework</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- PATTERN: compare. A comparison table, the client's column tinted. Supply: 2–4 columns (client first), 4–10 feature rows; cells are .mark--yes, .mark--no or a short value (under 14 characters). Every td needs data-label with its column name (used on phones). Be fair. -->
+<section class="sec" aria-labelledby="h-cmp">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-cmp" class="t-sec">How it compares.</h2><p class="lede">Checked against each project's documentation on 1 November 2026.</p></div>
+    <table class="cmp" aria-label="Runnel compared with a Redis queue and a cron table">
+      <thead><tr><th scope="col"><span class="vh">Feature</span></th><th scope="col" class="is-us">Runnel</th><th scope="col">Redis queue <span class="meta">BullMQ</span></th><th scope="col">Cron + table</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Enqueue inside a transaction</th><td class="is-us" data-label="Runnel"><span class="mark mark--yes"><svg aria-hidden="true"><use href="#i-check"/></svg>Yes</span></td><td data-label="Redis queue"><span class="mark mark--no"><svg aria-hidden="true"><use href="#i-dash"/></svg>No</span></td><td data-label="Cron + table"><span class="mark mark--yes"><svg aria-hidden="true"><use href="#i-check"/></svg>Yes</span></td></tr>
+        <tr><th scope="row">Extra service to run</th><td class="is-us" data-label="Runnel"><span class="mark">None</span></td><td data-label="Redis queue"><span class="mark">Redis</span></td><td data-label="Cron + table"><span class="mark">None</span></td></tr>
+        <tr><th scope="row">Retries with backoff</th><td class="is-us" data-label="Runnel"><span class="mark mark--yes"><svg aria-hidden="true"><use href="#i-check"/></svg>Yes</span></td><td data-label="Redis queue"><span class="mark mark--yes"><svg aria-hidden="true"><use href="#i-check"/></svg>Yes</span></td><td data-label="Cron + table"><span class="mark mark--no"><svg aria-hidden="true"><use href="#i-dash"/></svg>Write it</span></td></tr>
+        <tr><th scope="row">Peak throughput</th><td class="is-us" data-label="Runnel"><span class="mark">41k/s</span></td><td data-label="Redis queue"><span class="mark">90k/s</span></td><td data-label="Cron + table"><span class="mark">4k/s</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PATTERN: pricing. Tiers in one hairline grid, one tier picked (.is-pick, on the window surface). Supply: 2–4 tiers; name; price (figure + unit line); one sentence; 3–6 ticks; one button. The picked tier may hold the seat stepper (data-stepper, data-price). -->
+<section class="sec" id="pricing" aria-labelledby="h-price">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-price" class="t-sec">Free to self-host. Pay for the dashboard.</h2><p class="lede">Prices in US dollars, billed monthly, tax extra.</p></div>
+    <div class="tiers">
+      <div class="tier"><div class="tier-head"><h3>Open source</h3><span class="tag">MIT</span></div><p class="price">$0<small>forever, self-hosted</small></p><p class="body-copy">The library, the CLI and the local dashboard.</p><ul class="ticks"><li>Unlimited jobs</li><li>Community support</li></ul><a class="btn btn--secondary" href="#quickstart">Install</a></div>
+      <div class="tier is-pick"><div class="tier-head"><h3>Team</h3><span class="tag tag--accent">Most teams pick this</span></div><p class="price">$12<small>per seat, per month</small></p><div class="seats"><label for="seats-team">Seats</label><div class="row"><div class="stepper" data-stepper data-price="12" data-currency="$"><button data-step="-1" aria-label="One seat fewer">−</button><input id="seats-team" type="number" inputmode="numeric" min="1" max="200" value="5"><button data-step="1" aria-label="One seat more">+</button></div><output class="meta" data-total aria-live="polite">$60</output></div></div><ul class="ticks"><li>Hosted dashboard, 90-day history</li><li>Alerts to Slack and email</li><li>Support in one business day</li></ul><a class="btn" href="#request">Start 14-day trial</a></div>
+      <div class="tier"><div class="tier-head"><h3>Enterprise</h3></div><p class="price">Custom<small>annual contract</small></p><p class="body-copy">SSO, audit log, a private region and a named engineer.</p><ul class="ticks"><li>99.95% uptime SLA</li><li>Security review</li></ul><a class="btn btn--secondary" href="#request">Talk to us</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: changelog. A release log on a commit line. Supply: 2–8 releases; version (mono), date, 1–6 entries each with a tag: Added (.tag--add), Fixed (.tag), Changed (.tag--warn), Removed (.tag--del). .is-major fills the dot. -->
+<section class="sec" id="changelog" aria-labelledby="h-log">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-log" class="t-sec">Changelog</h2><p class="lede">Semantic versions. Breaking changes only in majors, always with a codemod.</p></div>
+    <ol class="log">
+      <li class="is-major"><div><h3>v2.14.0</h3><time class="meta" datetime="2026-11-18">18 Nov 2026</time></div><ul><li><span class="tag tag--add">Added</span><span>Batches: one callback when every job in a group finishes.</span></li><li><span class="tag tag--warn">Changed</span><span>Default backoff base is now 2 s, was 1 s.</span></li></ul></li>
+      <li><div><h3>v2.13.2</h3><time class="meta" datetime="2026-10-30">30 Oct 2026</time></div><ul><li><span class="tag">Fixed</span><span>Schedules in Australia/Lord_Howe skipped the half-hour change.</span></li></ul></li>
+      <li><div><h3>v2.13.0</h3><time class="meta" datetime="2026-10-09">9 Oct 2026</time></div><ul><li><span class="tag tag--add">Added</span><span><code>runnel dev --once</code> runs the queue empty and exits.</span></li><li><span class="tag tag--del">Removed</span><span>Node 18 support.</span></li></ul></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PATTERN: schedule. A release track or calendar of dated items; pack.js marks the next one. Supply: 3–6 items in date order, each data-date="YYYY-MM-DD", a visible date, title 2–6 words, one line; .when tag with data-countdown inside. -->
+<section class="sec" id="schedule" aria-labelledby="h-sched">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-sched" class="t-sec">Release train</h2><p class="lede">A minor every three weeks, office hours the Thursday after.</p></div>
+    <ol class="track-list" data-next>
+      <li data-date="2026-11-18"><time class="meta" datetime="2026-11-18">18 Nov</time><h3>v2.14 shipped</h3><p>Batches and the new backoff.</p></li>
+      <li data-date="2026-12-03"><time datetime="2026-12-03">3 Dec</time><h3>Office hours</h3><p>Live Q&amp;A with the maintainers, 17:00 UTC.</p><span class="tag tag--accent when" data-countdown>Next</span></li>
+      <li data-date="2026-12-09"><time datetime="2026-12-09">9 Dec</time><h3>v2.15 release</h3><p>Rate limits per queue.</p><span class="tag tag--accent when" data-countdown>Next</span></li>
+      <li data-date="2027-01-13"><time datetime="2027-01-13">13 Jan</time><h3>v3.0 beta</h3><p>Workflows with steps and signals.</p><span class="tag tag--accent when" data-countdown>Next</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PATTERN: people. Maintainers or team as dense rows, like a shortlog. Supply: 3–12 people; initials or a square photo; name; handle; role line; optional commit share as --v percent with its figure. -->
+<section class="sec" id="people" aria-labelledby="h-people">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-people" class="t-sec">Maintained by four people and 212 contributors.</h2><p class="lede">Full-time on Runnel, paid by the hosted plan.</p></div>
+    <ul class="people">
+      <li class="person"><span class="avatar" aria-hidden="true">MO</span><h3>Maren Okafor <span class="meta">@marenok</span></h3><p>Founder. Writes the scheduler.</p><p class="commits meta"><i style="--v:62%"></i>1,840 commits</p></li>
+      <li class="person"><span class="avatar" aria-hidden="true">TL</span><h3>Tomás Lindqvist <span class="meta">@tlq</span></h3><p>Workers, locking, the benchmark suite.</p><p class="commits meta"><i style="--v:41%"></i>1,212 commits</p></li>
+      <li class="person"><span class="avatar" aria-hidden="true">AS</span><h3>Aiko Sato <span class="meta">@aikos</span></h3><p>Dashboard and the hosted platform.</p><p class="commits meta"><i style="--v:30%"></i>884 commits</p></li>
+      <li class="person"><span class="avatar" aria-hidden="true">DB</span><h3>Dev Bhattacharya <span class="meta">@devb</span></h3><p>Docs, examples, support rota.</p><p class="commits meta"><i style="--v:18%"></i>530 commits</p></li>
+    </ul>
+  </div>
+</section>
+
+<!-- PATTERN: questions. Sticky intro beside a list of disclosures. Supply: h2 2–6 words; one line with a link; 3–10 questions (under 14 words each) with answers of 1–3 short paragraphs. -->
+<section class="sec" aria-labelledby="h-faq">
+  <div class="wrap faq">
+    <div><h2 id="h-faq" class="t-sec">Questions</h2><p class="body-copy" style="margin-top:16px">Not here? Ask in <a class="link" href="#request">a support request</a>.</p></div>
+    <div>
+      <details class="disc" open><summary>Will it slow down my main database?</summary><div class="disc-body"><p>A busy queue adds a few hundred small writes per second. Most teams start on their main instance and move queues to a replica of their own when they pass 5,000 jobs per second.</p></div></details>
+      <details class="disc"><summary>What happens if a worker dies mid-job?</summary><div class="disc-body"><p>Its lock expires after the job's timeout and another worker picks the job up. The attempt is recorded as abandoned.</p></div></details>
+      <details class="disc"><summary>Can I read the jobs with plain SQL?</summary><div class="disc-body"><p>Yes. They are rows in <code>runnel.jobs</code>. The schema is documented and stable within a major version.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: request. A request form in a dialog window, beside what happens next. Supply: h2; one sentence; 2–4 next-steps with times; fields (name, email, phone optional, one select, date, message, consent). Without a backend the form uses mailto and says so beside the button. -->
+<section class="sec" id="request" aria-labelledby="h-req">
+  <div class="wrap req-grid">
+    <div>
+      <h2 id="h-req" class="t-sec">Talk to an engineer, not a sales script.</h2>
+      <p class="body-copy" style="margin-top:20px">Tell us your volume and your stack. One of the maintainers answers.</p>
+      <ol class="next-list"><li><span class="meta">&lt; 1 day</span><span>A reply from a maintainer, by email.</span></li><li><span class="meta">30 min</span><span>A call on the date you pick, with your schema open.</span></li><li><span class="meta">14 days</span><span>Team plan on trial, no card needed.</span></li></ol>
+    </div>
+    <div class="win">
+      <div class="win-bar"><div class="win-dots" aria-hidden="true"><i></i><i></i><i></i></div><div class="win-title">new request</div></div>
+      <form class="win-body form" action="mailto:hello@runnel.example?subject=Runnel%20request" method="post" enctype="text/plain">
+        <div class="form-grid">
+          <div class="field"><label for="r-name">Name <span class="req">(required)</span></label><input class="input" id="r-name" name="name" autocomplete="name" required></div>
+          <div class="field"><label for="r-email">Work email <span class="req">(required)</span></label><input class="input" id="r-email" name="email" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="r-tel">Phone</label><input class="input" id="r-tel" name="phone" type="tel" autocomplete="tel"><p class="hint">Only if you prefer a call.</p></div>
+          <div class="field"><label for="r-vol">Jobs per day</label><select class="select" id="r-vol" name="volume"><option>Under 100k</option><option>100k to 10M</option><option>Over 10M</option></select></div>
+          <div class="field full"><label for="r-msg">What are you running? <span class="req">(required)</span></label><textarea class="textarea" id="r-msg" name="message" required></textarea></div>
+        </div>
+        <div class="form-foot"><button class="btn" type="submit">Open in your mail app</button><p class="hint">Sending opens your mail program; nothing is stored here.</p></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: visit. Getting there: a drawn map window beside address, transit and hours. Supply: address, nearest stop, hours, 2–3 online places (status, chat, repository); the map is inline SVG with role="img" and an aria-label naming the place. Leave it out for remote-only clients or replace the map with a region list. -->
+<section class="sec" aria-labelledby="h-visit">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-visit" class="t-sec">Where to find us.</h2><p class="lede">Online all week; in the office Tuesday to Thursday.</p></div>
+    <div class="visit">
+      <div class="win">
+        <div class="win-bar"><div class="win-title">map · Ropewalk Lane</div></div>
+        <svg class="map" viewBox="0 0 640 360" role="img" aria-label="Map: Runnel's office at 14 Ropewalk Lane, two minutes' walk north of Canal Street station">
+          <rect width="640" height="360" fill="var(--win)"/>
+          <path d="M0 250 C150 230 260 300 400 270 S560 220 640 236 V290 C560 280 470 320 400 322 S170 290 0 304Z" fill="var(--win-hl)"/>
+          <g stroke="var(--win-line)" stroke-width="18" fill="none" stroke-linecap="round"><path d="M-10 120H650"/><path d="M180 -10V250"/><path d="M430 -10L470 260"/></g>
+          <g stroke="var(--win-line)" stroke-width="8" fill="none"><path d="M0 60H640"/><path d="M300 0V240"/><path d="M80 0V230"/><path d="M560 0V240"/></g>
+          <path d="M-10 196H650" stroke="currentColor" stroke-width="3" stroke-dasharray="10 6"/>
+          <g fill="currentColor"><circle cx="300" cy="196" r="9" fill="var(--win)" stroke="currentColor" stroke-width="3"/><text x="314" y="226" font-size="15" font-family="JetBrains Mono, monospace">Canal Street</text></g>
+          <g transform="translate(300 106)"><path d="M0 0c-14-18-20-27-20-37a20 20 0 0 1 40 0c0 10-6 19-20 37z" fill="var(--win-accent)"/><circle cx="0" cy="-37" r="7" fill="var(--win)"/></g>
+          <text x="330" y="80" font-size="16" font-weight="600" fill="currentColor" font-family="Sora, sans-serif">Runnel, 14 Ropewalk Lane</text>
+          <text x="20" y="342" font-size="13" fill="var(--win-muted)" font-family="JetBrains Mono, monospace">river · 200 m</text>
+        </svg>
+      </div>
+      <div class="win"><div class="win-body">
+        <dl>
+          <div><dt>address</dt><dd>14 Ropewalk Lane, third floor<br>Bristol BS1 6QX</dd></div>
+          <div><dt>nearest stop</dt><dd>Canal Street, 2 min walk</dd></div>
+          <div><dt>office hours</dt><dd>Tue–Thu, 10:00–17:00</dd></div>
+          <div><dt>online</dt><dd><a class="link" href="#changelog">status</a> · <a class="link" href="#people">repository</a></dd></div>
+        </dl>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: 404. A terminal that failed, a plain heading and three ways back. Supply: the path that failed, 2–4 links. Use as the whole main of 404.html. -->
+<section class="sec" aria-labelledby="h-404">
+  <div class="wrap nf">
+    <div><h2 id="h-404" class="t-sec">This page is not here.</h2><p class="body-copy" style="margin-top:16px">It may have moved when the docs were rebuilt.</p><div class="row"><a class="btn" href="#main">Back to the start</a><a class="link link--arrow" href="#docs">Docs</a></div></div>
+    <div class="win term"><div class="win-bar"><div class="win-title">404</div></div><pre class="shell"><span class="cmd">runnel open /pricing/enterprise-plus</span><span class="er">error[E404]: no page at this path</span><span class="o">hint: did you mean /pricing ?</span></pre></div>
+  </div>
+</section>
+
+<div class="cat-div"><div class="wrap"><p>Catalogue: elements, in their states.</p></div></div>
+
+<section class="sec" aria-labelledby="h-el">
+  <div class="wrap">
+    <div class="sec-head"><h2 id="h-el" class="t-sec">Elements</h2></div>
+    <div class="el-grid">
+      <!-- ELEMENT: buttons. .btn primary, .btn--secondary, .link quiet (.link--arrow adds ->). States: default, focus (keyboard; shown here with .is-focus), disabled (disabled or aria-disabled). Labels 1–4 words. -->
+      <div><h3>Buttons</h3><div class="stack"><div class="row"><a class="btn" href="#quickstart">Start free</a><a class="btn is-focus" href="#quickstart">Focused</a><button class="btn" disabled>Disabled</button></div><div class="row"><a class="btn btn--secondary" href="#docs">Read the docs</a><button class="btn btn--secondary" disabled>Disabled</button><a class="link link--arrow" href="#changelog">Quiet link</a></div></div></div>
+      <!-- ELEMENT: status, tag, notice. .status data-state up|degraded|down (.status--live pulses); .tag plus --add --del --warn --accent; .notice info and .notice--warn, each with an icon from the sprite. -->
+      <div><h3>Status, tags and notices</h3><div class="stack"><div class="row"><span class="status status--live" data-state="up">Operational</span><span class="status" data-state="degraded">Degraded</span><span class="status" data-state="down">Outage</span></div><div class="row"><span class="tag">v2.14.0</span><span class="tag tag--add">Added</span><span class="tag tag--warn">Changed</span><span class="tag tag--del">Removed</span><span class="tag tag--accent">New</span></div><div class="notice"><svg aria-hidden="true"><use href="#i-info"/></svg><p><strong>Heads up.</strong> Node 18 support ends with v2.13.</p></div><div class="notice notice--warn"><svg aria-hidden="true"><use href="#i-warn"/></svg><p><strong>Degraded in eu-west-1.</strong> Jobs are delayed by up to 40 s.</p></div></div></div>
+      <!-- ELEMENT: form controls. Always inside a .win or .surface. Each .field: label (say "(required)" in it), control, .hint, .err (shown when the field has .is-error). Controls: text, email, tel, date, select, textarea, checkbox, radio. -->
+      <div class="full"><h3>Form controls</h3><div class="win"><div class="win-body form"><div class="form-grid">
+        <div class="field"><label for="e-name">Full name <span class="req">(required)</span></label><input class="input" id="e-name" autocomplete="name" value="Maren Okafor"><p class="hint">As it should appear on invoices.</p></div>
+        <div class="field is-error"><label for="e-email">Work email <span class="req">(required)</span></label><input class="input" id="e-email" type="email" autocomplete="email" value="maren@" aria-invalid="true" aria-describedby="e-email-err"><p class="err" id="e-email-err">enter a full address, like name@company.com</p></div>
+        <div class="field"><label for="e-tel">Phone</label><input class="input" id="e-tel" type="tel" autocomplete="tel"><p class="hint">With country code.</p></div>
+        <div class="field"><label for="e-date">Call date</label><input class="input" id="e-date" type="date"><p class="hint">Tuesday to Thursday.</p></div>
+        <div class="field"><label for="e-region">Region</label><select class="select" id="e-region"><option>eu-west-1 (Ireland)</option><option>us-east-1 (Virginia)</option></select></div>
+        <div class="field"><label for="e-key">API key</label><input class="input input--mono" id="e-key" value="rk_live_••••4f2a" disabled><p class="hint">Disabled: rotate it in Settings.</p></div>
+        <div class="field full"><label for="e-msg">Message</label><textarea class="textarea" id="e-msg"></textarea></div>
+        <fieldset class="fieldset"><legend>Plan</legend><label class="choice"><input type="radio" name="e-plan" checked><span>Team</span></label><label class="choice"><input type="radio" name="e-plan"><span>Enterprise</span></label><label class="choice"><input type="radio" name="e-plan" disabled><span>Legacy (closed)</span></label></fieldset>
+        <fieldset class="fieldset"><legend>Updates</legend><label class="choice"><input type="checkbox" checked><span>Release notes</span></label><label class="choice"><input type="checkbox"><span>Incident alerts</span></label></fieldset>
+      </div></div></div></div>
+      <!-- ELEMENT: data table with view switch. .dt with .num figures, every td carries data-label (phones stack rows). The switch is pack.js views: data-views on the box, data-view-tabs on the tab row, data-view-tab / data-view + data-label on tabs and panels. 2–4 views. -->
+      <div><h3>Table with views</h3><div class="win" data-views="day">
+        <div class="win-tabs" data-view-tabs aria-label="Period"><button class="win-tab" data-view-tab="day">24 h</button><button class="win-tab" data-view-tab="week">7 days</button></div>
+        <div data-view="day" data-label="24 hours"><table class="dt"><thead><tr><th scope="col">Queue</th><th scope="col" class="num">Jobs</th><th scope="col" class="num">Failed</th><th scope="col" class="num">p95</th></tr></thead><tbody><tr><td data-label="Queue">emails</td><td class="num" data-label="Jobs">48,210</td><td class="num" data-label="Failed">12</td><td class="num" data-label="p95">41 ms</td></tr><tr><td data-label="Queue">webhooks</td><td class="num" data-label="Jobs">9,604</td><td class="num" data-label="Failed">87</td><td class="num" data-label="p95">310 ms</td></tr></tbody></table></div>
+        <div data-view="week" data-label="7 days"><table class="dt"><thead><tr><th scope="col">Queue</th><th scope="col" class="num">Jobs</th><th scope="col" class="num">Failed</th><th scope="col" class="num">p95</th></tr></thead><tbody><tr><td data-label="Queue">emails</td><td class="num" data-label="Jobs">331,900</td><td class="num" data-label="Failed">74</td><td class="num" data-label="p95">44 ms</td></tr><tr><td data-label="Queue">webhooks</td><td class="num" data-label="Jobs">66,020</td><td class="num" data-label="Failed">512</td><td class="num" data-label="p95">298 ms</td></tr></tbody></table></div>
+      </div></div>
+      <!-- ELEMENT: disclosure. details.disc > summary + .disc-body. Summary under 14 words. -->
+      <div><h3>Disclosure</h3><details class="disc"><summary>Which regions can host my workers?</summary><div class="disc-body"><p>eu-west-1, us-east-1 and ap-southeast-2, or your own cloud.</p></div></details><details class="disc"><summary>Is there a free trial?</summary><div class="disc-body"><p>Fourteen days of Team, no card.</p></div></details></div>
+      <!-- ELEMENT: quantity stepper. pack.js stepper; for seats, licences, credits. Disabled state: disabled on input and buttons. Without JS it is a number input. -->
+      <div><h3>Quantity stepper</h3><div class="surface win-body"><div class="seats"><label for="e-seats">Build minutes (thousands)</label><div class="row"><div class="stepper" data-stepper data-price="4" data-currency="$"><button data-step="-1" aria-label="Fewer">−</button><input id="e-seats" type="number" min="1" max="50" value="3"><button data-step="1" aria-label="More">+</button></div><output class="meta" data-total>$12</output></div><label for="e-seats-off">Disabled</label><div class="stepper"><button disabled aria-label="Fewer">−</button><input id="e-seats-off" type="number" value="1" disabled><button disabled aria-label="More">+</button></div></div></div></div>
+      <!-- ELEMENT: keyboard mark and chat. .kbd inline, .kbd--xl in the band. .chat with .msg--user / .msg--bot and an optional .tool-call line. 2–6 messages. -->
+      <div><h3>Keyboard marks and a conversation</h3><p class="body-copy">Press <span class="kbd">⌘</span> <span class="kbd">K</span> to search, <span class="kbd">R</span> to retry, <span class="kbd">Esc</span> to close.</p><div class="win" style="margin-top:16px"><div class="win-bar"><div class="win-title">#support · runnel</div></div><div class="chat"><div class="msg msg--user"><span class="msg-who" aria-hidden="true">JP</span><div class="msg-text"><p>Why is j_8f20e marked failed?</p></div></div><div class="msg msg--bot"><span class="msg-who" aria-hidden="true">R</span><div class="msg-text"><p class="tool-call">runnel.inspect("j_8f20e")</p><p>Five attempts, each a 504 from the mail provider. It is in dead_jobs; retry with <span class="kbd">R</span>.</p></div></div></div></div></div>
+      <!-- ELEMENT: chart. Inline SVG bars in a window, role="img" with an aria-label that states the data. 4–14 bars. -->
+      <div><h3>Chart</h3><div class="win"><div class="win-bar"><div class="win-title">jobs per hour · today</div></div><div class="win-body"><svg class="chart" viewBox="0 0 320 140" role="img" aria-label="Jobs per hour today, rising from 1.2 thousand at midnight to a peak of 4.8 thousand at 09:00"><g class="grid"><path d="M28 20H316M28 60H316M28 100H316"/></g><g fill="currentColor"><rect x="36" y="92" width="22" height="28"/><rect x="66" y="96" width="22" height="24"/><rect x="96" y="84" width="22" height="36"/><rect x="126" y="56" width="22" height="64"/><rect x="156" y="24" width="22" height="96"/><rect x="186" y="40" width="22" height="80"/><rect x="216" y="52" width="22" height="68"/><rect x="246" y="64" width="22" height="56"/><rect x="276" y="76" width="22" height="44"/></g><path d="M28 120H316" stroke="currentColor"/><text x="0" y="24">4.8k</text><text x="0" y="104">1.2k</text><text x="36" y="136">00</text><text x="156" y="136">09</text><text x="276" y="136">16</text></svg></div></div></div>
+      <!-- ELEMENT: picture slot. figure.pic > .pic-frame (ratios: default 4:3, --wide 16:9, --square, --tall) + figcaption. Takes an <img> (photo or screenshot) or an inline SVG drawing. Pictures that are not the client's own carry span.standin "Stand-in photo". -->
+      <div class="full"><h3>Picture slot</h3><div class="spec">
+        <figure class="pic pic--wide"><div class="pic-frame"><svg viewBox="0 0 320 180" aria-hidden="true"><rect width="320" height="180" fill="var(--win-2)"/><rect x="96" y="40" width="128" height="80" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M150 120v18h20v-18M130 140h60" stroke="currentColor" stroke-width="2" fill="none"/><path d="M40 150h240" stroke="currentColor" stroke-width="2"/></svg><span class="standin">Stand-in photo</span></div><figcaption><span class="mono">fig. 1</span>The Bristol office, third floor.</figcaption></figure>
+        <figure class="pic pic--wide"><div class="pic-frame"><svg viewBox="0 0 320 180" role="img" aria-label="Drawing: a job moves from the jobs table to a worker and back as done"><rect width="320" height="180" fill="var(--win)"/><g fill="none" stroke="currentColor" stroke-width="2"><rect x="30" y="54" width="90" height="72" rx="4"/><path d="M30 78h90M30 102h90"/><rect x="200" y="62" width="90" height="56" rx="28"/><path d="M124 80h70M196 100h-70" stroke-dasharray="5 4"/></g><text x="38" y="72" font-size="12" fill="currentColor" font-family="JetBrains Mono, monospace">jobs</text><text x="222" y="95" font-size="12" fill="currentColor" font-family="JetBrains Mono, monospace">worker</text></svg></div><figcaption><span class="mono">fig. 2</span>A drawing in the same slot.</figcaption></figure>
+      </div></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- PATTERN: footer. Brand with the install line, 3 link columns, a base row with status and version. Supply: install command, 3–6 links per column, licence, status. -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="stack"><a class="brand" href="#main"><svg aria-hidden="true"><use href="#i-logo"/></svg>Runnel</a><p class="body-copy">Background jobs on Postgres.</p><span class="foot-cmd">npm install runnel</span></div>
+      <div><p class="foot-title">product</p><ul class="foot-links"><li><a href="#pricing">Pricing</a></li><li><a href="#changelog">Changelog</a></li><li><a href="#schedule">Roadmap</a></li></ul></div>
+      <div><p class="foot-title">developers</p><ul class="foot-links"><li><a href="#docs">Docs</a></li><li><a href="#quickstart">Quick start</a></li><li><a href="#spec">Limits</a></li></ul></div>
+      <div><p class="foot-title">company</p><ul class="foot-links"><li><a href="#people">Maintainers</a></li><li><a href="#request">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-base"><span class="status" data-state="up">All systems normal</span><p class="meta">© 2026 Runnel Labs Ltd · MIT · v2.14.0</p></div>
+  </div>
+</footer>
+</body>
+</html>

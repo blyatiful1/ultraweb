@@ -1,0 +1,11 @@
+{
+  "name": "console",
+  "title": "Console",
+  "character": "The product is the picture: the client's own interface rebuilt in HTML and CSS (windows, diffs, terminals, tables, metric tiles) on a precise, dense page of hairlines, Sora and mono figures.",
+  "suits": ["developer tools", "APIs", "SaaS products", "apps", "databases and data services", "open-source projects", "infrastructure and observability", "AI and analytics products"],
+  "notFor": ["places and venues", "restaurants and food", "crafts and handmade goods", "shops of physical products", "events", "people-first services without a product interface"],
+  "colourways": ["light", "dark", "signal"],
+  "firstScreens": ["window", "quickstart", "claim"],
+  "signature": "The window kit: app chrome with tabs and a sidebar, line-numbered code and diff blocks with added and removed marks, a terminal with a prompt, data tables, metric tiles, keycaps and numbered annotation pins, all filled with the product's real content and sound at 375px.",
+  "fonts": ["Sora", "JetBrains Mono"]
+}
