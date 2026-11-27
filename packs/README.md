@@ -30,7 +30,7 @@ Every pack has three colourways, three first screens, its own buttons, form cont
 ## What is and is not known
 
 - Fieldbook went through one graded comparison (`evals/results/2026-11-25-pack-test.md`): at about half the per-site cost of the comparison arm, the grader preferred its page for one brief of two. It lost where its character did not fit the subject.
-- The other five packs were authored after that round. Each passes its checks; none has been through a graded comparison.
+- The other five packs were authored after that round. Each passes its checks and has had one site built from it by the smallest model, which chose the pack itself from all six and passed the gates (`evals/results/2026-11-27-six-packs.md`). None has been through a graded comparison.
 - A pack forced onto the wrong subject loses to a page designed for it. `pack-build.md` tells the builder to say so and build without a pack when none suits.
 
 ## Adding a pack

@@ -32,8 +32,8 @@ Read `pack/PACK.md` and `pack/catalogue.html` completely before you write anythi
 ## 3. Build
 
 - Copy `pack/pack.css`, `pack/pack.js` if it exists, and `pack/fonts/` into `site/` unchanged, keeping the paths the catalogue uses.
-- Write `site/index.html`. For each section, copy the pattern's markup from the catalogue and replace the sample content with the client's. Keep the classes and the structure. Respect each pattern's limits.
-- Add no CSS and no `style` attributes. A drawing is inline SVG that follows the pack's rule for drawings, and it shows the real thing with its real parts, labelled the way the trade labels them. A circle with two lines is an icon, not a drawing.
+- Write `site/index.html`. Take the `<head>` from the catalogue as it is (the stylesheet, the font preloads, the script) and change only the title and the description. For each section, copy the pattern's markup from the catalogue and replace the sample content with the client's. Keep the classes and the structure. Respect each pattern's limits.
+- Add no CSS, and no `style` attributes beyond the ones a pattern already carries in the catalogue. A drawing is inline SVG that follows the pack's rule for drawings, and it shows the real thing with its real parts, labelled the way the trade labels them. A circle with two lines is an icon, not a drawing.
 - Fill in the data attributes that the pack's behaviours read (opening hours, dates), as `pack/PACK.md` describes them. Write no script of your own.
 - Write real detail: names, sizes, materials, prices, times, steps, conditions. No filler and no repeated sentences. Follow the pack's voice.
 - A fact you had to draft carries the attribute `data-assumed` on its element (`references/brief.md`). Never draft a street address, a phone number, a registration number or a bank detail: leave them out.
