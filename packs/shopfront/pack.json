@@ -1,0 +1,11 @@
+{
+  "name": "shopfront",
+  "title": "Shopfront",
+  "character": "The painted shop sign and the price board: saturated colour edge to edge, a fat slab name with a sign-writer's shade, awning stripes, round stamps and a live Open plate.",
+  "suits": ["bakeries", "cafés", "delis", "market stalls", "barbers", "repair shops", "record shops", "bookshops", "clubs", "community halls"],
+  "notFor": ["luxury brands", "software and apps", "formal professional services"],
+  "colourways": ["pillarbox", "enamel", "lamplight"],
+  "firstScreens": ["first-sign", "first-board", "first-front"],
+  "signature": "The board: a bolted enamel price list with dot leaders, specials and sold-out marks, beside a hanging Open plate that pack.js works out from the real opening hours.",
+  "fonts": ["Alfa Slab One", "Nunito Sans"]
+}

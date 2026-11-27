@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en-GB" data-colourway="pillarbox">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shopfront pack catalogue: Halden Street Bakery</title>
+<meta name="description" content="The catalogue of the Shopfront design pack: every pattern and element once, filled for an invented neighbourhood bakery.">
+<link rel="preload" href="fonts/alfa-slab-one-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="pack.css">
+<script src="pack.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ELEMENT: drawing sprite. Copy this <svg> once, right after <body>. Parts: sf-loaf, sf-croissant, sf-cup, sf-cake, sf-scissors, sf-record, sf-book, sf-wrench (products, 64x48), sf-person (portrait, 100x100; set style="--sym:var(--accent)" to vary), sf-bus, sf-bike, sf-door (getting there, 48x48), sf-ring (the stamp's text path). -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<pattern id="sf-stripes" width="62" height="10" patternUnits="userSpaceOnUse" patternTransform="translate(44 0)"><rect width="31" height="10" fill="var(--stripe-a)"/><rect x="31" width="31" height="10" fill="var(--stripe-b)"/></pattern>
+<path id="sf-ring" d="M34 100a66 66 0 1 1 132 0a66 66 0 1 1-132 0"/>
+<symbol id="sf-loaf" viewBox="0 0 64 48"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 42c0-18 12-31 27-31s27 13 27 31z" fill="var(--sym,var(--panel))"/><path d="M19 24l6 7M30 19l6 8M41 21l5 7" fill="none"/></g></symbol>
+<symbol id="sf-croissant" viewBox="0 0 64 48"><g stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" fill="var(--sym,var(--panel))"><path d="M4 36c4-15 15-24 28-24s24 9 28 24c-6-3-11-3-14 0-3-7-8-10-14-10s-11 3-14 10c-3-3-8-3-14 0z"/><path d="M24 27l2-13M40 27l-2-13" fill="none"/></g></symbol>
+<symbol id="sf-cup" viewBox="0 0 64 48"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18h34v9c0 9-7 15-17 15s-17-6-17-15z" fill="var(--sym,var(--panel))"/><path d="M46 21h4a6 6 0 0 1 0 12h-6M6 46h46M23 3c-3 3 3 6 0 10M33 3c-3 3 3 6 0 10" fill="none"/></g></symbol>
+<symbol id="sf-cake" viewBox="0 0 64 48"><g stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M8 44V26l48-13v31z" fill="var(--sym,var(--panel))"/><path d="M8 26l48-13M8 35h48" fill="none"/><circle cx="50" cy="8" r="4" fill="var(--sold)"/></g></symbol>
+<symbol id="sf-scissors" viewBox="0 0 64 48"><g stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"><circle cx="14" cy="36" r="8" fill="var(--sym,var(--panel))"/><circle cx="36" cy="40" r="6" fill="var(--sym,var(--panel))"/><path d="M20 30L58 6M33 34L46 4"/></g></symbol>
+<symbol id="sf-record" viewBox="0 0 64 48"><g stroke="currentColor" stroke-width="3" fill="none"><circle cx="32" cy="24" r="21" fill="var(--sym,var(--panel-text))"/><circle cx="32" cy="24" r="7" fill="var(--accent)"/><path d="M32 9a15 15 0 0 1 15 15" stroke="var(--panel)" stroke-linecap="round"/></g></symbol>
+<symbol id="sf-book" viewBox="0 0 64 48"><g stroke="currentColor" stroke-width="3" stroke-linejoin="round" fill="var(--sym,var(--panel))"><path d="M6 9c9-3 19-2 26 4v31c-7-6-17-7-26-4z"/><path d="M58 9c-9-3-19-2-26 4v31c7-6 17-7 26-4z"/></g></symbol>
+<symbol id="sf-wrench" viewBox="0 0 64 48"><path d="M46 4a12 12 0 0 0-11 16L10 37a5 5 0 1 0 7 7l18-24a12 12 0 0 0 16-11l-7 4-6-3v-7z" fill="var(--sym,var(--panel))" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/></symbol>
+<symbol id="sf-person" viewBox="0 0 100 100"><rect width="100" height="100" fill="var(--sym,var(--band))"/><g stroke="currentColor" stroke-width="4" stroke-linejoin="round"><path d="M12 106c2-23 17-34 38-34s36 11 38 34z" fill="var(--ink)"/><path d="M36 78h28v30H36z" fill="var(--panel)"/><circle cx="50" cy="45" r="20" fill="var(--panel)"/><path d="M29 43c1-15 10-22 21-22s20 7 21 22c-8-6-14-8-21-8s-13 2-21 8z" fill="currentColor"/></g></symbol>
+<symbol id="sf-bus" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="5" width="32" height="33" rx="6"/><path d="M8 23h32M15 44v-6M33 44v-6"/><circle cx="16" cy="31" r="1.5"/><circle cx="32" cy="31" r="1.5"/></g></symbol>
+<symbol id="sf-bike" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="32" r="8"/><circle cx="37" cy="32" r="8"/><path d="M11 32l8-14h12l6 14M19 18l7 14H11M28 11h6"/></g></symbol>
+<symbol id="sf-door" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 44V5h24v39M5 44h38"/><circle cx="30" cy="26" r="1.5"/></g></symbol>
+</defs></svg>
+
+<p class="catnote on-panel">This page is the Shopfront design pack catalogue: every pattern and element once, filled in for an invented bakery.</p>
+
+<!-- PATTERN: header. Shop name, 3 to 6 anchor links, and the short open-now chip. Supply: name (up to 4 words), links (one or two words each), the opening hours string (same as the sign). The awning div is the pack's stripe device; keep it. -->
+<header class="shopbar on-ground">
+<div class="awning" aria-hidden="true"></div>
+<div class="shopbar__in wrap">
+<a class="shopbar__name" href="#main">Halden Street Bakery</a>
+<p class="openchip" data-open-sign="short" data-hours="mon closed; tue-fri 07:00-15:00; sat 07:00-14:00; sun 08:00-13:00" data-tz="Europe/London"><span class="lamp" aria-hidden="true"></span><span data-open-state>Hours</span> <span data-open-detail>Tue to Sun from 7am</span></p>
+<nav aria-label="Main"><ul class="shopbar__nav">
+<li><a href="#board">The board</a></li>
+<li><a href="#bake">How we bake</a></li>
+<li><a href="#hours">Hours</a></li>
+<li><a href="#order">Pre-order</a></li>
+<li><a href="#visit">Find us</a></li>
+</ul></nav>
+</div>
+</header>
+
+<main id="main">
+<p class="catmark on-panel">First screen 1 of 3: the sign</p>
+<!-- PATTERN: first-sign (signature first screen). The name very large, the open-now plate worked out by pack.js, today's hours, one sentence, two buttons, one stamp. Supply: flourish line (up to 8 words), name (up to 4 words; add sign__name--long when the longest word has 10 to 13 letters, sign__name--xlong for 14 or more), data-hours, data-tz, lede (15 to 35 words), 2 buttons, stamp words (centre lines up to 7 characters each; ring up to 26 characters). The fallback text inside data-open-detail is shown without JavaScript: write the week's hours there. -->
+<section class="sign on-ground" aria-labelledby="sign-name">
+<div class="wrap sign__in">
+<p class="flourish">Bakers on Halden Street since 1987</p>
+<h1 class="sign__name" id="sign-name">Halden Street Bakery</h1>
+<div class="sign__side">
+<div class="plate hang" data-open-sign data-hours="mon closed; tue-fri 07:00-15:00; sat 07:00-14:00; sun 08:00-13:00" data-tz="Europe/London">
+<p class="plate__state"><span class="lamp" aria-hidden="true"></span><span data-open-state>Hours</span></p>
+<p class="plate__detail" data-open-detail>Tue to Fri 7am to 3pm, Sat 7am to 2pm, Sun 8am to 1pm</p>
+</div>
+<svg class="stamp" viewBox="0 0 200 200" role="img" aria-label="Stamp: baked at 4am, every day since 1987">
+<circle class="stamp__disc" cx="100" cy="100" r="97"/><circle class="stamp__ring" cx="100" cy="100" r="88"/><circle class="stamp__ring" cx="100" cy="100" r="58"/>
+<text class="stamp__arc"><textPath href="#sf-ring" textLength="402">EVERY DAY ★ SINCE 1987 ★</textPath></text>
+<text class="stamp__big" x="100" y="96">Baked</text><text class="stamp__big" x="100" y="128" textLength="92" lengthAdjust="spacingAndGlyphs">at 4am</text>
+</svg>
+</div>
+<div class="sign__text">
+<p class="lede">Sourdough, rye and a good custard tart, baked through the night behind the counter and sold until the shelves are empty.</p>
+<div class="btns"><a class="btn btn--big" href="#board">See today’s board</a><a class="btn btn--secondary btn--big" href="#order">Pre-order for pickup</a></div>
+</div>
+</div>
+</section>
+
+<p class="catmark on-panel">First screen 2 of 3: the board</p>
+<!-- PATTERN: first-board. The client's own price list is the picture. Supply: name as h1 (up to 5 words), lede (15 to 30 words), the short open chip, 2 buttons, board title, board date line, 4 to 10 items (name up to 6 words, price, optional one-line note, optional mark: special or sold out), a foot line. On a real page the heading is the h1. -->
+<section class="boardhero on-ground" aria-labelledby="bh-title">
+<div class="wrap boardhero__in">
+<div class="boardhero__intro">
+<h2 class="boardhero__title" id="bh-title">Halden Street Bakery</h2>
+<p class="lede">The board changes every morning at seven. What’s crossed out has gone; what’s marked is only here today.</p>
+<p class="openchip" data-open-sign="short"><span class="lamp" aria-hidden="true"></span><span data-open-state>Hours</span> <span data-open-detail>Tue to Sun from 7am</span></p>
+<div class="btns"><a class="btn" href="#order">Pre-order for pickup</a><a class="link" href="#visit">Find the shop</a></div>
+</div>
+<div class="board board--big on-panel">
+<div class="board__top"><h3 class="board__title">Today’s board</h3><p class="board__date">Friday 27 November</p></div>
+<ul class="board__list">
+<li class="board__item"><span class="board__name">Country sourdough</span><span class="board__price">£4.80</span><span class="board__desc">800g, 36-hour ferment, dark crust</span></li>
+<li class="board__item"><span class="board__name">Seeded rye <span class="mark mark--special">Today only</span></span><span class="board__price">£5.20</span><span class="board__desc">Sunflower, linseed and a little treacle</span></li>
+<li class="board__item"><span class="board__name">White bloomer</span><span class="board__price">£3.40</span></li>
+<li class="board__item is-soldout"><span class="board__name">Cardamom buns <span class="mark mark--sold">Sold out</span></span><span class="board__price">£2.60</span></li>
+<li class="board__item"><span class="board__name">Custard tart</span><span class="board__price">£2.90</span></li>
+<li class="board__item"><span class="board__name">Cheese and onion pasty</span><span class="board__price">£4.10</span><span class="board__desc">Hot from 11:30</span></li>
+<li class="board__item"><span class="board__name">Pot of tea for two</span><span class="board__price">£3.00</span></li>
+</ul>
+<p class="board__foot">Everything baked here this morning. Ask us about allergens.</p>
+</div>
+</div>
+</section>
+
+<p class="catmark on-panel">First screen 3 of 3: the shopfront on a colour block</p>
+<!-- PATTERN: first-front. A drawn shopfront (or one big product part) on the band colour, sitting on a kerb. Supply: heading (up to 8 words), lede (15 to 30 words), open chip, 2 buttons; in the drawing, the fascia word (one word, up to 9 letters, capitals), the window parts (swap the <use href> for the client's products), and the aria-label. For a product instead of a shop, replace the drawing with <svg viewBox="0 0 64 48" role="img" aria-label="..."><use href="#sf-cup"/></svg>. -->
+<section class="front on-band" aria-labelledby="front-t">
+<div class="wrap front__in">
+<div class="front__text">
+<h2 class="front__title" id="front-t">The bread shop on the corner of Mill Lane</h2>
+<p class="lede">Look for the striped awning. Loaves in the window from seven, the kettle on all morning, and the last tart goes at three.</p>
+<p class="openchip" data-open-sign="short"><span class="lamp" aria-hidden="true"></span><span data-open-state>Hours</span> <span data-open-detail>Tue to Sun from 7am</span></p>
+<div class="btns"><a class="btn btn--big" href="#visit">How to find us</a><a class="btn btn--secondary btn--big" href="#board">Today’s board</a></div>
+</div>
+<div class="front__art">
+<svg viewBox="0 0 560 440" role="img" aria-label="Drawing of the shopfront: a striped awning, loaves and croissants in the window, a green door and a chalk board on the pavement">
+<g stroke="currentColor" stroke-width="5" stroke-linejoin="round">
+<rect x="10" y="4" width="440" height="18" fill="var(--ground)"/>
+<rect x="20" y="22" width="420" height="420" fill="var(--panel)"/>
+<rect x="44" y="40" width="372" height="68" rx="6" fill="var(--ground)"/>
+<path d="M44 108h372v38a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0a15.5 15.5 0 0 1-31 0z" fill="url(#sf-stripes)" stroke-width="4"/>
+<rect x="44" y="180" width="232" height="196" fill="var(--band)"/>
+<path d="M44 262h232M44 340h232" fill="none"/>
+<rect x="34" y="376" width="252" height="16" fill="var(--panel)"/>
+<rect x="300" y="180" width="116" height="262" fill="var(--ground)"/>
+<path d="M318 300v-74a40 40 0 0 1 80 0v74z" fill="var(--band)"/>
+<path d="M336 252l22-22 22 22" fill="none" stroke-width="3"/>
+<rect x="332" y="252" width="52" height="26" rx="4" fill="var(--panel)" stroke-width="3"/>
+<circle cx="400" cy="340" r="6" fill="currentColor"/>
+<rect x="290" y="430" width="136" height="12" fill="var(--panel)"/>
+<path d="M472 442l26-122h20l26 122" fill="none"/>
+<path d="M480 404l22-84h16l22 84z" fill="var(--panel-text)"/>
+<path d="M494 352h32M490 370h40M488 388h44" stroke="var(--panel)" stroke-width="4" stroke-linecap="round"/>
+</g>
+<text x="230" y="91" text-anchor="middle" font-family="Alfa Slab One, Rockwell, serif" font-size="46" fill="var(--sign)">BAKERY</text>
+<g color="var(--band-text)">
+<use href="#sf-loaf" x="54" y="216" width="48" height="40"/><use href="#sf-loaf" x="108" y="216" width="48" height="40"/><use href="#sf-cake" x="164" y="216" width="48" height="40"/><use href="#sf-loaf" x="218" y="216" width="48" height="40"/>
+<use href="#sf-croissant" x="54" y="296" width="48" height="40"/><use href="#sf-croissant" x="108" y="296" width="48" height="40"/><use href="#sf-cup" x="164" y="296" width="48" height="40"/><use href="#sf-croissant" x="218" y="296" width="48" height="40"/>
+</g>
+</svg>
+</div>
+</div>
+<div class="front__kerb" aria-hidden="true"></div>
+</section>
+
+<!-- PATTERN: board (index of offerings with figures). The full price board, split into views with the view switch. Supply: section heading (up to 7 words), lede, 2 to 5 views (button label one or two words), each with 1 to 3 groups (h3) of 2 to 12 items. Without JavaScript every view shows, one after another. Keep prices to the same format throughout (£4.80). -->
+<section class="sec on-ground" id="board" aria-labelledby="board-t">
+<div class="wrap">
+<header class="sec__head"><h2 class="sec__title" id="board-t">The whole board</h2><p class="lede">Prices as they are on the wall inside. Whole cakes and trays need a day’s notice.</p></header>
+<div class="board on-panel">
+<div class="views" data-views>
+<div class="views__switch" hidden><button class="views__btn" type="button" data-view-btn="bread">Bread</button><button class="views__btn" type="button" data-view-btn="sweet">Sweet</button><button class="views__btn" type="button" data-view-btn="drinks">Drinks</button></div>
+<div class="views__panel" data-view="bread"><div class="board__cols">
+<div class="board__group"><h3>Loaves</h3><ul class="board__list">
+<li class="board__item"><span class="board__name">Country sourdough</span><span class="board__price">£4.80</span></li>
+<li class="board__item"><span class="board__name">Seeded rye</span><span class="board__price">£5.20</span></li>
+<li class="board__item"><span class="board__name">Wholemeal tin</span><span class="board__price">£3.60</span></li>
+<li class="board__item"><span class="board__name">Pumpernickel-style Vollkornbrot</span><span class="board__price">£6.50</span><span class="board__desc">Thursdays and Saturdays</span></li>
+</ul></div>
+<div class="board__group"><h3>Rolls and small</h3><ul class="board__list">
+<li class="board__item"><span class="board__name">Bap, white or brown</span><span class="board__price">£0.70</span></li>
+<li class="board__item is-soldout"><span class="board__name">Focaccia slice <span class="mark mark--sold">Sold out</span></span><span class="board__price">£2.80</span></li>
+<li class="board__item"><span class="board__name">Six breakfast rolls</span><span class="board__price">£3.90</span></li>
+</ul></div>
+</div></div>
+<div class="views__panel" data-view="sweet"><div class="board__cols">
+<div class="board__group"><h3>From the counter</h3><ul class="board__list">
+<li class="board__item"><span class="board__name">Custard tart</span><span class="board__price">£2.90</span></li>
+<li class="board__item"><span class="board__name">Cardamom bun</span><span class="board__price">£2.60</span></li>
+<li class="board__item"><span class="board__name">Parkin <span class="mark mark--special">New</span></span><span class="board__price">£2.40</span></li>
+</ul></div>
+<div class="board__group"><h3>Whole cakes</h3><ul class="board__list">
+<li class="board__item"><span class="board__name">Lemon drizzle, serves 10</span><span class="board__price">£24.00</span></li>
+<li class="board__item"><span class="board__name">Chocolate and stout, serves 12</span><span class="board__price">£32.00</span></li>
+</ul></div>
+</div></div>
+<div class="views__panel" data-view="drinks"><div class="board__cols">
+<div class="board__group"><h3>Hot</h3><ul class="board__list">
+<li class="board__item"><span class="board__name">Filter coffee, refills free</span><span class="board__price">£2.20</span></li>
+<li class="board__item"><span class="board__name">Flat white</span><span class="board__price">£3.10</span></li>
+</ul></div>
+</div></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- PATTERN: band (full-width band statement). One sentence on the band colour under the awning. Supply: statement (6 to 16 words), attribution (up to 8 words). Use once per page, never next to first-front (also on the band colour). -->
+<section class="band on-band" aria-labelledby="band-t">
+<div class="awning" aria-hidden="true"></div>
+<div class="wrap band__in"><h2 class="band__text" id="band-t">If it’s on the board, it was flour this morning.</h2><p class="band__by">Marta Halden, head baker</p></div>
+</section>
+
+<!-- PATTERN: steps (steps in order). Numbered discs joined by a dotted line; vertical on phones. Supply: heading, lede, 3 to 6 steps, each a time or short label (up to 4 words), a title (up to 4 words) and 1 to 3 sentences. -->
+<section class="sec on-ground" id="bake" aria-labelledby="bake-t">
+<div class="wrap">
+<header class="sec__head"><h2 class="sec__title" id="bake-t">From flour to counter</h2><p class="lede">Every loaf on the shelf went through the same night.</p></header>
+<ol class="steps">
+<li class="step"><p class="step__when">The afternoon before</p><h3 class="step__title">Mix and wait</h3><p>Flour, water, salt and last night’s starter. Then the dough rests in the cold for eighteen hours.</p></li>
+<li class="step"><p class="step__when">4:00am</p><h3 class="step__title">Ovens on</h3><p>Joe lights the deck ovens and shapes every loaf by hand.</p></li>
+<li class="step"><p class="step__when">5:30am</p><h3 class="step__title">The first bake</h3><p>Sourdough first, then rye, then the tins and the trays of buns.</p></li>
+<li class="step"><p class="step__when">7:00am</p><h3 class="step__title">Doors open</h3><p>Still warm. The board goes up and the kettle goes on.</p></li>
+</ol>
+</div>
+</section>
+
+<!-- PATTERN: spec-tag (specification list). One product on a hanging price tag with its facts. Supply: product name (up to 5 words), price, 3 to 8 facts (term up to 3 words, value up to 12 words), heading and 1 to 3 short paragraphs beside it, up to 6 tags (allergens or features), one button. -->
+<section class="sec on-ground" aria-labelledby="spec-t">
+<div class="wrap spec">
+<div class="ptag-wrap"><div class="ptag on-panel">
+<h3 class="ptag__name">Country sourdough</h3>
+<p class="ptag__price">£4.80</p>
+<dl class="spec-list">
+<dt>Weight</dt><dd>800g, sliced on request</dd>
+<dt>Flour</dt><dd>Stoneground wheat from Gilchesters, 10% wholemeal</dd>
+<dt>Ferment</dt><dd>36 hours, cold</dd>
+<dt>Keeps</dt><dd>Four days in a paper bag, longer frozen</dd>
+<dt>Contains</dt><dd>Wheat (gluten)</dd>
+</dl>
+</div></div>
+<div class="spec__text">
+<h2 class="sec__title" id="spec-t">The loaf we’re known for</h2>
+<p>If you only buy one thing, buy this. A dark, blistered crust, an open crumb and the slight sourness that comes from taking our time.</p>
+<ul class="tags"><li class="tag">Vegan</li><li class="tag">No added sugar</li><li class="tag">Baked daily</li></ul>
+<a class="btn" href="#order">Put one aside for me</a>
+</div>
+</div>
+</section>
+
+<!-- PATTERN: story (text beside a picture). A picture slot with caption and an optional stamp over its lower corner, beside a heading, 1 to 3 paragraphs and a signature. Supply: picture (photo or drawing, 4:3), caption, heading (up to 8 words), text (40 to 120 words), signature. Add story--flip to put the picture on the right. Keep "Stand-in photo" on any picture that is not the client's own. -->
+<section class="sec on-ground" aria-labelledby="story-t">
+<div class="wrap story">
+<div class="story__media">
+<figure class="pic">
+<div class="pic__frame"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%236b4a30'/%3E%3Crect y='190' width='400' height='110' fill='%233b2414'/%3E%3Cellipse cx='120' cy='190' rx='80' ry='46' fill='%23c98a4b'/%3E%3Cellipse cx='280' cy='186' rx='86' ry='50' fill='%23b8743a'/%3E%3Cellipse cx='200' cy='214' rx='70' ry='38' fill='%23d9a066'/%3E%3C/svg%3E" alt="Three loaves cooling on a wooden bench" width="400" height="300"><span class="pic__standin">Stand-in photo</span></div>
+<figcaption>Friday’s sourdough, cooling by the back door</figcaption>
+</figure>
+<svg class="stamp" viewBox="0 0 200 200" role="img" aria-label="Stamp: family run, Halden Street"><circle class="stamp__disc" cx="100" cy="100" r="97"/><circle class="stamp__ring" cx="100" cy="100" r="88"/><circle class="stamp__ring" cx="100" cy="100" r="58"/><text class="stamp__arc"><textPath href="#sf-ring" textLength="402">HALDEN STREET ★ CALDER BRIDGE ★</textPath></text><text class="stamp__big" x="100" y="96">Family</text><text class="stamp__big" x="100" y="128">run</text></svg>
+</div>
+<div class="story__text">
+<h2 class="sec__title" id="story-t">Thirty-nine years behind the same counter</h2>
+<p>Marta’s parents opened the shop in 1987 with one oven and a sack of flour on tick. The counter, the bell over the door and the habit of saving a loaf for whoever’s late have not.</p>
+<p>Joe came as a Saturday boy and stayed. These days he does the nights and Marta does the mornings.</p>
+<p class="story__sig">Marta and Joe</p>
+</div>
+</div>
+</section>
+
+<!-- PATTERN: figures (row of real numbers). 2 to 5 figures on a ruled strip. Supply: each figure (up to 6 characters, a unit in <small> allowed), a label (up to 5 words) and an optional detail line. Use real numbers only. -->
+<section class="sec on-ground" aria-labelledby="fig-t">
+<div class="wrap">
+<h2 class="vh" id="fig-t">The bakery in numbers</h2>
+<ul class="figures">
+<li class="figure"><span class="figure__n">1987</span><span class="figure__l">Opened on Halden Street</span></li>
+<li class="figure"><span class="figure__n">340</span><span class="figure__l">Loaves on a Saturday</span><span class="figure__d">Fewer on a wet Tuesday</span></li>
+<li class="figure"><span class="figure__n">36<small>h</small></span><span class="figure__l">For every sourdough</span></li>
+<li class="figure"><span class="figure__n">£0.70</span><span class="figure__l">Still the price of a bap</span></li>
+</ul>
+</div>
+</section>
+
+<!-- PATTERN: schedule (hours sign and dated list). The weekly hours as a hanging sign (pack.js marks today's row), beside a list of dated events. Supply: one row per day with data-day (mon to sun) and the hours; 2 to 8 dates, each month (3 letters), day number, weekday, what (up to 6 words) and one info line. Use <time datetime>. -->
+<section class="sec on-ground" id="hours" aria-labelledby="hours-t">
+<div class="wrap">
+<header class="sec__head"><h2 class="sec__title" id="hours-t">When we’re open</h2><p class="lede">Bread from opening until it’s gone. On Saturdays that can be before noon.</p></header>
+<div class="sched">
+<div class="hangsign hang on-panel">
+<h3 class="hangsign__title">Opening hours</h3>
+<table class="hours" data-hours-table data-tz="Europe/London">
+<caption class="vh">Opening hours, Monday to Sunday</caption>
+<tbody>
+<tr data-day="mon"><th scope="row">Monday</th><td class="is-closed">Closed</td></tr>
+<tr data-day="tue"><th scope="row">Tuesday</th><td>7am – 3pm</td></tr>
+<tr data-day="wed"><th scope="row">Wednesday</th><td>7am – 3pm</td></tr>
+<tr data-day="thu"><th scope="row">Thursday</th><td>7am – 3pm</td></tr>
+<tr data-day="fri"><th scope="row">Friday</th><td>7am – 3pm</td></tr>
+<tr data-day="sat"><th scope="row">Saturday</th><td>7am – 2pm</td></tr>
+<tr data-day="sun"><th scope="row">Sunday</th><td>8am – 1pm</td></tr>
+</tbody>
+</table>
+</div>
+<div>
+<h3 class="ticket__h">Coming up</h3>
+<ul class="dates">
+<li class="date"><p class="date__cal"><span class="date__m">Dec</span><span class="date__d">6</span><span class="date__w">Sat</span></p><p class="date__what">Calder Bridge Christmas market</p><p class="date__info"><time datetime="2026-12-06T09:00">9am to 4pm</time>, our stall by the clock tower</p></li>
+<li class="date"><p class="date__cal"><span class="date__m">Dec</span><span class="date__d">19</span><span class="date__w">Sat</span></p><p class="date__what">Last day for stollen orders</p><p class="date__info"><time datetime="2026-12-19">Order by 2pm</time> for collection on the 23rd</p></li>
+<li class="date"><p class="date__cal"><span class="date__m">Dec</span><span class="date__d">25</span><span class="date__w">Fri</span></p><p class="date__what">Closed until 2 January</p><p class="date__info">The ovens need a holiday too</p></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+
+<!-- PATTERN: people. Round portraits (photo or the sf-person drawing) with a name, role and an "ask about" line. Supply: 2 to 9 people, name (up to 3 words), role (up to 6 words), ask-about (up to 6 words). Vary the drawing with style="--sym:..." using colourway properties. -->
+<section class="sec on-ground" aria-labelledby="people-t">
+<div class="wrap">
+<header class="sec__head"><h2 class="sec__title" id="people-t">Behind the counter</h2></header>
+<ul class="people">
+<li class="person"><figure class="pic pic--round"><div class="pic__frame"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#sf-person"/></svg></div></figure><h3 class="person__name">Marta Halden</h3><p class="person__role">Mornings, cakes and the till</p><p class="person__ask">Ask her about: rye</p></li>
+<li class="person"><figure class="pic pic--round"><div class="pic__frame"><svg viewBox="0 0 100 100" aria-hidden="true" style="--sym:var(--ground)"><use href="#sf-person"/></svg></div></figure><h3 class="person__name">Joe Okafor</h3><p class="person__role">Nights and every loaf</p><p class="person__ask">Ask him about: starters</p></li>
+<li class="person"><figure class="pic pic--round"><div class="pic__frame"><svg viewBox="0 0 100 100" aria-hidden="true" style="--sym:var(--panel-muted)"><use href="#sf-person"/></svg></div></figure><h3 class="person__name">Priya Natarajan</h3><p class="person__role">Saturdays and the market stall</p><p class="person__ask">Ask her about: buns</p></li>
+</ul>
+</div>
+</section>
+
+<!-- PATTERN: preorder (pre-order list). A two-part ticket: items with quantity steppers on the left; pickup day and time, name, phone, a running bag summary and total on the right. pack.js totals it and opens the visitor's email; without JavaScript the form opens the mail program. Supply: 2 to 12 items (data-price as a plain number, name attribute = item name), data-order-email, data-currency, pickup times. Each stepper's input needs its own label (the item name and price). -->
+<section class="sec on-ground" id="order" aria-labelledby="order-t">
+<div class="wrap">
+<header class="sec__head"><h2 class="sec__title" id="order-t">Pre-order for pickup</h2><p class="lede">Order by 2pm and we’ll bag it up for the next morning. You pay when you collect.</p></header>
+<form class="ticket on-panel" data-order data-order-email="orders@haldenstreet.example" data-currency="£" data-order-subject="Pre-order for pickup" action="mailto:orders@haldenstreet.example?subject=Pre-order%20for%20pickup" method="post" enctype="text/plain">
+<div class="ticket__items">
+<h3 class="ticket__h">Your list</h3>
+<ul class="order-list">
+<li class="order-item"><label class="order-item__name" for="q1">Country sourdough <span class="order-item__price">£4.80</span></label><span class="stepper" data-stepper><button type="button" data-step="-1" aria-label="One fewer country sourdough">−</button><input id="q1" type="number" name="Country sourdough" data-price="4.80" min="0" max="12" value="0" inputmode="numeric" autocomplete="off"><button type="button" data-step="1" aria-label="One more country sourdough">+</button></span></li>
+<li class="order-item"><label class="order-item__name" for="q2">Seeded rye <span class="order-item__price">£5.20</span></label><span class="stepper" data-stepper><button type="button" data-step="-1" aria-label="One fewer seeded rye">−</button><input id="q2" type="number" name="Seeded rye" data-price="5.20" min="0" max="12" value="1" inputmode="numeric" autocomplete="off"><button type="button" data-step="1" aria-label="One more seeded rye">+</button></span></li>
+<li class="order-item"><label class="order-item__name" for="q3">Six breakfast rolls <span class="order-item__price">£3.90</span></label><span class="stepper" data-stepper><button type="button" data-step="-1" aria-label="One fewer box of rolls">−</button><input id="q3" type="number" name="Six breakfast rolls" data-price="3.90" min="0" max="12" value="0" inputmode="numeric" autocomplete="off"><button type="button" data-step="1" aria-label="One more box of rolls">+</button></span></li>
+<li class="order-item"><label class="order-item__name" for="q4">Custard tarts, box of four <span class="order-item__price">£11.00</span><span class="order-item__note">Saturday only</span></label><span class="stepper" data-stepper><button type="button" data-step="-1" aria-label="One fewer box of tarts">−</button><input id="q4" type="number" name="Custard tarts, box of four" data-price="11.00" min="0" max="6" value="0" inputmode="numeric" autocomplete="off"><button type="button" data-step="1" aria-label="One more box of tarts">+</button></span></li>
+<li class="order-item is-soldout"><label class="order-item__name" for="q5">Stollen <span class="mark mark--sold">Sold out</span></label><span class="stepper is-disabled" data-stepper><button type="button" data-step="-1" aria-label="One fewer stollen">−</button><input id="q5" type="number" name="Stollen" data-price="9.50" min="0" max="0" value="0" disabled><button type="button" data-step="1" aria-label="One more stollen">+</button></span></li>
+</ul>
+</div>
+<div class="ticket__side">
+<div class="field"><label for="p-day">Pickup day (required)</label><input id="p-day" type="date" name="Pickup day" required></div>
+<div class="field"><label for="p-time">Pickup time</label><select id="p-time" name="Pickup time"><option>7am to 9am</option><option>9am to 11am</option><option>11am to 1pm</option></select></div>
+<div class="field"><label for="p-name">Your name (required)</label><input id="p-name" type="text" name="Name" autocomplete="name" required></div>
+<div class="field"><label for="p-tel">Phone (required)</label><input id="p-tel" type="tel" name="Phone" autocomplete="tel" required><p class="hint">Only if something runs out.</p></div>
+<div class="bag" aria-live="polite"><p class="bag__h">In your bag</p><output class="bag__lines" data-order-summary for="q1 q2 q3 q4">Nothing yet.</output><p class="bag__total"><span>Pay at the counter</span><output data-order-total>£0.00</output></p></div>
+<button class="btn" type="submit">Send pre-order by email</button>
+<p class="hint">This opens your email program with the order written out. Nothing is sent from this page.</p>
+</div>
+</form>
+</div>
+</section>
+
+<!-- PATTERN: faq (questions). A heading and an "ask at the counter" speech-bubble beside a list of disclosures. Supply: heading, bubble text (up to 20 words) and a phone or email link, 3 to 10 questions (up to 12 words each) with answers of 1 to 4 sentences. -->
+<section class="sec on-ground" aria-labelledby="faq-t">
+<div class="wrap faq">
+<div>
+<h2 class="sec__title" id="faq-t">Asked at the counter</h2>
+<div class="faq__ask on-panel"><p>Something else? Ring the shop, we pick up between batches.</p><a class="btn" href="tel:+441632960418">01632 960 418</a></div>
+</div>
+<div>
+<details class="disclose"><summary>Do you make anything without gluten?</summary><div class="disclose__body"><p>Not safely. Flour is in the air from four in the morning, so we would rather not promise what we can’t keep.</p></div></details>
+<details class="disclose"><summary>Can I bring my own bag or tin?</summary><div class="disclose__body"><p>Please do. Cake tins get a ten per cent discount on whatever goes in them.</p></div></details>
+<details class="disclose"><summary>What happens to the bread that doesn’t sell?</summary><div class="disclose__body"><p>Anything left at closing goes to the Calder Bridge food bank, and yesterday’s rye becomes Saturday’s bread pudding.</p></div></details>
+<details class="disclose"><summary>Do you do wholesale for cafés?</summary><div class="disclose__body"><p>For five cafés within walking distance, yes. Use the cake form below and tell us what you need.</p></div></details>
+</div>
+</div>
+</section>
+
+<!-- PATTERN: request (request form). A short intro with a large product part beside a form on the panel. Supply: heading, intro (20 to 60 words), one product part, the form's fields and the mailto address. The form posts to mailto: so it opens the visitor's mail program; say so in the hint. Every required field says "(required)" in its label. -->
+<section class="sec on-ground" aria-labelledby="req-t">
+<div class="wrap request">
+<div class="request__intro">
+<h2 class="sec__title" id="req-t">Order a celebration cake</h2>
+<p>Birthdays, weddings, a retirement at the bus depot. Give us a week’s notice and a rough idea, and Marta will ring you to work out the rest.</p>
+<svg class="request__art" viewBox="0 0 64 48" aria-hidden="true"><use href="#sf-cake"/></svg>
+</div>
+<form class="request__form on-panel form form--two" action="mailto:cakes@haldenstreet.example?subject=Cake%20order" method="post" enctype="text/plain">
+<div class="field"><label for="c-name">Your name (required)</label><input id="c-name" name="Name" type="text" autocomplete="name" required></div>
+<div class="field"><label for="c-email">Email (required)</label><input id="c-email" name="Email" type="email" autocomplete="email" required></div>
+<div class="field"><label for="c-tel">Phone</label><input id="c-tel" name="Phone" type="tel" autocomplete="tel"></div>
+<div class="field"><label for="c-date">Date needed (required)</label><input id="c-date" name="Date" type="date" required><p class="hint">At least seven days from today.</p></div>
+<div class="field"><label for="c-size">Size</label><select id="c-size" name="Size"><option>Serves 10, from £24</option><option>Serves 20, from £42</option><option>Serves 40, from £75</option></select></div>
+<fieldset class="field"><legend>Collection</legend><label class="check"><input type="radio" name="Collection" value="Pickup" checked> Pickup from the shop</label><label class="check"><input type="radio" name="Collection" value="Delivery"> Delivery within Calder Bridge</label></fieldset>
+<div class="field full"><label for="c-msg">Tell us about it</label><textarea id="c-msg" name="Details"></textarea><p class="hint">Flavours, writing on top, anyone who can’t eat nuts.</p></div>
+<div class="full"><label class="check"><input type="checkbox" name="Call me" value="Yes"> Ring me to talk it through</label></div>
+<div class="full form__send"><button class="btn" type="submit">Send by email</button><p class="hint">Opens your email program; this page does not send anything itself.</p></div>
+</form>
+</div>
+</section>
+
+<!-- PATTERN: visit (getting there). A drawn street map beside the address and ways to arrive. Supply: map (edit the street names and the shop marker position; keep role="img" and describe the route in aria-label), address (2 to 4 lines), 2 to 5 ways (icon part sf-bus, sf-bike or sf-door, a bold line, a detail line), a directions link to a real map URL. -->
+<section class="sec on-ground" id="visit" aria-labelledby="visit-t">
+<div class="wrap">
+<header class="sec__head"><h2 class="sec__title" id="visit-t">Finding the shop</h2></header>
+<div class="visit">
+<div class="visit__map">
+<svg viewBox="0 0 480 320" role="img" aria-label="Map: the bakery is on the corner of Halden Street and Mill Lane, two minutes from the number 12 bus stop">
+<rect width="480" height="320" fill="var(--panel)"/>
+<g fill="none" stroke="currentColor" stroke-linecap="butt"><path d="M0 200H480" stroke-width="30"/><path d="M300 0V320" stroke-width="30"/><path d="M60 0C90 80 120 150 140 320" stroke-width="16"/></g>
+<path d="M0 200H480M300 0V320" fill="none" stroke="var(--panel)" stroke-width="3" stroke-dasharray="12 12"/>
+<rect x="340" y="30" width="110" height="120" rx="10" fill="var(--go)" stroke="currentColor" stroke-width="3"/>
+<g font-family="Nunito Sans, sans-serif" font-weight="800" font-size="18" fill="var(--panel-text)"><text x="170" y="178">Halden Street</text><text x="324" y="268" transform="rotate(90 324 268)">Mill Lane</text><text x="352" y="172">Mill Park</text><text x="186" y="112">Bus 12</text></g>
+<g transform="translate(244 96)" color="var(--panel-text)"><circle cx="0" cy="0" r="20" fill="var(--panel)" stroke="currentColor" stroke-width="3"/><use href="#sf-bus" x="-13" y="-13" width="26" height="26"/></g>
+<g transform="translate(346 246)"><circle r="26" fill="var(--ink)" stroke="currentColor" stroke-width="4"/><path d="M0-14l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z" fill="var(--ink-text)"/></g>
+</svg>
+</div>
+<div>
+<address class="visit__addr">14 Halden Street<br>Calder Bridge<br>CB4 2HL</address>
+<ul class="ways">
+<li class="way"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#sf-bus"/></svg><p><strong>Bus 12 to Mill Lane</strong>Two minutes’ walk, cross at the lights</p></li>
+<li class="way"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#sf-bike"/></svg><p><strong>Bike rack outside</strong>Room for four, under the awning</p></li>
+<li class="way"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#sf-door"/></svg><p><strong>Step-free door</strong>Ring the bell and we’ll bring it out</p></li>
+</ul>
+<a class="btn btn--secondary" href="https://www.openstreetmap.org/search?query=Calder%20Bridge">Open in a map</a>
+</div>
+</div>
+</div>
+</section>
+
+<p class="catmark on-panel">404 layout (its own page; here shown inside the catalogue)</p>
+<!-- PATTERN: not-found (404). A big sold-out stamp beside a short apology and a way back. Supply: heading (up to 8 words; h1 on the real 404 page), one sentence, a button to the home page. -->
+<section class="sec on-ground" aria-labelledby="lost-t">
+<div class="wrap lost">
+<svg class="stamp stamp--sold stamp--big" viewBox="0 0 200 200" role="img" aria-label="Stamp: sold out, page 404"><circle class="stamp__disc" cx="100" cy="100" r="97"/><circle class="stamp__ring" cx="100" cy="100" r="88"/><circle class="stamp__ring" cx="100" cy="100" r="58"/><text class="stamp__arc"><textPath href="#sf-ring" textLength="402">PAGE 404 ★ PAGE 404 ★ PAGE 404 ★</textPath></text><text class="stamp__big" x="100" y="96">Sold</text><text class="stamp__big" x="100" y="128">out</text></svg>
+<div class="lost__text"><h2 class="lost__title" id="lost-t">We’re all out of that page</h2><p class="lede">It may have moved, or it was never on the board. The bread is still where it was.</p><a class="btn btn--big" href="#main">Back to the shop</a></div>
+</div>
+</section>
+
+<p class="catmark on-panel">Elements</p>
+<section class="sec on-ground" aria-labelledby="el-t">
+<div class="wrap stack">
+<header class="sec__head"><h2 class="sec__title" id="el-t">Elements</h2><p class="lede">Each element in its states. The class is-focus shows the keyboard focus ring.</p></header>
+
+<div class="el-grid">
+<!-- ELEMENT: buttons. .btn (primary), .btn.btn--secondary, .link (quiet text link with arrow); .btn--big on first screens. Labels up to 4 words. Disabled: the disabled attribute on <button>, aria-disabled="true" on links. -->
+<div class="el"><h3>Buttons</h3>
+<div class="el-row"><a class="btn" href="#order">Pre-order</a><a class="btn is-focus" href="#order">Focused</a><button class="btn" type="button" disabled>Disabled</button></div>
+<div class="el-row"><a class="btn btn--secondary" href="#board">See the board</a><a class="btn btn--secondary is-focus" href="#board">Focused</a><button class="btn btn--secondary" type="button" disabled>Disabled</button></div>
+<div class="el-row"><a class="link" href="#visit">Find the shop</a><a class="link is-focus" href="#visit">Focused</a></div>
+</div>
+<!-- ELEMENT: buttons on the panel and on the band. The same classes; colours follow the context class. -->
+<div class="el el-box on-panel"><h3>On the panel</h3><div class="el-row"><a class="btn" href="#order">Pre-order</a><a class="btn btn--secondary" href="#board">The board</a><a class="link" href="#visit">Find us</a></div></div>
+<div class="el el-box on-band"><h3>On the band</h3><div class="el-row"><a class="btn" href="#order">Pre-order</a><a class="btn btn--secondary" href="#board">The board</a><a class="link" href="#visit">Find us</a></div></div>
+<!-- ELEMENT: status marks, tags, marks. .status (open), .status--closed, .status--sold; .tag in a .tags list (up to 3 words); .mark--special and .mark--sold go inside a board or order item name. -->
+<div class="el"><h3>Marks and tags</h3>
+<div class="el-row"><span class="status">Open now</span><span class="status status--closed">Closed</span><span class="status status--sold">Sold out</span></div>
+<ul class="tags"><li class="tag">Vegan</li><li class="tag">Contains nuts</li><li class="tag">Hot from 11:30</li></ul>
+<p><span class="mark mark--special">Today only</span> <span class="mark mark--sold">Sold out</span></p>
+</div>
+</div>
+
+<!-- ELEMENT: notices. .notice (information) and .notice.notice--warn (warning). Title up to 6 words, text up to 30 words. One per section at most. -->
+<div class="el-grid">
+<div class="notice"><p class="notice__title">Christmas orders are open</p><p>Stollen, mince pies and whole cakes for collection up to 23 December.</p></div>
+<div class="notice notice--warn"><p class="notice__title">Closed Tuesday 1 December</p><p>The ovens are being serviced. Back to normal on Wednesday at 7am.</p></div>
+</div>
+
+<!-- ELEMENT: form controls. .field wraps label, control, .hint and .error. Required fields say "(required)" in the label. Errors: add is-error to .field, aria-invalid="true" and aria-describedby to the control, and a .error message. Name, email and phone fields carry autocomplete. Forms sit on the panel. -->
+<div class="el-box on-panel">
+<h3 class="ticket__h">Form controls</h3>
+<p class="hint">Default, focused, disabled. Every type also appears in the cake form and pre-order.</p>
+<div class="form form--two" style="margin:1rem 0 2.5rem">
+<div class="field"><label for="e-text">Name on the cake</label><input id="e-text" type="text" autocomplete="off" value="Happy 80th, Dot"><p class="hint">Up to 20 letters.</p></div>
+<div class="field"><label for="e-email">Email (required)</label><input id="e-email" class="is-focus" type="email" autocomplete="email" required><p class="hint">Shown focused.</p></div>
+<div class="field"><label for="e-tel">Phone</label><input id="e-tel" type="tel" autocomplete="tel" disabled value="01632 960 418"><p class="hint">Shown disabled.</p></div>
+<fieldset class="field"><legend>Extras</legend><label class="check"><input type="checkbox" checked> Slice it</label><label class="check"><input type="checkbox" class="is-focus"> Paper bag (focused)</label><label class="check"><input type="checkbox" disabled> Gift box (sold out)</label><label class="check"><input type="radio" name="e-r" checked> Small loaf</label><label class="check"><input type="radio" name="e-r" disabled> Giant (disabled)</label></fieldset>
+</div>
+<h3 class="ticket__h">In error, with hints</h3>
+<div class="form form--two">
+<div class="field is-error"><label for="x-text">Your name (required)</label><input id="x-text" type="text" autocomplete="name" required aria-invalid="true" aria-describedby="x1 x1h"><p class="hint" id="x1h">As it goes on the bag.</p><p class="error" id="x1">Tell us who to ask for.</p></div>
+<div class="field is-error"><label for="x-email">Email (required)</label><input id="x-email" type="email" autocomplete="email" required value="marta@" aria-invalid="true" aria-describedby="x2 x2h"><p class="hint" id="x2h">For the receipt only.</p><p class="error" id="x2">That email is missing the part after the @.</p></div>
+<div class="field is-error"><label for="x-tel">Phone (required)</label><input id="x-tel" type="tel" autocomplete="tel" required value="0163" aria-invalid="true" aria-describedby="x3 x3h"><p class="hint" id="x3h">Only if something runs out.</p><p class="error" id="x3">That number looks too short.</p></div>
+<div class="field is-error"><label for="x-date">Date needed (required)</label><input id="x-date" type="date" required aria-invalid="true" aria-describedby="x4 x4h"><p class="hint" id="x4h">Tuesday to Sunday.</p><p class="error" id="x4">We need seven days’ notice.</p></div>
+<div class="field is-error"><label for="x-sel">Size</label><select id="x-sel" aria-invalid="true" aria-describedby="x5 x5h"><option>Choose a size</option><option>Serves 10</option></select><p class="hint" id="x5h">Prices on the board.</p><p class="error" id="x5">Choose a size.</p></div>
+<div class="field is-error"><label for="x-area">Message</label><textarea id="x-area" aria-invalid="true" aria-describedby="x6 x6h"></textarea><p class="hint" id="x6h">Flavours and writing on top.</p><p class="error" id="x6">Write a few words about the cake.</p></div>
+<fieldset class="field is-error"><legend>Allergies</legend><label class="check"><input type="checkbox" aria-invalid="true" aria-describedby="x7"> I have told you about allergies</label><p class="hint">We bake with nuts.</p><p class="error" id="x7">Please confirm before we bake.</p></fieldset>
+<fieldset class="field is-error"><legend>Collection</legend><label class="check"><input type="radio" name="x-col" aria-invalid="true" aria-describedby="x8"> Pickup</label><label class="check"><input type="radio" name="x-col" aria-invalid="true" aria-describedby="x8"> Delivery</label><p class="hint">Delivery within a mile.</p><p class="error" id="x8">Choose pickup or delivery.</p></fieldset>
+</div>
+</div>
+
+<div class="el-grid">
+<!-- ELEMENT: quantity stepper. <span class="stepper" data-stepper> with a −1 button, a number input with its own <label>, a +1 button. min, max and value on the input. Buttons appear with pack.js. Add is-disabled and disabled on the input for a sold-out item. -->
+<div class="el el-box on-panel"><h3>Quantity stepper</h3>
+<div class="el-row"><label for="st1" class="vh">Quantity of bloomers</label><span class="stepper" data-stepper><button type="button" data-step="-1" aria-label="One fewer">−</button><input id="st1" type="number" min="0" max="9" value="2" inputmode="numeric" autocomplete="off"><button type="button" data-step="1" aria-label="One more">+</button></span>
+<label for="st2" class="vh">Quantity, sold out</label><span class="stepper is-disabled" data-stepper><button type="button" data-step="-1" aria-label="One fewer">−</button><input id="st2" type="number" min="0" max="0" value="0" disabled><button type="button" data-step="1" aria-label="One more">+</button></span></div>
+</div>
+<!-- ELEMENT: disclosure. <details class="disclose"><summary>question</summary><div class="disclose__body">answer</div></details>. Summary up to 12 words. -->
+<div class="el"><h3>Disclosure</h3>
+<details class="disclose"><summary>Allergens in today’s bakes</summary><div class="disclose__body"><p>Wheat in everything; milk and egg in the buns and tarts; sesame on the seeded rye.</p></div></details>
+<details class="disclose" open><summary>Shown open</summary><div class="disclose__body"><p>The answer sits under the question, never wider than a comfortable line.</p></div></details>
+</div>
+</div>
+
+<!-- ELEMENT: table with figures and view switch. .views[data-views] holds a hidden .views__switch of buttons (data-view-btn) and panels (data-view). data-views="today" picks the button whose data-view-days lists today (mon,tue...). Table: .table in .table-wrap; figures in .num cells; 2 to 6 columns, 2 to 12 rows. -->
+<div class="el el-box on-panel">
+<h3>Table and view switch</h3>
+<div class="views" data-views="today" data-tz="Europe/London">
+<div class="views__switch" hidden><button class="views__btn" type="button" data-view-btn="week" data-view-days="mon,tue,wed,thu,fri">Weekdays</button><button class="views__btn" type="button" data-view-btn="sat" data-view-days="sat">Saturday</button><button class="views__btn" type="button" data-view-btn="sun" data-view-days="sun">Sunday</button></div>
+<div class="views__panel table-wrap" data-view="week"><table class="table"><caption>Out of the oven, weekdays</caption><thead><tr><th scope="col">Bake</th><th scope="col" class="num">Ready</th><th scope="col" class="num">Loaves</th></tr></thead><tbody><tr><th scope="row">Sourdough</th><td class="num">7:00</td><td class="num">60</td></tr><tr><th scope="row">Rye and tins</th><td class="num">7:30</td><td class="num">45</td></tr><tr><th scope="row">Pasties</th><td class="num">11:30</td><td class="num">40</td></tr></tbody></table></div>
+<div class="views__panel table-wrap" data-view="sat"><table class="table"><caption>Out of the oven, Saturday</caption><thead><tr><th scope="col">Bake</th><th scope="col" class="num">Ready</th><th scope="col" class="num">Loaves</th></tr></thead><tbody><tr><th scope="row">Sourdough</th><td class="num">6:45</td><td class="num">140</td></tr><tr><th scope="row">Rye and tins</th><td class="num">7:15</td><td class="num">120</td></tr><tr><th scope="row">Custard tarts</th><td class="num">9:00</td><td class="num">80</td></tr></tbody></table></div>
+<div class="views__panel table-wrap" data-view="sun"><table class="table"><caption>Out of the oven, Sunday</caption><thead><tr><th scope="col">Bake</th><th scope="col" class="num">Ready</th><th scope="col" class="num">Loaves</th></tr></thead><tbody><tr><th scope="row">Sourdough</th><td class="num">8:00</td><td class="num">50</td></tr><tr><th scope="row">Cardamom buns</th><td class="num">8:30</td><td class="num">72</td></tr></tbody></table></div>
+</div>
+</div>
+
+<!-- ELEMENT: picture slot. <figure class="pic [pic--square|pic--tall|pic--wide|pic--round]"><div class="pic__frame"> img or svg </div><figcaption>. Default ratio 4:3; the photograph example is in the story pattern. Put <span class="pic__standin">Stand-in photo</span> inside the frame on any picture that is not the client's own. Caption up to 14 words. -->
+<div class="el-grid">
+<figure class="pic pic--square"><div class="pic__frame"><svg viewBox="-8 -10 80 68" role="img" aria-label="Drawing of a croissant"><use href="#sf-croissant" width="64" height="48"/></svg></div><figcaption>Drawing, square, from the sprite</figcaption></figure>
+<figure class="pic pic--round" style="max-width:16rem"><div class="pic__frame"><svg viewBox="0 0 100 100" aria-hidden="true" style="--sym:var(--accent)"><use href="#sf-person"/></svg><span class="pic__standin">Stand-in photo</span></div><figcaption>Round, for people</figcaption></figure>
+</div>
+
+<!-- ELEMENT: drawing parts. The sprite's product parts, each placed with <svg viewBox="0 0 64 48"><use href="#sf-..."/></svg>. Add role="img" and aria-label when the drawing carries meaning; aria-hidden="true" when it is decoration. -->
+<div class="el"><h3>Drawing parts</h3>
+<ul class="tags part" style="gap:1.25rem">
+<li><svg viewBox="0 0 64 48" width="96" role="img" aria-label="Loaf"><use href="#sf-loaf"/></svg></li><li><svg viewBox="0 0 64 48" width="96" role="img" aria-label="Croissant"><use href="#sf-croissant"/></svg></li><li><svg viewBox="0 0 64 48" width="96" role="img" aria-label="Cup of coffee"><use href="#sf-cup"/></svg></li><li><svg viewBox="0 0 64 48" width="96" role="img" aria-label="Slice of cake"><use href="#sf-cake"/></svg></li><li><svg viewBox="0 0 64 48" width="96" role="img" aria-label="Scissors"><use href="#sf-scissors"/></svg></li><li><svg viewBox="0 0 64 48" width="96" role="img" aria-label="Record"><use href="#sf-record"/></svg></li><li><svg viewBox="0 0 64 48" width="96" role="img" aria-label="Open book"><use href="#sf-book"/></svg></li><li><svg viewBox="0 0 64 48" width="96" role="img" aria-label="Wrench"><use href="#sf-wrench"/></svg></li>
+</ul>
+</div>
+</div>
+</section>
+</main>
+
+<!-- PATTERN: footer. Awning (flipped), the name in the sign face, address, compact hours (pack.js marks today), contact links. Supply: name, address, hours rows with data-day, 2 to 5 links (real URLs, tel: or mailto:), a small line. -->
+<footer class="foot on-ground">
+<div class="awning awning--thin" aria-hidden="true"></div>
+<div class="wrap foot__in">
+<div><p class="foot__name">Halden Street Bakery</p><p class="mut" style="margin-top:1rem">Bread, cake and a pot of tea since 1987.</p></div>
+<div><p class="foot__h">Find us</p><address>14 Halden Street<br>Calder Bridge CB4 2HL</address></div>
+<div><p class="foot__h">Hours</p><table class="hours hours--compact" data-hours-table><caption class="vh">Opening hours</caption><tbody><tr data-day="mon"><th scope="row">Mon</th><td class="is-closed">Closed</td></tr><tr data-day="tue,wed,thu,fri"><th scope="row">Tue–Fri</th><td>7am – 3pm</td></tr><tr data-day="sat"><th scope="row">Sat</th><td>7am – 2pm</td></tr><tr data-day="sun"><th scope="row">Sun</th><td>8am – 1pm</td></tr></tbody></table></div>
+<div><p class="foot__h">Get in touch</p><ul class="foot__links"><li><a href="tel:+441632960418">01632 960 418</a></li><li><a href="mailto:hello@haldenstreet.example">hello@haldenstreet.example</a></li><li><a href="https://www.instagram.com/">Instagram</a></li></ul></div>
+</div>
+<div class="wrap foot__small"><p>© 2026 Halden Street Bakery</p><p>Made with flour, water, salt and time.</p></div>
+</footer>
+</body>
+</html>
