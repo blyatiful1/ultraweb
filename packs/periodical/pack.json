@@ -1,0 +1,11 @@
+{
+  "name": "periodical",
+  "title": "Quarterly",
+  "character": "The site as one issue of a small, well-made magazine: masthead and issue line, numbered sections, drop caps, pull quotes, marginal notes, numbered figures and a colophon, set for long, comfortable reading.",
+  "suits": ["inns and restaurants with a story", "wineries, farms and producers", "nonprofits and campaigns", "studios and practices that write", "annual reports", "schools, societies and clubs"],
+  "notFor": ["fast transactional pages and shops with large catalogues", "software products and interfaces", "anything with little to read", "night-time venues sold on atmosphere alone"],
+  "colourways": ["paper", "night", "special"],
+  "firstScreens": ["cover-story", "contents-page", "letter"],
+  "signature": "The folio system (issue line, section marks, running numbers carried from masthead to colophon) and marginal notes that sit beside the reading column on wide screens and fold into the text on phones.",
+  "fonts": ["Newsreader", "Libre Franklin"]
+}

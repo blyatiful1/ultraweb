@@ -1,0 +1,11 @@
+{
+  "name": "vitrine",
+  "title": "Vitrine",
+  "character": "Objects in a case: each thing on its own pale plate with a numbered museum label, placed asymmetrically on a light stone wall, in a hairline Bodoni and a light Jost.",
+  "suits": ["ceramicists", "jewellers", "furniture makers", "architects", "interior studios", "galleries", "florists", "boutique hotels", "portfolios of made things"],
+  "notFor": ["busy price-led shops", "events and festivals", "software and apps", "restaurants with long menus"],
+  "colourways": ["stone", "ink", "sage"],
+  "firstScreens": ["fs-object", "fs-index", "fs-statement"],
+  "signature": "The plate and label system: numbered plates with museum labels (number, title, material, dimensions, year, price or On request), a running index of plates in the header, and a picture slot that is complete with a drawn silhouette, plan or elevation and takes a photograph when one exists.",
+  "fonts": ["Bodoni Moda", "Jost"]
+}

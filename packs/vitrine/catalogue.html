@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en" data-colourway="stone">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitrine pack catalogue · Maren Holt Stoneware</title>
+<meta name="description" content="The Vitrine design pack catalogue: every pattern and element, filled for an invented stoneware studio.">
+<link rel="preload" href="fonts/bodoni-moda-latin-400-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="pack.css">
+<style>
+/* Catalogue only: the colourway switch and the pattern names. Not part of the pack. */
+.cat-bar { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.25rem; padding-block: .5rem; border-bottom: 1px solid var(--line); }
+.cat-bar button { min-height: 44px; padding: 0 1rem; border: 1px solid var(--muted); background: var(--plate); color: var(--text); font: 500 1rem var(--sans); cursor: pointer; }
+.cat-bar button[aria-pressed="true"] { background: var(--text); color: var(--ground); }
+.cat-name { padding-top: 2rem; color: var(--muted); font: 500 1rem/1.4 var(--sans); border-top: 1px dashed var(--line); }
+.el-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 3.5rem var(--gap); align-items: start; }
+.el-grid > div { display: grid; gap: 1.25rem; align-content: start; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- Drawing parts. Copy this whole <svg> once, right after <body>. Place a part with:
+     <svg class="drawing" viewBox="(the symbol's viewBox)" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Drawing of …"><use href="#v-jar"/></svg>
+     Filled parts: v-jar v-bottle v-bowl v-beakers v-lamp v-stool v-ring v-pendant v-branch v-person. Line parts (add class drawing--line): v-chair v-elevation v-plan. -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="v-jar" viewBox="0 0 200 240"><path d="M78 240c-10 0-15-5-17-14L50 140c-4-34 10-64 34-74V52h32v14c24 10 38 40 34 74l-11 86c-2 9-7 14-17 14z"/><path d="M80 44h40v9H80z"/><path class="d-glint" d="M54 150c30 9 62 9 92 0M66 96c6-10 14-18 24-22"/></symbol>
+  <symbol id="v-bottle" viewBox="0 0 120 240"><path d="M50 0h20v8h-3v62c26 12 44 42 44 84 0 52-20 86-51 86S9 206 9 154c0-42 18-72 44-84V8h-3z"/><path class="d-glint" d="M28 120c-8 14-10 32-8 50M11 178c30 8 68 8 98 0"/></symbol>
+  <symbol id="v-bowl" viewBox="0 0 240 110"><path d="M8 20h224c-5 42-42 66-76 70l-5 20H89l-5-20C50 86 13 62 8 20z"/><path class="d-glint" d="M14 30h212M40 56c20 14 46 22 80 24"/></symbol>
+  <symbol id="v-beakers" viewBox="0 0 200 120"><path d="M20 10h64l-6 104c0 4-3 6-7 6H33c-4 0-7-2-7-6z"/><path d="M112 36h56l-5 78c0 4-3 6-7 6h-32c-4 0-7-2-7-6z"/><path class="d-glint" d="M22 40h60M114 62h52"/></symbol>
+  <symbol id="v-lamp" viewBox="0 0 160 240"><path class="d-soft" d="M40 14h80l28 74H12z"/><path d="M77 88h6v14h-6z"/><path d="M60 102c-14 18-20 40-20 64 0 34 14 54 26 74h28c12-20 26-40 26-74 0-24-6-46-20-64z"/><path class="d-glint" d="M50 150c-4 20-2 40 6 58"/></symbol>
+  <symbol id="v-stool" viewBox="0 0 160 200"><ellipse cx="80" cy="22" rx="66" ry="12"/><path d="M34 30l-16 170h9l20-170zM126 30l16 170h-9l-20-170zM76 34h8v166h-8z"/><path d="M28 128h104v5H28z"/></symbol>
+  <symbol id="v-ring" viewBox="0 0 160 160"><circle cx="80" cy="98" r="50" fill="none" stroke="currentColor" stroke-width="11"/><path d="M80 14l20 20-20 20-20-20z"/><path d="M64 50h32l-6 10H70z"/></symbol>
+  <symbol id="v-pendant" viewBox="0 0 160 240"><path class="d-line" d="M14 0c22 90 50 132 66 150M146 0c-22 90-50 132-66 150"/><path d="M80 146c16 18 28 36 28 56a28 28 0 0 1-56 0c0-20 12-38 28-56z"/></symbol>
+  <symbol id="v-branch" viewBox="0 0 160 240"><path class="d-line" d="M80 152C78 104 62 62 34 22M82 152c4-50 26-92 56-122M80 152c0-40 2-82 6-118"/><path d="M58 84c-16-2-26-12-28-24 14 0 24 8 28 24zM60 62c4-14 14-22 26-22-2 12-12 20-26 22zM108 80c4-14 16-22 28-20-4 12-14 20-28 20zM118 56c-14-2-22-12-22-24 12 2 20 10 22 24zM84 92c-12-6-16-16-14-26 10 4 14 14 14 26z"/><circle cx="34" cy="22" r="7"/><circle cx="138" cy="30" r="7"/><circle cx="86" cy="32" r="6"/><path d="M58 150h44l-5 80c0 6-4 10-10 10H73c-6 0-10-4-10-10z"/></symbol>
+  <symbol id="v-person" viewBox="0 0 160 200"><ellipse cx="80" cy="64" rx="30" ry="37"/><path d="M68 96h24v18H68z"/><path d="M12 200c2-52 30-82 68-82s66 30 68 82z"/></symbol>
+  <symbol id="v-chair" viewBox="0 0 160 240"><g class="d-line"><path d="M42 12v228M118 12v228M38 10h84v18H38zM42 64h76M62 28v36M80 28v36M98 28v36M30 124h100v14H30zM42 204h76"/></g></symbol>
+  <symbol id="v-elevation" viewBox="0 0 240 200"><g class="d-line"><path d="M0 199h240M30 199V92h180v107M18 94l102-74 102 74M168 54V30h16v36M104 199v-58h32v58M50 112h36v44H50zM154 112h36v44h-36zM68 112v44M172 112v44M50 134h36M154 134h36"/></g></symbol>
+  <symbol id="v-plan" viewBox="0 0 240 200"><path class="d-wall" d="M10 10h136M182 10h48v180H10V10"/><g class="d-line"><path d="M146 10a36 36 0 0 0 36 36M182 10v36M30 30h70v92H30zM30 50h70M226 70v60M222 70v60"/><circle cx="168" cy="134" r="26"/><path d="M130 160h-6v-26M206 160h6v-26" stroke-dasharray="4 4"/></g></symbol>
+</svg>
+
+<div class="wrap cat-bar" role="group" aria-label="Catalogue colourway">
+  <strong>Vitrine pack catalogue.</strong>
+  <span class="muted">Colourway:</span>
+  <button type="button" data-cw="stone" aria-pressed="true">Stone</button>
+  <button type="button" data-cw="ink" aria-pressed="false">Ink</button>
+  <button type="button" data-cw="sage" aria-pressed="false">Sage</button>
+</div>
+
+<!-- PATTERN: header. Wordmark, up to 5 nav links, a live status, and the running index of plates.
+     Supply: studio name (1-3 words) and a short descriptor (2-4 words); nav links to section ids; one link per plate number, each to that plate's id. Limits: 3-12 plate numbers; links go to ids that exist. -->
+<header class="site-head">
+  <div class="wrap site-head__bar">
+    <a class="wordmark" href="#main">Maren Holt <small>Stoneware</small></a>
+    <nav class="nav" aria-label="Main">
+      <ul>
+        <li><a href="#works">Works</a></li>
+        <li><a href="#studio">Studio</a></li>
+        <li><a href="#dates">Dates</a></li>
+        <li><a href="#visit">Visit</a></li>
+        <li><a href="#enquire">Enquire</a></li>
+      </ul>
+    </nav>
+    <p class="status" data-hours="Thu-Sat 10:00-17:00; Sun 11:00-16:00">Open Thursday to Sunday</p>
+  </div>
+  <nav class="wrap runindex" aria-label="Index of plates">
+    <span class="runindex__label">Plates</span>
+    <ol>
+      <li><a href="#p01" aria-label="Plate 01">01</a></li>
+      <li><a href="#p02" aria-label="Plate 02">02</a></li>
+      <li><a href="#p03" aria-label="Plate 03">03</a></li>
+      <li><a href="#p04" aria-label="Plate 04">04</a></li>
+      <li><a href="#p05" aria-label="Plate 05">05</a></li>
+      <li><a href="#p06" aria-label="Plate 06">06</a></li>
+      <li><a href="#p07" aria-label="Plate 07">07</a></li>
+    </ol>
+    <a class="quiet" href="#works">List of works</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<p class="wrap cat-name">This page is the catalogue of the Vitrine pack. First screen A: one object.</p>
+<!-- PATTERN: fs-object (first screen A, the signature). One object very large on its plate, the heading and the museum label hung to its left.
+     Use when the client has one piece, room or building that stands for them. Supply: h1 (4-12 words), lead (15-35 words), 1-2 buttons, one picture (photo or drawing part), its label (number, title, material, dimensions, year, price or "On request").
+     Limits: one plate only; heading at most 12 words; no word longer than 13 letters in the heading. -->
+<section class="wrap fs fs-object" aria-labelledby="h-a">
+  <div class="fs-object__head">
+    <h1 id="h-a" class="d1">Stoneware made to be used for a lifetime</h1>
+    <p class="lead">Jars, bottles and bowls thrown by hand in a coastal workshop and fired for three days in a wood kiln. Twelve pieces a season, each one numbered.</p>
+    <div class="actions">
+      <a class="btn" href="#works">See the works</a>
+      <a class="quiet" href="#visit">Visit the studio <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+  <figure class="fs-object__plate" id="p01">
+    <div class="slot slot--drawn">
+      <span class="slot__no" aria-hidden="true">01</span>
+      <svg class="drawing" viewBox="0 0 200 240" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Drawing of a tall jar with a short neck"><use href="#v-jar"/></svg>
+    </div>
+    <figcaption class="label">
+      <span class="label__no">01</span>
+      <p class="label__title">Storage jar, ash glaze</p>
+      <p class="label__meta">Wood-fired stoneware</p>
+      <p class="label__meta">46 × 34 cm · 2026</p>
+      <p class="label__price"><span>£1,450</span><span class="status status--sold">Sold</span></p>
+    </figcaption>
+  </figure>
+</section>
+
+<p class="wrap cat-name">First screen B: the index of plates.</p>
+<!-- PATTERN: fs-index (first screen B). The client's own list of works as the centrepiece: number, drawing or photo thumbnail, title, material, size, price.
+     Use for a maker with a range, a gallery's current show, a hotel's rooms. Supply: h1 (3-10 words), lead (15-30 words), status, 1 button; 4-9 rows, each linking to a plate id.
+     Limits: title 2-6 words, material 1-4 words, size up to 14 characters, price up to 10 characters or "On request". -->
+<section class="wrap fs fs-index" aria-labelledby="h-b">
+  <div class="fs-index__head">
+    <h2 id="h-b" class="d1">Works for the winter season</h2>
+    <p class="lead">Seven pieces from the autumn firing, shown in the studio until 20 December.</p>
+    <p class="status" data-hours="Thu-Sat 10:00-17:00; Sun 11:00-16:00">Open Thursday to Sunday</p>
+    <div class="actions"><a class="btn btn--secondary" href="#enquire">Ask about a piece</a></div>
+  </div>
+  <div class="fs-index__list">
+    <div class="ix__cols" aria-hidden="true"><span>No.</span><span></span><span>Work</span><span>Size</span><span>Price</span></div>
+    <ol class="ix" aria-label="Works for the winter season">
+      <li><a class="ix__row" href="#p01"><span class="ix__no">01</span><span class="ix__thumb slot slot--drawn"><svg class="drawing" viewBox="0 0 200 240" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#v-jar"/></svg></span><span class="ix__work"><span class="ix__title">Storage jar, ash glaze</span><span class="ix__mat">Wood-fired stoneware</span></span><span class="ix__size">46 × 34 cm</span><span class="ix__price"><span class="status status--sold">Sold</span></span></a></li>
+      <li><a class="ix__row" href="#p02"><span class="ix__no">02</span><span class="ix__thumb slot slot--drawn"><svg class="drawing" viewBox="0 0 120 240" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#v-bottle"/></svg></span><span class="ix__work"><span class="ix__title">Tall bottle, iron slip</span><span class="ix__mat">Stoneware</span></span><span class="ix__size">41 × 18 cm</span><span class="ix__price">£680</span></a></li>
+      <li><a class="ix__row" href="#p03"><span class="ix__no">03</span><span class="ix__thumb slot slot--drawn"><svg class="drawing" viewBox="0 0 240 110" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#v-bowl"/></svg></span><span class="ix__work"><span class="ix__title">Serving bowl, celadon</span><span class="ix__mat">Porcelain</span></span><span class="ix__size">9 × 32 cm</span><span class="ix__price">£320</span></a></li>
+      <li><a class="ix__row" href="#p04"><span class="ix__no">04</span><span class="ix__thumb slot slot--drawn"><svg class="drawing" viewBox="0 0 200 120" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#v-beakers"/></svg></span><span class="ix__work"><span class="ix__title">Beakers, set of four</span><span class="ix__mat">Stoneware, shino</span></span><span class="ix__size">11 × 8 cm</span><span class="ix__price">£180</span></a></li>
+      <li><a class="ix__row" href="#p05"><span class="ix__no">05</span><span class="ix__thumb slot slot--drawn"><svg class="drawing" viewBox="0 0 160 240" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#v-lamp"/></svg></span><span class="ix__work"><span class="ix__title">Lamp base, tenmoku</span><span class="ix__mat">Stoneware, linen shade</span></span><span class="ix__size">52 × 30 cm</span><span class="ix__price">£740</span></a></li>
+      <li><a class="ix__row" href="#p06"><span class="ix__no">06</span><span class="ix__thumb slot slot--drawn"><svg class="drawing" viewBox="0 0 160 240" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#v-branch"/></svg></span><span class="ix__work"><span class="ix__title">Bud vase with winter stems</span><span class="ix__mat">Porcelain</span></span><span class="ix__size">14 × 7 cm</span><span class="ix__price">£95</span></a></li>
+      <li><a class="ix__row" href="#p07"><span class="ix__no">07</span><span class="ix__thumb slot"><img src="img/standin-jar.jpg" alt="" width="1200" height="1500"></span><span class="ix__work"><span class="ix__title">Lidded jar, two glazes</span><span class="ix__mat">Wood-fired stoneware</span></span><span class="ix__size">38 × 26 cm</span><span class="ix__price">On request</span></a></li>
+    </ol>
+  </div>
+</section>
+
+<p class="wrap cat-name">First screen C: a statement and one small plate.</p>
+<!-- PATTERN: fs-statement (first screen C). A sentence in display type with one small plate set low and to the right.
+     Use when the client's idea matters more than any one object: architects, interior studios, florists, a hotel's approach. Supply: one statement (12-30 words), lead (10-25 words), 1-2 buttons, one plate with label.
+     Limits: statement at most 30 words; one plate only. -->
+<section class="wrap fs fs-statement" aria-labelledby="h-c">
+  <h2 id="h-c" class="fs-statement__text">Pots for the kitchen table, thrown slowly, fired with driftwood, glazed with the ash the kiln leaves behind.</h2>
+  <div class="fs-statement__foot">
+    <p class="lead">A one-person workshop on the Kent coast, open to visitors four days a week.</p>
+    <div class="actions"><a class="btn" href="#works">See the works</a><a class="quiet" href="#studio">About the studio <span aria-hidden="true">→</span></a></div>
+  </div>
+  <figure class="plate fs-statement__plate">
+    <div class="slot slot--drawn"><svg class="drawing" viewBox="0 0 120 240" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Drawing of a tall narrow-necked bottle"><use href="#v-bottle"/></svg></div>
+    <figcaption class="label"><span class="label__no">02</span><p class="label__title">Tall bottle, iron slip</p><p class="label__meta">Stoneware · 41 × 18 cm · 2026</p><p class="label__price"><span>£680</span><span class="status status--available">Available</span></p></figcaption>
+  </figure>
+</section>
+
+<!-- PATTERN: case. The wall of plates, placed asymmetrically in a repeating six-place rhythm; ratios are set by position.
+     Use for any set of offerings: pieces, rooms, projects, arrangements. Supply: section numeral, h2 (2-8 words), aside line, 3-12 plates, each a picture and a full label.
+     Limits: 3-12 plates; label title 2-6 words; one id per plate (p02 …) matching the running index. -->
+<section class="wrap sec" id="works" aria-labelledby="h-works">
+  <div class="sec-head"><span class="sec-head__no" aria-hidden="true">I</span><h2 id="h-works">The case</h2><p class="sec-head__aside">Plates 02–07, autumn firing</p></div>
+  <ol class="case">
+    <li id="p02"><figure class="plate"><div class="slot slot--drawn"><svg class="drawing" viewBox="0 0 120 240" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Drawing of a tall bottle"><use href="#v-bottle"/></svg></div><figcaption class="label"><span class="label__no">02</span><p class="label__title">Tall bottle, iron slip</p><p class="label__meta">Stoneware</p><p class="label__meta">41 × 18 cm · 2026</p><p class="label__price"><span>£680</span><span class="status status--available">Available</span></p></figcaption></figure></li>
+    <li id="p03"><figure class="plate"><div class="slot slot--drawn"><svg class="drawing" viewBox="0 0 240 110" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Drawing of a wide footed bowl"><use href="#v-bowl"/></svg></div><figcaption class="label"><span class="label__no">03</span><p class="label__title">Serving bowl, celadon</p><p class="label__meta">Porcelain</p><p class="label__meta">9 × 32 cm · 2025</p><p class="label__price"><span>£320</span><span class="status status--available">Available</span></p></figcaption></figure></li>
+    <li id="p04"><figure class="plate"><div class="slot slot--drawn"><svg class="drawing" viewBox="0 0 200 120" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Drawing of two beakers"><use href="#v-beakers"/></svg></div><figcaption class="label"><span class="label__no">04</span><p class="label__title">Beakers, set of four</p><p class="label__meta">Stoneware, shino glaze</p><p class="label__meta">11 × 8 cm each · 2026</p><p class="label__price"><span>£180</span><span class="status status--available">Available</span></p></figcaption></figure></li>
+    <li id="p05"><figure class="plate"><div class="slot slot--drawn"><svg class="drawing" viewBox="0 0 160 240" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Drawing of a lamp with a round ceramic base"><use href="#v-lamp"/></svg></div><figcaption class="label"><span class="label__no">05</span><p class="label__title">Lamp base, tenmoku</p><p class="label__meta">Stoneware, linen shade</p><p class="label__meta">52 × 30 cm · 2025</p><p class="label__price"><span>£740</span><span class="status status--sold">Sold</span></p></figcaption></figure></li>
+    <li id="p06"><figure class="plate"><div class="slot slot--drawn"><svg class="drawing" viewBox="0 0 160 240" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Drawing of a small vase holding winter stems"><use href="#v-branch"/></svg></div><figcaption class="label"><span class="label__no">06</span><p class="label__title">Bud vase with winter stems</p><p class="label__meta">Porcelain</p><p class="label__meta">14 × 7 cm · 2026</p><p class="label__price"><span>£95</span><span class="status status--available">Available</span></p></figcaption></figure></li>
+    <li id="p07"><figure class="plate"><div class="slot"><img src="img/standin-jar.jpg" alt="A lidded jar with a green upper glaze over a pale body, on a dark shelf" width="1200" height="1500" loading="lazy"><span class="standin">Stand-in photo</span></div><figcaption class="label"><span class="label__no">07</span><p class="label__title">Lidded jar, two glazes</p><p class="label__meta">Wood-fired stoneware</p><p class="label__meta">38 × 26 cm · 2026</p><p class="label__price"><span>On request</span><span class="status status--available">Available</span></p></figcaption></figure></li>
+  </ol>
+</section>
+
+<!-- PATTERN: text-picture. A wide plate beside a short text with one figure at its foot. Add class tp--flip to put the picture on the right.
+     Use for the maker, the place, the method. Supply: picture + label, h2 (2-8 words), 1-3 paragraphs (40-120 words in all), one aside figure with a line of text, one quiet link.
+     Limits: no more than 3 paragraphs; not twice in a row without tp--flip on the second. -->
+<section class="wrap sec" id="studio" aria-labelledby="h-studio">
+  <div class="tp">
+    <figure class="plate tp__plate">
+      <div class="slot slot--land slot--drawn"><svg class="drawing drawing--line" viewBox="0 0 240 200" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Elevation drawing of the studio building with a pitched roof and chimney"><use href="#v-elevation"/></svg></div>
+      <figcaption class="label"><span class="label__no">A</span><p class="label__title">The workshop, Saltings Yard</p><p class="label__meta">Former net store, timber and brick · 1894</p></figcaption>
+    </figure>
+    <div class="tp__text">
+      <h2 id="h-studio">One wheel, one kiln, one pair of hands</h2>
+      <div class="prose"><p>Maren trained in Mashiko and Stoke before taking the old net store in 2014. Clay is dug two miles inland and left to age for a year.</p><p>The kiln is fired twice a year. What comes out is sorted, numbered and photographed before anything is sold.</p></div>
+      <p class="tp__aside"><b>12</b><span class="muted">years in the yard, two firings a year</span></p>
+      <a class="quiet" href="#dates">Come to an open day <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: spec. A specification sheet: one plate held still on the left while a list of terms runs beside it.
+     Use for one product's details, a room's features, a commission's terms. Supply: plate + label, h2 (2-8 words), one paragraph (15-40 words), 4-12 term/value pairs.
+     Limits: term 1-3 words; value up to 25 words. -->
+<section class="wrap sec" aria-labelledby="h-spec">
+  <div class="spec">
+    <figure class="plate spec__plate">
+      <div class="slot slot--square slot--drawn"><svg class="drawing" viewBox="0 0 200 240" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Drawing of the storage jar"><use href="#v-jar"/></svg></div>
+      <figcaption class="label"><span class="label__no">01</span><p class="label__title">Storage jar, ash glaze</p><p class="label__meta">46 × 34 cm · 2026</p></figcaption>
+    </figure>
+    <div class="spec__body">
+      <h2 id="h-spec">What each piece is made of</h2>
+      <p class="prose">Every work leaves the studio with a card that records the same facts as the list below.</p>
+      <dl class="spec__list">
+        <div><dt>Clay</dt><dd>Local red earthenware blended with St Thomas stoneware, aged twelve months</dd></div>
+        <div><dt>Firing</dt><dd>Anagama wood kiln, 72 hours, to 1,300 °C</dd></div>
+        <div><dt>Glaze</dt><dd>Oak and driftwood ash, applied by pouring</dd></div>
+        <div><dt>Use</dt><dd>Food safe; dishwasher safe except pieces with gold repair</dd></div>
+        <div><dt>Care</dt><dd>Wash by hand, dry upside down, keep away from direct flame</dd></div>
+        <div><dt>Lead time</dt><dd>Commissions 14–20 weeks, timed to the next firing</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: steps. Steps in order on a hairline, each with a large numeral, an optional small drawing and a duration.
+     Use for the making, the commission process, a booking sequence. Supply: numeral, h2 (2-8 words), 3-9 steps, each with title (2-5 words), text (10-35 words), duration.
+     Limits: 3-9 steps; durations up to 16 characters. -->
+<section class="wrap sec" aria-labelledby="h-steps">
+  <div class="sec-head"><span class="sec-head__no" aria-hidden="true">II</span><h2 id="h-steps">How a commission is made</h2><p class="sec-head__aside">Four stages, about four months</p></div>
+  <ol class="steps">
+    <li><span class="steps__no">I</span><h3>A conversation</h3><p>We talk about where the piece will live, how it will be used and what it should hold.</p><p class="steps__time">One visit or call</p></li>
+    <li><span class="steps__no">II</span><h3>Drawings</h3><p>You receive two or three drawings at full scale with the glaze tests that go with them.</p><p class="steps__time">2 weeks</p></li>
+    <li><span class="steps__no">III</span><h3>Throwing and drying</h3><p>Several pieces are made so that the best one can be chosen after the firing.</p><p class="steps__time">6–8 weeks</p></li>
+    <li><span class="steps__no">IV</span><h3>The firing</h3><p>Three days and nights of stoking. The kiln cools for a week before it is opened.</p><p class="steps__time">Next: March 2027</p></li>
+  </ol>
+</section>
+
+<!-- PATTERN: figures. A row of real numbers in large display numerals, each with its unit and a plain explanation.
+     Use for facts that are true and checkable: firing temperature, years, rooms, square metres. Supply: 3-6 items, each a number (up to 6 characters), a unit (up to 6 characters), a line (4-14 words).
+     Limits: no invented statistics, no percentages of satisfaction. -->
+<section class="wrap sec sec--tight" aria-labelledby="h-figs">
+  <h2 id="h-figs" class="vh">The studio in figures</h2>
+  <ul class="figs">
+    <li><p class="figs__n">1,300<small>°C</small></p><p class="figs__l">Top temperature of the wood kiln</p></li>
+    <li><p class="figs__n">72<small>hours</small></p><p class="figs__l">Stoking without a break, every firing</p></li>
+    <li><p class="figs__n">2<small>a year</small></p><p class="figs__l">Firings, in March and September</p></li>
+    <li><p class="figs__n">140</p><p class="figs__l">Pieces numbered since the first firing</p></li>
+  </ul>
+</section>
+
+<!-- PATTERN: band. The one full-width band of the page: a statement in display type, its source as a label, and a line drawing.
+     Use once per page, after the middle. Supply: quote or statement (10-35 words), source label (name, role, place), one line drawing part.
+     Limits: one band per page; never directly after a first screen or directly before the footer. -->
+<section class="band" aria-labelledby="h-band">
+  <div class="wrap band__inner">
+    <h2 id="h-band" class="vh">A word from a collector</h2>
+    <blockquote class="band__quote"><p>“The jar stands by the window and the light moves across it all day. I have never owned anything that changes so much while staying still.”</p></blockquote>
+    <div class="band__by label label--band"><span class="label__no">—</span><p class="label__title">Ruth Okafor</p><p class="label__meta">Collector, Deal · owner of plate 41</p></div>
+    <div class="band__draw"><svg class="drawing--line" viewBox="0 0 160 240" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#v-chair"/></svg></div>
+  </div>
+</section>
+
+<!-- PATTERN: works. The list of works as a table, split into views (categories, seasons, floors).
+     Use when there are more pieces than plates, or for rooms and rates. Supply: numeral, h2, 2-5 views, each a table with 3-15 rows: number, work, material, size, year, price or status.
+     Limits: 2-5 views; view names one or two words; 6 columns at most. -->
+<section class="wrap sec" id="list" aria-labelledby="h-list">
+  <div class="sec-head"><span class="sec-head__no" aria-hidden="true">III</span><h2 id="h-list">List of works</h2><p class="sec-head__aside">All prices include VAT</p></div>
+  <div class="works">
+    <div class="works__body" data-views="Kinds of work">
+      <div data-view="Vessels">
+        <h3 class="views__title">Vessels</h3>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Vessels, scrollable table">
+          <table class="table">
+            <thead><tr><th scope="col">No.</th><th scope="col">Work</th><th scope="col">Material</th><th scope="col" class="r">Size, cm</th><th scope="col" class="r">Year</th><th scope="col" class="r">Price</th></tr></thead>
+            <tbody>
+              <tr><td class="no">01</td><th scope="row">Storage jar, ash glaze</th><td>Stoneware</td><td class="r">46 × 34</td><td class="r">2026</td><td class="r"><span class="status status--sold">Sold</span></td></tr>
+              <tr><td class="no">02</td><th scope="row">Tall bottle, iron slip</th><td>Stoneware</td><td class="r">41 × 18</td><td class="r">2026</td><td class="r">£680</td></tr>
+              <tr><td class="no">07</td><th scope="row">Lidded jar, two glazes</th><td>Stoneware</td><td class="r">38 × 26</td><td class="r">2026</td><td class="r">On request</td></tr>
+              <tr><td class="no">08</td><th scope="row">Moon jar, natural ash</th><td>Stoneware</td><td class="r">36 × 36</td><td class="r">2025</td><td class="r">£1,900</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div data-view="Table">
+        <h3 class="views__title">Table</h3>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Table pieces, scrollable table">
+          <table class="table">
+            <thead><tr><th scope="col">No.</th><th scope="col">Work</th><th scope="col">Material</th><th scope="col" class="r">Size, cm</th><th scope="col" class="r">Year</th><th scope="col" class="r">Price</th></tr></thead>
+            <tbody>
+              <tr><td class="no">03</td><th scope="row">Serving bowl, celadon</th><td>Porcelain</td><td class="r">9 × 32</td><td class="r">2025</td><td class="r">£320</td></tr>
+              <tr><td class="no">04</td><th scope="row">Beakers, set of four</th><td>Stoneware</td><td class="r">11 × 8</td><td class="r">2026</td><td class="r">£180</td></tr>
+              <tr><td class="no">09</td><th scope="row">Dinner plates, six</th><td>Stoneware</td><td class="r">2 × 27</td><td class="r">2026</td><td class="r">£360</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div data-view="Light">
+        <h3 class="views__title">Light</h3>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Lighting, scrollable table">
+          <table class="table">
+            <thead><tr><th scope="col">No.</th><th scope="col">Work</th><th scope="col">Material</th><th scope="col" class="r">Size, cm</th><th scope="col" class="r">Year</th><th scope="col" class="r">Price</th></tr></thead>
+            <tbody>
+              <tr><td class="no">05</td><th scope="row">Lamp base, tenmoku</th><td>Stoneware, linen</td><td class="r">52 × 30</td><td class="r">2025</td><td class="r"><span class="status status--sold">Sold</span></td></tr>
+              <tr><td class="no">10</td><th scope="row">Wall sconce pair</th><td>Porcelain, brass</td><td class="r">24 × 12</td><td class="r">2026</td><td class="r">£540</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: schedule. Dates in a ruled list with large day numerals; the next one is marked live and repeated in the side panel.
+     Use for exhibitions, open days, workshops, seasons. Supply: numeral, h2, side line (fallback text), 3-10 items each with data-date (and data-end for runs), data-label, day, month and weekday, title, place, time.
+     Limits: 3-10 dates; title 2-8 words. Give the list an id and point data-next-from at it. -->
+<section class="wrap sec" id="dates" aria-labelledby="h-dates">
+  <div class="sec-head"><span class="sec-head__no" aria-hidden="true">IV</span><h2 id="h-dates">Open days and shows</h2></div>
+  <div class="sched">
+    <div class="sched__next"><span class="muted">Next in the studio</span><b data-next-from="#date-list">See the dates listed here</b><a class="quiet" href="#visit">How to get here <span aria-hidden="true">→</span></a></div>
+    <ol class="dates" id="date-list" data-next-date>
+      <li data-date="2026-10-18" data-label="Kiln opening, 18 October"><p class="dates__d">18<small>Oct · Sun</small></p><p class="dates__what"><b>Kiln opening</b><span>The workshop, Saltings Yard</span></p><p class="dates__when" data-next-slot><span class="num">11:00–16:00</span></p></li>
+      <li data-date="2026-11-14" data-end="2026-12-20" data-label="Winter show, until 20 December"><p class="dates__d">14<small>Nov · Sat</small></p><p class="dates__what"><b>Winter show: seven new works</b><span>The workshop, until 20 December</span></p><p class="dates__when" data-next-slot><span class="num">Thu–Sun</span></p></li>
+      <li data-date="2027-01-23" data-label="Throwing workshop, 23 January"><p class="dates__d">23<small>Jan · Sat</small></p><p class="dates__what"><b>Throwing workshop for beginners</b><span>Six places, clay and firing included</span></p><p class="dates__when" data-next-slot><span class="num">£160</span></p></li>
+      <li data-date="2027-03-12" data-end="2027-03-15" data-label="Spring firing, 12 March"><p class="dates__d">12<small>Mar · Fri</small></p><p class="dates__what"><b>Spring firing, visitors welcome</b><span>Help stoke the kiln for a shift</span></p><p class="dates__when" data-next-slot><span class="num">Free</span></p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PATTERN: people. Portraits as plates in a stepped row, each with a name label.
+     Use for the makers, partners, a hotel's hosts. Supply: numeral, h2, 1-9 people each with a portrait (photo or v-person), number, name, role, one line.
+     Limits: role up to 6 words; one line up to 14 words. -->
+<section class="wrap sec" aria-labelledby="h-people">
+  <div class="sec-head"><span class="sec-head__no" aria-hidden="true">V</span><h2 id="h-people">Who works in the yard</h2></div>
+  <ul class="people">
+    <li><figure class="plate"><div class="slot slot--drawn"><svg class="drawing" viewBox="0 0 160 200" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Portrait drawing of Maren Holt"><use href="#v-person"/></svg></div><figcaption class="label"><span class="label__no">i</span><p class="label__title">Maren Holt</p><p class="label__meta">Potter, founder · since 2014</p><p class="label__meta">Throws, glazes and fires every piece.</p></figcaption></figure></li>
+    <li><figure class="plate"><div class="slot slot--drawn"><svg class="drawing" viewBox="0 0 160 200" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Portrait drawing of Tomasz Wierzbicki"><use href="#v-person"/></svg></div><figcaption class="label"><span class="label__no">ii</span><p class="label__title">Tomasz Wierzbicki</p><p class="label__meta">Kiln partner · since 2019</p><p class="label__meta">Builds the kiln walls and leads the night shifts.</p></figcaption></figure></li>
+    <li><figure class="plate"><div class="slot slot--drawn"><svg class="drawing" viewBox="0 0 160 200" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Portrait drawing of Ines Carvalho"><use href="#v-person"/></svg></div><figcaption class="label"><span class="label__no">iii</span><p class="label__title">Ines Carvalho</p><p class="label__meta">Studio assistant · since 2024</p><p class="label__meta">Runs the open days and packs every order.</p></figcaption></figure></li>
+  </ul>
+</section>
+
+<!-- PATTERN: faq. Questions as numbered disclosures beside a short contact note.
+     Use for delivery, care, commissions, bookings. Supply: numeral, h2, a note (10-30 words) and a link, 3-10 questions (question up to 14 words, answer 15-80 words).
+     Limits: 3-10 questions. -->
+<section class="wrap sec" aria-labelledby="h-faq">
+  <div class="sec-head"><span class="sec-head__no" aria-hidden="true">VI</span><h2 id="h-faq">Questions people ask</h2></div>
+  <div class="faq">
+    <div class="faq__aside"><p class="muted">Anything else, write to the studio. Replies come within two working days.</p><a class="quiet" href="#enquire">Write to the studio <span aria-hidden="true">→</span></a></div>
+    <div class="qa">
+      <details open><summary>Do you ship outside the United Kingdom?</summary><div class="qa__a"><p>Yes, to Europe and North America. Each piece is double boxed and insured; shipping is quoted with the piece.</p></div></details>
+      <details><summary>Can I reserve a piece before the show opens?</summary><div class="qa__a"><p>Pieces are released on the first morning of each show. You can ask to be told when the list goes up.</p></div></details>
+      <details><summary>Is the glaze safe for food and the dishwasher?</summary><div class="qa__a"><p>All glazes are tested for food use. Tableware is dishwasher safe; large jars are best washed by hand.</p></div></details>
+      <details><summary>Do you take commissions for restaurants?</summary><div class="qa__a"><p>A small number each year, planned around the two firings. Allow at least five months.</p></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: request. An enquiry form beside the plate being asked about and an honest note on how it is sent.
+     Use for enquiries, commissions, bookings. Supply: numeral, h2, mailto address in action, fields (name, email, phone, date, select, message, consent), the plate, the notice.
+     Limits: 3-9 fields; mark required fields with "(required)" in the label; keep autocomplete on name, email, tel. -->
+<section class="wrap sec" id="enquire" aria-labelledby="h-enq">
+  <div class="sec-head"><span class="sec-head__no" aria-hidden="true">VII</span><h2 id="h-enq">Ask about a piece</h2></div>
+  <div class="req-form">
+    <form class="form" action="mailto:studio@example.com" method="post" enctype="text/plain">
+      <div class="field"><label for="f-name">Your name <span class="req">(required)</span></label><input class="input" id="f-name" name="name" type="text" autocomplete="name" required></div>
+      <div class="field"><label for="f-email">Email <span class="req">(required)</span></label><input class="input" id="f-email" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="f-tel">Telephone</label><input class="input" id="f-tel" name="telephone" type="tel" autocomplete="tel" aria-describedby="f-tel-h"><p class="hint" id="f-tel-h">Only if you would like a call back.</p></div>
+      <div class="field"><label for="f-date">Date you would like to visit</label><input class="input" id="f-date" name="visit" type="date"></div>
+      <div class="field full"><label for="f-piece">The piece</label><select class="input" id="f-piece" name="piece"><option>02 Tall bottle, iron slip</option><option>03 Serving bowl, celadon</option><option>07 Lidded jar, two glazes</option><option>A commission</option></select></div>
+      <div class="field full"><label for="f-msg">Message <span class="req">(required)</span></label><textarea class="input" id="f-msg" name="message" required aria-describedby="f-msg-h"></textarea><p class="hint" id="f-msg-h">Where the piece will live, and anything we should know.</p></div>
+      <div class="field full"><label class="check"><input type="checkbox" name="list"><span>Tell me when the next show list goes up</span></label></div>
+      <div class="full actions"><button class="btn" type="submit">Open in your email</button><span class="muted">This opens your email program; nothing is sent from this page.</span></div>
+    </form>
+    <div class="req-form__aside">
+      <figure class="plate"><div class="slot slot--square slot--drawn"><svg class="drawing" viewBox="0 0 120 240" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Drawing of the tall bottle"><use href="#v-bottle"/></svg></div><figcaption class="label"><span class="label__no">02</span><p class="label__title">Tall bottle, iron slip</p><p class="label__meta">41 × 18 cm · £680</p></figcaption></figure>
+      <div class="notice" role="note"><span class="notice__mark" aria-hidden="true">i</span><p><strong>Not yet connected</strong>The form opens a message in your own email program, addressed to the studio.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: visit. Getting there: a drawn map on a plate, the address, live status, hours and ways to arrive.
+     Use for any client with a door. Supply: map drawing (adapt the inline SVG: streets, water, the marker), address, data-hours string, 3-7 hours rows, 2-4 ways to arrive.
+     Limits: hours rows up to 7; each way up to 25 words. -->
+<section class="wrap sec" id="visit" aria-labelledby="h-visit">
+  <div class="sec-head"><span class="sec-head__no" aria-hidden="true">VIII</span><h2 id="h-visit">Finding the yard</h2></div>
+  <div class="visit">
+    <figure class="plate visit__map">
+      <div class="slot slot--land">
+        <svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Map: the studio is on Saltings Yard, between Harbour Street and Island Wall, two minutes from the beach">
+          <path d="M0 150c60-14 120-10 180 4s90 10 120 0v46H0z" fill="var(--line)" opacity=".45"/>
+          <path d="M20 172c20-4 40-4 60 0M120 168c20-4 40-4 60 0M210 180c20-4 40-4 60 0" fill="none" stroke="var(--muted)" stroke-width="1" vector-effect="non-scaling-stroke"/>
+          <g fill="var(--line)" opacity=".7"><path d="M14 14h46v30H14zM14 56h46v40H14zM104 14h54v34h-54zM104 60h28v34h-28zM206 18h70v40h-70zM206 70h34v32h-34zM250 70h26v32h-26z"/></g>
+          <g fill="none" stroke="var(--text)" stroke-width="1.5" vector-effect="non-scaling-stroke"><path d="M-10 116c90-8 180-10 320-2M80 -10l6 124M190 -10l-4 124"/><path d="M86 104h100" stroke-dasharray="3 4"/></g>
+          <circle cx="152" cy="104" r="11" fill="var(--accent)"/><circle cx="152" cy="104" r="3.5" fill="var(--plate)"/>
+          <path d="M272 190v-24M266 172l6-6 6 6" fill="none" stroke="var(--text)" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+        </svg>
+      </div>
+      <figcaption class="label"><span class="label__no">B</span><p class="label__title">Saltings Yard, Whitstable</p><p class="label__meta">Two minutes from the beach, ten from the station</p></figcaption>
+    </figure>
+    <div class="visit__info">
+      <address>Unit 4, Saltings Yard<br>Island Wall, Whitstable<br>Kent CT5 1EP</address>
+      <p class="status" data-hours="Thu-Sat 10:00-17:00; Sun 11:00-16:00">Open Thursday to Sunday</p>
+      <dl class="hours">
+        <div><dt>Monday to Wednesday</dt><dd>Closed</dd></div>
+        <div><dt>Thursday to Saturday</dt><dd>10:00–17:00</dd></div>
+        <div><dt>Sunday</dt><dd>11:00–16:00</dd></div>
+      </dl>
+      <dl class="ways">
+        <div><dt>By train</dt><dd>Whitstable station, then ten minutes on foot along Harbour Street.</dd></div>
+        <div><dt>By car</dt><dd>Pay and display on Gorrell Tank. The yard has no parking.</dd></div>
+        <div><dt>Step-free</dt><dd>Level entrance from the yard; the kiln shed has one step.</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- PATTERN: lost (404 layout). An empty plate with the outline of a missing object and a label that says what happened.
+     Use as the whole content of 404.html (heading becomes h1 there). Supply: one drawing part, h1 (2-8 words), one line, links home and to the index. -->
+<section class="wrap sec" aria-labelledby="h-lost">
+  <div class="lost">
+    <figure class="plate">
+      <div class="slot slot--empty slot--drawn"><svg class="drawing" viewBox="0 0 200 240" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><use href="#v-jar"/></svg></div>
+      <figcaption class="label"><span class="label__no">404</span><p class="label__title">Work not found</p><p class="label__meta">Moved, sold or never made</p></figcaption>
+    </figure>
+    <div class="lost__text">
+      <h2 id="h-lost" class="d2">This plate is empty</h2>
+      <p class="lead">The page you asked for is not in the case. The list of works has everything that is.</p>
+      <div class="actions"><a class="btn" href="#main">Back to the start</a><a class="quiet" href="#list">List of works <span aria-hidden="true">→</span></a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ELEMENTS ======================================================== -->
+<section class="wrap sec" id="elements" aria-labelledby="h-el">
+  <div class="sec-head"><span class="sec-head__no" aria-hidden="true">IX</span><h2 id="h-el">Elements</h2><p class="sec-head__aside">Each in its states</p></div>
+  <div class="el-grid">
+    <!-- ELEMENT: buttons. Primary (.btn), secondary (.btn--secondary), quiet text link (.quiet). States: default, focus (keyboard ring), disabled (aria-disabled or disabled). Limit: label 1-4 words; one primary per section. -->
+    <div>
+      <h3>Buttons</h3>
+      <div class="actions"><a class="btn" href="#enquire">Ask about a piece</a><a class="btn btn--secondary" href="#works">See the works</a></div>
+      <div class="actions"><button class="btn" type="button" disabled>Sold out</button><button class="btn btn--secondary" type="button" disabled>Unavailable</button></div>
+      <div class="actions"><a class="quiet" href="#visit">Visit the studio <span aria-hidden="true">→</span></a><span class="quiet" aria-disabled="true">Booking closed</span></div>
+    </div>
+    <!-- ELEMENT: status, tag, notice. .status with --open, --closed, --available, --sold (red gallery dot). .tag and .tag--next. .notice (information) and .notice--warn. Limit: status up to 5 words; notice up to 40 words. -->
+    <div>
+      <h3>Status, tags, notices</h3>
+      <p class="status status--open">Open now, until 17:00</p>
+      <p class="status status--closed">Closed now, opens Thursday at 10:00</p>
+      <p class="status status--available">Available</p>
+      <p class="status status--sold">Sold</p>
+      <ul class="tags"><li class="tag">Stoneware</li><li class="tag">Wood-fired</li><li class="tag tag--next">Next</li></ul>
+      <div class="notice" role="note"><span class="notice__mark" aria-hidden="true">i</span><p><strong>Shipping</strong>Large jars are sent by courier in a wooden crate.</p></div>
+      <div class="notice notice--warn" role="note"><span class="notice__mark" aria-hidden="true">!</span><p><strong>Closed 24 December to 2 January</strong>Orders placed then are packed on 3 January.</p></div>
+    </div>
+    <!-- ELEMENT: picture slot. .slot (4:5) or --square, --land (3:2), --wide (16:9), --tall (2:3). Holds an <img> (cover) or a drawing part; add slot--drawn for the shelf line under a drawing. Optional .slot__no numeral; .standin label on any photo that is not the client's own. -->
+    <div>
+      <h3>Picture slot</h3>
+      <figure class="plate"><div class="slot slot--land"><img src="img/standin-jar.jpg" alt="Lidded jar on a dark shelf" width="1200" height="1500" loading="lazy"><span class="slot__no" aria-hidden="true">07</span><span class="standin">Stand-in photo</span></div><figcaption class="label"><span class="label__no">07</span><p class="label__title">Photograph in a 3:2 slot</p><p class="label__meta">Photo fills the slot</p></figcaption></figure>
+      <figure class="plate"><div class="slot slot--land slot--drawn"><svg class="drawing drawing--line" viewBox="0 0 240 200" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Plan drawing of a room with a bed, a round table and a door"><use href="#v-plan"/></svg></div><figcaption class="label"><span class="label__no">C</span><p class="label__title">Drawing in a 3:2 slot</p><p class="label__meta">Plan part, v-plan</p></figcaption></figure>
+    </div>
+    <!-- ELEMENT: drawing parts. All symbols from the sprite, shown small. -->
+    <div>
+      <h3>Drawing parts</h3>
+      <ul class="tags" aria-label="Drawing parts">
+        <li class="slot slot--square slot--drawn" style="width:6rem"><svg class="drawing" viewBox="0 0 160 160" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Ring, v-ring"><use href="#v-ring"/></svg></li>
+        <li class="slot slot--square slot--drawn" style="width:6rem"><svg class="drawing" viewBox="0 0 160 240" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Pendant, v-pendant"><use href="#v-pendant"/></svg></li>
+        <li class="slot slot--square slot--drawn" style="width:6rem"><svg class="drawing" viewBox="0 0 160 200" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Stool, v-stool"><use href="#v-stool"/></svg></li>
+        <li class="slot slot--square slot--drawn" style="width:6rem"><svg class="drawing drawing--line" viewBox="0 0 160 240" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Chair, v-chair"><use href="#v-chair"/></svg></li>
+        <li class="slot slot--square slot--drawn" style="width:6rem"><svg class="drawing drawing--line" viewBox="0 0 240 200" preserveAspectRatio="xMidYMax meet" role="img" aria-label="House elevation, v-elevation"><use href="#v-elevation"/></svg></li>
+        <li class="slot slot--square slot--drawn" style="width:6rem"><svg class="drawing" viewBox="0 0 200 240" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Jar, v-jar"><use href="#v-jar"/></svg></li>
+      </ul>
+    </div>
+    <!-- ELEMENT: form controls. .field > label + .input (+ .hint, + .err with aria-invalid and aria-describedby). Types: text, email, tel, date, select, textarea; .check for checkbox and radio; .stepper for quantity (number input). -->
+    <div>
+      <h3>Form controls</h3>
+      <div class="field"><label for="e-name">Name <span class="req">(required)</span></label><input class="input" id="e-name" type="text" autocomplete="name" required aria-describedby="e-name-h"><p class="hint" id="e-name-h">As it should appear on the gift card.</p></div>
+      <div class="field"><label for="e-email">Email <span class="req">(required)</span></label><input class="input" id="e-email" type="email" autocomplete="email" required value="maren@" aria-invalid="true" aria-describedby="e-email-e"><p class="err" id="e-email-e">Error: enter a full email address, like name@example.com.</p></div>
+      <div class="field"><label for="e-tel">Telephone</label><input class="input" id="e-tel" type="tel" autocomplete="tel" disabled value="Not needed for collection"></div>
+      <div class="field"><label for="e-qty">Quantity</label><input class="input stepper" id="e-qty" type="number" min="1" max="6" value="1" inputmode="numeric" aria-describedby="e-qty-h"><p class="hint" id="e-qty-h">Up to six of each set.</p></div>
+    </div>
+    <div>
+      <h3>Choices</h3>
+      <fieldset><legend class="legend">Collection or delivery</legend>
+        <label class="check"><input type="radio" name="e-way" checked><span>Collect from the studio</span></label>
+        <label class="check"><input type="radio" name="e-way"><span>Courier, insured</span></label>
+        <label class="check"><input type="radio" name="e-way" disabled><span>Post (not for large pieces)</span></label>
+      </fieldset>
+      <fieldset><legend class="legend">Terms <span class="req">(required)</span></legend>
+        <label class="check"><input type="checkbox" aria-invalid="true" aria-describedby="e-terms-e" required><span>I have read the care notes (required)</span></label>
+        <p class="err" id="e-terms-e">Error: please confirm you have read the care notes.</p>
+      </fieldset>
+    </div>
+    <!-- ELEMENT: table with figures. .table inside .table-wrap (focusable, scrolls on phones); .r for figures, .no for plate numbers. Views: see the works pattern ([data-views] with [data-view] panels). -->
+    <div>
+      <h3>Table with figures</h3>
+      <div class="table-wrap" tabindex="0" role="region" aria-label="Firing record, scrollable table">
+        <table class="table" style="min-width:20rem">
+          <caption>Firing record</caption>
+          <thead><tr><th scope="col">Firing</th><th scope="col" class="r">Hours</th><th scope="col" class="r">Pieces</th></tr></thead>
+          <tbody><tr><th scope="row">Spring 2026</th><td class="r">71</td><td class="r">64</td></tr><tr><th scope="row">Autumn 2026</th><td class="r">74</td><td class="r">58</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- ELEMENT: disclosure. .qa wrapping details/summary; numbers are automatic. -->
+    <div>
+      <h3>Disclosure</h3>
+      <div class="qa"><details><summary>What does the red dot mean?</summary><div class="qa__a"><p>As in a gallery: the piece is sold.</p></div></details></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- PATTERN: footer. Studio name in display type, up to three short columns, and a base line with the colophon.
+     Supply: name, address, hours line, 2-5 contact links, the plate range. Limits: 3 columns; links 1-4 words. -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="site-foot__top">
+      <p class="site-foot__name">Maren Holt Stoneware</p>
+      <div class="site-foot__cols">
+        <div><h2>Studio</h2><address>Unit 4, Saltings Yard<br>Whitstable CT5 1EP</address></div>
+        <div><h2>Open</h2><p>Thursday to Sunday</p><p class="muted">Closed 24 Dec – 2 Jan</p></div>
+        <div><h2>Write</h2><ul><li><a href="mailto:studio@example.com">studio@example.com</a></li><li><a href="tel:+441227000000">01227 000 000</a></li></ul></div>
+      </div>
+    </div>
+    <div class="site-foot__base"><p>Catalogue of works, plates 01–07, winter 2026</p><a class="quiet" href="#main">Back to the top</a></div>
+  </div>
+</footer>
+
+<script src="pack.js"></script>
+<script>
+/* Catalogue only: colourway switch. */
+document.querySelectorAll("[data-cw]").forEach(function (b) {
+  b.addEventListener("click", function () {
+    document.documentElement.setAttribute("data-colourway", b.getAttribute("data-cw"));
+    document.querySelectorAll("[data-cw]").forEach(function (o) { o.setAttribute("aria-pressed", o === b ? "true" : "false"); });
+  });
+});
+</script>
+</body>
+</html>
